@@ -1,0 +1,61 @@
+.login form{
+    position: relative;
+    background-color: #645764;
+    justify-items: center;
+    height: 85vh;
+}
+.claude{
+    position: relative;
+    text-align: center;
+    text-decoration: solid;
+    text-transform: capitalize;
+    font-size: 25px;
+    color: white;
+}
+.hero input{
+    position: relative;
+    width: 30vw;
+    top: 20px;
+    text-align: center;
+    font-size: 20px;
+    height: 5vh;
+    border: 1px solid violet;
+    border-radius: 5px;
+}
+.hero textarea{
+    position: relative;
+    width: 30vw;
+    top: 40px;
+    height: 9vh;
+    border: 1px solid violet;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+.button button{
+    position: relative;
+    width: 14vw;
+    top: 30px;
+    height: 5vh;
+    border: 1px solid blue;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 10px;
+    background-color:#564778;
+    color: white;
+    font-size: 20px;
+}
+.button button:hover{
+    color: black;
+    
+    background-color: #e266;
+}
+.her ,a{
+    position: relative;
+font-size: 20px;
+color: blue;
+text-decoration: none;
+margin-left: 100px;
+
+}
