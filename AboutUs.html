@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | GirlsSpace Mahama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:radial-gradient(circle,#f705ff71,#ffffff);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ____ navbar ____ */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-logo img {
+      width: 60px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    /* ____ hamburger ____ */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #374151;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* ____ nav links ____ */
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .nav-link {
+      position: relative;
+      color: #374151;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #ec4899;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .login-btn {
+      padding: 6px 14px;
+      border: 1.5px solid #c23cb6;
+      border-radius: 30px;
+      color: #c23cb6;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .login-btn:hover {
+      background: #fbe7ff;
+    }
+
+    .donate-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .donate-btn:hover {
+      border: 1px solid #c23cb6;
+      box-shadow: 0 1px 10px 3px #c23cb6;
+    }
+
+    .nav-search input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 13px;
+      width: 130px;
+    }
+
+    /* ____ Dropdown ____ */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      min-width: 130px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 8px 14px;
+      color: #374151;
+      font-size: 13px;
+    }
+
+    .dropdown-menu li a:hover {
+      background: #f3e5f8;
+      color: #c23cb6;
+    }
+
+    .dropdown:hover .dropdown-menu,
+    .dropdown.active .dropdown-menu {
+      display: block;
+    }
+
+    /* ____ Overlay ____ */
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .nav-overlay.active {
+      display: block;
+    }
+
+    /* 
+       About Section
+        */
+    .about {
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .about h1 {
+      font-size: 2.5rem;
+      color: #f705ff;
+      margin-bottom: 1rem;
+    }
+
+    .about p.lead {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      color: #666;
+    }
+
+    .section {
+      margin-bottom: 4rem;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .section-img {
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .section-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .section-img img:hover {
+      transform: scale(1.05);
+    }
+
+    .section-content h2 {
+      font-size: 2rem;
+      color: #000000b0;
+      margin-bottom: 1rem;
+    }
+
+    .section-content p {
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+     /* .values-grid:hover{
+        
+     } */
+
+    .value-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .value-card:hover {
+      transition: 2s;
+      /* background: repeating-linear-gradient(to right ,#f705ff31,#ffffff65 20%); */
+      background: repeating-radial-gradient(circle, #ffffff23, #c23cb73d 40%);
+      transition: 1s;
+      transform: translateY(-8px);
+    }
+
+    .value-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ff6b8b, #c23cb6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .value-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    .value-card p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    /* 
+       Footer
+             */
+    .footer {
+      background: #000;
+      color: #e2e8f0;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .footer-main {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-logo-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 2px solid #ec4899;
+    }
+
+    .footer-subtitle {
+      font-weight: 600;
+      color: #d351d3;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .footer-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #94a3b8;
+      max-width: 360px;
+      margin: 0;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+
+    .social-btn:hover {
+      background: #334155;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .links-title {
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .link-item {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      transition: color 0.3s;
+    }
+
+    .link-item:hover {
+      color: #db78e4;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #1e293b;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .highlight {
+      color: #b740db;
+      font-weight: 500;
+    }
+
+    .footer-right-info {
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    .footer-right-info p {
+      margin: 0.25rem 0;
+    }
+
+    /* 
+       Responsive Design
+                         */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        padding: 80px 20px 20px;
+        gap: 20px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: left 0.4s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .nav-link, .login-btn, .donate-btn {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        color: #374151;
+        font-size: 16px;
+      }
+
+      .nav-search {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .nav-search input {
+        width: 100%;
+      }
+
+      .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-radius: 0;
+        width: 100%;
+        display: none;
+        background: #f9f7fd;
+      }
+
+      .dropdown.active .dropdown-menu {
+        display: block;
+      }
+
+      .about h1 {
+        font-size: 2rem;
+      }
+
+      .section {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .section-img {
+        order: -1;
+        height: 220px;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-logo-section,
+      .social-links {
+        justify-content: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .footer-right-info {
+        text-align: center;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .navbar {
+        padding: 12px 40px;
+      }
+
+      .nav-search input {
+        width: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo">
+    </div>
+
+    <div class="hamburger" id="mobile-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#index.html" class="nav-link">Home</a></li>
+      <li><a href="./about.html" class="nav-link">About</a></li>
+      <li><a href="#chat.html" class="nav-link">Chat</a></li>
+      <li><a href="#" class="nav-link">Stories</a></li>
+      <li><a href="#" class="nav-link">Programs</a></li>
+      <li> <a href="#protection" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Protection</a></li>
+
+      <li class="dropdown" id="language-dropdown">
+        <a href="#" class="nav-link">Languages</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">English</a></li>
+          <li><a href="#">Arabic</a></li>
+          <li><a href="#">Swahili</a></li>
+          <li><a href="#">French</a></li>
+        </ul>
+      </li>
+
+      <li><a href="#" class="login-btn">Log In</a></li>
+      <li><a href="#" class="donate-btn">Donate</a></li>
+    </ul>
+
+    <div class="nav-search">
+      <input type="text" placeholder="Search...">
+    </div>
+  </nav>
+
+
+  <div class="nav-overlay"></div>
+
+  <!-- 
+       About Us Content
+        -->
+  <main class="container">
+    <section class="about">
+      <h1>About Us</h1>
+      <p class="lead">
+        Empowering girls in Mahama Refugee Camp through connection, education, and resources.
+      </p>
+
+      <!-- Mission -->
+      <div class="section">
+        <div class="section-img">
+          <img src="./img/mision.jpg" alt="Girls learning together">
+        </div>
+        <div class="section-content">
+          <h2>Our Mission</h2>
+          <p>
+            To provide a safe, empowering digital platform where girls in Mahama Refugee Camp can connect, learn, share their stories, and access essential resources for personal growth and protection.
+          </p>
+        </div>
+      </div>
+
+      <!-- Vision -->
+      <div class="section" style="direction: rtl;">
+        <div class="section-content">
+          <h2>Our Vision</h2>
+          <p>
+            A world where every girl has access to education, protection, and opportunities to thrive, regardless of their circumstances or location.
+          </p>
+        </div>
+        <div class="section-img">
+          <img src="./img/vision.jpeg" alt="Bright future">
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div class="sections" style="grid-column: 1 / -1; text-align: center;">
+        <h2 style="font-size: 2rem; color: #df35c8; margin-bottom: 1.5rem;">Our Values</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3>Safety</h3>
+            <p>Creating secure spaces for girls.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-star"></i></div>
+            <h3>Empowerment</h3>
+            <p>Supporting girls to reach their potential.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-users"></i></div>
+            <h3>Inclusivity</h3>
+            <p>Embracing diversity and ensuring every voice matters.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-heart"></i></div>
+            <h3>Respect</h3>
+            <p>Valuing every individual.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-icon"><i class="fas fa-handshake"></i></div>
+            <h3>Community</h3>
+            <p>Building strong, supportive networks.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!--
+       Footer
+       -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footVisioner-left">
+          <div class="footer-logo-section">
+            <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="footer-logo">
+            <p class="footer-subtitle">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="footer-desc">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4 class="links-title">Quick Links</h4>
+          <ul class="links-list">
+            <li><a href="chat.html" class="link-item">Join Chat</a></li>
+            <li><a href="#" class="link-item">Share Story</a></li>
+            <li><a href="#" class="link-item">Programs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4 class="links-title">Get Help</h4>
+          <ul class="links-list">
+            <li><a href="#" class="link-item">Emergency</a></li>
+            <li><a href="#" class="link-item">Support</a></li>
+            <li><a href="#" class="link-item">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-left-info">
+          <p>© 2024 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
+        </div>
+        <div class="footer-right-info">
+          <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p>Supported by UNHCR, Save The Children, Alight</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!--
+       Mobile Menu Script
+      -->
+  <!-- <script>
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.querySelector('.nav-overlay');
+    const dropdown = document.getElementById('language-dropdown');
+
+    mobileMenu.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      navLinks.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    if (dropdown) {
+      dropdown.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          dropdown.classList.toggle('active');
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        navLinks.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        dropdown?.classList.remove('active');
+      }
+    });
+  </script> -->
+</body>
+</html>
