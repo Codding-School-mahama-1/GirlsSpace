@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>GirlsSpace Mahama</title>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- Google Fonts: Poppins -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
   <style>
-    * {
+  
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -21,53 +27,136 @@
       background: #000;
       color: white;
       overflow-x: hidden;
-      direction: ltr;
+      line-height: 1.6;
     }
 
-    /* Navbar */
+    a, button {
+      cursor: pointer;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ____ navbar____ */
     .navbar {
-      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 40px;
+      padding: 12px 20px;
       background: #ffffff;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 12px;
     }
 
     .nav-logo img {
-      width: 80px;
-      height: 60px;
+      width: 60px;
+      height: 50px;
       object-fit: contain;
-      border-radius: 60%;
+      border-radius: 50%;
     }
 
+    /*____ hamburger ____*/
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #374151;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /*____ nav links ____*/
     .nav-links {
-      list-style: none;
       display: flex;
-      gap: 24px;
+      gap: 16px;
       align-items: center;
-      flex-wrap: wrap;
+      font-size: 14px;
     }
 
     .nav-links a {
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
       color: #374151;
-      transition: 0.2s;
+      font-weight: 500;
+      transition: color 0.2s;
     }
 
-    .nav-links a:hover {
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ec4899;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+  }
+
+.nav-link:hover::after {
+            width: 100%;
+        }
+
+.login-btn {
+      padding: 6px 14px;
+      border: 1.5px solid #c23cb6;
+      border-radius: 30px;
       color: #c23cb6;
+      font-weight: 600;
+      font-size: 13px;
     }
 
-    /* Dropdown */
+    
+
+    .nav-search input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 13px;
+      width: 130px;
+    }
+
+    /*____ Dropdown____ */
     .dropdown {
       position: relative;
     }
@@ -75,22 +164,78 @@
     .dropdown-menu {
       position: absolute;
       top: 100%;
-      left: 0; /* يظهر على اليسار (تحت الزر) */
+      left: 0;
       background: white;
       box-shadow: 0 6px 16px rgba(0,0,0,0.1);
       border-radius: 10px;
-      list-style: none;
-      padding: 8px 0;
+      min-width: 130px;
       display: none;
-      min-width: 140px;
       z-index: 1000;
     }
 
     .dropdown-menu li a {
       display: block;
-      padding: 10px 16px;
+      padding: 8px 14px;
       color: #374151;
-      font-size: 14px;
+      font-size: 13px;
+    }
+
+    .dropdown-menu li a:hover {
+      background: #f3e5f8;
+      color: #c23cb6;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+    .login-btn:hover {
+      background: #fbe7ff;
+    }
+
+    .donate-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .donate-btn:hover {
+      border: 1px solid #c23cb6;
+      box-shadow:0 1px 10px 3px #c23cb6;
+    }
+
+    .nav-search input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 13px;
+      width: 130px;
+    }
+
+    /*____ Dropdown____ */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      min-width: 130px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 8px 14px;
+      color: #374151;
+      font-size: 13px;
     }
 
     .dropdown-menu li a:hover {
@@ -102,67 +247,31 @@
       display: block;
     }
 
-    /* Buttons */
-    .login-btn {
-      padding: 8px 16px;
-      border: 1.5px solid #c23cb6;
-      border-radius: 30px;
-      font-weight: 600;
-      color: #c23cb6;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-
-    .login-btn:hover {
-      background: #fbe7ff;
-      color: #b02ca1;
-    }
-
-    .donate-btn {
-      padding: 10px 18px;
-      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
-      color: white;
-      border-radius: 30px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .donate-btn:hover {
-      border: 0 10px 10px solid  #b02ca1;
-    }
-
-    /* Search */
-    .nav-search input {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 14px;
-      width: 160px;
-    }
-
-    /* Hero */
+    /* ___ hero section___  */
     .hero {
       position: relative;
-      height: 100vh;
-      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)),
-                  url(./img/img-410-doc-3.webp) no-repeat center center/cover;
+      min-height: 100vh;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)),
+                  url('./img/img-410-doc-3.webp') center/cover no-repeat;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 0 60px;
+      text-align: center;
+      padding: 25px;
       margin-top: -80px;
     }
 
     .content {
-      max-width: 600px;
-      text-align: left;
+      max-width: 100%;
+      z-index: 2;
     }
 
     .title {
-      font-size: 4.5rem;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
       font-weight: 900;
-      line-height: 1.1;
-      color: #fff;
+      line-height: 1;
+      margin-bottom: 16px;
     }
 
     .title span {
@@ -170,27 +279,25 @@
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      line-height: 1.8;
+      font-size: clamp(1rem, 3.5vw, 1.3rem);
       color: #f0f0f0;
-      margin: 20px 0;
+      margin: 16px 0 24px;
+      max-width: 600px;
     }
 
     .buttons {
       display: flex;
-      gap: 15px;
+      gap: 12px;
+      justify-content: center;
       flex-wrap: wrap;
     }
 
     .btn {
-      padding: 14px 32px;
-      font-size: 1.1rem;
+      padding: 12px 24px;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
       font-weight: 600;
       border-radius: 50px;
-      text-decoration: none;
       transition: all 0.3s ease;
-      display: inline-block;
-      text-align: center;
     }
 
     .btn-primary {
@@ -200,31 +307,98 @@
 
     .btn-primary:hover {
       background: #E91E63;
-      color: #fff;
+      color: white;
       transform: translateY(-3px);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
       color: white;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255,255,255,0.3);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255,255,255,0.3);
       border-color: #E91E63;
-      transform: translateY(-3px);
     }
 
-    /* Stats */
+    /* ___animated logo ___ */
+    .logo-container {
+      margin: 32px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-logo {
+      width: clamp(180px, 50vw, 300px);
+      height: clamp(180px, 50vw, 300px);
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(238,241,5,0.5);
+      box-shadow: 0 10px 30px rgba(236,72,154,0.3);
+      animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-logo svg {
+      width: 60%;
+      height: 60%;
+      color: #ec489a;
+      filter: drop-shadow(0 0 20px rgba(236,72,153,0.6));
+      animation: spin 10s linear infinite;
+    }
+
+    .sparkle {
+      position: absolute;
+      background: #fbbf24;
+      border-radius: 50%;
+      opacity: 0;
+      animation: sparkleAnim 2s infinite;
+    }
+
+    .sparkle:nth-child(1) { top: 20%; right: 25%; width: 6px; height: 6px; animation-delay: 0s; }
+    .sparkle:nth-child(2) { top: 60%; left: 20%; width: 5px; height: 5px; animation-delay: 0.5s; }
+    .sparkle:nth-child(3) { bottom: 25%; right: 30%; width: 6px; height: 6px; animation-delay: 1s; }
+    .sparkle:nth-child(4) { top: 30%; left: 30%; width: 4px; height: 4px; animation-delay: 0.3s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 10px 30px rgba(236,72,154,0.2); }
+      50% { box-shadow: 0 15px 40px rgba(236,72,154,0.4); }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes sparkleAnim {
+      0% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.5); }
+      100% { opacity: 0; transform: scale(0); }
+    }
+
+    /* ____stats ____ */
     .stats {
       position: absolute;
-      bottom: 20px;
+      bottom: 2px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 100px;
+      gap: clamp(20px, 6vw, 60px);
+      flex-wrap: wrap;
       justify-content: center;
+      width: 100%;
+      padding: 0 20px;
     }
 
     .stat-item {
@@ -232,295 +406,314 @@
     }
 
     .stat-number {
-      font-size: 2.5rem;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
       font-weight: 800;
       color: #ffd9027c;
     }
 
     .stat-label {
-      font-size: 1rem;
-      color: #ffffff;
-      margin-top: -5px;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      color: #fff;
     }
 
     .info-icon {
       position: absolute;
-      bottom: 30px;
-      right: 30px; /* على اليمين */
-      width: 50px;
-      height: 50px;
+      bottom: 20px;
+      right: 20px;
+      width: 45px;
+      height: 45px;
       background: #E91E63;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: white;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+      box-shadow: 0 4px 15px rgba(233,30,99,0.4);
     }
 
-    /* Footer */
+    /* ========================================
+       Footer - Exact Match
+    ======================================== */
     .footer {
-      background-color: #273147;
-      color: #e5e7eb;
-      padding: 4rem 1rem;
-      margin-top: 2rem;
+      background: rgb(15, 15, 20) ;
+      color: #e2e8f0;
+      padding: 3rem 1.5rem 1.5rem;
+      font-family: 'Inter', sans-serif;
     }
 
     .container {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 1rem;
     }
 
-    .footer-grid {
+    .footer-main {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-bottom: 3rem;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
     }
 
-    @media (min-width: 768px) {
-      .footer-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      .footer-about {
-        grid-column: span 2;
-      }
-      .navbar {
-        flex-wrap: nowrap;
-      }
-    }
-
-    .logo-section {
+    .footer-left {
       display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
+      flex-direction: column;
       gap: 1rem;
     }
 
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(to right, #ec4899, #be123c);
-      border-radius: 12px;
+    .footer-logo-section {
       display: flex;
       align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
+      gap: 12px;
     }
 
-    .icon-svg {
-      width: 32px;
-      height: 32px;
-      color: white;
-    }
-
-    .dot {
-      position: absolute;
+    .footer-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
       border-radius: 50%;
+      border: 2px solid rgb(255, 135, 219);
     }
 
-    .dot.yellow {
-      top: 4px;
-      right: 4px;
-      width: 8px;
-      height: 8px;
-      background: #fbbf24;
+    .footer-subtitle {
+      font-weight: 600;
+      color:  rgb(255, 135, 219);
+      font-size: 1rem;
+      margin: 0;
     }
 
-    .dot.blue {
-      bottom: 4px;
-      left: 4px;
-      width: 6px;
-      height: 6px;
-      background: #93c5fd;
-    }
-
-    .logo-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(to right, #f472b6, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .logo-subtitle {
-      color: #9ca3af;
-      font-size: 0.875rem;
-      margin-top: 0.25rem;
-    }
-
-    .about-text {
-      color: #9ca3af;
-      margin-bottom: 1.5rem;
-      max-width: 32rem;
+    .footer-desc {
       font-size: 0.95rem;
+      line-height: 1.6;
+      color: #94a3b8;
+      max-width: 360px;
+      margin: 0;
     }
 
     .social-links {
       display: flex;
-      gap: 0.75rem;
+      gap: 12px;
     }
 
     .social-btn {
       width: 40px;
       height: 40px;
-      background: #1f2937;
+      background: #1e293b;
+      border: 1px solid #334155;
       border-radius: 8px;
+      color: #cbd5e1;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-      color: white;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
     }
 
     .social-btn:hover {
-      background: #374151;
+      background: #334155;
+      color: white;
+      transform: translateY(-2px);
     }
 
     .links-title {
       color: white;
       font-weight: 600;
-      margin-bottom: 1rem;
       font-size: 1.1rem;
+      margin-bottom: 1rem;
     }
 
     .links-list {
       list-style: none;
+      padding: 0;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
     }
 
     .link-item {
-      color: #9ca3af;
-      background: none;
-      border: none;
-      text-align: left;
-      cursor: pointer;
+      color: #94a3b8;
+      text-decoration: none;
       font-size: 0.95rem;
-      padding: 0;
       transition: color 0.3s;
     }
 
     .link-item:hover {
-      color: white;
+      color: rgb(219, 120, 228);
     }
 
     .footer-bottom {
-      border-top: 1px solid #1f2937;
-      padding-top: 2rem;
-    }
-
-    .footer-bottom-content {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .footer-bottom-content {
-        flex-direction: row;
-        justify-content: space-between;
-      }
-    }
-
-    .copyright {
-      color: #9ca3af;
+      padding-top: 1.5rem;
+      border-top: 1px solid #1e293b;
       font-size: 0.875rem;
-      text-align: center;
+      color: #64748b;
+    }
+
+    .footer-left-info p {
+      margin: 0;
     }
 
     .highlight {
-      color: #d1d5db;
+      color: rgb(183, 64, 219);
+      font-weight: 500;
     }
 
-    .legal-links {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.875rem;
+    .footer-right-info {
+      text-align: right;
+      line-height: 1.5;
     }
 
-    .legal-btn {
-      color: #9ca3af;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.3s;
+    .footer-right-info p {
+      margin: 0.25rem 0;
     }
 
-    .legal-btn:hover {
-      color: white;
-    }
 
-    .footer-info {
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.875rem;
-    }
-
-    /* Responsive */
+    /* _____ Responsive _______ */
     @media (max-width: 768px) {
-      .hero {
-        padding: 20px;
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        padding: 80px 20px 20px;
+        gap: 20px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: left 0.4s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .nav-links a {
+        font-size: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        width: 100%;
+        color: #374151;
+      }
+
+      .login-btn, .donate-btn {
+        width: 100%;
         text-align: center;
-        justify-content: center;
+        margin: 10px 0;
       }
 
-      .content {
-        max-width: 100%;
-        text-align: center;
-      }
-
-      .title {
-        font-size: 2.8rem;
-      }
-
-      .buttons {
-        justify-content: center;
-      }
-
-      .stats {
-        gap: 30px;
-        padding: 15px;
-      }
-
-      .info-icon {
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-      }
-
-      .navbar {
-        padding: 10px 15px;
-        justify-content: center;
+      .nav-search {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
       }
 
       .nav-search input {
-        width: 120px;
+        width: 100%;
+      }
+
+      .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 999;
+      }
+
+      .nav-overlay.active {
+        display: block;
+      }
+    }
+
+    @media (min-width: 640px) {
+      .hero {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        padding: 0 40px;
+      }
+
+      .content {
+        max-width: 550px;
+        text-align: left;
+      }
+
+      .buttons {
+        justify-content: flex-start;
+      }
+
+      .logo-container {
+        margin: 0;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .navbar {
+        padding: 12px 40px;
+      }
+
+      .nav-search input {
+        width: 160px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 2fr 1fr 1fr;
+        text-align: left;
+      }
+
+      .footer-about {
+        grid-column: 1;
+      }
+
+      .logo-section {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .links-title, .links-list {
+        text-align: left;
+      }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Navbar -->
+  <!-- navbar    -->
   <nav class="navbar">
     <div class="nav-logo">
       <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo">
     </div>
 
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <ul class="nav-links">
+fx-login
       <li><a href="./index.html">Home</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Chat</a></li>
@@ -529,6 +722,15 @@
       <li><a href="#">Support</a></li>
 
       <!-- Language Dropdown -->
+
+      <a href="./index.html" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium" >Home</a>
+      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">About</a>
+      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Chat</a>
+      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Stories</a>
+      <a href="./Learning _Programs.html" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Programs</a>
+      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Support</a>
+
+ main
       <li class="dropdown">
         <a href="#">Languages</a>
         <ul class="dropdown-menu">
@@ -538,25 +740,53 @@
           <li><a href="#">French</a></li>
         </ul>
       </li>
+ fx-login
       <li><a href="./login.html" class="login-btn">Log In</a></li>
+
+
+      <li><a href="#" class="login-btn">Log In</a></li>
+ main
       <li><a href="#" class="donate-btn">Donate</a></li>
     </ul>
+
 
     <div class="nav-search">
       <input type="text" placeholder="Search...">
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!--     overlay  -->
+  <div class="nav-overlay"></div>
+
+  <!--  hero section   -->
   <section class="hero">
     <div class="content">
       <h1 class="title">Your Safe <span>Digital Space</span></h1>
       <p class="subtitle">
-        Connect, learn, and grow in a secure environment designed specifically for girls in Mahama refugee camp. Share your stories, access training, and build lasting friendships.
+        Connect, learn, and grow in a secure environment designed specifically for girls in Mahama refugee camp.
       </p>
       <div class="buttons">
         <a href="#" class="btn btn-primary">Join Our Community</a>
         <a href="#" class="btn btn-secondary">Explore Programs</a>
+      </div>
+    </div>
+
+    <div class="logo-container">
+      <div class="main-logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="35" r="18" stroke="currentColor" stroke-width="3"/>
+          <path d="M25 65c0-15 10-25 25-25s25 10 25 25v15c0 5-10 10-25 10s-25-5-25-10z" fill="currentColor"/>
+          <circle cx="42" cy="32" r="3" fill="#ec4899"/>
+          <circle cx="58" cy="32" r="3" fill="#ec4899"/>
+          <path d="M45 42c0-2 2-4 5-4s5 2 5 4" stroke="#fff" stroke-width="2" fill="none"/>
+          <circle cx="20" cy="20" r="3" fill="#fbbf24"/>
+          <circle cx="80" cy="25" r="2.5" fill="#a855f7"/>
+          <circle cx="35" cy="75" r="2" fill="#f472b6"/>
+        </svg>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
       </div>
     </div>
 
@@ -571,114 +801,96 @@
       </div>
       <div class="stat-item">
         <div class="stat-number">25</div>
-        <div class="stat-label">Training Programs</div>
+        <div class="stat-label">Programs</div>
       </div>
       <div class="stat-item">
         <div class="stat-number">24/7</div>
-        <div class="stat-label">Safe Support</div>
+        <div class="stat-label">Support</div>
       </div>
     </div>
 
     <div class="info-icon">i</div>
   </section>
 
-  <!-- Footer -->
+<!-- ========================================
+       Footer
+  ======================================== -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-about">
-          <div class="logo-section">
-            <div class="nav-logo">
-               <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo">
-            </div>
-            <div>
-              <p class="logo-subtitle">Empowering Girls, Building Futures</p>
-            </div>
+      <div class="footer-main">
+        <div class="footer-left">
+          <div class="footer-logo-section">
+            <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="footer-logo">
+            <p class="footer-subtitle">Empowering Girls, Building Futures</p>
           </div>
-          <p class="about-text">
-            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive. Together, we're building a brighter future through education, protection, and empowerment.
+          <p class="footer-desc">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
           </p>
           <div class="social-links">
-            <button onclick="followSocial('Facebook')" class="social-btn"><span><i class="fa-brands fa-facebook"></i></span></button>
-            <button onclick="followSocial('Twitter')" class="social-btn"><span><i class="fa-brands fa-facebook"></i></span></button>
-            <button onclick="followSocial('Instagram')" class="social-btn"><span><i class="fa-brands fa-instagram"></i></span></button>
-            <button onclick="followSocial('YouTube')" class="social-btn"><span><i class="fa-brands fa-square-youtube"></i></span></button>
+            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
 
         <div class="footer-links">
           <h4 class="links-title">Quick Links</h4>
           <ul class="links-list">
-            <li><button onclick="scrollToSection('chat')" class="link-item">Join Chat Rooms</button></li>
-            <li><button onclick="scrollToSection('stories')" class="link-item">Share Your Story</button></li>
-            <li><button onclick="scrollToSection('programs')" class="link-item">Learning Programs</button></li>
-            <li><button onclick="scrollToSection('protection')" class="link-item">Protection Partners</button></li>
-            <li><button onclick="scrollToSection('support')" class="link-item">Support & Donate</button></li>
+            <li><a href="#" class="link-item">Join Chat</a></li>
+            <li><a href="#" class="link-item">Share Story</a></li>
+            <li><a href="#" class="link-item">Programs</a></li>
           </ul>
         </div>
 
-        <div class="footer-help">
+        <div class="footer-links">
           <h4 class="links-title">Get Help</h4>
           <ul class="links-list">
-            <li><button onclick="emergencyHelp()" class="link-item">Emergency Help</button></li>
-            <li><button onclick="contactSupport()" class="link-item">24/7 Support Chat</button></li>
-            <li><button onclick="reportIssue()" class="link-item">Report an Issue</button></li>
-            <li><button onclick="safetyResources()" class="link-item">Safety Resources</button></li>
-            <li><button onclick="privacyPolicy()" class="link-item">Privacy & Safety</button></li>
+            <li><a href="#" class="link-item">Emergency</a></li>
+            <li><a href="#" class="link-item">Support</a></li>
+            <li><a href="#" class="link-item">Report</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <div class="footer-bottom-content">
-          <p class="copyright">
-            © 2024 GirlsSpace Mahama. All rights reserved. 
-            <span class="highlight">Protecting and empowering girls, always.</span>
-          </p>
-          <div class="legal-links">
-            <button onclick="privacyPolicy()" class="legal-btn">Privacy Policy</button>
-            <button onclick="termsOfService()" class="legal-btn">Terms of Service</button>
-            <button onclick="communityGuidelines()" class="legal-btn">Community Guidelines</button>
-          </div>
+        <div class="footer-left-info">
+          <p>© 2024 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
         </div>
-        <div class="footer-info">
-          <p class="lang-support">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic.</p>
-          <p class="partners">Supported by UNHCR, PFR, Save The Children, Alight, and local protection partners</p>
+        <div class="footer-right-info">
+          <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p>Supported by UNHCR, Save The Children, Alight</p>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- JavaScript -->
-  <script>
-    function followSocial(platform) {
-      alert('Follow us on ' + platform);
-    }
-    function scrollToSection(id) {
-      alert('Scroll to section: ' + id);
-    }
-    function emergencyHelp() {
-      alert('Emergency Help Activated');
-    }
-    function contactSupport() {
-      alert('Opening Support Chat...');
-    }
-    function reportIssue() {
-      alert('Report Issue Form');
-    }
-    function safetyResources() {
-      alert('Safety Resources');
-    }
-    function privacyPolicy() {
-      alert('Privacy Policy');
-    }
-    function termsOfService() {
-      alert('Terms of Service');
-    }
-    function communityGuidelines() {
-      alert('Community Guidelines');
-    }
-  </script>
+  <!-- <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const overlay = document.querySelector('.nav-overlay');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-links a, .link-item').forEach(el => {
+      el.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+
+    overlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  </script> -->
 
 </body>
 </html>
