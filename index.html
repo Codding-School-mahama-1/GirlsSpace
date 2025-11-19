@@ -6,120 +6,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>GirlsSpace Mahama</title>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#ec4899',
+            'primary-dark': '#be185d',
+            accent: '#fbbf24',
+            dark: '#0f0f14',
+            'custom-purple': '#c23cb6',
+          },
+          animation: {
+            float: 'float 3s ease-in-out infinite',
+            'spin-slow': 'spin 10s linear infinite',
+            sparkle: 'sparkleAnim 2s infinite',
+            pulse: 'pulse-glow 2s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            sparkleAnim: {
+              '0%': { opacity: 0, transform: 'scale(0)' },
+              '50%': { opacity: 1, transform: 'scale(1.5)' },
+              '100%': { opacity: 0, transform: 'scale(0)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { boxShadow: '0 10px 30px rgba(236,72,154,0.2)' },
+              '50%': { boxShadow: '0 15px 40px rgba(236,72,154,0.4)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
-  
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #000;
-      color: white;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-
-    a, button {
-      cursor: pointer;
-      color: inherit;
-      text-decoration: none;
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    /* ____ navbar____ */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .nav-logo img {
-      width: 60px;
-      height: 50px;
-      object-fit: contain;
-      border-radius: 50%;
-    }
-
-    /*____ hamburger ____*/
-    .hamburger {
+    /* Custom Scrollbar specifically for mobile menu if needed */
+    .no-scrollbar::-webkit-scrollbar {
       display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      z-index: 1001;
     }
-
-    .hamburger span {
-      width: 28px;
-      height: 3px;
-      background: #374151;
-      border-radius: 3px;
-      transition: all 0.3s ease;
-    }
-
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
-
-    /*____ nav links ____*/
-    .nav-links {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .nav-links a {
-      color: #374151;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-
-    .nav-link {
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .nav-link:hover {
-      color: #ec4899;
-    }
-
+    /* Specific gradient underline for nav links */
     .nav-link::after {
       content: '';
       position: absolute;
@@ -130,650 +69,84 @@
       background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
       transition: all 0.3s ease;
       transform: translateX(-50%);
-  }
-
-.nav-link:hover::after {
-            width: 100%;
-        }
-
-.login-btn {
-      padding: 6px 14px;
-      border: 1.5px solid #c23cb6;
-      border-radius: 30px;
-      color: #c23cb6;
-      font-weight: 600;
-      font-size: 13px;
     }
-
-    
-
-    .nav-search input {
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 13px;
-      width: 130px;
-    }
-
-    /*____ Dropdown____ */
-    .dropdown {
-      position: relative;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      min-width: 130px;
-      display: none;
-      z-index: 1000;
-    }
-
-    .dropdown-menu li a {
-      display: block;
-      padding: 8px 14px;
-      color: #374151;
-      font-size: 13px;
-    }
-
-    .dropdown-menu li a:hover {
-      background: #f3e5f8;
-      color: #c23cb6;
-    }
-
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
-    .login-btn:hover {
-      background: #fbe7ff;
-    }
-
-    .donate-btn {
-      padding: 8px 16px;
-      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
-      color: white;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 13px;
-    }
-    .donate-btn:hover {
-      border: 1px solid #c23cb6;
-      box-shadow:0 1px 10px 3px #c23cb6;
-    }
-
-    .nav-search input {
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 13px;
-      width: 130px;
-    }
-
-    /*____ Dropdown____ */
-    .dropdown {
-      position: relative;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      min-width: 130px;
-      display: none;
-      z-index: 1000;
-    }
-
-    .dropdown-menu li a {
-      display: block;
-      padding: 8px 14px;
-      color: #374151;
-      font-size: 13px;
-    }
-
-    .dropdown-menu li a:hover {
-      background: #f3e5f8;
-      color: #c23cb6;
-    }
-
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
-
-    /* ___ hero section___  */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)),
-                  url('./img/img-410-doc-3.webp') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 25px;
-      margin-top: -80px;
-    }
-
-    .content {
-      max-width: 100%;
-      z-index: 2;
-    }
-
-    .title {
-      font-size: clamp(2.5rem, 8vw, 4.5rem);
-      font-weight: 900;
-      line-height: 1;
-      margin-bottom: 16px;
-    }
-
-    .title span {
-      color: #FFD700;
-    }
-
-    .subtitle {
-      font-size: clamp(1rem, 3.5vw, 1.3rem);
-      color: #f0f0f0;
-      margin: 16px 0 24px;
-      max-width: 600px;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 12px 24px;
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
-      font-weight: 600;
-      border-radius: 50px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-      background: white;
-      color: #E91E63;
-    }
-
-    .btn-primary:hover {
-      background: #E91E63;
-      color: white;
-      transform: translateY(-3px);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.3);
-      border-color: #E91E63;
-    }
-
-    /* ___animated logo ___ */
-    .logo-container {
-      margin: 32px 0;
+    .nav-link:hover::after {
       width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    .main-logo {
-      width: clamp(180px, 50vw, 300px);
-      height: clamp(180px, 50vw, 300px);
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(238,241,5,0.5);
-      box-shadow: 0 10px 30px rgba(236,72,154,0.3);
-      animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .main-logo svg {
-      width: 60%;
-      height: 60%;
-      color: #ec489a;
-      filter: drop-shadow(0 0 20px rgba(236,72,153,0.6));
-      animation: spin 10s linear infinite;
-    }
-
-    .sparkle {
-      position: absolute;
-      background: #fbbf24;
-      border-radius: 50%;
-      opacity: 0;
-      animation: sparkleAnim 2s infinite;
-    }
-
-    .sparkle:nth-child(1) { top: 20%; right: 25%; width: 6px; height: 6px; animation-delay: 0s; }
-    .sparkle:nth-child(2) { top: 60%; left: 20%; width: 5px; height: 5px; animation-delay: 0.5s; }
-    .sparkle:nth-child(3) { bottom: 25%; right: 30%; width: 6px; height: 6px; animation-delay: 1s; }
-    .sparkle:nth-child(4) { top: 30%; left: 30%; width: 4px; height: 4px; animation-delay: 0.3s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 10px 30px rgba(236,72,154,0.2); }
-      50% { box-shadow: 0 15px 40px rgba(236,72,154,0.4); }
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes sparkleAnim {
-      0% { opacity: 0; transform: scale(0); }
-      50% { opacity: 1; transform: scale(1.5); }
-      100% { opacity: 0; transform: scale(0); }
-    }
-
-    /* ____stats ____ */
-    .stats {
-      position: absolute;
-      bottom: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: clamp(20px, 6vw, 60px);
-      flex-wrap: wrap;
-      justify-content: center;
-      width: 100%;
-      padding: 0 20px;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
-      font-weight: 800;
-      color: #ffd9027c;
-    }
-
-    .stat-label {
-      font-size: clamp(0.8rem, 2.5vw, 1rem);
-      color: #fff;
-    }
-
-    .info-icon {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      width: 45px;
-      height: 45px;
-      background: #E91E63;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(233,30,99,0.4);
-    }
-
-    /* ========================================
-       Footer - Exact Match
-    ======================================== */
-    .footer {
-      background: rgb(15, 15, 20) ;
-      color: #e2e8f0;
-      padding: 3rem 1.5rem 1.5rem;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-
-    .footer-main {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 3rem;
-      margin-bottom: 2rem;
-    }
-
-    .footer-left {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .footer-logo-section {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .footer-logo {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      border-radius: 50%;
-      border: 2px solid rgb(255, 135, 219);
-    }
-
-    .footer-subtitle {
-      font-weight: 600;
-      color:  rgb(255, 135, 219);
-      font-size: 1rem;
-      margin: 0;
-    }
-
-    .footer-desc {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: #94a3b8;
-      max-width: 360px;
-      margin: 0;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 12px;
-    }
-
-    .social-btn {
-      width: 40px;
-      height: 40px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      color: #cbd5e1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      font-size: 1.1rem;
-    }
-
-    .social-btn:hover {
-      background: #334155;
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .links-title {
-      color: white;
-      font-weight: 600;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-
-    .links-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .link-item {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.3s;
-    }
-
-    .link-item:hover {
-      color: rgb(219, 120, 228);
-    }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #1e293b;
-      font-size: 0.875rem;
-      color: #64748b;
-    }
-
-    .footer-left-info p {
-      margin: 0;
-    }
-
-    .highlight {
-      color: rgb(183, 64, 219);
-      font-weight: 500;
-    }
-
-    .footer-right-info {
-      text-align: right;
-      line-height: 1.5;
-    }
-
-    .footer-right-info p {
-      margin: 0.25rem 0;
-    }
-
-
-    /* _____ Responsive _______ */
-    @media (max-width: 768px) {
-      .hamburger {
-        display: flex;
-      }
-
-      .nav-links {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 280px;
-        height: 100vh;
-        background: white;
-        flex-direction: column;
-        padding: 80px 20px 20px;
-        gap: 20px;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        transition: left 0.4s ease;
-        z-index: 1000;
-        overflow-y: auto;
-      }
-
-      .nav-links.active {
-        left: 0;
-      }
-
-      .nav-links a {
-        font-size: 16px;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-        width: 100%;
-        color: #374151;
-      }
-
-      .login-btn, .donate-btn {
-        width: 100%;
-        text-align: center;
-        margin: 10px 0;
-      }
-
-      .nav-search {
-        order: 3;
-        width: 100%;
-        margin-top: 10px;
-      }
-
-      .nav-search input {
-        width: 100%;
-      }
-
-      .nav-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: none;
-        z-index: 999;
-      }
-
-      .nav-overlay.active {
-        display: block;
-      }
-    }
-
-    @media (min-width: 640px) {
-      .hero {
-        flex-direction: row;
-        text-align: left;
-        justify-content: space-between;
-        padding: 0 40px;
-      }
-
-      .content {
-        max-width: 550px;
-        text-align: left;
-      }
-
-      .buttons {
-        justify-content: flex-start;
-      }
-
-      .logo-container {
-        margin: 0;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .navbar {
-        padding: 12px 40px;
-      }
-
-      .nav-search input {
-        width: 160px;
-      }
-
-      .footer-grid {
-        grid-template-columns: 2fr 1fr 1fr;
-        text-align: left;
-      }
-
-      .footer-about {
-        grid-column: 1;
-      }
-
-      .logo-section {
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-      }
-
-      .links-title, .links-list {
-        text-align: left;
-      }
-
-      .footer-bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
     }
   </style>
 </head>
 
-<body>
+<body class="font-poppins bg-black text-white overflow-x-hidden selection:bg-primary selection:text-white">
 
-  <!-- navbar    -->
-  <nav class="navbar">
-    <div class="nav-logo">
-      <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo">
+  <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
-    <div class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <ul class="nav-links">
-fx-login
-      <li><a href="./index.html">Home</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Chat</a></li>
-      <li><a href="#">Stories</a></li>
-      <li><a href="#">Programs</a></li>
-      <li><a href="#">Support</a></li>
-
-      <!-- Language Dropdown -->
-
-      <a href="./index.html" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium" >Home</a>
-      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">About</a>
-      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Chat</a>
-      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Stories</a>
-      <a href="./Learning _Programs.html" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Programs</a>
-      <a href="#" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Support</a>
-
- main
-      <li class="dropdown">
-        <a href="#">Languages</a>
-        <ul class="dropdown-menu">
-          <li><a href="#">English</a></li>
-          <li><a href="#">Arabic</a></li>
-          <li><a href="#">Swahili</a></li>
-          <li><a href="#">French</a></li>
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors">Home</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">About</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">Chat</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">Stories</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">Protection</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors">Programs</a>
+      
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary transition-colors py-2">
+          Languages <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        </button>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">English</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Arabic</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Swahili</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">French</a></li>
         </ul>
-      </li>
- fx-login
-      <li><a href="./login.html" class="login-btn">Log In</a></li>
-
-
-      <li><a href="#" class="login-btn">Log In</a></li>
- main
-      <li><a href="#" class="donate-btn">Donate</a></li>
-    </ul>
-
-
-    <div class="nav-search">
-      <input type="text" placeholder="Search...">
+      </div>
+         <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple">Donate</a>
+    
     </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]">
+      </div>
+   </div>
+
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
   </nav>
 
-  <!--     overlay  -->
-  <div class="nav-overlay"></div>
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
 
-  <!--  hero section   -->
-  <section class="hero">
-    <div class="content">
-      <h1 class="title">Your Safe <span>Digital Space</span></h1>
-      <p class="subtitle">
+
+  <section class="relative min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 py-20 mt-[-80px] bg-cover bg-center bg-no-repeat overflow-hidden" 
+           style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('./img/img-410-doc-3.webp');">
+    
+    <div class="z-10 text-center lg:text-left max-w-[550px] lg:ml-10">
+      <h1 class="text-4xl lg:text-7xl font-black leading-tight mb-4">
+        Your Safe <span class="text-accent">Digital Space</span>
+      </h1>
+      <p class="text-base lg:text-xl text-gray-100 mb-8 max-w-[600px] mx-auto lg:mx-0">
         Connect, learn, and grow in a secure environment designed specifically for girls in Mahama refugee camp.
       </p>
-      <div class="buttons">
-        <a href="#" class="btn btn-primary">Join Our Community</a>
-        <a href="#" class="btn btn-secondary">Explore Programs</a>
+      <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+        <a href="#" class="px-6 py-3 bg-white text-[#E91E63] rounded-full font-semibold text-base transition-transform hover:-translate-y-1 hover:bg-[#E91E63] hover:text-white shadow-lg">
+          Join Our Community
+        </a>
+        <a href="#" class="px-6 py-3 bg-white/20 text-white border-2 border-white/30 rounded-full font-semibold text-base transition-colors hover:bg-white/30 hover:border-[#E91E63]">
+          Explore Programs
+        </a>
       </div>
     </div>
 
-    <div class="logo-container">
-      <div class="main-logo">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="relative z-10 mt-10 lg:mt-0 lg:mr-10">
+      <div class="w-[250px] h-[250px] lg:w-[300px] lg:h-[300px] bg-white/10 rounded-full flex items-center justify-center border border-yellow-300/50 animate-float animate-pulse backdrop-blur-sm">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3/5 h-3/5 text-primary drop-shadow-[0_0_20px_rgba(236,72,153,0.6)] animate-spin-slow">
           <circle cx="50" cy="35" r="18" stroke="currentColor" stroke-width="3"/>
           <path d="M25 65c0-15 10-25 25-25s25 10 25 25v15c0 5-10 10-25 10s-25-5-25-10z" fill="currentColor"/>
           <circle cx="42" cy="32" r="3" fill="#ec4899"/>
@@ -783,114 +156,105 @@ fx-login
           <circle cx="80" cy="25" r="2.5" fill="#a855f7"/>
           <circle cx="35" cy="75" r="2" fill="#f472b6"/>
         </svg>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
-        <div class="sparkle"></div>
+        <div class="absolute top-1/4 right-1/4 w-1.5 h-1.5 bg-accent rounded-full animate-sparkle"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-1 h-1 bg-accent rounded-full animate-sparkle delay-500"></div>
+        <div class="absolute bottom-1/4 right-1/3 w-1.5 h-1.5 bg-accent rounded-full animate-sparkle delay-1000"></div>
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stat-item">
-        <div class="stat-number">1,200+</div>
-        <div class="stat-label">Active Girls</div>
+    <div class="absolute bottom-0 left-0 w-full pb-6 px-5 flex flex-wrap justify-center gap-6 lg:gap-16 z-10 bg-gradient-to-t from-black/80 to-transparent pt-10">
+      <div class="text-center">
+        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">1,200+</div>
+        <div class="text-sm text-white">Active Girls</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">50+</div>
-        <div class="stat-label">Daily Stories</div>
+      <div class="text-center">
+        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">50+</div>
+        <div class="text-sm text-white">Daily Stories</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">25</div>
-        <div class="stat-label">Programs</div>
+      <div class="text-center">
+        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">25</div>
+        <div class="text-sm text-white">Programs</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">24/7</div>
-        <div class="stat-label">Support</div>
+      <div class="text-center">
+        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">24/7</div>
+        <div class="text-sm text-white">Support</div>
       </div>
     </div>
 
-    <div class="info-icon">i</div>
+    <div class="absolute bottom-5 right-5 w-11 h-11 bg-[#E91E63] rounded-full flex items-center justify-center text-xl text-white shadow-[0_4px_15px_rgba(233,30,99,0.4)] cursor-pointer hover:scale-110 transition-transform z-20">i</div>
   </section>
 
-<!-- ========================================
-       Footer
-  ======================================== -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-main">
-        <div class="footer-left">
-          <div class="footer-logo-section">
-            <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="footer-logo">
-            <p class="footer-subtitle">Empowering Girls, Building Futures</p>
+  <footer class="bg-dark text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
+            <p class="font-semibold text-[rgb(255,135,219)] text-base">Empowering Girls, Building Futures</p>
           </div>
-          <p class="footer-desc">
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6">
             A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
           </p>
-          <div class="social-links">
-            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
 
-        <div class="footer-links">
-          <h4 class="links-title">Quick Links</h4>
-          <ul class="links-list">
-            <li><a href="#" class="link-item">Join Chat</a></li>
-            <li><a href="#" class="link-item">Share Story</a></li>
-            <li><a href="#" class="link-item">Programs</a></li>
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Quick Links</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Join Chat</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Share Story</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Programs</a></li>
           </ul>
         </div>
 
-        <div class="footer-links">
-          <h4 class="links-title">Get Help</h4>
-          <ul class="links-list">
-            <li><a href="#" class="link-item">Emergency</a></li>
-            <li><a href="#" class="link-item">Support</a></li>
-            <li><a href="#" class="link-item">Report</a></li>
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Get Help</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Report</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="footer-bottom">
-        <div class="footer-left-info">
-          <p>© 2025 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
+        <div>
+          <p>© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium">Empowering girls, always.</span></p>
         </div>
-        <div class="footer-right-info">
-          <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+        <div class="text-left md:text-right">
+          <p class="mb-1">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
           <p>Supported by UNHCR, Save The Children, Alight</p>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- JavaScript -->
-  <!-- <script>
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    const overlay = document.querySelector('.nav-overlay');
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
 
-    hamburger.addEventListener('click', () => {
+    function toggleMenu() {
       hamburger.classList.toggle('active');
-      navLinks.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
+      const isOpen = hamburger.classList.contains('active');
+      
+      if (isOpen) {
+        mobileMenu.style.left = '0';
+        overlay.classList.remove('hidden');
+      } else {
+        mobileMenu.style.left = '-100%';
+        overlay.classList.add('hidden');
+      }
+    }
 
-    document.querySelectorAll('.nav-links a, .link-item').forEach(el => {
-      el.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        navLinks.classList.remove('active');
-        overlay.classList.remove('active');
-      });
-    });
-
-    overlay.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      navLinks.classList.remove('active');
-      overlay.classList.remove('active');
-    });
-  </script> -->
-
+    hamburger.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
 </body>
 </html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>English Zero | Learn English from Zero for Free</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="course.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#007bff', accent: '#00c6ff', success: '#28a745', highlight: '#ffd700',
+            pink: '#ec4899', purple: '#a855f7', dark: '#1e293b', muted: '#94a3b8', light: '#f8f9fa', border: '#ddd',
+            gold: '#d4af37'
+          },
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          boxShadow: { card: '0 5px 20px rgba(0,0,0,0.08)', glow: '0 0 20px #a855f7' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-light text-gray-800 font-sans min-h-screen">
+
+  <!-- Navbar - Identical to login.html -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="img/girls-space-logo.png" alt="GirlsSpace Logo">
+    </div>
+    <div class="hamburger" id="mobile-menu">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="./index.html" class="nav-link">Home</a></li>
+      <li><a href="./AboutUs.html" class="nav-link">About</a></li>
+      <li><a href="./chat.html" class="nav-link">Chat</a></li>
+      <li><a href="./stories.html" class="nav-link">Stories</a></li>
+      <li><a href="./Learning_Programs.html" class="nav-link">Programs</a></li>
+      <li><a href="./protaction.html" class="nav-link">Protaction</a></li>
+      <li class="dropdown" id="language-dropdown">
+        <a href="#" class="nav-link">Languages</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">English</a></li>
+          <li><a href="#">Arabic</a></li>
+          <li><a href="#">Swahili</a></li>
+          <li><a href="#">French</a></li>
+        </ul>
+      </li>
+      <li><a href="./login.html" class="login-btn">Log In</a></li>
+      <li><a href="./donate.html" class="donate-btn">Donate</a></li>
+    </ul>
+    <div class="nav-search">
+      <input type="text" placeholder="Search...">
+    </div>
+  </nav>
+  <div class="nav-overlay"></div>
+
+  <!-- Secondary Navbar (Progress + Login) -->
+  <div class="bg-gradient-to-r from-purple to-pink text-white py-4 shadow-xl sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-4 text-sm md:text-base">
+      <div class="flex items-center gap-4">
+        <span id="userGreeting" class="font-bold hidden">Welcome back, <span id="userNameDisplay"></span>!</span>
+        <button id="loginBtn" class="bg-white text-purple px-6 py-2 rounded-full font-bold hover:bg-purple hover:text-white transition">Log In</button>
+        <button id="logoutBtn" class="bg-white text-red-600 px-6 py-2 rounded-full font-bold hidden hover:bg-red-600 hover:text-white transition">Log Out</button>
+      </div>
+      <div class="flex items-center gap-3">
+        <span>Your Progress:</span>
+        <div class="w-48 bg-white/30 rounded-full h-10 overflow-hidden">
+          <div id="overallProgress" class="h-full bg-yellow-400 text-black text-center font-bold transition-all duration-700">0%</div>
+        </div>
+        <span id="progressText" class="font-bold">0% Complete</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <div class="text-center py-16 bg-gradient-to-br from-purple to-pink rounded-3xl text-white mb-12">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4">Learn English from GirlsSpace Completely Free!</h1>
+      <p class="text-xl">25 Lessons + Quizzes + Professional Certificate</p>
+    </div>
+
+    <h2 class="text-4xl font-bold text-center mb-10 text-purple">All Lessons</h2>
+    <div id="lessonsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-20"></div>
+
+    <!-- Selected Lesson View -->
+    <div id="selectedLesson" class="hidden bg-white rounded-3xl shadow-card p-8">
+      <h1 id="lessonTitle" class="text-4xl font-bold text-purple text-center mb-4"></h1>
+      <p id="lessonMeta" class="text-center text-muted mb-8">Duration: ~7 minutes</p>
+
+      <div class="bg-gray-100 p-6 rounded-2xl mb-8">
+        <p class="font-bold mb-3">Lesson Progress:</p>
+        <div class="h-8 bg-gray-300 rounded-full overflow-hidden">
+          <div id="lessonProgress" class="h-full bg-success text-white text-center font-bold transition-all">0%</div>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold mb-6 text-purple">Watch the Video</h2>
+      <div class="rounded-2xl overflow-hidden shadow-2xl mb-10">
+        <div id="youtubePlayer" class="w-full bg-black flex items-center justify-center">
+          <p class="text-white text-xl">Loading video...</p>
+        </div>
+      </div>
+
+      <h2 class="text-3xl font-bold mb-6 text-purple">Quick Quiz</h2>
+      <div id="quizSection" class="mb-10"></div>
+
+      <div class="text-center">
+        <button id="nextBtn" class="bg-yellow-400 text-black px-10 py-4 rounded-full font-bold text-xl hidden hover:bg-yellow-500 transition shadow-lg">
+          <span id="nextBtnText">Next Lesson</span>
+        </button>
+        <button onclick="backToLessons()" class="bg-gray-400 text-white px-8 py-4 rounded-full font-bold ml-4 hover:bg-gray-500 transition">Back to Lessons</button>
+      </div>
+    </div>
+
+    <!-- Login / Create Account Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+      <div class="bg-white p-10 rounded-3xl max-w-md w-full shadow-2xl text-center">
+        <h2 class="text-3xl font-bold mb-8 text-purple">Welcome to English Zero!</h2>
+        <input type="text" id="authName" placeholder="Your Full Name" class="w-full p-4 mb-4 border-2 border-purple rounded-xl text-lg focus:outline-none">
+        <input type="email" id="authEmail" placeholder="Your Email" class="w-full p-4 mb-6 border-2 border-purple rounded-xl text-lg focus:outline-none">
+        <button onclick="createAccount()" class="w-full bg-gradient-to-r from-pink to-purple text-white py-4 rounded-xl font-bold text-xl hover:shadow-glow transition">
+          Create Account & Start Learning
+        </button>
+        <p class="mt-6 text-gray-600">Already have an account? Just enter your name & email</p>
+      </div>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="certificateModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+      <div class="bg-white p-10 rounded-3xl max-w-lg w-full text-center shadow-2xl">
+        <h2 class="text-4xl font-bold mb-6 text-purple">Congratulations!</h2>
+        <p class="text-xl mb-8">You've successfully completed the full course!</p>
+        <input type="text" id="studentName" placeholder="Your name as it should appear on the certificate" class="w-full p-4 border-2 border-purple rounded-xl text-lg mb-6">
+        <button onclick="generateCertificate()" class="bg-yellow-400 text-black px-10 py-4 rounded-full font-bold text-xl hover:bg-yellow-500">Download Certificate</button>
+      </div>
+    </div>
+  </div>
+
+<footer class="bg-dark text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
+            <p class="font-semibold text-[rgb(255,135,219)] text-base">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+          </p>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Quick Links</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Join Chat</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Share Story</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Programs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Get Help</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
+        <div>
+          <p>© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium">Empowering girls, always.</span></p>
+        </div>
+        <div class="text-left md:text-right">
+          <p class="mb-1">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p>Supported by UNHCR, Save The Children, Alight</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    let player, currentLessonId, watchInterval;
+    let currentUser = null;
+    let progress = {};
+    let ytReady = false;
+
+    const lessons = [
+      { id: 1, title: "Hello! Your First Words", videoId: "CbPy_CjJR90" },
+      { id: 2, title: "English Consonants + Vowels", videoId: "exIcb2_PTVM" },
+      { id: 3, title: "Grammar: a / an + Noun", videoId: "sX7eLnvedMo" },
+      { id: 4, title: "Singular + Plural Nouns", videoId: "Db4AC9iaj4c" },
+      { id: 5, title: "Subjective Pronouns", videoId: "Q_7Uow5vXZM" },
+      { id: 6, title: "Subjective Pronouns + 'Be' Verb", videoId: "TOixidGqEeY" },
+      { id: 7, title: "Subjective Pronouns + Be + Not", videoId: "4SoEvIbzwh0" },
+      { id: 8, title: "Be Verb Pronoun Questions", videoId: "HZ0CBUsI93E" },
+      { id: 9, title: "Review #1 - Subjective Pronouns", videoId: "gA7vk0GVOHc" },
+      { id: 10, title: "Grammar Check Up #1", videoId: "tj6fCMTUbKM" },
+      { id: 11, title: "What + Be Verb Questions", videoId: "F1P4bBy00vg" },
+      { id: 12, title: "This / That", videoId: "rWmd39oMZws" },
+      { id: 13, title: "These / Those", videoId: "IfsMvzf5yHA" },
+      { id: 14, title: "This/That/These/Those Practice", videoId: "eByGdzdn_rw" },
+      { id: 15, title: "Possessive Adjectives", videoId: "oBYfoG5wBP8" },
+      { id: 16, title: "Possessive Pronouns", videoId: "YzInQMQ7hWE" },
+      { id: 17, title: "Grammar Check Up #2", videoId: "F5WDeNw9_Ek" },
+      { id: 18, title: "Articles + Noun", videoId: "vNTiUh72lFo" },
+      { id: 19, title: "Prepositions: in/on/under", videoId: "3Lj0_D1FZ3g" },
+      { id: 20, title: "Beginner Adjectives", videoId: "BLJ9pFRy-No" },
+      { id: 21, title: "Grammar Check Up #3", videoId: "HuNnWNu7gw0" },
+      { id: 22, title: "Have / Has", videoId: "wuBE2I6Dn-Y" },
+      { id: 23, title: "Don't / Doesn't Have", videoId: "1CAKkdFeOK4" },
+      { id: 24, title: "Do / Does Have Questions", videoId: "-Qb99jxYPxg" },
+      { id: 25, title: "Grammar Check Up #4 - Final", videoId: "agMpwm7VnvM" }
+    ];
+
+    const quizzes = {
+       2: { title: "English Consonants + Vowels", questions: [
+        { q: "Choose the vowel:", options: ["B", "E", "K", "M"], answer: 1, explanation: "E is a vowel." },
+        { q: "What is the vowel?", options: ["T", "A", "P", "S"], answer: 1, explanation: "A is a vowel." },
+        { q: "Which letter is NOT a vowel?", options: ["O", "U", "Y", "G"], answer: 3, explanation: "G is a consonant." },
+        { q: "How many vowels in \"book\"?", options: ["1", "2", "3", "4"], answer: 1, explanation: "2 (o, o)" }
+      ]},
+      3: { title: "Grammar: a / an + Noun", questions: [
+        { q: "_____ apple.", options: ["a", "an"], answer: 1, explanation: "an apple (vowel sound)." },
+        { q: "_____ car.", options: ["a", "an"], answer: 0, explanation: "a car (consonant sound)." },
+        { q: "_____ umbrella.", options: ["a", "an"], answer: 1, explanation: "an umbrella (vowel sound)." },
+        { q: "_____ orange.", options: ["a", "an"], answer: 1, explanation: "an orange (vowel sound)." }
+      ]},
+      4: { title: "Singular + Plural Nouns", questions: [
+        { q: "cat → _____", options: ["cat", "cats"], answer: 1, explanation: "cats" },
+        { q: "dog → _____", options: ["dog", "dogs"], answer: 1, explanation: "dogs" },
+        { q: "baby → _____", options: ["babys", "babies"], answer: 1, explanation: "babies" },
+        { q: "box → _____", options: ["boxs", "boxes"], answer: 1, explanation: "boxes" }
+      ]},
+      5: { title: "Subjective Pronouns", questions: [
+        { q: "_____ am a student.", options: ["He", "I"], answer: 1, explanation: "I am a student." },
+        { q: "_____ is my brother.", options: ["She", "He"], answer: 1, explanation: "He is my brother." },
+        { q: "_____ are friends.", options: ["You", "We"], answer: 1, explanation: "We are friends." },
+        { q: "_____ is a cat.", options: ["It", "They"], answer: 0, explanation: "It is a cat." }
+      ]},
+      6: { title: "Subjective Pronouns + 'Be' Verb", questions: [
+        { q: "She _____ happy.", options: ["is", "are"], answer: 0, explanation: "She is happy." },
+        { q: "They _____ students.", options: ["is", "are"], answer: 1, explanation: "They are students." },
+        { q: "I _____ tired.", options: ["is", "am"], answer: 1, explanation: "I am tired." },
+        { q: "You _____ late.", options: ["is", "are"], answer: 1, explanation: "You are late." }
+      ]},
+      7: { title: "Subjective Pronouns + Be + Not", questions: [
+        { q: "We _____ teachers.", options: ["is not", "are not"], answer: 1, explanation: "We are not teachers." },
+        { q: "He _____ a doctor.", options: ["is not", "are not"], answer: 0, explanation: "He is not a doctor." },
+        { q: "I _____ hungry.", options: ["is not", "am not"], answer: 1, explanation: "I am not hungry." },
+        { q: "You _____ here.", options: ["is not", "are not"], answer: 1, explanation: "You are not here." }
+      ]},
+      8: { title: "Be Verb Pronoun Questions", questions: [
+        { q: "You are late. → _____", options: ["You are late?", "Are you late?"], answer: 1, explanation: "Are you late?" },
+        { q: "She is happy. → _____", options: ["She is happy?", "Is she happy?"], answer: 1, explanation: "Is she happy?" },
+        { q: "We are friends. → _____", options: ["We are friends?", "Are we friends?"], answer: 1, explanation: "Are we friends?" },
+        { q: "It is a dog. → _____", options: ["It is a dog?", "Is it a dog?"], answer: 1, explanation: "Is it a dog?" }
+      ]},
+      9: { title: "Review #1 - Subjective Pronouns", questions: [
+        { q: "Him is my friend. → _____", options: ["Him is my friend.", "He is my friend."], answer: 1, explanation: "He is my friend." },
+        { q: "Them are students. → _____", options: ["Them are students.", "They are students."], answer: 1, explanation: "They are students." },
+        { q: "Her is a teacher. → _____", options: ["Her is a teacher.", "She is a teacher."], answer: 1, explanation: "She is a teacher." },
+        { q: "Me am happy. → _____", options: ["Me am happy.", "I am happy."], answer: 1, explanation: "I am happy." }
+      ]},
+      10: { title: "Grammar Check Up #1", questions: [
+        { q: "Choose correct:", options: ["I am not a doctor.", "I is not a doctor."], answer: 0, explanation: "I am not a doctor." },
+        { q: "Choose correct:", options: ["They are not here.", "They is not here."], answer: 0, explanation: "They are not here." },
+        { q: "Choose correct:", options: ["He is not tall.", "He are not tall."], answer: 0, explanation: "He is not tall." },
+        { q: "Choose correct:", options: ["You are not latebbb.", "You is not late."], answer: 0, explanation: "You are not late." }
+      ]},
+      11: { title: "What + Be Verb Questions", questions: [
+        { q: "_____ is your name?", options: ["What", "Who"], answer: 0, explanation: "What is your name?" },
+        { q: "_____ is your job?", options: ["What", "Who"], answer: 0, explanation: "What is your job?" },
+        { q: "_____ are you from?", options: ["What", "Where"], answer: 1, explanation: "Where are you from?" },
+        { q: "_____ is this?", options: ["What", "Who"], answer: 0, explanation: "What is this?" }
+      ]},
+      12: { title: "This / That", questions: [
+        { q: "_____ is my book (near).", options: ["This", "That"], answer: 0, explanation: "This is my book." },
+        { q: "_____ is your bag (far).", options: ["This", "That"], answer: 1, explanation: "That is your bag." },
+        { q: "_____ is a pen (near).", options: ["This", "That"], answer: 0, explanation: "This is a pen." },
+        { q: "_____ is the school (far).", options: ["This", "That"], answer: 1, explanation: "That is the school." }
+      ]},
+      13: { title: "These / Those", questions: [
+        { q: "_____ are my shoes (far).", options: ["These", "Those"], answer: 1, explanation: "Those are my shoes." },
+        { q: "_____ are apples (near).", options: ["These", "Those"], answer: 0, explanation: "These are apples." },
+        { q: "_____ are books (far).", options: ["These", "Those"], answer: 1, explanation: "Those are books." },
+        { q: "_____ are my keys (near).", options: ["These", "Those"], answer: 0, explanation: "These are my keys." }
+      ]},
+      14: { title: "This/That/These/Those Practice", questions: [
+        { q: "_____ are apples (near).", options: ["These", "Those"], answer: 0, explanation: "These are apples." },
+        { q: "_____ is a car (far).", options: ["This", "That"], answer: 1, explanation: "That is a car." },
+        { q: "_____ are dogs (far).", options: ["These", "Those"], answer: 1, explanation: "Those are dogs." },
+        { q: "_____ is my phone (near).", options: ["This", "That"], answer: 0, explanation: "This is my phone." }
+      ]},
+      15: { title: "Possessive Adjectives", questions: [
+        { q: "_____ car is red. (I)", options: ["My", "Mine"], answer: 0, explanation: "My car is red." },
+        { q: "_____ name is Ali. (you)", options: ["My", "Your"], answer: 1, explanation: "Your name is Ali." },
+        { q: "_____ book is new. (he)", options: ["Her", "His"], answer: 1, explanation: "His book is new." },
+        { q: "_____ toys are fun. (they)", options: ["Our", "Their"], answer: 1, explanation: "Their toys are fun." }
+      ]},
+      16: { title: "Possessive Pronouns", questions: [
+        { q: "This book is _____. (she)", options: ["her", "hers"], answer: 1, explanation: "This book is hers." },
+        { q: "That pen is _____. (I)", options: ["my", "mine"], answer: 1, explanation: "That pen is mine." },
+        { q: "These shoes are _____. (you)", options: ["your", "yours"], answer: 1, explanation: "These shoes are yours." },
+        { q: "The house is _____. (we)", options: ["our", "ours"], answer: 1, explanation: "The house is ours." }
+      ]},
+      17: { title: "Grammar Check Up #2", questions: [
+        { q: "That are my pens. → _____", options: ["That are my pens.", "Those are my pens."], answer: 1, explanation: "Those are my pens." },
+        { q: "This is your bags. → _____", options: ["This is your bags.", "These are your bags."], answer: 1, explanation: "These are your bags." },
+        { q: "That is she book. → _____", options: ["That is she book.", "That is her book."], answer: 1, explanation: "That is her book." },
+        { q: "These is my phone. → _____", options: ["These is my phone.", "This is my phone."], answer: 1, explanation: "This is my phone." }
+      ]},
+      18: { title: "Articles + Noun", questions: [
+        { q: "_____ sun is hot.", options: ["A", "The"], answer: 1, explanation: "The sun is hot." },
+        { q: "_____ elephant is big.", options: ["A", "An"], answer: 1, explanation: "An elephant is big." },
+        { q: "_____ apple a day...", options: ["A", "An"], answer: 1, explanation: "An apple a day..." },
+        { q: "_____ moon is bright.", options: ["A", "The"], answer: 1, explanation: "The moon is bright." }
+      ]},
+      19: { title: "Prepositions: in/on/under", questions: [
+        { q: "The cat is _____ the table.", options: ["in", "under"], answer: 1, explanation: "The cat is under the table." },
+        { q: "The book is _____ the bag.", options: ["in", "on"], answer: 0, explanation: "The book is in the bag." },
+        { q: "The picture is _____ the wall.", options: ["in", "on"], answer: 1, explanation: "The picture is on the wall." },
+        { q: "The ball is _____ the chair.", options: ["in", "under"], answer: 1, explanation: "The ball is under the chair." }
+      ]},
+      20: { title: "Beginner Adjectives", questions: [
+        { q: "The _____ elephant.", options: ["small", "big"], answer: 1, explanation: "The big elephant." },
+        { q: "The _____ car.", options: ["slow", "fast"], answer: 1, explanation: "The fast car." },
+        { q: "The _____ house.", options: ["old", "new"], answer: 1, explanation: "The new house." },
+        { q: "The _____ cat.", options: ["angry", "cute"], answer: 1, explanation: "The cute cat." }
+      ]},
+      21: { title: "Grammar Check Up #3", questions: [
+        { q: "Correct:", options: ["The book is on the chair.", "The book on is the chair."], answer: 0, explanation: "The book is on the chair." },
+        { q: "Correct:", options: ["The cat is under the bed.", "The cat under is the bed."], answer: 0, explanation: "The cat is under the bed." },
+        { q: "Correct:", options: ["An apple is red.", "A apple is red."], answer: 0, explanation: "An apple is red." },
+        { q: "Correct:", options: ["These are my books.", "This are my books."], answer: 0, explanation: "These are my books." }
+      ]},
+      22: { title: "Have / Has", questions: [
+        { q: "He _____ a bike.", options: ["have", "has"], answer: 1, explanation: "He has a bike." },
+        { q: "We _____ two cats.", options: ["have", "has"], answer: 0, explanation: "We have two cats." },
+        { q: "She _____ a phone.", options: ["have", "has"], answer: 1, explanation: "She has a phone." },
+        { q: "I _____ a car.", options: ["have", "has"], answer: 0, explanation: "I have a car." }
+      ]},
+      23: { title: "Don't / Doesn't Have", questions: [
+        { q: "I have a pen. → _____", options: ["I have a pen.", "I don't have a pen."], answer: 1, explanation: "I don't have a pen." },
+        { q: "She has a book. → _____", options: ["She has a book.", "She doesn't have a book."], answer: 1, explanation: "She doesn't have a book." },
+        { q: "They have dogs. → _____", options: ["They have dogs.", "They don't have dogs."], answer: 1, explanation: "They don't have dogs." },
+        { q: "He has a bike. → _____", options: ["He has a bike.", "He doesn't have a bike."], answer: 1, explanation: "He doesn't have a bike." }
+      ]},
+      24: { title: "Do / Does Have Questions", questions: [
+        { q: "_____ she have a dog?", options: ["Do", "Does"], answer: 1, explanation: "Does she have a dog?" },
+        { q: "_____ you have a pen?", options: ["Do", "Does"], answer: 0, explanation: "Do you have a pen?" },
+        { q: "_____ they have books?", options: ["Do", "Does"], answer: 0, explanation: "Do they have books?" },
+        { q: "_____ he have a car?", options: ["Do", "Does"], answer: 1, explanation: "Does he have a car?" }
+      ]},
+      25: { title: "Grammar Check Up #4 - Final", questions: [
+        { q: "Correct:", options: ["I have a book.", "I has a book."], answer: 0, explanation: "I have a book." },
+        { q: "Correct:", options: ["She doesn't like coffee.", "She don't like coffee."], answer: 0, explanation: "She doesn't like coffee." },
+        { q: "Correct:", options: ["They are happy.", "They is happy."], answer: 0, explanation: "They are happy." },
+        { q: "Correct:", options: ["This is my pen.", "This are my pen."], answer: 0, explanation: "This is my pen." }
+      ]}
+     };
+
+    function onYouTubeIframeAPIReady() { ytReady = true; }
+
+    // تحميل المستخدم
+    function loadUser() {
+      const saved = localStorage.getItem('currentUser');
+      if (saved) {
+        currentUser = JSON.parse(saved);
+        document.getElementById('userNameDisplay').textContent = currentUser.name;
+        document.getElementById('userGreeting').classList.remove('hidden');
+        document.getElementById('loginBtn').classList.add('hidden');
+        document.getElementById('logoutBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('authModal').classList.remove('hidden');
+      }
+      loadProgress();
+      renderLessons();
+    }
+
+    function loadProgress() {
+      const key = currentUser ? `progress_${currentUser.id}` : 'guest_progress';
+      progress = JSON.parse(localStorage.getItem(key) || '{}');
+    }
+
+    function saveProgress() {
+      const key = currentUser ? `progress_${currentUser.id}` : 'guest_progress';
+      localStorage.setItem(key, JSON.stringify(progress));
+    }
+
+    function createAccount() {
+      const name = document.getElementById('authName').value.trim();
+      const email = document.getElementById('authEmail').value.trim();
+      if (!name || !email) return alert('Please enter your name and email');
+
+      const guestProgress = JSON.parse(localStorage.getItem('guest_progress') || '{}');
+      currentUser = { id: 'user_' + Date.now(), name, email };
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      const userKey = `progress_${currentUser.id}`;
+      const existing = JSON.parse(localStorage.getItem(userKey) || '{}');
+      progress = { ...guestProgress, ...existing };
+      localStorage.setItem(userKey, JSON.stringify(progress));
+      localStorage.removeItem('guest_progress');
+
+      document.getElementById('authModal').classList.add('hidden');
+      loadUser();
+      alert(`Welcome ${name}! Your progress has been saved!`);
+    }
+
+    document.getElementById('loginBtn').onclick = () => document.getElementById('authModal').classList.remove('hidden');
+    document.getElementById('logoutBtn').onclick = () => {
+      if (confirm('Are you sure you want to log out?')) {
+        localStorage.removeItem('currentUser');
+        location.reload();
+      }
+    };
+
+    // التصحيح الرئيسي: فتح الدرس 2 بعد الدرس 1 فقط
+    function renderLessons() {
+      const grid = document.getElementById('lessonsGrid');
+      grid.innerHTML = '';
+      lessons.forEach((lesson, i) => {
+        const prev = lessons[i-1];
+        let unlocked = false;
+
+        if (i === 0) {
+          unlocked = true; // الدرس 1 مفتوح دائمًا
+        } else if (i === 1) {
+          // الدرس 2: يُفتح بعد مشاهدة الدرس 1 فقط
+          unlocked = progress[1]?.completed === true;
+        } else {
+          // الدروس 3-25: يحتاجون فيديو + كويز
+          unlocked = progress[prev?.id]?.completed && progress[prev?.id]?.quizCompleted;
+        }
+
+        const prog = progress[lesson.id]?.watchPercent || 0;
+        const isFullyCompleted = 
+          (lesson.id === 1 && progress[lesson.id]?.completed) ||
+          (lesson.id > 1 && progress[lesson.id]?.completed && progress[lesson.id]?.quizCompleted);
+
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-3xl overflow-hidden shadow-card transition-all ${!unlocked ? 'opacity-60' : 'cursor-pointer hover:shadow-2xl hover:-translate-y-3'}`;
+
+        if (unlocked && currentUser) {
+          card.onclick = () => openLesson(lesson.id);
+        } else {
+          card.onclick = () => document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        card.innerHTML = `
+          <div class="relative">
+            <img src="https://img.youtube.com/vi/${lesson.videoId}/maxresdefault.jpg" class="w-full h-48 object-cover">
+            ${!unlocked ? '<div class="absolute inset-0 bg-black/70 flex items-center justify-center"><i class="fas fa-lock text-6xl text-white"></i></div>' : ''}
+            <div class="absolute bottom-0 left-0 bg-purple text-white px-4 py-2 rounded-tr-xl font-bold">Lesson ${lesson.id}</div>
+            ${isFullyCompleted ? '<div class="absolute top-2 right-2 bg-success text-white p-2 rounded-full"><i class="fas fa-check"></i></div>' : ''}
+          </div>
+          <div class="p-6">
+            <h3 class="font-bold text-xl mb-3">${lesson.title}</h3>
+            <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full ${isFullyCompleted ? 'bg-success' : 'bg-gradient-to-r from-pink to-purple'} transition-all" style="width: ${prog}%"></div>
+            </div>
+            <p class="text-sm text-muted mt-2">${prog}% watched</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      updateOverallProgress();
+    }
+
+    function openLesson(id) {
+      if (!currentUser) return document.getElementById('authModal').classList.remove('hidden');
+      const lesson = lessons.find(l => l.id == id);
+      currentLessonId = id;
+      document.getElementById('lessonTitle').textContent = `Lesson ${id}: ${lesson.title}`;
+      document.getElementById('selectedLesson').classList.remove('hidden');
+      document.getElementById('selectedLesson').scrollIntoView({ behavior: 'smooth' });
+
+      setTimeout(() => initPlayer(lesson.videoId), 1000);
+      renderQuiz(id);
+      updateNextButton();
+    }
+
+    function initPlayer(videoId) {
+      if (!ytReady) return setTimeout(() => initPlayer(videoId), 500);
+      if (player) player.destroy();
+
+      player = new YT.Player('youtubePlayer', {
+        videoId: videoId,
+        playerVars: { rel: 0, modestbranding: 1 },
+        events: { onReady: onPlayerReady, onStateChange: onPlayerStateChange }
+      });
+    }
+
+    function onPlayerReady() {
+      clearInterval(watchInterval);
+      watchInterval = setInterval(updateWatchProgress, 1000);
+    }
+
+    function updateWatchProgress() {
+      if (!player || !player.getCurrentTime) return;
+      const percent = Math.min(100, Math.round((player.getCurrentTime() / player.getDuration()) * 100));
+      document.getElementById('lessonProgress').style.width = percent + '%';
+      document.getElementById('lessonProgress').textContent = percent + '%';
+      progress[currentLessonId] = progress[currentLessonId] || {};
+      progress[currentLessonId].watchPercent = percent;
+      saveProgress();
+
+      if (percent >= 90 && !progress[currentLessonId]?.completed) {
+        progress[currentLessonId].completed = true;
+        saveProgress();
+        renderQuiz(currentLessonId);
+        renderLessons(); // إعادة رسم القفل
+        updateNextButton();
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.ENDED) {
+        progress[currentLessonId].completed = true;
+        saveProgress();
+        renderQuiz(currentLessonId);
+        renderLessons();
+        updateNextButton();
+      }
+    }
+
+    function renderQuiz(id) {
+      const quizDiv = document.getElementById('quizSection');
+      const videoWatched = progress[id]?.completed;
+      const quizPassed = progress[id]?.quizCompleted;
+
+      if (!currentUser) {
+        quizDiv.innerHTML = `<p class="text-xl text-purple font-bold text-center">Please log in to take the quiz!</p>`;
+        return;
+      }
+
+      if (id === 1) {
+        quizDiv.innerHTML = `<p class="text-xl text-purple font-bold text-center">This is an introductory lesson. No quiz required!</p>`;
+        return;
+      }
+
+      if (quizPassed) {
+        quizDiv.innerHTML = `<p class="text-3xl font-bold text-success text-center">Quiz Completed Successfully!</p>`;
+        return;
+      }
+
+      if (!videoWatched) {
+        quizDiv.innerHTML = `
+          <div class="bg-purple/10 p-8 rounded-2xl text-center">
+            <p class="text-2xl font-bold text-purple">Watch at least 90% of the video to unlock the quiz</p>
+          </div>
+        `;
+        return;
+      }
+
+      const quiz = quizzes[id];
+      let html = `<h3 class="text-2xl font-bold mb-6 text-purple">Quiz: ${quiz.title}</h3>`;
+      quiz.questions.forEach((q, index) => {
+        html += `
+          <div class="bg-white p-5 rounded-xl mb-5 shadow-md border">
+            <p class="font-semibold mb-3">${index + 1}. ${q.q}</p>
+            ${q.options.map((opt, i) => `
+              <label class="flex items-center mb-2 cursor-pointer">
+                <input type="radio" name="q${index}" value="${i}" class="mr-3 w-5 h-5 text-purple">
+                <span>${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+        `;
+      });
+      html += `
+        <div class="text-center mt-6">
+          <button onclick="submitQuiz(${id})" class="bg-gradient-to-r from-purple to-pink text-white px-10 py-3 rounded-full font-bold text-lg hover:shadow-glow transition">
+            Submit Quiz
+          </button>
+        </div>
+      `;
+      quizDiv.innerHTML = html;
+    }
+
+    function submitQuiz(id) {
+      const quiz = quizzes[id];
+      let score = 0;
+      const explanations = [];
+
+      quiz.questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const correct = q.options[q.answer];
+        if (selected && parseInt(selected.value) === q.answer) score++;
+        explanations.push(`
+          <div class="p-3 rounded-lg ${selected && parseInt(selected.value) === q.answer ? 'bg-green-100' : 'bg-red-100'}">
+            <p><strong>${index + 1}.</strong> ${q.q}</p>
+            <p class="text-sm"><strong>Correct:</strong> ${correct} — ${q.explanation}</p>
+          </div>
+        `);
+      });
+
+      const percent = Math.round((score / quiz.questions.length) * 100);
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'mt-6 p-6 bg-gray-50 rounded-2xl';
+      resultDiv.innerHTML = `
+        <h4 class="text-xl font-bold mb-3">Your Score: ${percent}% (${score}/${quiz.questions.length})</h4>
+        ${percent >= 70 
+          ? '<p class="text-success font-bold">Passed! Lesson marked as complete.</p>'
+          : '<p class="text-red-600 font-bold">Failed. You need 70% or higher. Try again!</p>'
+        }
+        <div class="mt-4 space-y-2">${explanations.join('')}</div>
+      `;
+
+      if (percent >= 70) {
+        progress[id].quizCompleted = true;
+        saveProgress();
+        renderQuiz(id);
+        renderLessons(); // إعادة رسم القفل للدرس التالي
+        updateNextButton();
+        updateOverallProgress();
+      }
+
+      document.getElementById('quizSection').appendChild(resultDiv);
+    }
+
+    function updateNextButton() {
+      const nextBtn = document.getElementById('nextBtn');
+      const isVideoDone = progress[currentLessonId]?.completed;
+      const isQuizDone = currentLessonId === 1 || progress[currentLessonId]?.quizCompleted;
+
+      if (isVideoDone && isQuizDone) {
+        nextBtn.classList.remove('hidden');
+        if (currentLessonId === 25) {
+          document.getElementById('nextBtnText').textContent = "Get Certificate";
+          nextBtn.onclick = () => {
+            if (isCourseComplete()) {
+              document.getElementById('certificateModal').classList.remove('hidden');
+            } else {
+              alert("Please complete all 25 lessons to get your certificate!");
+            }
+          };
+        } else {
+          document.getElementById('nextBtnText').textContent = "Next Lesson";
+          nextBtn.onclick = () => openLesson(currentLessonId + 1);
+        }
+      } else {
+        nextBtn.classList.add('hidden');
+      }
+    }
+
+    function isCourseComplete() {
+      return lessons.every(lesson => {
+        if (lesson.id === 1) return progress[lesson.id]?.completed;
+        return progress[lesson.id]?.completed && progress[lesson.id]?.quizCompleted;
+      });
+    }
+
+    function updateOverallProgress() {
+      let completedCount = 0;
+      lessons.forEach(lesson => {
+        if (lesson.id === 1 && progress[lesson.id]?.completed) completedCount++;
+        else if (lesson.id > 1 && progress[lesson.id]?.completed && progress[lesson.id]?.quizCompleted) completedCount++;
+      });
+      const percent = Math.round((completedCount / 25) * 100);
+      document.getElementById('overallProgress').style.width = percent + '%';
+      document.getElementById('overallProgress').textContent = percent + '%';
+      document.getElementById('progressText').textContent = percent + '% Complete';
+    }
+
+    function backToLessons() {
+      document.getElementById('selectedLesson').classList.add('hidden');
+      if (watchInterval) clearInterval(watchInterval);
+      if (player) player.stopVideo();
+    }
+
+    function generateCertificate() {
+      const name = document.getElementById('studentName').value.trim() || currentUser.name;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('l', 'mm', 'a4');
+      const w = doc.internal.pageSize.getWidth();
+      const h = doc.internal.pageSize.getHeight();
+
+      doc.setFillColor(255, 250, 230);
+      doc.rect(0, 0, w, h, 'F');
+      doc.setDrawColor(180, 120, 50);
+      doc.setLineWidth(4);
+      doc.rect(15, 15, w-30, h-30);
+
+      doc.setFontSize(50);
+      doc.setTextColor(100, 0, 150);
+      doc.text('Certificate of Completion', w/2, 70, { align: 'center' });
+
+      doc.setFontSize(30);
+      doc.setTextColor(0, 0, 0);
+      doc.text('This certifies that', w/2, 110, { align: 'center' });
+
+      doc.setFontSize(50);
+      doc.setTextColor(180, 120, 50);
+      doc.text(name, w/2, 150, { align: 'center' });
+
+      doc.setFontSize(28);
+      doc.setTextColor(0, 0, 0);
+      doc.text('has successfully completed the English Zero Course', w/2, 180, { align: 'center' });
+
+      doc.setFontSize(20);
+      doc.text('25 Lessons • GirlsSpace Mahama • ' + new Date().toLocaleDateString(), w/2, 210, { align: 'center' });
+
+      doc.save(name + '_English_Zero_Certificate.pdf');
+      document.getElementById('certificateModal').classList.add('hidden');
+    }
+
+    document.getElementById('hamburger').onclick = () => {
+      document.getElementById('navLinks').classList.toggle('hidden');
+    };
+
+    window.onload = () => loadUser();
+  </script>
+</body>
+</html>

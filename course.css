@@ -1,0 +1,179 @@
+ #youtubePlayer { aspect-ratio: 16/9; }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ========================================
+       Navigation Bar (Navbar) - Same as login.html
+       ======================================== */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-logo img {
+      width: 60px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #374151;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .nav-link {
+      position: relative;
+      color: #374151;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #ec4899;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .login-btn {
+      padding: 6px 14px;
+      border: 1.5px solid #c23cb6;
+      border-radius: 30px;
+      color: #c23cb6;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .login-btn:hover {
+      background: #fbe7ff;
+    }
+
+    .donate-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .donate-btn:hover {
+      box-shadow: 0 1px 10px 3px #c23cb6;
+    }
+
+    .nav-search input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 13px;
+      width: 130px;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      min-width: 130px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 8px 14px;
+      color: #374151;
+      font-size: 13px;
+    }
+
+    .dropdown-menu li a:hover {
+      background: #f3e5f8;
+      color: #c23cb6;
+    }
+
+    .dropdown:hover .dropdown-menu,
+    .dropdown.active .dropdown-menu {
+      display: block;
+    }
+
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .nav-overlay.active {
+      display: block;
+    }
+  
