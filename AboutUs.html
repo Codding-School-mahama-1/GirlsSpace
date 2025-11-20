@@ -565,11 +565,11 @@
     </div>
 
     <ul class="nav-links" id="nav-links">
-      <li><a href="#index.html" class="nav-link">Home</a></li>
+      <li><a href="./index.html" class="nav-link">Home</a></li>
       <li><a href="./about.html" class="nav-link">About</a></li>
-      <li><a href="#chat.html" class="nav-link">Chat</a></li>
-      <li><a href="#" class="nav-link">Stories</a></li>
-      <li><a href="#" class="nav-link">Programs</a></li>
+      <li><a href="./chat.html" class="nav-link">Chat</a></li>
+      <li><a href="./stories.html" class="nav-link">Stories</a></li>
+      <li><a href="./Learning_Programs.html" class="nav-link">Programs</a></li>
       <li> <a href="#protection" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Protection</a></li>
 
       <li class="dropdown" id="language-dropdown">
@@ -582,8 +582,8 @@
         </ul>
       </li>
 
-      <li><a href="#" class="login-btn">Log In</a></li>
-      <li><a href="#" class="donate-btn">Donate</a></li>
+      <li><a href="./login.html" class="login-btn">Log In</a></li>
+      <li><a href="./Donate.html" class="donate-btn">Donate</a></li>
     </ul>
 
     <div class="nav-search">
@@ -689,9 +689,9 @@
         <div class="footer-links">
           <h4 class="links-title">Quick Links</h4>
           <ul class="links-list">
-            <li><a href="chat.html" class="link-item">Join Chat</a></li>
-            <li><a href="#" class="link-item">Share Story</a></li>
-            <li><a href="#" class="link-item">Programs</a></li>
+            <li><a href="./chat.html" class="link-item">Join Chat</a></li>
+            <li><a href="./stories.html" class="link-item">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="link-item">Programs</a></li>
           </ul>
         </div>
 
@@ -716,45 +716,5 @@
       </div>
     </div>
   </footer>
-
-  <!--
-       Mobile Menu Script
-      -->
-  <!-- <script>
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.getElementById('nav-links');
-    const overlay = document.querySelector('.nav-overlay');
-    const dropdown = document.getElementById('language-dropdown');
-
-    mobileMenu.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
-      navLinks.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
-
-    overlay.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      navLinks.classList.remove('active');
-      overlay.classList.remove('active');
-    });
-
-    if (dropdown) {
-      dropdown.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          dropdown.classList.toggle('active');
-        }
-      });
-    }
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        navLinks.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        dropdown?.classList.remove('active');
-      }
-    });
-  </script> -->
 </body>
 </html>
