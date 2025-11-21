@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #a5242449;
+            --primary-light:#66153ead;
+            --secondary: #119ae9bb;
+            --accent: #df9c0a9c;
+            --light: #8d4545dc;
+            --dark: #050505fd;
+            --success: #28971e;
+            --warning: #071a42;
+            --gray: #000000de;
+            --gray-light: #4c4e4e;
+        }
+
+        body {
+            background: radial-gradient(circle ,#be185d, #e9ecef 95%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ____ Modern Navbar ____ */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .nav-logo img {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        /* ____ hamburger ____ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #374151;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ____ nav links ____ */
+        .nav-links,a {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+            text-decoration: none;
+            list-style: none;
+
+        }
+
+        .nav-link   {
+            position: relative;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #ec4899;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+       
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .login-btn {
+            padding: 6px 14px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            color: #c23cb6;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #fbe7ff;
+        }
+
+        .donate-btn {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            box-shadow: 0 4px 12px rgba(194, 60, 182, 0.4);
+        }
+
+        .nav-search input {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 13px;
+            width: 130px;
+        }
+
+        /* ____ Dropdown ____ */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            min-width: 130px;
+            display: none;
+            z-index: 1000;
+            list-style: none;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 8px 14px;
+            color: #374151;
+            font-size: 13px;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* ____ Overlay ____ */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .nav-overlay.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 30%;
+            background: var(--light);
+            border-right: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .online-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            margin-right: 5px;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .sidebar-tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .channels, .people {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .channels.active, .people.active {
+            display: block;
+        }
+
+        .channels h3, .people h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .channels h3 i, .people h3 i {
+            margin-right: 10px;
+        }
+
+        .channel-list, .people-list {
+            list-style: none;
+        }
+
+        .channel-item, .person-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-item:hover, .person-item:hover {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .channel-item.active, .person-item.active {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .channel-icon, .person-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .person-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-info, .person-info {
+            flex: 1;
+        }
+
+        .channel-info h4, .person-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .channel-info p, .person-info p {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .person-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .person-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .person-status-dot.online {
+            background: var(--success);
+        }
+
+        .person-status-dot.offline {
+            background: var(--gray);
+        }
+
+        .person-status-dot.busy {
+            background: var(--warning);
+        }
+
+        /* Chat Area Styles */
+        .chat-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+        }
+
+        .chat-title h2 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .chat-title p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .chat-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .chat-actions button:hover {
+            color: var(--primary);
+        }
+
+        .home-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background: var(--secondary);
+        }
+
+        .messages {
+            background-image:url(./imge/hp1.png);
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(248, 248, 248, 0.993);
+            margin: 0 10px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .received .message-avatar {
+            background: var(--primary-light);
+        }
+
+        .sent .message-avatar {
+            background: var(--warning);
+        }
+
+        .message-content {
+            background: var(--gray-light);
+            padding: 12px 15px;
+            border-radius: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .received .message-content {
+            border-top-left-radius: 5px;
+            background: var(--light);
+            
+        }
+
+        .sent .message-content {
+            border-top-right-radius: 5px;
+            background: var(--primary-light);
+            color: rgb(245, 241, 241);
+        }
+
+        .message-sender {
+        
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .received .message-sender {
+            color: var(--primary);
+        }
+
+        .sent .message-sender {
+            color: rgba(202, 196, 196, 0.8);
+        }
+
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .message-input {
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-input input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 30px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        .message-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: var(--secondary);
+        }
+
+        /* Search Modal */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-modal.active {
+            display: flex;
+        }
+
+        .search-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .search-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-modal-header h3 {
+            color: var(--primary);
+        }
+
+        .search-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .search-modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 30px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background: #f5f5f5;
+        }
+
+        .search-result-sender {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .search-result-text {
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+        }
+
+        /* Main Footer (outside chat) */
+        .main-footer {
+            background: #273147;
+            color: #e5e7eb;
+            padding: 2rem 1rem;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .footer-about {
+            grid-column: 1 / -1;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section img {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .logo-subtitle {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .about-text {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            max-width: 32rem;
+            margin: 1rem auto;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            background: #374151;
+        }
+
+        .links-title {
+            color: white;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+
+        .link-item {
+            transition: color 0.3s;
+            font-size: 12px;
+        }
+
+        .link-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .link-item:hover {
+            color: rgb(255, 255, 255);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #1f2937;
+            padding-top: 1.5rem;
+            font-size: 0.875rem;
+            color: #9ca3af;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .footer-info {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+
+        /* Video and Phone Call Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .accept-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .decline-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* _____ Responsive _______ */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                gap: 20px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.4s ease;
+                z-index: 1000;
+                overflow-y: auto;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-link, .login-btn, .donate-btn {
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+                color: #374151;
+                font-size: 16px;
+            }
+
+            .nav-search {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav-search input {
+                width: 100%;
+            }
+
+            .chat-container {
+                flex-direction: column;
+                height: 90vh;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 40%;
+            }
+            
+            .channels, .people {
+                display: flex;
+                flex-direction: column;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 10px 20px;
+            }
+            
+            .channel-list, .people-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .channel-item, .person-item {
+                min-width: 150px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+       
+        @media (max-width: 480px) {
+            .sidebar {
+                height: 35%;
+            }
+            
+            .sidebar-header {
+                padding: 15px;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .user-profile {
+                padding: 10px 15px;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .user-info h3 {
+                font-size: 1rem;
+            }
+            
+            .channels, .people {
+                padding: 10px 15px;
+            }
+            
+            .channel-item, .person-item {
+                padding: 10px;
+            }
+            
+            .channel-icon, .person-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            
+            .channel-info h4, .person-info h4 {
+                font-size: 0.9rem;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .chat-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .message-avatar {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .message-content {
+                padding: 10px 12px;
+            }
+            
+            .message-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .navbar {
+                padding: 12px 40px;
+            }
+
+            .nav-search input {
+                width: 160px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modern Navigation -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="./imge/Girls Space (1) (1) (2).png" alt="Logo">
+        </div>
+        
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link">Home</a></li>
+            <li><a href="#" class="nav-link">About</a></li>
+            <li><a href="./chat.html" class="nav-link">chat</a></li>
+            <li><a href="#" class="nav-link">stories</a></li>
+            <li><a href="#" class="nav-link">porgrams</a></li>
+            <li><a href="#" class="nav-link">Support</a></li>
+            
+            <li class="dropdown">
+                <a href="#" class="nav-link">Langauages <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">English</a></li>
+                    <li><a href="#">Arabic</a></li>
+            <li><a href="#" class="nav-link">Swahili</a></li>
+            <li><a href="#" class="nav-link"> French</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="nav-link">Resources</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+            <li><a href="#" class="login-btn">Login</a></li>
+            <li><a href="#" class="donate-btn">Donate</a></li>
+            <li class="nav-search">
+                <input type="text" placeholder="Search...">
+            </li>
+        </ul>
+        
+        <div class="nav-overlay"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="chat-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                     <h2>let us Chat</h2>
+                    <p>Connect with fellow entrepreneurs</p> 
+                </div>
+                
+                <div class="user-profile">
+                    <div class="user-avatar"> 
+                        <img src="imge/girl.png" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <h3>Maya Johnson</h3>
+                        <p>Founder of EcoPack</p>
+                        <div class="online-status">
+                            <div class="status-dot"></div>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-tabs">
+                    <div class="sidebar-tab active" data-tab="channels">Channels</div>
+                    <div class="sidebar-tab" data-tab="people">People</div>
+                </div>
+                
+                <div class="channels active">
+                    <h3><i class="fas fa-hashtag"></i> Discussion Channels</h3>
+                    <ul class="channel-list">
+                        <li class="channel-item active" data-channel="ideas">
+                            <div class="channel-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="channel-info">
+                                <h4>Ideas & Brainstorming</h4>
+                                <p>23 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item" data-channel="support">
+                            <div class="channel-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="channel-info">
+                                <h4>Q&A Support</h4>
+                                <p>45 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item" data-channel="partnerships">
+                            <div class="channel-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="channel-info">
+                                <h4>Partnerships</h4>
+                                <p>18 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item" data-channel="growth">
+                            <div class="channel-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="channel-info">
+                                <h4>Growth Strategies</h4>
+                                <p>32 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item" data-channel="resources">
+                            <div class="channel-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="channel-info">
+                                <h4>Student Resources</h4>
+                                <p>56 members</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="people">
+                    <h3><i class="fas fa-users"></i> Community Members</h3>
+                    <ul class="people-list">
+                        <li class="person-item" data-person="alex">
+                            <div class="person-avatar">
+                                <img src="imge/good .png" alt="Alex Johnson">
+                            </div>
+                            <div class="person-info">
+                                <h4>Alex Johnson</h4>
+                                <p>Product Designer</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="person-item" data-person="samira">
+                            <div class="person-avatar">
+                                <img src="imge/jazeal.png" alt="Samira Khan">
+                            </div>
+                            <div class="person-info">
+                                <h4>Samira Khan</h4>
+                                <p>Marketing Specialist</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="person-item" data-person="tyler">
+                            <div class="person-avatar">
+                                <img src="imge/JS image (2).png" alt="Tyler Park">
+                            </div>
+                            <div class="person-info">
+                                <h4>Tyler Park</h4>
+                                <p>Finance Advisor</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot busy"></div>
+                                    <span>Busy</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="person-item" data-person="maria">
+                            <div class="person-avatar">
+                                <img src="imge/jazeal.png" alt="Maria Rodriguez">
+                            </div>
+                            <div class="person-info">
+                                <h4>Maria Rodriguez</h4>
+                                <p>Software Developer</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot offline"></div>
+                                    <span>Offline</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="person-item" data-person="david">
+                            <div class="person-avatar">
+                                <img src="imge/JS image (2).png" alt="David Chen">
+                            </div>
+                            <div class="person-info">
+                                <h4>David Chen</h4>
+                                <p>UX Researcher</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <div class="chat-title">
+                        <h2 id="channel-title">#ideas-and-brainstorming</h2>
+                        <p id="channel-description">Share and discuss business ideas with the community</p>
+                    </div>
+                    <div class="chat-actions">
+                        <a href="/index.html" class="home-btn">Home</a>
+                        <button id="search-btn"><i class="fas fa-search"></i></button>
+                        <button><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </div>
+                
+                <div class="messages" id="messages-container">
+                    <!-- Messages will be dynamically loaded here -->
+                </div>
+                
+                <div class="message-input">
+                    <input type="text" id="message-input" placeholder="Type your message here...">
+                    <button class="send-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h3>Search Messages</h3>
+                <button class="search-modal-close" id="search-modal-close">&times;</button>
+            </div>
+            <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Type to search messages...">
+            <div class="search-results" id="search-results">
+                <div class="no-results">Enter a search term to find messages</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer (outside chat) -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="logo-section">
+                        <img src="./imge/Girls Space (1) (1) (2).png" alt="Logo">
+                        <p class="logo-subtitle">Empowering Students, Building Futures</p>
+                    </div>
+                    <p class="about-text">
+                        A platform for student entrepreneurs to connect, collaborate, and grow their business ideas.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="links-title">Quick Links</h4>
+                    <ul class="links-list">
+                        <li class="link-item"><a href="#">Join Chat</a></li>
+                        <li class="link-item"><a href="#">Share Story</a></li>
+                        <li class="link-item"><a href="#">Programs</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="links-title">Get Help</h4>
+                    <ul class="links-list">
+                        <li class="link-item"><a href="#">Emergency</a></li>
+                        <li class="link-item"><a href="#">Support</a></li>
+                        <li class="link-item"><a href="#">Report</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025/11/11 Student Business Chat. <span style="color:#d1d5db;">Empowering entrepreneurs, always.</span></p>
+                <div class="footer-info">
+                    <p>Available in: English, Français, Español, العربية</p>
+                    <p>Supported by Student Entrepreneurship Network</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Chat data for different channels
+        const chatData = {
+            ideas: [
+                {
+                    sender: "Alex Johnson",
+                    avatar: "imge/good .png",
+                    text: "Hey everyone! I'm working on a sustainable packaging idea for campus food vendors. Any thoughts on materials that are both eco-friendly and cost-effective?",
+                    time: "10:24 AM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/hussein.png",
+                    text: "That's a great idea, Alex! Have you considered using mushroom-based packaging? I've seen some startups having success with it.",
+                    time: "10:26 AM",
+                    type: "sent"
+                },
+                {
+                    sender: "Samira Khan",
+                    avatar: "imge/jazeal.png",
+                    text: "Mushroom packaging is interesting but might be expensive for campus vendors. What about recycled paper with a biodegradable coating?",
+                    time: "10:28 AM",
+                    type: "received"
+                },
+                {
+                    sender: "Tyler Park",
+                    avatar: "imge/JS image (2).png",
+                    text: "I agree with Samira. Also, you could approach the sustainability department for a grant or partnership. They might fund part of the initiative.",
+                    time: "10:30 AM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/Pasted image.png",
+                    text: "Great point about the sustainability department! I can connect you with Dr. Evans if you'd like. She's always looking for student-led green initiatives.",
+                    time: "10:32 AM",
+                    type: "sent"
+                }
+            ],
+            support: [
+                {
+                    sender: "Jamie Lee",
+                    avatar: "imge/good .png",
+                    text: "Hi everyone, I'm struggling with creating a business plan for my startup. Any resources or templates you'd recommend?",
+                    time: "09:15 AM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/hussein.png",
+                    text: "I found the Small Business Administration website really helpful. They have free templates and guides for creating business plans.",
+                    time: "09:20 AM",
+                    type: "sent"
+                },
+                {
+                    sender: "Maria Rodriguez",
+                    avatar: "imge/jazeal.png",
+                    text: "The university's entrepreneurship center also offers free workshops on business planning. I attended one last month and it was fantastic!",
+                    time: "09:25 AM",
+                    type: "received"
+                },
+                {
+                    sender: "David Chen",
+                    avatar: "imge/JS image (2).png",
+                    text: "If you're looking for something more tech-focused, Y Combinator has great resources online for startup founders.",
+                    time: "09:30 AM",
+                    type: "received"
+                }
+            ],
+            partnerships: [
+                {
+                    sender: "Sarah Williams",
+                    avatar: "imge/good .png",
+                    text: "I'm looking for a marketing partner for my eco-friendly clothing line. Anyone interested in collaborating?",
+                    time: "11:05 AM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/hussein.png",
+                    text: "I have experience in digital marketing and would love to discuss potential collaboration. Let's connect!",
+                    time: "11:10 AM",
+                    type: "sent"
+                },
+                {
+                    sender: "Michael Brown",
+                    avatar: "imge/jazeal.png",
+                    text: "Our student marketing club is always looking for real projects. We could potentially help with your marketing campaign.",
+                    time: "11:15 AM",
+                    type: "received"
+                }
+            ],
+            growth: [
+                {
+                    sender: "Lisa Thompson",
+                    avatar: "imge/good .png",
+                    text: "My tutoring service has plateaued at 20 clients. Any suggestions for scaling up without compromising quality?",
+                    time: "02:10 PM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/hussein.png",
+                    text: "Have you considered creating online courses or group sessions? That could help you reach more students with the same time investment.",
+                    time: "02:15 PM",
+                    type: "sent"
+                },
+                {
+                    sender: "Robert Kim",
+                    avatar: "imge/jazeal.png",
+                    text: "Partnering with local schools could be another avenue. Many schools are looking for after-school tutoring programs.",
+                    time: "02:20 PM",
+                    type: "received"
+                }
+            ],
+            resources: [
+                {
+                    sender: "Emma Wilson",
+                    avatar: "imge/good .png",
+                    text: "Does anyone know if the university offers grants for student startups?",
+                    time: "03:45 PM",
+                    type: "received"
+                },
+                {
+                    sender: "You",
+                    avatar: "imge/hussein.png",
+                    text: "Yes! The Innovation Fund provides up to $5,000 for promising student ventures. The deadline for applications is next month.",
+                    time: "03:50 PM",
+                    type: "sent"
+                },
+                {
+                    sender: "James Miller",
+                    avatar: "imge/jazeal.png",
+                    text: "The business library also has a dedicated section for entrepreneurship with some really helpful books and resources.",
+                    time: "03:55 PM",
+                    type: "received"
+                }
+            ]
+        };
+
+        // Channel descriptions
+        const channelDescriptions = {
+            ideas: "Share and discuss business ideas with the community",
+            support: "Get answers to your questions and help others",
+            partnerships: "Find collaborators and business partners",
+            growth: "Discuss strategies for scaling your business",
+            resources: "Share and discover helpful student resources"
+        };
+
+        // Current active channel
+        let currentChannel = 'ideas';
+        let allMessages = [];
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.nav-overlay');
+            
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown *')) {
+                    const dropdowns = document.querySelectorAll('.dropdown-menu');
+                    dropdowns.forEach(dropdown => {
+                        dropdown.style.display = 'none';
+                    });
+                }
+            });
+
+            // Initialize chat with default channel
+            loadChannel('ideas');
+            
+            // Channel switching
+            const channelItems = document.querySelectorAll('.channel-item');
+            channelItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    channelItems.forEach(i => i.classList.remove('active'));
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Load the channel messages
+                    const channelId = this.getAttribute('data-channel');
+                    loadChannel(channelId);
+                });
+            });
+
+            // People tab switching
+            const sidebarTabs = document.querySelectorAll('.sidebar-tab');
+            sidebarTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    sidebarTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    document.querySelector('.channels').classList.remove('active');
+                    document.querySelector('.people').classList.remove('active');
+                    document.querySelector(`.${tabId}`).classList.add('active');
+                });
+            });
+
+            // Person selection
+            const personItems = document.querySelectorAll('.person-item');
+            personItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // In a real app, this would open a direct message conversation
+                    const personName = this.querySelector('h4').textContent;
+                    alert(`Opening direct message with ${personName}. In a real app, this would switch to a private chat.`);
+                });
+            });
+
+            // Search functionality
+            const searchBtn = document.getElementById('search-btn');
+            const searchModal = document.getElementById('search-modal');
+            const searchModalClose = document.getElementById('search-modal-close');
+            const searchModalInput = document.getElementById('search-modal-input');
+            const searchResults = document.getElementById('search-results');
+            
+            searchBtn.addEventListener('click', function() {
+                searchModal.classList.add('active');
+                searchModalInput.focus();
+            });
+            
+            searchModalClose.addEventListener('click', function() {
+                searchModal.classList.remove('active');
+            });
+            
+            // Search when typing in the search modal
+            searchModalInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    searchResults.innerHTML = '<div class="no-results">Enter a search term to find messages</div>';
+                    return;
+                }
+                
+                // Filter messages based on search term
+                const filteredMessages = allMessages.filter(message => 
+                    message.text.toLowerCase().includes(searchTerm) || 
+                    message.sender.toLowerCase().includes(searchTerm)
+                );
+                
+                // Display search results
+                if (filteredMessages.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No messages found matching your search</div>';
+                } else {
+                    searchResults.innerHTML = '';
+                    filteredMessages.forEach(message => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <div class="search-result-sender">${message.sender}</div>
+                            <div class="search-result-text">${message.text}</div>
+                            <div class="message-time">${message.time} • ${getChannelName(message.channel)}</div>
+                        `;
+                        searchResults.appendChild(resultItem);
+                        
+                        // Clicking on a search result switches to that channel and highlights the message
+                        resultItem.addEventListener('click', function() {
+                            loadChannel(message.channel);
+                            searchModal.classList.remove('active');
+                            searchModalInput.value = '';
+                            
+                            // In a real app, you would scroll to and highlight the message
+                            setTimeout(() => {
+                                alert(`Switched to ${getChannelName(message.channel)} channel. In a real app, we would scroll to and highlight the message.`);
+                            }, 300);
+                        });
+                    });
+                }
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === searchModal) {
+                    searchModal.classList.remove('active');
+                }
+            });
+
+            // Simple chat functionality
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+            const messagesContainer = document.getElementById('messages-container');
+            
+            // Function to add a new message
+            function addMessage(text) {
+                if (text.trim() === '') return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message sent';
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="imge/Pasted image.png" alt="User Avatar">
+                    </div>
+                    <div class="message-content">
+                        <div class="message-sender">You</div>
+                        <div class="message-text">${text}</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                messageInput.value = '';
+                
+                // Scroll to the bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Add to allMessages for search functionality
+                const newMessage = {
+                    sender: "You",
+                    avatar: "imge/Pasted image.png",
+                    text: text,
+                    time: "Just now",
+                    type: "sent",
+                    channel: currentChannel
+                };
+                
+                allMessages.push(newMessage);
+                
+                // In a real app, you would send this message to the server
+                console.log("Message sent:", newMessage);
+            }
+            
+            // Send message on button click
+            sendButton.addEventListener('click', function() {
+                addMessage(messageInput.value);
+            });
+            
+            // Send message on Enter key
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addMessage(messageInput.value);
+                }
+            });
+        });
+
+        // Function to load a channel
+        function loadChannel(channelId) {
+            currentChannel = channelId;
+            
+            // Update channel title and description
+            document.getElementById('channel-title').textContent = `#${channelId}`;
+            document.getElementById('channel-description').textContent = channelDescriptions[channelId] || "Channel description";
+            
+            // Clear current messages
+            const messagesContainer = document.getElementById('messages-container');
+            messagesContainer.innerHTML = '';
+            
+            // Load messages for the channel
+            if (chatData[channelId]) {
+                chatData[channelId].forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${message.type}`;
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">
+                            <img src="${message.avatar}" alt="User Avatar">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-sender">${message.sender}</div>
+                            <div class="message-text">${message.text}</div>
+                            <div class="message-time">${message.time}</div>
+                        </div>
+                    `;
+                    
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Add to allMessages for search functionality
+                    const messageWithChannel = {...message, channel: channelId};
+                    allMessages.push(messageWithChannel);
+                });
+            }
+            
+            // Scroll to the bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Helper function to get channel name from ID
+        function getChannelName(channelId) {
+            const channelNames = {
+                ideas: "Ideas & Brainstorming",
+                support: "Q&A Support",
+                partnerships: "Partnerships",
+                growth: "Growth Strategies",
+                resources: "Student Resources"
+            };
+            
+            return channelNames[channelId] || channelId;
+        }
+    </script>
+</body>
+</html>

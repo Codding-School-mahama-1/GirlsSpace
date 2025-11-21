@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>| GirlsSpace Mahama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f0ff;
+            padding-top: 85px; /* Add padding to prevent content from hiding behind fixed navbar */
+        }
+
+        /* FIXED NAVBAR - Only change made */
+        .navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 40px;
+            background: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            position: fixed; /* Changed from sticky to fixed */
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Rest of your original CSS remains exactly the same */
+        .nav-logo img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 60%;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #374151;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #c23cb6;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            list-style: none;
+            padding: 8px 0;
+            display: none;
+            min-width: 140px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Buttons */
+        .login-btn {
+            padding: 8px 16px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #c23cb6;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #fbe7ff;
+            color: #b02ca1;
+        }
+
+        .donate-btn {
+            padding: 10px 18px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: rgb(255, 255, 255);
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 60, 182, 0.3);
+        }
+
+        /* Search */
+        .nav-search {
+            position: relative;
+        }
+
+        .nav-search input {
+            padding: 8px 12px 8px 36px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            width: 160px;
+            transition: border-color 0.2s;
+        }
+
+        .nav-search input:focus {
+            border-color: #c23cb6;
+        }
+
+        .nav-search::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            height: 3px;
+            width: 25px;
+            background: #374151;
+            margin-bottom: 4px;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        .containers {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .chat {
+            text-align: center;
+        }
+
+        .chat h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #5d1a9e;
+        }
+
+        .chat > p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: #161616;
+        }
+        .chat > h2{
+            color: #0e5ae7;
+        }
+
+        
+        /* Grid Layout */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            color: #161616;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: #0e5ae7;
+        }
+        
+        .card p {
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+        
+        .muted {
+            color: #131111;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #ff6b8b;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff4d73;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 139, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #8a2be2;
+            border: 2px solid #8a2be2;
+        }
+        
+        .btn-outline:hover {
+            background-color: #a34b90;
+            color: white;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .footer-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-btn:hover {
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .links-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        linke-list ,li> a {
+            text-decoration: none;
+
+        }
+
+        .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .link-item:hover {
+            color: #db78e4;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .footer-left-info p {
+            margin: 0;
+        }
+
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
+        }
+
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 12px 20px;
+            }
+            
+            .nav-links {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                display: none;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+            
+            .nav-search {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .nav-search input {
+                width: 100%;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-logo-section {
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .footer-right-info {
+                text-align: center;
+            }
+            
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+ 
+<body>
+    <!-- Fixed Navbar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="/imge/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
+        </div>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./AboutUs.html">About</a></li>
+            <li><a href="./chat.html">Chat</a></li>
+            <li><a href="./stories.html">Stories</a></li>
+            <li><a href="./learning_programs.html">Programs</a></li>
+            <li><a href="#">Support</a></li>
+
+            <!-- Language Dropdown -->
+            <li class="dropdown" id="language-dropdown">
+                <a href="#">Languages</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">English</a></li>
+                    <li><a href="#">Arabic</a></li>
+                    <li><a href="#">Swahili</a></li>
+                    <li><a href="#">French</a></li>
+                </ul>
+            </li>
+            <li><a href="./login.html" class="login-btn">Log In</a></li>
+            <li><a href="#" class="donate-btn">Donate</a></li>
+        </ul>
+
+        <div class="nav-search">
+            <input type="text" placeholder="Search...">
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="containers">
+        <section class="chat">
+            <h2>Safe Chat Rooms</h2>
+            <p>Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.</p>
+
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="card-content">
+                        <h3>Confidence Corner</h3>
+                        <p>Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.</p>
+                        <p class="muted">👥 245 online • Active</p>
+                        <a class="btn btn-primary" href="./confident.html">Join Chat</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"><img src="./imge/hellthe.png" width="370" height="200" alt=""></div>
+                    <div class="card-content">
+                        <h3>Health & Wellness</h3>
+                        <p>Discuss health topics in a safe space with trained moderators and healthcare professionals.</p>
+                        <p class="muted">👥 89 online • Active</p>
+                        <a class="btn btn-primary" href="/heathwellness.html">Join Study</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"> <img src="./imge/dermsgaslias.png" width="370" height="200" alt=""></div>
+                    <div class="card-content">
+                        <h3>Dreams & Goals</h3>
+                        <p>Share aspirations and support each other in achieving personal and professional goals.</p>
+                        <p class="muted">Private • Secure</p>
+                        <a class="btn btn-outline" href="./derames.html">Request Access</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./imge/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle">Empowering Girls, Building Futures</p>
+                    </div>
+                    <p class="footer-desc">
+                        A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title">Quick Links</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item">Join Chat</a></li>
+                        <li><a href="#" class="link-item">Share Story</a></li>
+                        <li><a href="#" class="link-item">Programs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title">Get Help</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item">Emergency</a></li>
+                        <li><a href="#" class="link-item">Support</a></li>
+                        <li><a href="#" class="link-item">Report</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-left-info">
+                    <p>© 2025 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
+                </div>
+                <div class="footer-right-info">
+                    <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p>Supported by UNHCR, Save The Children, Alight</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+            const languageDropdown = document.getElementById('language-dropdown');
+
+            // Toggle mobile menu
+            mobileMenu.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Handle dropdown on mobile
+            if (languageDropdown) {
+                languageDropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        this.classList.toggle('active');
+                    }
+                });
+            }
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
