@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health & Wellness Success Story</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary:#cc2681;
+            --primary-dark: #df5e5e;
+            --secondary: #cc0e17e8;
+            --accent: #9b59b6;
+            --light: #a52e2e;
+            --dark: #2c3e50;
+            --text: #34495e;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: var(--text);
+            line-height: 1.6;
+        }
+  
+    
+      
+    
+
+body {
+      font-family: 'Poppins', sans-serif;
+      /* background: #000; */
+      color: rgb(20, 18, 18);
+    }
+
+    a, button {
+      cursor: pointer;
+      color: inherit;
+      text-decoration: none;
+    }
+
+
+    ul {
+    /* body {
+      font-family: 'Poppins', sans-serif;
+      background: #000;
+      color: white;
+    } */
+      list-style: none;
+    }
+
+    /* ____ navbar ____ */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-logo img {
+      width: 60px;
+      height: 50px;
+        
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    /* ____ hamburger ____ */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      /* background: #000; */
+      color: rgb(12, 11, 11);
+    }
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: #374151;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    /* body {
+      font-family: 'Poppins', sans-serif;
+      background: #000;
+      color: white;
+    } */
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* ____ nav links ____ */
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .nav-link {
+      position: relative;
+      color: #374151;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #ec4899;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .login-btn {
+      padding: 6px 14px;
+      border: 1.5px solid #c23cb6;
+      border-radius: 30px;
+      color: #c23cb6;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .login-btn:hover {
+      background: #fbe7ff;
+    }
+
+    .donate-btn {
+      padding: 8px 16px;
+      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .donate-btn:hover {
+      border: 1px solid #c23cb6;
+      box-shadow: 0 1px 10px 3px #c23cb6;
+    }
+
+    .nav-search input {
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      font-size: 13px;
+      width: 130px;
+    }
+
+    /* ____ Dropdown ____ */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      min-width: 130px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .dropdown-menu li a {
+      display: block;
+      padding: 8px 14px;
+      color: #374151;
+      font-size: 13px;
+    }
+
+    .dropdown-menu li a:hover {
+      background: #f3e5f8;
+      color: #c23cb6;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    /* ____ Overlay ____ */
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .nav-overlay.active {
+      display: block;
+    }
+
+    /* _____ Responsive _______ */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        padding: 80px 20px 20px;
+        gap: 20px;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: left 0.4s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .nav-link, .login-btn, .donate-btn {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        color: #374151;
+        font-size: 16px;
+      }
+
+      .nav-search {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .nav-search input {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .navbar {
+        padding: 12px 40px;
+      }
+
+      .nav-search input {
+        width: 160px;
+      }
+    }
+
+
+
+
+        .container {
+            width: 100%;
+            max-width:1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .story-hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin: 4rem 0;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-image {
+            flex: 1;
+            min-height: 400px;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding: 3rem;
+        }
+
+        .hero-content h2 {
+            color: var(--primary-dark);
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .business-name {
+            color: var(--secondary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .hero-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+    
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .story-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .detail-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .detail-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .journey {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .journey h2 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 2.5rem;
+            font-size: 2.2rem;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            width: 45%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-content h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content .year {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .advice-section {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            padding: 4rem 0;
+            border-radius: 20px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .advice-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .advice-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .advice-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .advice-card:hover {
+            transform: scale(1.05);
+        }
+
+        .advice-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .advice-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .quote {
+            text-align: center;
+            padding: 3rem;
+            margin: 3rem 0;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            font-size: 8rem;
+            color: var(--light);
+            z-index: 0;
+        }
+
+        .quote p {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--dark);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote .author {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .butt {
+            /* position: relative; */
+            border: rgb(10, 240, 48) solid 3px;
+            background-color: #e71f5b;
+            width: 100px;
+            height: 40px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            /* align-items: center; */
+            margin-left: +50px;
+
+
+
+        }
+
+        .butt, a footer {
+            background: var(--dark); footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-radius: 30px 30px 0 0;
+        }
+            /* color: white;
+            text-align: center;
+            padding: 3rem 0;
+
+            text-decoration: none; */
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+     
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .story-hero {
+                flex-direction: column;
+            }
+
+            .hero-image {
+                min-height: 300px;
+                width: 100%;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+     <nav class="navbar">
+
+
+        <div class="nav-logo">
+            <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
+        </div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./AboutUs.html">About</a></li>
+            <li><a href="./chat.html">Chat</a></li>
+            <li><a href="./sories.html">Stories</a></li>
+            <li><a href="./learning_programs">Programs</a></li>
+            <li><a href="#"> Support</a></li>
+            </div>
+            <p class="subtitle">
+
+            <!-- Language Dropdown --> 
+            <li class="dropdown" id="language-dropdown">
+                <a href="#">Languages</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">English</a></li>
+                    <li><a href="#">Arabic</a></li>
+                    <li><a href="#">Swahili</a></li>
+                    <li><a href="#">French</a></li>
+                </ul>
+            </li>
+            <li><a href="./login.html" class="login-btn">Log In</a></li>
+            <li><a href="#" class="donate-btn">Donate</a></li>
+        </ul>
+
+        <div class="nav-search">
+            <input type="text" placeholder="Search...">
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>Health & Wellness Success Story</h1>
+            </div>
+            <p class="subtitle">How a student turned a personal health challenge into a thriving wellness business</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="story-hero">
+            <div class="hero-image">
+                <i class="fas fa-spa" style="font-size: 8rem; color: var(--primary-dark); z-index: 1;"></i>
+            </div>
+            <div class="hero-content">
+                <h2>Maya Patel</h2>
+                <span class="business-name">Mindful Balance Wellness</span>
+                <p>While pursuing her degree in Nutrition Science, Maya developed a holistic wellness app after her own
+                    struggle with stress and burnout during finals. What started as a personal project to manage her
+                    wellbeing has grown into a platform used by over 50,000 students nationwide.</p>
+                <p>Mindful Balance combines guided meditation, nutrition tracking, and sleep optimization in one
+                    comprehensive app designed specifically for the student lifestyle.</p>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4.8★</span>
+                        <span class="stat-label">App Store Rating</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Team Members</span>
+                    </div>
+                </div>
+            </div>
+        </section>Wellness Success Story</h1>
+            </div>
+            <p class="subtitle">
+
+        <section class="story-details">
+            <div class="detail-card">
+                <i class="fas fa-brain"></i>
+                <h3>The Challenge</h3>
+                <p>During her sophomore year, Maya experienced severe burnout trying to balance coursework, part-time
+                    jobs, and extracurricular activities. She noticed many peers facing similar mental health challenges
+                    with limited accessible resources.</p>
+            </div>
+            <div class="detail-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>The Solution</h3>
+                <p>Maya developed a mobile app that provided 5-minute meditation sessions, healthy quick recipes for
+                    students, and sleep tracking specifically designed around academic schedules and stressors.</p>
+            </div>
+            <div class="detail-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>The Impact</h3>
+                <p>Within two years, Mindful Balance became the top-rated wellness app in the education category, with
+                    studies showing users reported 30% lower stress levels and improved sleep quality.</p>
+            </div>
+        </section>
+
+      
+
+        <section class="quote">
+            <p>"Creating Mindful Balance wasn't just about building a business—it was about solving a problem I deeply
+                understood. When you're passionate about making a difference in people's lives, the long hours and
+                challenges become meaningful."</p>
+            <div class="author">- Maya Patel, Founder of Mindful Balance Wellness</div>
+        </section>
+
+        <section class="advice-section">
+            <h2>Maya's Advice for Wellness Entrepreneurs</h2>
+            <div class="advice-cards">
+                <div class="advice-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Start With Empathy</h3>
+                    <p>Understand the real pain points your audience experiences.</p>
+                </div>
+                <div class="advice-card">
+                    <i class="fas fa-seedling"></i>
+                    <h3>Validate Early</h3>
+                    <p>Test your concept with a small group before scaling.</p>
+                </div>
+                <div class="advice-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Build Community</h3>
+                    <p>Wellness is about connection—foster a supportive user community.</p>
+                </div>
+                <div class="advice-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Maintain Balance</h3>
+                    <p>Practice what you preach—your own wellbeing matters too.</p>
+
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="butt">
+        <a href="chat.html"> Home</a>
+
+    </div>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Health & Wellness Stories</h3>
+                    <p>Showcasing inspiring entrepreneurs who are making a difference in health and wellbeing.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: stories@healthwellness.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Share Your Story</h3>
+                    <p>Are you a health and wellness entrepreneur? We'd love to feature your journey.</p>
+                 
+
+        
+</nav>0px; margin-top: 10px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">Submit
+                        Your Story</button> 
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Health & Wellness Success Stories. All rights reserved.</p>
+            </div>
+        </div>
+    </footer> 
+</body>
+

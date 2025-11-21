@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Programs | GirlsSpace</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: radial-gradient(circle at 30% 70%, rgba(194, 59, 182, 0.1), transparent 600px), 
+                  radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.1), transparent 800px),
+                  #f9fafb;
+    }
+
+    /* إخفاء شريط التمرير في النافبار الفرعي لمظهر أجمل */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    /* تأثيرات النافبار */
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Mobile Menu & Overlay */
+    #mobileMenu { transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.77, 0, 0.18, 1); }
+    #mobileMenu.active { transform: translateX(0); }
+    #overlay { opacity: 0; visibility: hidden; transition: all 0.4s ease; }
+    #overlay.active { opacity: 1; visibility: visible; }
+
+    /* Program Cards Animation */
+    .program-card { transition: all 0.4s ease; }
+    .program-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(194, 59, 182, 0.15); }
+
+    .gradient-text-pink { 
+      background: linear-gradient(90deg, #ff5f8d, #c23cb6); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+  </style>
+</head>
+<body class="text-gray-800 pt-[88px]">   <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
+    </div>
+
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors">About</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors">Stories</a>
+      <a href="#" class="nav-link hover:text-primary relative transition-colors">Protection</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors">Programs</a>
+      
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary transition-colors py-2">
+          Languages <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        </button>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">English</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Arabic</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Swahili</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">French</a></li>
+        </ul>
+      </div>
+         <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple">Donate</a>
+    
+    </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]">
+      </div>
+   </div>
+
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
+  </nav>
+
+
+  <div class="sticky top-[88px] z-40 bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-3 whitespace-nowrap mask-image-linear-gradient">
+        
+        <span class="text-sm font-bold text-gray-400 uppercase tracking-wider mr-2">Filter:</span>
+
+        <button class="px-5 py-1.5 rounded-full bg-pink-600 text-white text-sm font-medium shadow-md shadow-pink-200 transition-transform hover:scale-105">
+          All Programs
+        </button>
+
+        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
+          <i class="fas fa-shield-alt mr-1"></i> GBV
+        </button>
+
+        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
+          <i class="fas fa-language mr-1"></i> Languages
+        </button>
+
+        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
+          <i class="fas fa-tools mr-1"></i> Vocational
+        </button>
+
+        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
+          <i class="fas fa-heart mr-1"></i> Life Skills
+        </button>
+
+        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
+          <i class="fas fa-briefcase mr-1"></i> Entrepreneurship
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="mobileMenu" class="fixed inset-0 z-50 lg:hidden">
+    <div class="bg-white w-72 h-full shadow-2xl p-6 flex flex-col">
+      <div class="flex justify-between items-center mb-8">
+        <span class="font-bold text-xl text-pink-600">Menu</span>
+        <button onclick="closeMenu()" class="text-2xl text-gray-500 hover:text-pink-600"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <ul class="space-y-4 flex-1 overflow-y-auto">
+        <li><a href="./index.html" class="block text-gray-700 font-medium hover:text-pink-600">Home</a></li>
+        <li><a href="./AboutUs.html" class="block text-gray-700 font-medium hover:text-pink-600">About</a></li>
+        <li><a href="chat.html" class="block text-gray-700 font-medium hover:text-pink-600">Chat</a></li>
+        <li><a href="./stories.html" class="block text-gray-700 font-medium hover:text-pink-600">Stories</a></li>
+        <li><a href="./Learning_Programs.html" class="block text-pink-600 font-bold bg-pink-50 px-3 py-2 rounded-lg">Programs</a></li>
+        
+        <li class="pt-4 border-t border-gray-100">
+          <p class="text-xs text-gray-400 uppercase mb-2">Account</p>
+          <a href="./login.html" class="block w-full text-center py-2.5 border border-pink-600 text-pink-600 rounded-lg font-semibold mb-3">Log In</a>
+          <a href="./Donate.html" class="block w-full text-center py-2.5 bg-pink-600 text-white rounded-lg font-semibold shadow-lg">Donate</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div id="overlay" class="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm" onclick="closeMenu()"></div>
+
+
+  <main class="min-h-screen">
+    
+    <header class="text-center py-16 px-6">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900 tracking-tight">
+        Explore <span class="gradient-text-pink">Programs</span>
+      </h1>
+      <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+        Choose a path to empower your future. All courses are free and certified.
+      </p>
+    </header>
+
+    <div class="container max-w-6xl mx-auto px-6 pb-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+        <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-purple-100 flex flex-col h-full">
+          <div class="h-60 relative overflow-hidden group">
+            <img src="./img/GBV2.jpg" alt="GBV Prevention" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
+              <i class="fas fa-clock mr-1"></i> 4 Weeks
+            </div>
+            <div class="absolute top-4 right-4 bg-pink-100 text-pink-700 px-4 py-1 rounded-full text-xs font-bold">
+              Most Popular
+            </div>
+          </div>
+          <div class="p-8 flex-1 flex flex-col">
+            <h2 class="text-2xl font-bold mb-3 text-gray-800">Prevention of GBV</h2>
+            <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed">
+              Comprehensive training on identifying, preventing, and responding to Gender-Based Violence in your community.
+            </p>
+            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
+              <span class="flex items-center"><i class="fas fa-video text-pink-500 mr-2"></i> 12 Lessons</span>
+              <span class="flex items-center"><i class="fas fa-certificate text-pink-500 mr-2"></i> Certified</span>
+            </div>
+            <a href="./gbv-course.html" class="w-full py-3.5 bg-gray-900 text-white rounded-xl font-bold text-center hover:bg-pink-600 transition-colors shadow-lg">
+              Start Learning
+            </a>
+          </div>
+        </div>
+
+        <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-pink-100 flex flex-col h-full">
+          <div class="h-60 relative overflow-hidden group">
+            <img src="./img/English.jpg" alt="English Learning" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+             <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
+              <i class="fas fa-clock mr-1"></i> 8 Weeks
+            </div>
+            <div class="absolute top-4 right-4 bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-xs font-bold">
+              New
+            </div>
+          </div>
+          <div class="p-8 flex-1 flex flex-col">
+            <h2 class="text-2xl font-bold mb-3 text-gray-800">English for Beginners</h2>
+            <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed">
+              Start your journey to fluency. Learn basic grammar, vocabulary, and daily conversation skills.
+            </p>
+            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
+              <span class="flex items-center"><i class="fas fa-layer-group text-purple-500 mr-2"></i> 20 Lessons</span>
+              <span class="flex items-center"><i class="fas fa-star text-purple-500 mr-2"></i> Beginner</span>
+            </div>
+            <a href="./English_course.html" class="w-full py-3.5 bg-white border-2 border-gray-200 text-gray-800 rounded-xl font-bold text-center hover:border-purple-500 hover:text-purple-600 transition-colors">
+              View Curriculum
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-300 py-12 px-6">
+    <div class="max-w-7xl mx-auto text-center md:text-left">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-3">
+          <img src="./img/Girls Space (1) (1).png" class="w-10 h-10 rounded-full">
+          <span class="font-bold text-white text-lg">GirlsSpace</span>
+        </div>
+        <p class="text-sm text-gray-500">© 2025 GirlsSpace Mahama. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const overlay = document.getElementById('overlay');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : 'auto';
+    }
+
+    function closeMenu() {
+      mobileMenu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+  </script>
+
+</body>
+</html>
