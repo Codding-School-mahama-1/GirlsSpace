@@ -152,7 +152,6 @@ export function setupSignIn() {
         showMessage('Please enter email and password');
         return;
       }
-
       try {
         // إضافة مؤشر تحميل
         const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -237,7 +236,7 @@ export function setupSignIn() {
   }
 }
 
-// ================ FORGOT PASSWORD ================
+// = FORGOT PASSWORD 
 export function setupForgotPassword() {
   const forgotForm = document.getElementById('forgotForm');
   if (forgotForm) {
