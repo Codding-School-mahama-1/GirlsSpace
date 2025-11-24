@@ -478,7 +478,6 @@
     function toggleMenu() {
       hamburger.classList.toggle('active');
       const isOpen = hamburger.classList.contains('active');
-      
       if (isOpen) {
         mobileMenu.style.left = '0';
         overlay.classList.remove('hidden');
@@ -487,9 +486,16 @@
         overlay.classList.add('hidden');
       }
     }
-
     hamburger.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
   </script>
+  <script type="module">
+  import { checkAuthState, setupLogout } from './firebaseauth.js';
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuthState();
+    setupLogout();
+  });
+</script>
+ <script type="module" src="firebase.js"></script>
 </body>
 </html>
