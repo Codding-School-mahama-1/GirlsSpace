@@ -127,10 +127,11 @@
       <div class="flex flex-col gap-6 text-gray-700 font-medium">
         <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.home">Home</a>
         <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.about">About</a>
-        <a href="#" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.chat">Chat</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.chat">Chat</a>
         <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.stories">Stories</a>
-        <a href="#" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
         <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.programs">Programs</a>
+        <a href="./Protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
+        
         
         <div class="py-2 border-b border-gray-100">
           <div class="flex justify-between items-center">
@@ -478,7 +479,6 @@
     function toggleMenu() {
       hamburger.classList.toggle('active');
       const isOpen = hamburger.classList.contains('active');
-      
       if (isOpen) {
         mobileMenu.style.left = '0';
         overlay.classList.remove('hidden');
@@ -487,9 +487,16 @@
         overlay.classList.add('hidden');
       }
     }
-
     hamburger.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
   </script>
+  <script type="module">
+  import { checkAuthState, setupLogout } from './firebaseauth.js';
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuthState();
+    setupLogout();
+  });
+</script>
+ <script type="module" src="firebase.js"></script>
 </body>
 </html>
