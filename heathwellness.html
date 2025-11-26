@@ -28,278 +28,272 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
             color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
         }
   
-    
-      
-    
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: rgb(20, 18, 18);
+        }
 
-body {
-      font-family: 'Poppins', sans-serif;
-      /* background: #000; */
-      color: rgb(20, 18, 18);
-    }
+        a, button {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+        }
 
-    a, button {
-      cursor: pointer;
-      color: inherit;
-      text-decoration: none;
-    }
+        ul {
+            list-style: none;
+        }
 
+        /* ____ navbar ____ */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
 
-    ul {
-    /* body {
-      font-family: 'Poppins', sans-serif;
-      background: #000;
-      color: white;
-    } */
-      list-style: none;
-    }
+        .nav-logo img {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
 
-    /* ____ navbar ____ */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+        /* ____ hamburger ____ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
 
-    .nav-logo img {
-      width: 60px;
-      height: 50px;
-        
-      object-fit: contain;
-      border-radius: 50%;
-    }
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #374151;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
 
-    /* ____ hamburger ____ */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      z-index: 1001;
-    }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      /* background: #000; */
-      color: rgb(12, 11, 11);
-    }
-    .hamburger span {
-      width: 28px;
-      height: 3px;
-      background: #374151;
-      border-radius: 3px;
-      transition: all 0.3s ease;
-    }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
 
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
 
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    /* body {
-      font-family: 'Poppins', sans-serif;
-      background: #000;
-      color: white;
-    } */
-    }
+        /* ____ nav links ____ */
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+        }
 
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
+        .nav-link {
+            position: relative;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
 
-    /* ____ nav links ____ */
-    .nav-links {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      font-size: 14px;
-    }
+        .nav-link:hover {
+            color: #ec4899;
+        }
 
-    .nav-link {
-      position: relative;
-      color: #374151;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
 
-    .nav-link:hover {
-      color: #ec4899;
-    }
+        .nav-link:hover::after {
+            width: 100%;
+        }
 
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 50%;
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
+        .login-btn {
+            padding: 6px 14px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            color: #c23cb6;
+            font-weight: 600;
+            font-size: 13px;
+        }
 
-    .nav-link:hover::after {
-      width: 100%;
-    }
+        .login-btn:hover {
+            background: #fbe7ff;
+        }
 
-    .login-btn {
-      padding: 6px 14px;
-      border: 1.5px solid #c23cb6;
-      border-radius: 30px;
-      color: #c23cb6;
-      font-weight: 600;
-      font-size: 13px;
-    }
+        .donate-btn {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+        }
 
-    .login-btn:hover {
-      background: #fbe7ff;
-    }
+        .donate-btn:hover {
+            border: 1px solid #c23cb6;
+            box-shadow: 0 1px 10px 3px #c23cb6;
+        }
 
-    .donate-btn {
-      padding: 8px 16px;
-      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
-      color: white;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 13px;
-    }
+        .nav-search input {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 13px;
+            width: 130px;
+        }
 
-    .donate-btn:hover {
-      border: 1px solid #c23cb6;
-      box-shadow: 0 1px 10px 3px #c23cb6;
-    }
+        /* ____ Dropdown ____ */
+        .dropdown {
+            position: relative;
+        }
 
-    .nav-search input {
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 13px;
-      width: 130px;
-    }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            min-width: 130px;
+            display: none;
+            z-index: 1000;
+        }
 
-    /* ____ Dropdown ____ */
-    .dropdown {
-      position: relative;
-    }
+        .dropdown-menu li a {
+            display: block;
+            padding: 8px 14px;
+            color: #374151;
+            font-size: 13px;
+            cursor: pointer;
+        }
 
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      min-width: 130px;
-      display: none;
-      z-index: 1000;
-    }
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
 
-    .dropdown-menu li a {
-      display: block;
-      padding: 8px 14px;
-      color: #374151;
-      font-size: 13px;
-    }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
 
-    .dropdown-menu li a:hover {
-      background: #f3e5f8;
-      color: #c23cb6;
-    }
+        /* ____ Overlay ____ */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
 
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
+        .nav-overlay.active {
+            display: block;
+        }
 
-    /* ____ Overlay ____ */
-    .nav-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      z-index: 999;
-    }
+        /* _____ Responsive _______ */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
 
-    .nav-overlay.active {
-      display: block;
-    }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                gap: 20px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.4s ease;
+                z-index: 1000;
+                overflow-y: auto;
+            }
 
-    /* _____ Responsive _______ */
-    @media (max-width: 768px) {
-      .hamburger {
-        display: flex;
-      }
+            .nav-links.active {
+                left: 0;
+            }
 
-      .nav-links {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 280px;
-        height: 100vh;
-        background: white;
-        flex-direction: column;
-        padding: 80px 20px 20px;
-        gap: 20px;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        transition: left 0.4s ease;
-        z-index: 1000;
-        overflow-y: auto;
-      }
+            .nav-link, .login-btn, .donate-btn {
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+                color: #374151;
+                font-size: 16px;
+            }
 
-      .nav-links.active {
-        left: 0;
-      }
+            .nav-search {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+            }
 
-      .nav-link, .login-btn, .donate-btn {
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-        color: #374151;
-        font-size: 16px;
-      }
+            .nav-search input {
+                width: 100%;
+            }
+            
+            /* Fix for dropdown in mobile */
+            .dropdown-menu {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background: transparent;
+                padding-left: 20px;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+        }
 
-      .nav-search {
-        order: 3;
-        width: 100%;
-        margin-top: 10px;
-      }
+        @media (min-width: 769px) {
+            .navbar {
+                padding: 12px 40px;
+            }
 
-      .nav-search input {
-        width: 100%;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .navbar {
-        padding: 12px 40px;
-      }
-
-      .nav-search input {
-        width: 160px;
-      }
-    }
-
-
-
+            .nav-search input {
+                width: 160px;
+            }
+        }
 
         .container {
             width: 100%;
-            max-width:1200px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -667,7 +661,6 @@ body {
         }
 
         .butt {
-            /* position: relative; */
             border: rgb(10, 240, 48) solid 3px;
             background-color: #e71f5b;
             width: 100px;
@@ -678,27 +671,48 @@ body {
             margin-bottom: 10px;
             display: flex;
             justify-content: center;
-            /* align-items: center; */
             margin-left: +50px;
-
-
-
         }
 
-        .butt, a footer {
-            background: var(--dark); footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 3rem 0;
-            margin-top: 4rem;
-            border-radius: 30px 30px 0 0;
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .story-hero {
+                gap: 2rem;
+            }
+            
+            .hero-content {
+                padding: 2rem;
+            }
         }
-            /* color: white;
-            text-align: center;
-            padding: 3rem 0;
 
-            text-decoration: none; */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .business-name {
+                font-size: 1.3rem;
+            }
+            
+            .stats {
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
@@ -706,24 +720,36 @@ body {
                 font-size: 2.2rem;
             }
 
-     
-
             .subtitle {
                 font-size: 1.1rem;
             }
 
             .story-hero {
                 flex-direction: column;
+                margin: 2rem 0;
             }
 
             .hero-image {
                 min-height: 300px;
                 width: 100%;
             }
+            
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 1.8rem;
+            }
 
             .stats {
                 flex-direction: column;
                 gap: 1.5rem;
+                margin: 1.5rem 0;
+            }
+            
+            .stat-item {
+                padding: 0.5rem;
             }
 
             .timeline::before {
@@ -734,47 +760,196 @@ body {
                 width: calc(100% - 60px);
                 margin-left: 60px !important;
             }
+            
+            .advice-section {
+                padding: 3rem 0;
+            }
+            
+            .advice-section h2 {
+                font-size: 2rem;
+            }
+            
+            .quote {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .quote p {
+                font-size: 1.3rem;
+            }
 
             .footer-content {
                 flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .footer-section {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 2rem 0;
+            }
+            
+            .logo i {
+                font-size: 2.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .story-details {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .detail-card {
+                padding: 1.5rem;
+            }
+            
+            .journey {
+                padding: 2rem;
+            }
+            
+            .journey h2 {
+                font-size: 1.8rem;
+            }
+            
+            .advice-cards {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .advice-card {
+                padding: 1.5rem;
+            }
+            
+            .quote p {
+                font-size: 1.1rem;
+            }
+            
+            footer {
+                padding: 2rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 1.6rem;
+            }
+            
+            .business-name {
+                font-size: 1.2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .timeline-content {
+                padding: 1rem;
+            }
+            
+            .advice-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            
+            .nav-logo img {
+                width: 50px;
+                height: 40px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .hero-content h2 {
+                font-size: 1.4rem;
+            }
+            
+            .business-name {
+                font-size: 1.1rem;
+            }
+            
+            .detail-card {
+                padding: 1rem;
+            }
+            
+            .advice-card {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 
 <body>
-     <nav class="navbar">
-
-
+    <nav class="navbar">
         <div class="nav-logo">
             <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
         </div>
-        <ul class="nav-links" id="nav-links">
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./AboutUs.html">About</a></li>
-            <li><a href="./chat.html">Chat</a></li>
-            <li><a href="./sories.html">Stories</a></li>
-            <li><a href="./learning_programs">Programs</a></li>
-            <li><a href="#"> Support</a></li>
-            </div>
-            <p class="subtitle">
 
-            <!-- Language Dropdown --> 
+        <!-- Fixed hamburger menu -->
+        <div class="hamburger" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="./index.html" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" data-translate="about">About</a></li>
+            <li><a href="./chat.html" data-translate="chat">Chat</a></li>
+            <li><a href="./sories.html" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs" data-translate="programs">Programs</a></li>
+            <li><a href="./index.html" data-translate="support">Support</a></li>
+
+            <!-- Language Dropdown -->
             <li class="dropdown" id="language-dropdown">
-                <a href="#">Languages</a>
+                <a href="#" data-translate="languages">Languages</a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Arabic</a></li>
-                    <li><a href="#">Swahili</a></li>
-                    <li><a href="#">French</a></li>
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
-            <li><a href="./login.html" class="login-btn">Log In</a></li>
-            <li><a href="#" class="donate-btn">Donate</a></li>
+            <li><a href="./login.html" class="login-btn" data-translate="login">Log In</a></li>
+            <li><a href="#" class="donate-btn" data-translate="donate">Donate</a></li>
         </ul>
 
         <div class="nav-search">
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Search..." data-translate="search">
         </div>
     </nav>
 
@@ -782,9 +957,9 @@ body {
         <div class="container">
             <div class="logo">
                 <i class="fas fa-heartbeat"></i>
-                <h1>Health & Wellness Success Story</h1>
+                <h1 data-translate="health_wellness_title">Health & Wellness Success Story</h1>
             </div>
-            <p class="subtitle">How a student turned a personal health challenge into a thriving wellness business</p>
+            <p class="subtitle" data-translate="health_subtitle">How a student turned a personal health challenge into a thriving wellness business</p>
         </div>
     </header>
 
@@ -795,103 +970,86 @@ body {
             </div>
             <div class="hero-content">
                 <h2>Maya Patel</h2>
-                <span class="business-name">Mindful Balance Wellness</span>
-                <p>While pursuing her degree in Nutrition Science, Maya developed a holistic wellness app after her own
-                    struggle with stress and burnout during finals. What started as a personal project to manage her
-                    wellbeing has grown into a platform used by over 50,000 students nationwide.</p>
-                <p>Mindful Balance combines guided meditation, nutrition tracking, and sleep optimization in one
-                    comprehensive app designed specifically for the student lifestyle.</p>
+                <span class="business-name" data-translate="business_name">Mindful Balance Wellness</span>
+                <p data-translate="maya_story1">While pursuing her degree in Nutrition Science, Maya developed a holistic wellness app after her own struggle with stress and burnout during finals. What started as a personal project to manage her wellbeing has grown into a platform used by over 50,000 students nationwide.</p>
+                <p data-translate="maya_story2">Mindful Balance combines guided meditation, nutrition tracking, and sleep optimization in one comprehensive app designed specifically for the student lifestyle.</p>
 
                 <div class="stats">
                     <div class="stat-item">
                         <span class="stat-number">50K+</span>
-                        <span class="stat-label">Active Users</span>
+                        <span class="stat-label" data-translate="active_users">Active Users</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">4.8★</span>
-                        <span class="stat-label">App Store Rating</span>
+                        <span class="stat-label" data-translate="app_rating">App Store Rating</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-number">12</span>
-                        <span class="stat-label">Team Members</span>
+                        <span class="stat-label" data-translate="team_members">Team Members</span>
                     </div>
                 </div>
             </div>
-        </section>Wellness Success Story</h1>
-            </div>
-            <p class="subtitle">
+        </section>
 
         <section class="story-details">
             <div class="detail-card">
                 <i class="fas fa-brain"></i>
-                <h3>The Challenge</h3>
-                <p>During her sophomore year, Maya experienced severe burnout trying to balance coursework, part-time
-                    jobs, and extracurricular activities. She noticed many peers facing similar mental health challenges
-                    with limited accessible resources.</p>
+                <h3 data-translate="challenge_title">The Challenge</h3>
+                <p data-translate="challenge_text">During her sophomore year, Maya experienced severe burnout trying to balance coursework, part-time jobs, and extracurricular activities. She noticed many peers facing similar mental health challenges with limited accessible resources.</p>
             </div>
             <div class="detail-card">
                 <i class="fas fa-lightbulb"></i>
-                <h3>The Solution</h3>
-                <p>Maya developed a mobile app that provided 5-minute meditation sessions, healthy quick recipes for
-                    students, and sleep tracking specifically designed around academic schedules and stressors.</p>
+                <h3 data-translate="solution_title">The Solution</h3>
+                <p data-translate="solution_text">Maya developed a mobile app that provided 5-minute meditation sessions, healthy quick recipes for students, and sleep tracking specifically designed around academic schedules and stressors.</p>
             </div>
             <div class="detail-card">
                 <i class="fas fa-chart-line"></i>
-                <h3>The Impact</h3>
-                <p>Within two years, Mindful Balance became the top-rated wellness app in the education category, with
-                    studies showing users reported 30% lower stress levels and improved sleep quality.</p>
+                <h3 data-translate="impact_title">The Impact</h3>
+                <p data-translate="impact_text">Within two years, Mindful Balance became the top-rated wellness app in the education category, with studies showing users reported 30% lower stress levels and improved sleep quality.</p>
             </div>
         </section>
 
-      
-
         <section class="quote">
-            <p>"Creating Mindful Balance wasn't just about building a business—it was about solving a problem I deeply
-                understood. When you're passionate about making a difference in people's lives, the long hours and
-                challenges become meaningful."</p>
-            <div class="author">- Maya Patel, Founder of Mindful Balance Wellness</div>
+            <p data-translate="maya_quote">"Creating Mindful Balance wasn't just about building a business—it was about solving a problem I deeply understood. When you're passionate about making a difference in people's lives, the long hours and challenges become meaningful."</p>
+            <div class="author" data-translate="maya_author">- Maya Patel, Founder of Mindful Balance Wellness</div>
         </section>
 
         <section class="advice-section">
-            <h2>Maya's Advice for Wellness Entrepreneurs</h2>
+            <h2 data-translate="advice_title">Maya's Advice for Wellness Entrepreneurs</h2>
             <div class="advice-cards">
                 <div class="advice-card">
                     <i class="fas fa-heart"></i>
-                    <h3>Start With Empathy</h3>
-                    <p>Understand the real pain points your audience experiences.</p>
+                    <h3 data-translate="empathy_advice">Start With Empathy</h3>
+                    <p data-translate="empathy_text">Understand the real pain points your audience experiences.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-seedling"></i>
-                    <h3>Validate Early</h3>
-                    <p>Test your concept with a small group before scaling.</p>
+                    <h3 data-translate="validate_advice">Validate Early</h3>
+                    <p data-translate="validate_text">Test your concept with a small group before scaling.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-users"></i>
-                    <h3>Build Community</h3>
-                    <p>Wellness is about connection—foster a supportive user community.</p>
+                    <h3 data-translate="community_advice">Build Community</h3>
+                    <p data-translate="community_text">Wellness is about connection—foster a supportive user community.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-balance-scale"></i>
-                    <h3>Maintain Balance</h3>
-                    <p>Practice what you preach—your own wellbeing matters too.</p>
-
+                    <h3 data-translate="balance_advice">Maintain Balance</h3>
+                    <p data-translate="balance_text">Practice what you preach—your own wellbeing matters too.</p>
                 </div>
             </div>
         </section>
     </div>
-    <div class="butt">
-        <a href="chat.html"> Home</a>
-
-    </div>
+   
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Health & Wellness Stories</h3>
-                    <p>Showcasing inspiring entrepreneurs who are making a difference in health and wellbeing.</p>
+                    <h3 data-translate="footer_title">Health & Wellness Stories</h3>
+                    <p data-translate="footer_description">Showcasing inspiring entrepreneurs who are making a difference in health and wellbeing.</p>
                 </div>
                 <div class="footer-section">
-                    <h3>Contact</h3>
+                    <h3 data-translate="contact_title">Contact</h3>
                     <p>Email: stories@healthwellness.com</p>
                     <p>Phone: (123) 456-7890</p>
                     <div class="social-icons">
@@ -902,19 +1060,305 @@ body {
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h3>Share Your Story</h3>
-                    <p>Are you a health and wellness entrepreneur? We'd love to feature your journey.</p>
-                 
-
-        
-</nav>0px; margin-top: 10px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">Submit
-                        Your Story</button> 
+                    <h3 data-translate="share_story">Share Your Story</h3>
+                    <p data-translate="share_text">Are you a health and wellness entrepreneur? We'd love to feature your journey.</p>
+                    <button type="submit" style="padding: 10px 20px; margin-top: 10px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;" data-translate="submit_story">Submit Your Story</button>
                 </div>
             </div>
             <div class="copyright">
                 <p>&copy; 2023 Health & Wellness Success Stories. All rights reserved.</p>
             </div>
         </div>
-    </footer> 
-</body>
+    </footer>
 
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                // Navigation
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                login: "Log In",
+                donate: "Donate",
+                search: "Search...",
+                
+                // Header
+                health_wellness_title: "Health & Wellness Success Story",
+                health_subtitle: "How a student turned a personal health challenge into a thriving wellness business",
+                
+                // Story content
+                business_name: "Mindful Balance Wellness",
+                maya_story1: "While pursuing her degree in Nutrition Science, Maya developed a holistic wellness app after her own struggle with stress and burnout during finals. What started as a personal project to manage her wellbeing has grown into a platform used by over 50,000 students nationwide.",
+                maya_story2: "Mindful Balance combines guided meditation, nutrition tracking, and sleep optimization in one comprehensive app designed specifically for the student lifestyle.",
+                active_users: "Active Users",
+                app_rating: "App Store Rating",
+                team_members: "Team Members",
+                
+                // Detail cards
+                challenge_title: "The Challenge",
+                challenge_text: "During her sophomore year, Maya experienced severe burnout trying to balance coursework, part-time jobs, and extracurricular activities. She noticed many peers facing similar mental health challenges with limited accessible resources.",
+                solution_title: "The Solution",
+                solution_text: "Maya developed a mobile app that provided 5-minute meditation sessions, healthy quick recipes for students, and sleep tracking specifically designed around academic schedules and stressors.",
+                impact_title: "The Impact",
+                impact_text: "Within two years, Mindful Balance became the top-rated wellness app in the education category, with studies showing users reported 30% lower stress levels and improved sleep quality.",
+                
+                // Quote
+                maya_quote: "\"Creating Mindful Balance wasn't just about building a business—it was about solving a problem I deeply understood. When you're passionate about making a difference in people's lives, the long hours and challenges become meaningful.\"",
+                maya_author: "- Maya Patel, Founder of Mindful Balance Wellness",
+                
+                // Advice section
+                advice_title: "Maya's Advice for Wellness Entrepreneurs",
+                empathy_advice: "Start With Empathy",
+                empathy_text: "Understand the real pain points your audience experiences.",
+                validate_advice: "Validate Early",
+                validate_text: "Test your concept with a small group before scaling.",
+                community_advice: "Build Community",
+                community_text: "Wellness is about connection—foster a supportive user community.",
+                balance_advice: "Maintain Balance",
+                balance_text: "Practice what you preach—your own wellbeing matters too.",
+                
+                // Footer
+                footer_title: "Health & Wellness Stories",
+                footer_description: "Showcasing inspiring entrepreneurs who are making a difference in health and wellbeing.",
+                contact_title: "Contact",
+                share_story: "Share Your Story",
+                share_text: "Are you a health and wellness entrepreneur? We'd love to feature your journey.",
+                submit_story: "Submit Your Story"
+            },
+            ar: {
+                // Arabic translations
+                home: "الرئيسية",
+                about: "من نحن",
+                chat: "الدردشة",
+                stories: "القصص",
+                programs: "البرامج",
+                support: "الدعم",
+                languages: "اللغات",
+                login: "تسجيل الدخول",
+                donate: "تبرع",
+                search: "بحث...",
+                health_wellness_title: "قصة نجاح الصحة والعافية",
+                health_subtitle: "كيف حولت طالبة تحديًا صحيًا شخصيًا إلى عمل تجاري مزدهر في مجال العافية",
+                business_name: "العافية المتوازنة الواعية",
+                maya_story1: "أثناء متابعتها لشهادة في علوم التغذية، طورت مايا تطبيقًا شاملاً للعافية بعد معاناتها الخاصة من الإجهاد والإرهاق خلال فترة الامتحانات النهائية. ما بدأ كمشروع شخصي لإدارة صحتها نما ليصبح منصة يستخدمها أكثر من 50,000 طالب على مستوى البلاد.",
+                maya_story2: "تجمع العافية المتوازنة الواعية بين التأمل الموجه، وتتبع التغذية، وتحسين النوم في تطبيق شامل واحد مصمم خصيصًا لنمط حياة الطالب.",
+                active_users: "المستخدمون النشطون",
+                app_rating: "تقييم متجر التطبيقات",
+                team_members: "أعضاء الفريق",
+                challenge_title: "التحدي",
+                challenge_text: "خلال سنتها الثانية، عانت مايا من إرهاق شديد أثناء محاولتها الموازنة بين الدورات الدراسية، والوظائف بدوام جزئي، والأنشطة اللامنهجية. لاحظت أن العديد من زملائها يواجهون تحديات صحية عقلية مماثلة مع موارد محدودة يسهل الوصول إليها.",
+                solution_title: "الحل",
+                solution_text: "طورت مايا تطبيقًا للهاتف المحمول يوفر جلسات تأمل مدتها 5 دقائق، ووصفات سريعة صحية للطلاب، وتتبع النوم المصمم خصيصًا حول الجداول الدراسية وضغوطها.",
+                impact_title: "التأثير",
+                impact_text: "في غضون عامين، أصبحت العافية المتوازنة الواعية التطبيق الأعلى تقييمًا في فئة التعليم، مع دراسات تظهر أن المستخدمين أبلغوا عن انخفاض مستويات التوتر بنسبة 30٪ وتحسين جودة النوم.",
+                maya_quote: "\"إنشاء العافية المتوازنة الواعية لم يكن مجرد بناء عمل تجاري - لقد كان حول حل مشكلة فهمتها بعمق. عندما تكون شغوفًا بإحداث فرق في حياة الناس، تصبح الساعات الطويلة والتحديات ذات معنى.\"",
+                maya_author: "- مايا باتل، مؤسسة العافية المتوازنة الواعية",
+                advice_title: "نصيحة مايا لرواد الأعمال في مجال العافية",
+                empathy_advice: "ابدأ بالتعاطف",
+                empathy_text: "افهم نقاط الألم الحقيقية التي يعاني منها جمهورك.",
+                validate_advice: "تحقق مبكرًا",
+                validate_text: "اختبر مفهومك مع مجموعة صغيرة قبل التوسع.",
+                community_advice: "ابني مجتمعًا",
+                community_text: "العافية تدور حول الاتصال - عزز مجتمع مستخدمين داعم.",
+                balance_advice: "حافظ على التوازن",
+                balance_text: "مارس ما تعظ به - صحتك الشخصية مهمة أيضًا.",
+                footer_title: "قصص الصحة والعافية",
+                footer_description: "تسليط الضوء على رواد الأعمال الملهمين الذين يحدثون فرقًا في الصحة والعافية.",
+                contact_title: "اتصل بنا",
+                share_story: "شارك قصتك",
+                share_text: "هل أنت رائد أعمال في مجال الصحة والعافية؟ نحن نحب أن نبرز رحلتك.",
+                submit_story: "قدم قصتك"
+            },
+            sw: {
+                // Swahili translations
+                home: "Nyumbani",
+                about: "Kuhusu",
+                chat: "Gonga",
+                stories: "Hadithi",
+                programs: "Mipango",
+                support: "Msaada",
+                languages: "Lugha",
+                login: "Ingia",
+                donate: "Changia",
+                search: "Tafuta...",
+                health_wellness_title: "Hadithi ya Mafanikio ya Afya na Ustawi",
+                health_subtitle: "Jinsi mwanafunzi alivyobadilisha changamoto ya afya binafsi kuwa biashara ya ustawi inayostawi",
+                business_name: "Ustawi wa Usawa wa Kufahamu",
+                maya_story1: "Wakati anafuata shahada yake ya Sayansi ya Lishe, Maya aliunda programu ya ustawi kamili baada ya kupambana na msongo wa mawazo na uchovu wakati wa mitihani ya mwisho. Kilichokuwa mradi wa kibinafsi wa kudumisha ustawi wake kimekuwa jukwaa linalotumika na wanafunzi zaidi ya 50,000 nchini kote.",
+                maya_story2: "Ustawi wa Usawa wa Kufahamu unachanganya meditesheni inayoongozwa, ufuatiliaji wa lishe, na uboreshaji wa usingundi katika programu moja kamili iliyoundwa mahsusi kwa mtindo wa maisha ya mwanafunzi.",
+                active_users: "Watumiaji Wakazi",
+                app_rating: "Ukadiriaji wa Duka la Programu",
+                team_members: "Wanachama wa Timu",
+                challenge_title: "Changamoto",
+                challenge_text: "Wakati wa mwaka wake wa pili, Maya alipata uchovu mkubwa wakati anajaribu kuweka usawa kati ya kozi, kazi za muda, na shughuli za ziada. Aligundua wengi wa wenzake wakikabili changamoto sawa za afya ya akili na rasilimali ndogo zinazopatikana.",
+                solution_title: "Suluhisho",
+                solution_text: "Maya aliunda programu ya rununu iliyotoa vikao vya meditesheni ya dakika 5, mapishi ya haraka na ya kiafya kwa wanafunzi, na ufuatiliaji wa usingundi ulioundwa mahsusi kuzunguka ratiba za kitaaluma na misukumo.",
+                impact_title: "Athari",
+                impact_text: "Ndani ya miaka miwili, Ustawi wa Usawa wa Kufahamu ukawa programu ya ustawi iliyopewa ukadiriaji wa juu zaidi katika kategoria ya elimu, huku tafiti zikionyesha watumiaji waliripoti viwango vya chini vya msongo wa mawazo kwa 30% na ubora bora wa usingundi.",
+                maya_quote: "\"Kuunda Ustawi wa Usawa wa Kufahamu hakukuwa tu kuhusu kujenga biashara—ilikuwa kuhusu kutatua tatizo nililoelewa kwa undani. Unapokuwa na shauku ya kutofautisha maisha ya watu, masaa marefu na changamoto huwa na maana.\"",
+                maya_author: "- Maya Patel, Mwanzilishi wa Ustawi wa Usawa wa Kufahamu",
+                advice_title: "Ushauri wa Maya kwa Wajasiriamali wa Ustawi",
+                empathy_advice: "Anza kwa Uelewa",
+                empathy_text: "Elewa maumivu halisi ambayo hadhira yako hupata.",
+                validate_advice: "Thibitisha Mapema",
+                validate_text: "Jaribu dhana yako na kundi dogo kabla ya kuongeza.",
+                community_advice: "Jenga Jamii",
+                community_text: "Ustawi unahusu muunganisho—kuendeleza jamii ya watumiaji inayosaidia.",
+                balance_advice: "Dumisha Usawa",
+                balance_text: "Fanya unachohubiri—ustawi wako mwenyewe unajali pia.",
+                footer_title: "Hadithi za Afya na Ustawi",
+                footer_description: "Kuonyesha wajasiriamali wa kusisimua ambao wanafanya tofauti katika afya na ustawi.",
+                contact_title: "Wasiliana",
+                share_story: "Shiriki Hadithi Yako",
+                share_text: "Je, wewe ni mjasiriamali wa afya na ustawi? Tungependa kuonyesha safari yako.",
+                submit_story: "Wasilisha Hadithi Yako"
+            },
+            fr: {
+                // French translations
+                home: "Accueil",
+                about: "À propos",
+                chat: "Chat",
+                stories: "Histoires",
+                programs: "Programmes",
+                support: "Soutien",
+                languages: "Langues",
+                login: "Connexion",
+                donate: "Faire un don",
+                search: "Rechercher...",
+                health_wellness_title: "Histoire de réussite en santé et bien-être",
+                health_subtitle: "Comment une étudiante a transformé un défi de santé personnel en une entreprise de bien-être florissante",
+                business_name: "Bien-être Équilibre Conscient",
+                maya_story1: "En poursuivant son diplôme en sciences de la nutrition, Maya a développé une application de bien-être holistique après sa propre lutte contre le stress et l'épuisement pendant les examens finaux. Ce qui a commencé comme un projet personnel pour gérer son bien-être est devenu une plateforme utilisée par plus de 50 000 étudiants à travers le pays.",
+                maya_story2: "Bien-être Équilibre Conscient combine méditation guidée, suivi nutritionnel et optimisation du sommeil dans une application complète conçue spécifiquement pour le mode de vie étudiant.",
+                active_users: "Utilisateurs actifs",
+                app_rating: "Note sur l'App Store",
+                team_members: "Membres de l'équipe",
+                challenge_title: "Le Défi",
+                challenge_text: "Pendant sa deuxième année, Maya a connu un épuisement sévère en essayant de concilier cours, emplois à temps partiel et activités extrascolaires. Elle a remarqué que de nombreux pairs faisaient face à des défis de santé mentale similaires avec des ressources accessibles limitées.",
+                solution_title: "La Solution",
+                solution_text: "Maya a développé une application mobile qui fournissait des séances de méditation de 5 minutes, des recettes rapides et saines pour les étudiants et un suivi du sommeil spécialement conçu autour des horaires académiques et des facteurs de stress.",
+                impact_title: "L'Impact",
+                impact_text: "En deux ans, Bien-être Équilibre Conscient est devenu l'application de bien-être la mieux notée dans la catégorie éducation, avec des études montrant que les utilisateurs ont signalé des niveaux de stress inférieurs de 30 % et une meilleure qualité de sommeil.",
+                maya_quote: "\"Créer Bien-être Équilibre Conscient n'était pas seulement une question de construction d'entreprise - il s'agissait de résoudre un problème que je comprenais profondément. Lorsque vous êtes passionné par l'idée de faire une différence dans la vie des gens, les longues heures et les défis deviennent significatifs.\"",
+                maya_author: "- Maya Patel, Fondatrice de Bien-être Équilibre Conscient",
+                advice_title: "Les conseils de Maya pour les entrepreneurs du bien-être",
+                empathy_advice: "Commencez par l'empathie",
+                empathy_text: "Comprenez les véritables points douloureux que votre public expérimente.",
+                validate_advice: "Validez tôt",
+                validate_text: "Testez votre concept avec un petit groupe avant de passer à l'échelle.",
+                community_advice: "Construisez une communauté",
+                community_text: "Le bien-être concerne la connexion - favorisez une communauté d'utilisateurs solidaire.",
+                balance_advice: "Maintenez l'équilibre",
+                balance_text: "Pratiquez ce que vous prêchez - votre propre bien-être compte aussi.",
+                footer_title: "Histoires de santé et bien-être",
+                footer_description: "Mettant en valeur des entrepreneurs inspirants qui font une différence dans la santé et le bien-être.",
+                contact_title: "Contact",
+                share_story: "Partagez votre histoire",
+                share_text: "Êtes-vous un entrepreneur en santé et bien-être ? Nous aimerions présenter votre parcours.",
+                submit_story: "Soumettre votre histoire"
+            },
+            rw: {
+                // Kinyarwanda translations
+                home: "Ahabanza",
+                about: "Abo turi",
+                chat: "Kuganira",
+                stories: "Inkuru",
+                programs: "Porogaramu",
+                support: "Gushigikira",
+                languages: "Indimi",
+                login: "Injira",
+                donate: "Tanga",
+                search: "Shakisha...",
+                health_wellness_title: "Inkuru Y'Intsinzi mu Buzima n'Ubuzima",
+                health_subtitle: "Uko umunyeshuli yahinduye ikibazo cy'ubuzima bwite kuba ubucuruzi bw'ubuzima bukomeye",
+                business_name: "Ubuzima Bw'Umutekano Bwite",
+                maya_story1: "Mugihe yakurikiraga impamyabumenyi mu by'ibiribwa, Maya yatangiye porogaramu y'ubuzima yuzuye nyuma yo kurwara ingorane z'umutwe n'umunaniro mu gihe cy'ibizamini. Ibyatangiye nk'umushinga wite wo kugenzura ubuzima bwe byakuze byahinduka urubuga rukoreshwa n'abanyeshuli barenga 50,000 mu gihugu cyose.",
+                maya_story2: "Ubuzima Bw'Umutekano Bwite bihuza kwihutira, gukurikirana ibiribwa, no kwegura ibyo uyobora mu buryo buhuza ibintu byose byateguwe cyane kuri mibereho y'umunyeshuli.",
+                active_users: "Abakoresha B'ingoga",
+                app_rating: "Urutonde rwa App Store",
+                team_members: "Abanyamuryango b'Itsinda",
+                challenge_title: "Ingorane",
+                challenge_text: "Mumwaka we wa kabiri, Maya yari arwaye umunaniro ukomeye agerageza kugenzura amasomo, akazi gato, n'ibindi bikorwa. Yabonye ko benshi mu banyeshuli bagenzi be bagira ingorane z'ubuzima bw'umutwe zisa n'izo ariko badafite ubushobozi bwo kubona serivisi.",
+                solution_title: "Ibisubizo",
+                solution_text: "Maya yatangiye porogaramu yo kumutwe ifite iminota 5 yo kwihutira, amafunguro yoroshye kuri abanyeshuli, no gukurikirana ibyo uyobora byateguwe cyane kuri gahunda z'amashuli n'ibibazo.",
+                impact_title: "Ingaruka",
+                impact_text: "Mumyaka ibiri, Ubuzima Bw'Umutekano Bwite byahindutse porogaramu y'ubuzima ifite urutonde rw'icyiza cyane mu by'amashuli, hakoreshejwe ubushakashatsi bwerekana ko abakoresha bavuze ko bafite ingorane z'umutwe zigabanutse kuri 30% no kongera ubwiza bwo kuryama.",
+                maya_quote: "\"Gutanga Ubuzima Bw'Umutekano Bwite ntibyari gusa kubaka ubucuruzi - byari ukurikirana ikibazo nari mfite ubwenge. Iyo ufite umwenda wo gukora icyerekezo mu buzima bw'abantu, amasaha maremare n'ingorane bigira inshingano.\"",
+                maya_author: "- Maya Patel, Umwanzuro w'Ubuzima Bw'Umutekano Bwite",
+                advice_title: "Inama za Maya kuri Abacuruzi b'Ubuzima",
+                empathy_advice: "Tangira no Kumva",
+                empathy_text: "Menya ibibazo by'ukuri abakuntu bawe bahura nabyo.",
+                validate_advice: "Emeza Mbere",
+                validate_text: "Gerageza igitekerezo cyawe n'itsinda ritoya mbere yo kongera.",
+                community_advice: "Kora Umuryango",
+                community_text: "Ubuzima ni ukwiyunga - guteza imbere umuryango w'abakoresha ushyigikira.",
+                balance_advice: "Komeza Kubana",
+                balance_text: "Kora ibyo uvuga - ubuzima bwawe bwite burabaye.",
+                footer_title: "Inkuru z'Ubuzima",
+                footer_description: "Kwereka abacuruzi bafite umwanda bakora icyerekezo mu buzima n'ubuzima.",
+                contact_title: "Twandikire",
+                share_story: "Sangiza Inkuru Yawe",
+                share_text: "Uri umucuruzi w'ubuzima? Turashaka kugaragaza urugendo rwawe.",
+                submit_story: "Ohereza Inkuru Yawe"
+            }
+        };
+
+        // Function to change language
+        function changeLanguage(lang) {
+            // Update all elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Store the selected language
+            localStorage.setItem('selectedLanguage', lang);
+        }
+
+        // Add event listeners to language links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const hamburger = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+            
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+            
+            // Language selection
+            var languageLinks = document.querySelectorAll('.dropdown .dropdown-menu a');
+            languageLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                    
+                    // Close mobile menu after language selection
+                    if (window.innerWidth <= 768) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Check for previously selected language
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage) {
+                changeLanguage(savedLanguage);
+            }
+        });
+    </script>
+</body>
+</html>
