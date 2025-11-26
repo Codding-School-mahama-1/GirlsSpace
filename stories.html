@@ -491,21 +491,19 @@
     <div class="nav-logo">
       <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo">
     </div>
-
     <div class="hamburger" id="mobile-menu">
       <span></span>
       <span></span>
       <span></span>
     </div>
-
     <ul class="nav-links" id="nav-links">
-      <li><a href="./index.html" class="nav-link" data-translate="nav.home">Home</a></li>
-      <li><a href="./about.html" class="nav-link" data-translate="nav.about">About</a></li>
-      <li><a href="./chat.html" class="nav-link" data-translate="nav.chat">Chat</a></li>
-      <li><a href="./stories.html" class="nav-link" data-translate="nav.stories">Stories</a></li>
-      <li><a href="./Learning_Programs.html" class="nav-link" data-translate="nav.programs">Programs</a></li>
-      <li><a href="./protection.html" class="nav-link" data-translate="nav.protection">Protection</a></li>
-
+      <li><a href="./index.html" class="nav-link">Home</a></li>
+      <li><a href="./AboutUs.html" class="nav-link">About</a></li>
+      <li><a href="#chat.html" class="nav-link">Chat</a></li>
+      <li><a href="./stories.html" class="nav-link">Stories</a></li>
+      <li><a href="./Learning _Programs.html" class="nav-link">Programs</a></li>
+      <li> <a href="#protection" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Protection</a></li>
+    
       <li class="dropdown" id="language-dropdown">
         <a href="#" class="nav-link" id="current-language">Languages</a>
         <ul class="dropdown-menu" id="lang-menu">
@@ -527,8 +525,72 @@
   </nav>
 
   <div class="nav-overlay"></div>
-
-  <!-- Stories Section -->
+ <!-- 
+         Stories Section
+            -->
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .story-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #d65a98;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="min-h-full bg-gradient-to-br from-pink-300 to-purple-50">
   <main class="py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
       <!-- Header Section -->
@@ -536,27 +598,181 @@
         <h1 id="main-title" class="text-4xl md:text-5xl font-bold text-gray-900 mb-6" data-translate="stories.title">Share Your <span class="text-gradient">Story</span></h1>
         <p id="subtitle" class="text-xl text-gray-600 max-w-3xl mx-auto" data-translate="stories.subtitle">Your voice matters. Share your experiences, inspire others, and connect through the power of storytelling in a safe and supportive environment.</p>
       </div>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
-        <!-- Featured Stories Section -->
-        <div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-6" data-translate="stories.featured">Featured Stories</h2>
-          
-          <!-- Reference Stories -->
-          <div class="space-y-6 mb-8">
-            <div class="story-card bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-6">
-              <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                  A
-                </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-gray-900" data-translate="stories.amina.title">Amina's Journey</h3>
-                  <p class="text-sm text-gray-600" data-translate="stories.featuredTag">Featured Story</p>
-                </div>
-              </div>
-              <p class="text-gray-700 leading-relaxed" data-translate="stories.amina.preview">"Learning English through GirlsSpace has opened so many doors for me. I can now help translate for other girls and dream of becoming a teacher..."</p>
-              <button onclick="showFullStory('amina')" class="text-pink-600 font-medium mt-4 hover:text-pink-800 transition-colors" data-translate="stories.readFull">Read full story →</button>
-            </div>
+     </div><!-- Story Submission Form -->
+     <div class="bg-gradient-to-br from-pink-300 to-purple-400 rounded-3xl p-8 text-white shadow-lg sticky top-8">
+      <h2 id="form-title" class="text-2xl font-bold mb-6">Share Your Story</h2>
+      <form id="story-form" class="space-y-4">
+       <div><label for="story-title" class="block text-sm font-medium mb-2">Story Title</label> <input type="text" id="story-title" name="title" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" placeholder="Give your story a meaningful title">
+       </div>
+       <div><label for="author-name" class="block text-sm font-medium mb-2">Your Name (or Anonymous)</label> <input type="text" id="author-name" name="author" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" placeholder="How would you like to be known?">
+       </div>
+       <div><label for="story-category" class="block text-sm font-medium mb-2">Story Category</label> <select id="story-category" name="category" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none"> <option value="">Choose a category</option> <option value="education">Education &amp; Learning</option> <option value="empowerment">Personal Empowerment</option> <option value="community">Community Support</option> <option value="career">Career &amp; Dreams</option> <option value="health">Health &amp; Wellbeing</option> <option value="other">Other</option> </select>
+       </div>
+       <div><label for="story-content" class="block text-sm font-medium mb-2">Your Story</label> <textarea id="story-content" name="content" required rows="6" class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none resize-none" placeholder="Share your experience, challenges overcome, lessons learned, or how you've grown. Your story can inspire others..."></textarea>
+       </div><button type="submit" id="submit-btn" class="w-full bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-pink-500"> <span id="submit-text">Share My Story</span>
+        <div id="submit-loading" class="loading-spinner mx-auto hidden"></div></button>
+      </form>
+      <p class="text-pink-100 text-sm mt-4 text-center">Stories are reviewed before being shared to ensure a safe space for everyone.</p>
+     </div>
+    </div>
+   </div>
+  </main><!-- Story Modal -->
+  <div id="story-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+   <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+    <div class="p-8">
+     <div class="flex justify-between items-start mb-6">
+      <div>
+       <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-2"></h3>
+       <p id="modal-author" class="text-gray-600"></p>
+      </div><button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+     </div>
+     <div id="modal-content" class="text-gray-700 leading-relaxed whitespace-pre-line"></div>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Configuration object
+        const defaultConfig = {
+            main_title: "Share Your Story",
+            subtitle: "Your voice matters. Share your experiences, inspire others, and connect through the power of storytelling in a safe and supportive environment.",
+            form_title: "Share Your Story",
+            submit_button_text: "Share My Story"
+        };
+
+        // Reference stories data
+        const referenceStories = {
+            amina: {
+                title: "Amina's Journey to Teaching",
+                author: "Amina",
+                content: `Learning English through GirlsSpace has completely transformed my life. When I first arrived as a refugee, I felt isolated and voiceless. The language barrier made everything seem impossible.
+
+But through the English classes at GirlsSpace, I not only learned to communicate but found my confidence. The teachers were patient and understanding, creating a safe space where I could make mistakes and learn.
+
+Now, I can help translate for other girls who are just starting their journey. I've become a bridge between cultures and languages. My dream is to become a teacher myself, to give back to the community that gave me so much hope.
+
+Every day, I see new girls walking through the doors of GirlsSpace, carrying the same fears I once had. And every day, I get to show them that their dreams are possible, just like mine became possible.
+
+Education is the key that unlocks every door. GirlsSpace gave me that key, and now I'm helping others find theirs.`
+            },
+            fatima: {
+                title: "Finding My Voice and Helping Others",
+                author: "Fatima",
+                content: `The Gender-Based Violence training at GirlsSpace opened my eyes to rights I didn't even know I had. Growing up, I thought certain treatments were just "normal" - that I had to accept them.
+
+Learning about consent, boundaries, and my right to safety was life-changing. But more importantly, the training gave me the tools and courage to speak up - not just for myself, but for others.
+
+I remember the first time I helped another girl recognize that what she was experiencing wasn't okay. Seeing her realize she wasn't alone, that she deserved better, reminded me why this work is so important.
+
+Now I volunteer with the GBV program, helping facilitate workshops and providing peer support. Every girl who walks through our doors carrying shame or fear reminds me of my own journey.
+
+We create a circle of trust where girls can share without judgment. We remind each other that we are strong, that we deserve respect, and that together we can break cycles of violence.
+
+The most powerful thing I learned is that healing happens in community. None of us has to face these challenges alone.`
+            }
+        };
+
+        let currentStories = [];
+        let storyCount = 0;
+
+        // Data SDK handler
+        const dataHandler = {
+            onDataChanged(data) {
+                currentStories = data;
+                renderUserStories();
+            }
+        };
+
+        // Initialize SDKs
+        async function initializeApp() {
+            // Initialize Data SDK
+            const dataResult = await window.dataSdk.init(dataHandler);
+            if (!dataResult.isOk) {
+                console.error("Failed to initialize data SDK");
+                showToast("Failed to load stories", "error");
+                return;
+            }
+
+            // Initialize Element SDK
+            if (window.elementSdk) {
+                window.elementSdk.init({
+                    defaultConfig,
+                    onConfigChange: async (config) => {
+                        document.getElementById('main-title').innerHTML = 
+                            (config.main_title || defaultConfig.main_title).replace('Story', '<span class="text-gradient">Story</span>');
+                        document.getElementById('subtitle').textContent = 
+                            config.subtitle || defaultConfig.subtitle;
+                        document.getElementById('form-title').textContent = 
+                            config.form_title || defaultConfig.form_title;
+                        document.getElementById('submit-text').textContent = 
+                            config.submit_button_text || defaultConfig.submit_button_text;
+                    },
+                    mapToCapabilities: (config) => ({
+                        recolorables: [
+                            {
+                                get: () => config.background_color || "#fdf2f8",
+                                set: (value) => {
+                                    config.background_color = value;
+                                    window.elementSdk.setConfig({ background_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.primary_color || "#ec4899",
+                                set: (value) => {
+                                    config.primary_color = value;
+                                    window.elementSdk.setConfig({ primary_color: value });
+                                }
+                            },
+                            {
+                                get: () => config.text_color || "#1f2937",
+                                set: (value) => {
+                                    config.text_color = value;
+                                    window.elementSdk.setConfig({ text_color: value });
+                                }
+                            }
+                        ],
+                        borderables: [],
+                        fontEditable: {
+                            get: () => config.font_family || "system-ui",
+                            set: (value) => {
+                                config.font_family = value;
+                                window.elementSdk.setConfig({ font_family: value });
+                            }
+                        },
+                        fontSizeable: {
+                            get: () => config.font_size || 16,
+                            set: (value) => {
+                                config.font_size = value;
+                                window.elementSdk.setConfig({ font_size: value });
+                            }
+                        }
+                    }),
+                    mapToEditPanelValues: (config) => new Map([
+                        ["main_title", config.main_title || defaultConfig.main_title],
+                        ["subtitle", config.subtitle || defaultConfig.subtitle],
+                        ["form_title", config.form_title || defaultConfig.form_title],
+                        ["submit_button_text", config.submit_button_text || defaultConfig.submit_button_text]
+                    ])
+                });
+            }
+        }
+
+        // Render user submitted stories
+        function renderUserStories() {
+            const container = document.getElementById('user-stories');
+            const noStoriesMsg = document.getElementById('no-stories');
+            
+            if (currentStories.length === 0) {
+                container.innerHTML = '';
+                noStoriesMsg.classList.remove('hidden');
+                return;
+            }
+            
+            noStoriesMsg.classList.add('hidden');
+            
+            // Sort stories by creation date (newest first)
+            const sortedStories = [...currentStories].sort((a, b) => 
+                new Date(b.created_at) - new Date(a.created_at)
+            );
             
             <div class="story-card bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6">
               <div class="flex items-center mb-4">
