@@ -88,7 +88,7 @@
       <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.about">About</a>
       <a href="./chat.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.chat">Chat</a>
       <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.stories">Stories</a>
-            <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.programs">Programs</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.programs">Programs</a>
       <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.protection">Protection</a>
 
       
@@ -101,10 +101,15 @@
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="ar">Arabic</a></li>
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="sw">Swahili</a></li>
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="fr">French</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
         </ul>
       </div>
       <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-translate="nav.login">Log In</a>
       <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
+    
+<a id="adminLink" href="admin-dashboard.html" class="hidden px-3 py-1.5 bg-purple-600 text-white rounded-full text-xs font-semibold hover:bg-purple-700">
+  <i class="fas fa-shield-alt mr-2"></i>Admin Panel
+</a>
     </div>
 
     <div class="hidden lg:flex items-center gap-4">
@@ -142,6 +147,7 @@
               <option value="ar">Arabic</option>
               <option value="sw">Swahili</option>
               <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
             </select>
           </div>
         </div>
@@ -209,10 +215,9 @@
       </div>
     </div>
 
-    <div class="absolute bottom-5 right-5 w-11 h-11 bg-[#E91E63] rounded-full flex items-center justify-center text-xl text-white shadow-[0_4px_15px_rgba(233,30,99,0.4)] cursor-pointer hover:scale-110 transition-transform z-20">i</div>
   </section>
 
-  <footer class="bg-dark text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+  <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
         
@@ -397,6 +402,39 @@
         "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-[rgb(183,64,219)] font-medium'>Autonomiser les filles, toujours.</span>",
         "footer.languages": "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
         "footer.supporters": "Soutenu par : HCR, Save The Children, Alight"
+      },
+      rw: {
+        "nav.home": "Ahabanza",
+        "nav.about": "Abo turi",
+        "nav.chat": "Kuganira",
+        "nav.stories": "Inkuru",
+        "nav.protection": "Umutekano",
+        "nav.programs": "Porogaramu",
+        "nav.language": "Ururimi",
+        "nav.login": "Injira",
+        "nav.donate": "Tanga",
+        "nav.search": "Shaka...",
+        "hero.title": "Umwanya Wawe W'ikijyambere <span class='text-accent'>Umutekanye</span>",
+        "hero.description": "Wihuze, wige, kandi ukure mu mwanya utekanye utegejwe abahungu bo mu rugo rw'abimukanyi rwa Mahama.",
+        "hero.join": "Injira mu muryango wacu",
+        "hero.explore": "Shakisha porogaramu",
+        "stats.girls": "Abahungu Bakuze",
+        "stats.stories": "Inkuru z'umunsi",
+        "stats.programs": "Porogaramu",
+        "stats.support": "Gushigikira",
+        "footer.tagline": "Guharanira Abahungu, Kubaka Ejo Hazaza",
+        "footer.description": "Ubuturo butekanye bwa digitale aho abahungu bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        "footer.quickLinks": "Amahuza Yihuse",
+        "footer.joinChat": "Injira mu kuganira",
+        "footer.shareStory": "Sangiza inkuru",
+        "footer.programs": "Porogaramu",
+        "footer.getHelp": "Kwakira ubufasha",
+        "footer.emergency": "Ubutabazi",
+        "footer.support": "Gushigikira",
+        "footer.report": "Raporo",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-[rgb(183,64,219)] font-medium'>Guharanira abahungu, buri gihe.</span>",
+        "footer.languages": "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        "footer.supporters": "Bishigikijwe na: UNHCR, Save The Children, Alight"
       }
     };
 
@@ -431,7 +469,8 @@
         'en': 'English',
         'ar': 'Arabic',
         'sw': 'Swahili',
-        'fr': 'French'
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
       };
       
       // Update desktop language button
