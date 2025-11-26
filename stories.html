@@ -10,13 +10,11 @@
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* جميع الأنماط الأصلية تبقى كما هي */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
       background:radial-gradient(circle,#f705ff71,#ffffff);
@@ -1477,7 +1475,6 @@ The most powerful thing I learned is that healing happens in community. None of 
             `;
         }).join('');
     }
-
     // Handle form submission
     document.getElementById('story-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -1486,7 +1483,6 @@ The most powerful thing I learned is that healing happens in community. None of 
             showToast("Maximum limit of 999 stories reached. Please contact support.", "error");
             return;
         }
-        
         const submitBtn = document.getElementById('submit-btn');
         const submitText = document.getElementById('submit-text');
         const submitLoading = document.getElementById('submit-loading');
@@ -1548,7 +1544,7 @@ The most powerful thing I learned is that healing happens in community. None of 
         }
     }
 
-    // Close modal
+    // Close modal\\\\\\
     function closeModal() {
         document.getElementById('story-modal').classList.add('hidden');
     }
