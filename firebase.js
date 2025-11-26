@@ -4,13 +4,20 @@ import {
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
-  sendPasswordResetEmail 
+  sendPasswordResetEmail,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { 
   getFirestore, 
   doc, 
   setDoc, 
-  getDoc 
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // Firebase configuration
@@ -44,19 +51,20 @@ function showMessage(message, type = 'error') {
   }, 4000);
 }
 
-// ================ SIGN UP ================
-export function setupSignUp() {
+// كود سري لإنشاء حسابات مدراء (يمكن تغييره)
+const ADMIN_SECRET_CODE = "GIRLSSPACE2024";
+
+// ================ USER SIGN UP ================
+export function setupUserSignUp() {
   const signupForm = document.getElementById('signupForm');
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log('Sign up form submitted');
+      console.log('User sign up form submitted');
 
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-
-      console.log('Form data:', { fullName, email, password });
 
       if (!fullName || !email || !password) {
         showMessage('Please fill all fields');
@@ -71,30 +79,26 @@ export function setupSignUp() {
         submitBtn.disabled = true;
 
         // إنشاء المستخدم في Authentication
-        console.log('Creating user in Firebase Auth...');
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log('User created in Auth:', user.uid);
         
         // تقسيم الاسم إلى firstName و lastName
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0];
         const lastName = nameParts.slice(1).join(' ') || '';
 
-        // حفظ بيانات المستخدم في Firestore
+        // حفظ بيانات المستخدم في Firestore مع دور "user"
         const userData = {
           fullName: fullName,
           firstName: firstName,
           lastName: lastName,
           email: email,
-          createdAt: new Date().toISOString(),
           role: 'user',
+          createdAt: new Date().toISOString(),
           uid: user.uid
         };
 
-        console.log('Saving user data to Firestore:', userData);
         await setDoc(doc(db, "users", user.uid), userData);
-        console.log('User data saved to Firestore successfully');
         
         showMessage('Account created successfully! Redirecting...', 'success');
         
@@ -103,22 +107,21 @@ export function setupSignUp() {
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userUID', user.uid);
         localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userRole', 'user');
         
-        // الانتقال إلى index.html بعد التسجيل الناجح
+        // الانتقال إلى الصفحة الرئيسية للمستخدمين
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 2000);
 
       } catch (error) {
-        console.error('Sign up error:', error);
+        console.error('User sign up error:', error);
         if (error.code === 'auth/email-already-in-use') {
           showMessage('Email already in use!');
         } else if (error.code === 'auth/weak-password') {
           showMessage('Password should be at least 6 characters');
         } else if (error.code === 'auth/invalid-email') {
           showMessage('Invalid email address');
-        } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
         } else {
           showMessage(`Error: ${error.message}`);
         }
@@ -129,12 +132,99 @@ export function setupSignUp() {
         submitBtn.disabled = false;
       }
     });
-  } else {
-    console.log('Signup form not found');
   }
 }
 
-// ================ SIGN IN ================
+// ================ ADMIN SIGN UP ================
+export function setupAdminSignUp() {
+  const adminSignupForm = document.getElementById('adminSignupForm');
+  if (adminSignupForm) {
+    adminSignupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Admin sign up form submitted');
+
+      const fullName = document.getElementById('adminFullName').value.trim();
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const secretCode = document.getElementById('adminSecretCode').value.trim();
+
+      if (!fullName || !email || !password || !secretCode) {
+        showMessage('Please fill all fields');
+        return;
+      }
+
+      // التحقق من الكود السري
+      if (secretCode !== ADMIN_SECRET_CODE) {
+        showMessage('Invalid admin secret code');
+        return;
+      }
+
+      try {
+        // إضافة مؤشر تحميل
+        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Creating Admin Account...';
+        submitBtn.disabled = true;
+
+        // إنشاء المستخدم في Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // تقسيم الاسم إلى firstName و lastName
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        // حفظ بيانات المدير في Firestore مع دور "admin"
+        const adminData = {
+          fullName: fullName,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          role: 'admin',
+          createdAt: new Date().toISOString(),
+          uid: user.uid,
+          permissions: ['manage_users', 'view_reports', 'manage_content']
+        };
+
+        await setDoc(doc(db, "users", user.uid), adminData);
+        
+        showMessage('Admin account created successfully! Redirecting to dashboard...', 'success');
+        
+        // حفظ بيانات المدير في localStorage
+        localStorage.setItem('userFullName', fullName);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userUID', user.uid);
+        localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userRole', 'admin');
+        
+        // الانتقال إلى لوحة تحكم المدراء
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 2000);
+
+      } catch (error) {
+        console.error('Admin sign up error:', error);
+        if (error.code === 'auth/email-already-in-use') {
+          showMessage('Email already in use!');
+        } else if (error.code === 'auth/weak-password') {
+          showMessage('Password should be at least 6 characters');
+        } else if (error.code === 'auth/invalid-email') {
+          showMessage('Invalid email address');
+        } else {
+          showMessage(`Error: ${error.message}`);
+        }
+        
+        // إعادة تفعيل الزر
+        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  }
+}
+
+// ================ SIGN IN (للمستخدمين والمدراء) ================
 export function setupSignIn() {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
@@ -146,12 +236,11 @@ export function setupSignIn() {
       const password = document.getElementById('password').value;
       const rememberMe = document.getElementById('remember').checked;
 
-      console.log('Login data:', { email, password });
-
       if (!email || !password) {
         showMessage('Please enter email and password');
         return;
       }
+
       try {
         // إضافة مؤشر تحميل
         const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -160,55 +249,43 @@ export function setupSignIn() {
         submitBtn.disabled = true;
 
         // تسجيل الدخول
-        console.log('Signing in user...');
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log('User signed in:', user.uid);
 
-        // جلب بيانات المستخدم من Firestore
+        // جلب بيانات المستخدم من Firestore للتحقق من الدور
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          console.log('User data from Firestore:', userData);
-          showMessage(`Welcome back, ${userData.firstName}! Redirecting...`, 'success');
+          console.log('User role:', userData.role);
           
           // حفظ بيانات المستخدم في localStorage
           localStorage.setItem('userFullName', userData.fullName);
           localStorage.setItem('userEmail', userData.email);
           localStorage.setItem('userUID', user.uid);
           localStorage.setItem('userFirstName', userData.firstName);
+          localStorage.setItem('userRole', userData.role);
           
           if (rememberMe) {
             localStorage.setItem('rememberMe', 'true');
           }
-        } else {
-          console.log('No user data found in Firestore, creating now...');
-          // إذا لم توجد بيانات في Firestore، نقوم بإنشائها
-          const userData = {
-            email: email,
-            fullName: email.split('@')[0], // استخدام جزء من الإيميل كاسم
-            firstName: 'User',
-            createdAt: new Date().toISOString(),
-            role: 'user',
-            uid: user.uid
-          };
-          
-          await setDoc(doc(db, "users", user.uid), userData);
-          console.log('New user data created in Firestore');
-          
-          showMessage('Welcome! Account setup completed. Redirecting...', 'success');
-          localStorage.setItem('userFullName', userData.fullName);
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('userUID', user.uid);
-          localStorage.setItem('userFirstName', userData.firstName);
-        }
 
-        // الانتقال إلى index.html بعد تسجيل الدخول الناجح
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 2000);
+          // توجيه المستخدم بناءً على الدور
+          if (userData.role === 'admin') {
+            showMessage(`Welcome Admin ${userData.firstName}! Redirecting to dashboard...`, 'success');
+            setTimeout(() => {
+              window.location.href = 'admin-dashboard.html';
+            },2000);
+          } else {
+            showMessage(`Welcome back, ${userData.firstName}! Redirecting...`, 'success');
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 2000);
+          }
+        } else {
+          showMessage('User data not found. Please contact support.', 'error');
+        }
 
       } catch (error) {
         console.error('Sign in error:', error);
@@ -224,19 +301,98 @@ export function setupSignIn() {
           showMessage('Incorrect email or password');
         } else if (error.code === 'auth/invalid-email') {
           showMessage('Invalid email address');
-        } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
         } else {
           showMessage(`Error: ${error.message}`);
         }
       }
     });
-  } else {
-    console.log('Login form not found');
   }
 }
 
-// = FORGOT PASSWORD 
+// ================ CHECK USER ROLE AND REDIRECT ================
+export function checkUserRoleAndRedirect() {
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const currentPage = window.location.pathname.split('/').pop();
+          
+          // إذا كان المستخدم مديراً وهو في صفحة غير لوحة التحكم
+          if (userData.role === 'admin' && !currentPage.includes('admin') && currentPage !== 'admin-dashboard.html') {
+            window.location.href = 'admin-dashboard.html';
+          }
+          // إذا كان المستخدم عادي وهو في صفحة المدير
+          else if (userData.role === 'user' && currentPage.includes('admin')) {
+            window.location.href = 'index.html';
+          }
+        }
+      } catch (error) {
+        console.error('Error checking user role:', error);
+      }
+    }
+  });
+}
+
+// ================ CHECK ADMIN ACCESS ================
+export function checkAdminAccess() {
+  return new Promise(async (resolve, reject) => {
+    const user = auth.currentUser;
+    if (!user) {
+      window.location.href = 'admin-dashboard.html';
+      reject(new Error('No user logged in'));
+      return;
+    }
+
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.role !== 'admin') {
+          showMessage('Access denied. Admin privileges required.', 'error');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+          reject(new Error('User is not admin'));
+          return;
+        }
+        resolve(userData);
+      } else {
+        reject(new Error('User data not found'));
+      }
+    } catch (error) {
+      console.error('Error checking admin access:', error);
+      reject(error);
+    }
+  });
+}
+
+// ================ GET ALL USERS (للمدراء فقط) ================
+export async function getAllUsers() {
+  try {
+    await checkAdminAccess();
+    
+    const usersRef = collection(db, "users");
+    const querySnapshot = await getDocs(usersRef);
+    const users = [];
+    
+    querySnapshot.forEach((doc) => {
+      users.push({ id: doc.id, ...doc.data() });
+    });
+    
+    return users;
+  } catch (error) {
+    console.error('Error getting users:', error);
+    return [];
+  }
+}
+
+// ================ FORGOT PASSWORD ================
 export function setupForgotPassword() {
   const forgotForm = document.getElementById('forgotForm');
   if (forgotForm) {
@@ -269,8 +425,6 @@ export function setupForgotPassword() {
           showMessage('No account found with this email');
         } else if (error.code === 'auth/invalid-email') {
           showMessage('Invalid email address');
-        } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
         } else {
           showMessage(`Error: ${error.message}`);
         }
@@ -283,47 +437,14 @@ export function setupForgotPassword() {
   }
 }
 
-// ================ CHECK AUTH STATE ================
-export function checkAuthState() {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log('User is signed in:', user.uid);
-      const userFullName = localStorage.getItem('userFullName');
-      if (userFullName) {
-        const welcomeElement = document.getElementById('welcomeText');
-        if (welcomeElement) {
-          welcomeElement.textContent = `Welcome, ${userFullName}`;
-        }
-      }
-      
-      // إخفاء أزرار Login/Register إذا كان المستخدم مسجلاً
-      const loginBtn = document.querySelector('a[href="login.html"]');
-      if (loginBtn) {
-        loginBtn.style.display = 'none';
-      }
-    } else {
-      console.log('User is signed out');
-      // إظهار أزرار Login/Register
-      const loginBtn = document.querySelector('a[href="login.html"]');
-      if (loginBtn) {
-        loginBtn.style.display = 'block';
-      }
-    }
-  });
-}
-
 // ================ LOGOUT ================
 export function setupLogout() {
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       try {
-        await auth.signOut();
-        localStorage.removeItem('userFullName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userUID');
-        localStorage.removeItem('userFirstName');
-        localStorage.removeItem('rememberMe');
+        await signOut(auth);
+        localStorage.clear();
         window.location.href = 'login.html';
       } catch (error) {
         console.error('Logout error:', error);
@@ -333,5 +454,46 @@ export function setupLogout() {
   }
 }
 
-// تهيئة التطبيق
+// ================ CHECK AUTH STATE ================
+export function checkAuthState() {
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log('User is signed in:', user.uid);
+      const userFullName = localStorage.getItem('userFullName');
+      const userRole = localStorage.getItem('userRole');
+      
+      if (userFullName) {
+        const welcomeElement = document.getElementById('welcomeText');
+        if (welcomeElement) {
+          welcomeElement.textContent = `Welcome, ${userFullName}${userRole === 'admin' ? ' (Admin)' : ''}`;
+        }
+      }
+      
+      // تحديث واجهة المستخدم بناءً على الدور
+      updateUIForUserRole(userRole);
+    } else {
+      console.log('User is signed out');
+    }
+  });
+}
+
+// ================ UPDATE UI BASED ON USER ROLE ================
+function updateUIForUserRole(userRole) {
+  const loginBtn = document.querySelector('a[href="login.html"]');
+  const adminLink = document.getElementById('adminLink');
+  
+  if (loginBtn) {
+    loginBtn.style.display = 'none';
+  }
+  
+  if (adminLink) {
+    if (userRole === 'admin') {
+      adminLink.style.display = 'block';
+    } else {
+      adminLink.style.display = 'none';
+    }
+  }
+}
+
 console.log('Firebase initialized successfully');
+
