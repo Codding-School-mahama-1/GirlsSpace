@@ -32,6 +32,7 @@
             'spin-slow': 'spin 10s linear infinite',
             sparkle: 'sparkleAnim 2s infinite',
             pulse: 'pulse-glow 2s ease-in-out infinite',
+            fadeIn: 'fadeIn 0.5s ease-in-out',
           },
           keyframes: {
             float: {
@@ -46,6 +47,10 @@
             'pulse-glow': {
               '0%, 100%': { boxShadow: '0 10px 30px rgba(236,72,154,0.2)' },
               '50%': { boxShadow: '0 15px 40px rgba(236,72,154,0.4)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
             }
           }
         }
@@ -73,6 +78,21 @@
     .nav-link:hover::after {
       width: 100%;
     }
+    
+    /* Search results styling */
+    .search-result-item {
+      transition: all 0.3s ease;
+    }
+    .search-result-item:hover {
+      background-color: rgba(236, 72, 153, 0.1);
+      transform: translateX(5px);
+    }
+    #card{
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  
+}
   </style>
 </head>
 
@@ -105,7 +125,7 @@
         </ul>
       </div>
       <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-translate="nav.login">Log In</a>
-      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
+      <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
     
 <a id="adminLink" href="admin-dashboard.html" class="hidden px-3 py-1.5 bg-purple-600 text-white rounded-full text-xs font-semibold hover:bg-purple-700">
   <i class="fas fa-shield-alt mr-2"></i>Admin Panel
@@ -114,7 +134,10 @@
 
     <div class="hidden lg:flex items-center gap-4">
       <div class="relative">
-        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]" data-translate="nav.search">
+        <input type="text" id="search-input" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px] transition-all duration-300" data-translate="nav.search">
+        <div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50 animate-fadeIn">
+          <!-- Search results will be populated here -->
+        </div>
       </div>
    </div>
 
@@ -124,6 +147,19 @@
       <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
     </button>
   </nav>
+
+  <!-- Mobile Search Bar -->
+  <div id="mobile-search-container" class="lg:hidden px-5 py-3 bg-white border-b border-gray-200 hidden">
+    <div class="relative">
+      <input type="text" id="mobile-search-input" placeholder="Search..." class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+      <button id="close-mobile-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="mobile-search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50">
+        <!-- Mobile search results will be populated here -->
+      </div>
+    </div>
+  </div>
 
   <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
   
@@ -138,6 +174,11 @@
         <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.programs">Programs</a>
         <a href="./Protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
         
+        <!-- Mobile Search Button -->
+        <button id="mobile-search-button" class="py-2 border-b border-gray-100 hover:text-primary transition-colors text-left flex items-center justify-between">
+          <span data-translate="nav.search">Search</span>
+          <i class="fas fa-search text-gray-400"></i>
+        </button>
         
         <div class="py-2 border-b border-gray-100">
           <div class="flex justify-between items-center">
@@ -153,10 +194,39 @@
         </div>
         
         <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-translate="nav.login">Log In</a>
-        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-translate="nav.donate">Donate</a>
+        <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-translate="nav.donate">Donate</a>
       </div>
     </div>
   </div>
+
+  <!-- Search Results Page (initially hidden) -->
+  <section id="search-results-page" class="min-h-screen bg-black py-16 px-6 hidden">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl lg:text-4xl font-bold" data-translate="search.results">Search Results</h2>
+        <button id="close-search-page" class="text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <div class="relative">
+          <input type="text" id="results-search-input" placeholder="Search..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+          <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      
+      <div id="search-results-content" class="space-y-4">
+        <!-- Search results will be displayed here -->
+      </div>
+      
+      <div id="no-results-message" class="text-center py-12 hidden">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2" data-translate="search.noResults">No results found</h3>
+        <p class="text-gray-500" data-translate="search.tryDifferent">Try different keywords or browse our categories</p>
+      </div>
+    </div>
+  </section>
 
   <section class="relative min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 py-20 mt-[-80px] bg-cover bg-center bg-no-repeat overflow-hidden" 
            style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('./img/img-410-doc-3.webp');">
@@ -218,18 +288,25 @@
   </section>
 
   <!-- Our Services Section -->
-  <section class="py-16 px-6 bg-gradient-to-b from-black 50  to-slate-700">
-    <div class="max-w-7xl mx-auto">
+  <section class="py-16 px-6 bg-gradient-to-b from-dark 900  to-slate-700">
+    
+    <!-- Floating decorative elements -->
+    <div class="absolute top-10 left-10 w-4 h-4 bg-accent rounded-full animate-sparkle opacity-70"></div>
+    <div class="absolute top-1/4 right-20 w-3 h-3 bg-primary rounded-full animate-sparkle delay-300 opacity-60"></div>
+    <div class="absolute bottom-1/3 left-1/4 w-2 h-2 bg-accent rounded-full animate-sparkle delay-700 opacity-50"></div>
+    <div class="absolute bottom-20 right-1/4 w-3 h-3 bg-primary rounded-full animate-sparkle delay-1000 opacity-60"></div>
+    
+    <div class="max-w-7xl mx-auto relative z-10">
       <div class="text-center mb-12">
         <h2 class="text-3xl lg:text-5xl font-black mb-4" data-translate="services.title">Our Services</h2>
-        <p class="text-lg text-gray-300 max-w-2xl mx-auto" data-translate="services.subtitle">
+        <p class="text-lg text-gray-200 max-w-2xl mx-auto" data-translate="services.subtitle">
           Comprehensive support and resources designed specifically for girls in Mahama refugee camp
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Safe Chat Rooms -->
-        <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
           <div class="w-14 h-14 bg-gradient-to-r from-primary to-custom-purple rounded-full flex items-center justify-center mb-4">
             <i class="fas fa-comments text-white text-xl"></i>
           </div>
@@ -243,7 +320,7 @@
         </div>
 
         <!-- Share Your Story -->
-        <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
           <div class="w-14 h-14 bg-gradient-to-r from-accent to-orange-500 rounded-full flex items-center justify-center mb-4">
             <i class="fas fa-book-open text-white text-xl"></i>
           </div>
@@ -252,12 +329,12 @@
             A platform for sharing inspiring stories and life experiences in a safe and respectful way.          </p>
           <a href="./stories.html" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors">
             <span data-translate="services.learnMore">Learn More</span>
-            <i class="fas fa-arrow-right ml-2 text-sm"></i>
+            <i class="fas fa-arrow-right ml-2 text-pink-400"></i>
           </a>
         </div>
 
         <!-- Learning Programs -->
-        <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
           <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
             <i class="fas fa-graduation-cap text-white text-xl"></i>
           </div>
@@ -294,7 +371,6 @@
             <span data-translate="services.learnMore">Learn More</span>
             <i class="fas fa-arrow-right ml-2 text-sm"></i>
           </a>
-        </div>
         </div>
       </div>
     </div>
@@ -394,6 +470,9 @@
         "services.multilingual.title": "Multilingual Access",
         "services.multilingual.description": "The site is available in multiple languages: English, Français, Kiswahili, Kinyarwanda, العربية.",
         "services.learnMore": "Learn More",
+        "search.results": "Search Results",
+        "search.noResults": "No results found",
+        "search.tryDifferent": "Try different keywords or browse our categories",
         "footer.tagline": "Empowering Girls, Building Futures",
         "footer.description": "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
         "footer.quickLinks": "Quick Links",
@@ -448,6 +527,9 @@
         "services.multilingual.title": "الوصول متعدد اللغات",
         "services.multilingual.description": "الموقع متاح بعدة لغات: English, Français, Kiswahili, Kinyarwanda, العربية.",
         "services.learnMore": "تعرف على المزيد",
+        "search.results": "نتائج البحث",
+        "search.noResults": "لم يتم العثور على نتائج",
+        "search.tryDifferent": "جرب كلمات بحث مختلفة أو تصفح الفئات",
         "footer.tagline": "تمكين الفتيات، بناء المستقبل",
         "footer.description": "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
         "footer.quickLinks": "روابط سريعة",
@@ -626,6 +708,174 @@
       }
     };
 
+    // Sample search data - in a real application, this would come from a database or API
+    const searchData = [
+      {
+        id: 1,
+        title: "Safe Chat Rooms",
+        description: "Join our monitored chat rooms to connect with other girls in a safe environment",
+        category: "Chat",
+        url: "./chat.html",
+        tags: ["chat", "community", "safe space"]
+      },
+      {
+        id: 2,
+        title: "Share Your Story",
+        description: "Inspire others by sharing your personal journey and experiences",
+        category: "Stories",
+        url: "./stories.html",
+        tags: ["stories", "inspiration", "personal"]
+      },
+      {
+        id: 3,
+        title: "Learning Programs",
+        description: "Educational programs covering languages, life skills, and professional development",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["education", "learning", "skills"]
+      },
+      {
+        id: 4,
+        title: "24/7 Support",
+        description: "Get help anytime with our round-the-clock support services",
+        category: "Support",
+        url: "./protection.html",
+        tags: ["support", "help", "emergency"]
+      },
+      {
+        id: 5,
+        title: "Emergency Reporting",
+        description: "Confidential channels to report emergencies and get immediate assistance",
+        category: "Protection",
+        url: "./protection.html",
+        tags: ["emergency", "report", "safety"]
+      },
+      {
+        id: 6,
+        title: "Language Learning",
+        description: "Improve your language skills with our interactive courses",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["languages", "learning", "courses"]
+      },
+      {
+        id: 7,
+        title: "Life Skills",
+        description: "Develop essential life skills for personal growth and independence",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["skills", "development", "personal growth"]
+      },
+      {
+        id: 8,
+        title: "GBV Prevention",
+        description: "Learn about gender-based violence prevention and protection",
+        category: "Protection",
+        url: "./protection.html",
+        tags: ["gbv", "prevention", "safety"]
+      }
+    ];
+
+    // Search functionality
+    function performSearch(query) {
+      if (!query || query.trim() === '') {
+        return [];
+      }
+      
+      const searchTerms = query.toLowerCase().trim().split(/\s+/);
+      
+      return searchData.filter(item => {
+        const searchText = (
+          item.title.toLowerCase() + ' ' +
+          item.description.toLowerCase() + ' ' +
+          item.category.toLowerCase() + ' ' +
+          item.tags.join(' ')
+        ).toLowerCase();
+        
+        return searchTerms.some(term => searchText.includes(term));
+      });
+    }
+
+    function displaySearchResults(results, container) {
+      container.innerHTML = '';
+      
+      if (results.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 text-gray-500 text-center">
+            <i class="fas fa-search mb-2"></i>
+            <p>No results found</p>
+          </div>
+        `;
+        container.classList.remove('hidden');
+        return;
+      }
+      
+      results.forEach(result => {
+        const resultElement = document.createElement('a');
+        resultElement.href = result.url;
+        resultElement.className = 'block p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors search-result-item';
+        resultElement.innerHTML = `
+          <div class="font-medium text-gray-800">${result.title}</div>
+          <div class="text-sm text-gray-600 mt-1">${result.description}</div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-primary font-medium">${result.category}</span>
+            <i class="fas fa-arrow-right text-xs text-gray-400"></i>
+          </div>
+        `;
+        container.appendChild(resultElement);
+      });
+      
+      container.classList.remove('hidden');
+    }
+
+    function showSearchResultsPage(query) {
+      const results = performSearch(query);
+      const resultsPage = document.getElementById('search-results-page');
+      const resultsContent = document.getElementById('search-results-content');
+      const noResultsMessage = document.getElementById('no-results-message');
+      
+      resultsContent.innerHTML = '';
+      
+      if (results.length === 0) {
+        noResultsMessage.classList.remove('hidden');
+        resultsContent.classList.add('hidden');
+      } else {
+        noResultsMessage.classList.add('hidden');
+        resultsContent.classList.remove('hidden');
+        
+        results.forEach(result => {
+          const resultElement = document.createElement('a');
+          resultElement.href = result.url;
+          resultElement.className = 'block p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors search-result-item';
+          resultElement.innerHTML = `
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-lg text-white">${result.title}</h3>
+                <p class="text-gray-300 mt-1">${result.description}</p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                  ${result.tags.map(tag => `<span class="px-2 py-1 bg-primary/20 text-primary rounded text-xs">${tag}</span>`).join('')}
+                </div>
+              </div>
+              <span class="text-xs text-accent font-medium bg-accent/20 px-2 py-1 rounded">${result.category}</span>
+            </div>
+          `;
+          resultsContent.appendChild(resultElement);
+        });
+      }
+      
+      // Hide other sections and show results page
+      document.querySelector('section:not(#search-results-page)').style.display = 'none';
+      document.querySelector('footer').style.display = 'none';
+      resultsPage.classList.remove('hidden');
+    }
+
+    function hideSearchResultsPage() {
+      const resultsPage = document.getElementById('search-results-page');
+      resultsPage.classList.add('hidden');
+      document.querySelector('section:not(#search-results-page)').style.display = 'block';
+      document.querySelector('footer').style.display = 'block';
+    }
+
     // Language management functions
     function getCurrentLanguage() {
       return localStorage.getItem('selectedLanguage') || 'en';
@@ -696,6 +946,114 @@
         mobileLanguageSelector.addEventListener('change', function() {
           setCurrentLanguage(this.value);
         });
+      }
+
+      // Search functionality initialization
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      const mobileSearchInput = document.getElementById('mobile-search-input');
+      const mobileSearchResults = document.getElementById('mobile-search-results');
+      const mobileSearchButton = document.getElementById('mobile-search-button');
+      const mobileSearchContainer = document.getElementById('mobile-search-container');
+      const closeMobileSearch = document.getElementById('close-mobile-search');
+      const resultsSearchInput = document.getElementById('results-search-input');
+      const closeSearchPage = document.getElementById('close-search-page');
+
+      // Desktop search
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, searchResults);
+          } else {
+            searchResults.classList.add('hidden');
+          }
+        });
+
+        searchInput.addEventListener('focus', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, searchResults);
+          }
+        });
+
+        // Hide results when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.add('hidden');
+          }
+        });
+
+        // Handle Enter key to show full results page
+        searchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+              this.value = '';
+              searchResults.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // Mobile search
+      if (mobileSearchButton) {
+        mobileSearchButton.addEventListener('click', function() {
+          mobileSearchContainer.classList.remove('hidden');
+          mobileSearchInput.focus();
+        });
+      }
+
+      if (closeMobileSearch) {
+        closeMobileSearch.addEventListener('click', function() {
+          mobileSearchContainer.classList.add('hidden');
+          mobileSearchResults.classList.add('hidden');
+        });
+      }
+
+      if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, mobileSearchResults);
+          } else {
+            mobileSearchResults.classList.add('hidden');
+          }
+        });
+
+        mobileSearchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+              this.value = '';
+              mobileSearchResults.classList.add('hidden');
+              mobileSearchContainer.classList.add('hidden');
+              toggleMenu(); // Close mobile menu
+            }
+          }
+        });
+      }
+
+      // Results page search
+      if (resultsSearchInput) {
+        resultsSearchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+            }
+          }
+        });
+      }
+
+      // Close search page
+      if (closeSearchPage) {
+        closeSearchPage.addEventListener('click', hideSearchResultsPage);
       }
     });
 
