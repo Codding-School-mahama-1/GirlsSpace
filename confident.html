@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chat Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -33,6 +33,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         /* ____ Modern Navbar ____ */
@@ -40,7 +41,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
+            padding: 12px 5%;
             background: #ffffff;
             position: sticky;
             top: 0;
@@ -55,6 +56,7 @@
             height: 50px;
             object-fit: contain;
             border-radius: 50%;
+            max-width: 100%;
         }
 
         /* ____ hamburger ____ */
@@ -87,21 +89,21 @@
         }
 
         /* ____ nav links ____ */
-        .nav-links,a {
+        .nav-links {
             display: flex;
             gap: 16px;
             align-items: center;
             font-size: 14px;
             text-decoration: none;
             list-style: none;
-
         }
 
-        .nav-link   {
+        .nav-link {
             position: relative;
             color: #374151;
             font-weight: 500;
             transition: color 0.2s;
+            text-decoration: none;
         }
 
         .nav-link:hover {
@@ -119,7 +121,6 @@
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
-       
 
         .nav-link:hover::after {
             width: 100%;
@@ -133,6 +134,8 @@
             font-weight: 600;
             font-size: 13px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .login-btn:hover {
@@ -147,6 +150,8 @@
             font-weight: 600;
             font-size: 13px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .donate-btn:hover {
@@ -160,6 +165,7 @@
             outline: none;
             font-size: 13px;
             width: 130px;
+            max-width: 100%;
         }
 
         /* ____ Dropdown ____ */
@@ -233,6 +239,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            width: 100%;
         }
 
         .chat-container {
@@ -249,6 +256,7 @@
         /* Sidebar Styles */
         .sidebar {
             width: 30%;
+            min-width: 250px;
             background: var(--light);
             border-right: 1px solid var(--gray-light);
             display: flex;
@@ -290,6 +298,7 @@
             font-weight: bold;
             margin-right: 15px;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .user-avatar img {
@@ -298,14 +307,25 @@
             object-fit: cover;
         }
 
+        .user-info {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
         .user-info h3 {
             font-size: 1.1rem;
             margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .user-info p {
             font-size: 0.8rem;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .online-status {
@@ -320,6 +340,7 @@
             border-radius: 50%;
             background: var(--success);
             margin-right: 5px;
+            flex-shrink: 0;
         }
 
         .sidebar-tabs {
@@ -335,6 +356,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
             color: var(--gray);
+            white-space: nowrap;
         }
 
         .sidebar-tab.active {
@@ -403,6 +425,7 @@
             margin-right: 10px;
             font-size: 0.9rem;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .person-avatar img {
@@ -413,19 +436,28 @@
 
         .channel-info, .person-info {
             flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
         }
 
         .channel-info h4, .person-info h4 {
-        color: #000000;
+            color: #000000;
             font-size: 0.95rem;
             margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .person-info h4{
+        
+        .person-info h4 {
             color: rgb(13, 13, 173);
         }
+        
         .channel-info p, .person-info p {
             font-size: 0.75rem;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .person-status {
@@ -439,6 +471,7 @@
             height: 8px;
             border-radius: 50%;
             margin-right: 5px;
+            flex-shrink: 0;
         }
 
         .person-status-dot.online {
@@ -458,6 +491,7 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            min-width: 0; /* Important for flex item shrinking */
         }
 
         .chat-header {
@@ -469,21 +503,33 @@
             background-color: #f8f9fa;
         }
 
+        .chat-title {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
         .chat-title h2 {
             font-size: 1.3rem;
             color: var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-title p {
             font-size: 0.8rem;
             color: var(--gray);
             margin-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-actions {
             display: flex;
             gap: 15px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .chat-actions button {
@@ -507,6 +553,7 @@
             font-weight: 600;
             text-decoration: none;
             transition: background 0.3s ease;
+            white-space: nowrap;
         }
 
         .home-btn:hover {
@@ -569,12 +616,12 @@
             padding: 12px 15px;
             border-radius: 18px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            word-break: break-word; /* Prevent long words from breaking layout */
         }
 
         .received .message-content {
             border-top-left-radius: 5px;
             background: var(--light);
-            
         }
 
         .sent .message-content {
@@ -584,7 +631,6 @@
         }
 
         .message-sender {
-        
             font-weight: 600;
             font-size: 0.85rem;
             margin-bottom: 5px;
@@ -625,6 +671,7 @@
             border-radius: 30px;
             outline: none;
             transition: border 0.3s ease;
+            min-width: 0; /* Allow input to shrink properly */
         }
 
         .message-input input:focus {
@@ -643,6 +690,7 @@
             justify-content: center;
             cursor: pointer;
             transition: background 0.3s ease;
+            flex-shrink: 0;
         }
 
         .send-button:hover {
@@ -673,6 +721,10 @@
             border-radius: 10px;
             width: 90%;
             max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .search-modal-header {
@@ -680,6 +732,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .search-modal-header h3 {
@@ -701,11 +754,13 @@
             border-radius: 30px;
             outline: none;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .search-results {
             max-height: 300px;
             overflow-y: auto;
+            flex: 1;
         }
 
         .search-result-item {
@@ -726,6 +781,7 @@
         .search-result-text {
             font-size: 0.9rem;
             margin-top: 5px;
+            word-break: break-word;
         }
 
         .no-results {
@@ -734,177 +790,155 @@
             color: var(--gray);
         }
 
-        /* Main Footer (outside chat) */
-        .main-footer {
-            background: #273147;
-            color: #e5e7eb;
-            padding: 2rem 1rem;
-            margin-top: auto;
+        /* Footer */
+        .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .footer-container {
-            max-width: 1200px;
+        .container {
+            max-width: 1280px;
             margin: 0 auto;
         }
 
-        .footer-grid {
+        .footer-main {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
         }
 
-        .footer-about {
-            grid-column: 1 / -1;
-        }
-
-        .logo-section {
+        .footer-left {
             display: flex;
             flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .logo-section img {
-            width: 60px;
+        .footer-logo {
+            width: 50px;
             height: 50px;
             object-fit: contain;
             border-radius: 50%;
+            border: 2px solid #ec4899;
         }
 
-        .logo-subtitle {
-            color: #9ca3af;
-            font-size: 0.9rem;
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
         }
 
-        .about-text {
-            color: #9ca3af;
+        .footer-desc {
             font-size: 0.95rem;
-            max-width: 32rem;
-            margin: 1rem auto;
-            text-align: center;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
         }
 
         .social-links {
             display: flex;
             gap: 12px;
-            justify-content: center;
         }
 
         .social-btn {
             width: 40px;
             height: 40px;
-            background: #1f2937;
-            border: 1px solid #1f2937;
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: 8px;
-            color: white;
+            color: #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-decoration: none;
         }
 
         .social-btn:hover {
-            background: #374151;
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .links-title {
             color: white;
             font-weight: 600;
-            margin: 1rem 0 0.5rem;
             font-size: 1.1rem;
+            margin-bottom: 1rem;
         }
 
         .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            color: #9ca3af;
-            font-size: 0.95rem;
+            gap: 0.75rem;
         }
 
         .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
             transition: color 0.3s;
-            font-size: 12px;
-        }
-
-        .link-item a {
-            color: inherit;
             text-decoration: none;
         }
 
         .link-item:hover {
-            color: rgb(255, 255, 255);
+            color: #db78e4;
         }
 
         .footer-bottom {
-            border-top: 1px solid #1f2937;
-            padding-top: 1.5rem;
-            font-size: 0.875rem;
-            color: #9ca3af;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .footer-info {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 1rem;
-        }
-
-        /* Video and Phone Call Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal h3 {
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .modal-buttons {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
         }
 
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+        .footer-left-info p {
+            margin: 0;
         }
 
-        .accept-btn {
-            background: var(--primary);
-            color: white;
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
         }
 
-        .decline-btn {
-            background: #e74c3c;
-            color: white;
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
         }
 
         /* _____ Responsive _______ */
+        @media (max-width: 1024px) {
+            .chat-container {
+                height: 80vh;
+            }
+            
+            .sidebar {
+                width: 35%;
+            }
+        }
+
         @media (max-width: 768px) {
             .hamburger {
                 display: flex;
@@ -952,11 +986,13 @@
             .chat-container {
                 flex-direction: column;
                 height: 90vh;
+                border-radius: 10px;
             }
             
             .sidebar {
                 width: 100%;
                 height: 40%;
+                min-width: auto;
             }
             
             .channels, .people {
@@ -976,13 +1012,27 @@
             .channel-item, .person-item {
                 min-width: 150px;
             }
-
-            .footer-grid {
+            
+            .footer-main {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .footer-right-info {
+                text-align: left;
             }
         }
        
         @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            
             .sidebar {
                 height: 35%;
             }
@@ -1050,6 +1100,14 @@
             .message-text {
                 font-size: 0.9rem;
             }
+            
+            .message-input {
+                padding: 15px;
+            }
+            
+            .footer {
+                padding: 2rem 1rem 1rem;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1060,15 +1118,34 @@
             .nav-search input {
                 width: 160px;
             }
-
-            .footer-grid {
-                grid-template-columns: 2fr 1fr 1fr;
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .sidebar-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar-tab {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .channel-info h4, .person-info h4 {
+                font-size: 0.85rem;
+            }
+            
+            .chat-title h2 {
+                font-size: 1rem;
+            }
+            
+            .message {
+                max-width: 95%;
             }
         }
     </style>
 </head>
 <body>
-
     <!-- Modern Navigation -->
     <nav class="navbar">
         <div class="nav-logo">
@@ -1082,12 +1159,12 @@
         </div>
         
         <ul class="nav-links">
-            <li><a href=" ./indea.html" class="nav-link" data-translate="home">Home</a></li>
+            <li><a href="./indea.html" class="nav-link" data-translate="home">Home</a></li>
             <li><a href="./AboutUs.html" class="nav-link" data-translate="about">About</a></li>
             <li><a href="./chat.html" class="nav-link" data-translate="chat">Chat</a></li>
-            <li><a href=" ./stoies.html" class="nav-link" data-translate="stories">Stories</a></li>
-            <li><a href="./learning_programs " class="nav-link" data-translate="programs">Programs</a></li>
-            <li><a href="./support.html " class="nav-link" data-translate="support">Support</a></li>
+            <li><a href="./stoies.html" class="nav-link" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs" class="nav-link" data-translate="programs">Programs</a></li>
+            <li><a href="./support.html" class="nav-link" data-translate="support">Support</a></li>
             
             <li class="dropdown" id="language-dropdown">
                 <a href="#" class="nav-link" data-translate="languages">Languages <i class="fas fa-chevron-down"></i></a>
@@ -1100,7 +1177,6 @@
                 </ul>
             </li>
             
-    
             <li><a href="login.html" class="login-btn" data-translate="login">Login</a></li>
             <li><a href="Donate.html" class="donate-btn" data-translate="donate">Donate</a></li>
             <li class="nav-search">
@@ -1271,7 +1347,6 @@
                         <p id="channel-description" data-translate="ideasDescription">Share and discuss business ideas with the community</p>
                     </div>
                     <div class="chat-actions">
-                        <!-- <a href="/index.html" class="home-btn">Home</a> -->
                         <button id="search-btn"><i class="fas fa-search"></i></button>
                         <button><i class="fas fa-ellipsis-v"></i></button>
                     </div>
@@ -1305,50 +1380,52 @@
         </div>
     </div>
 
-    <!-- Main Footer (outside chat) -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <div class="logo-section">
-                        <img src="./img/Girls Space (1) (1) (2).png" alt="Logo">
-                        <p class="logo-subtitle" data-translate="empoweringStudents">Empowering Students, Building Futures</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
                     </div>
-                    <p class="about-text" data-translate="footerDescription">
-                        A platform for student entrepreneurs to connect, collaborate, and grow their business ideas.
+                    <p class="footer-desc" data-translate="footerDescription">
+                        A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
                     </p>
                     <div class="social-links">
                         <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
-                <div>
+                <div class="footer-links">
                     <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
                     <ul class="links-list">
-                        <li class="link-item"><a href="#" data-translate="joinChat">Join Chat</a></li>
-                        <li class="link-item"><a href="#" data-translate="shareStory">Share Story</a></li>
-                        <li class="link-item"><a href="#" data-translate="programs">Programs</a></li>
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
                     </ul>
                 </div>
 
-                <div>
+                <div class="footer-links">
                     <h4 class="links-title" data-translate="getHelp">Get Help</h4>
                     <ul class="links-list">
-                        <li class="link-item"><a href="#" data-translate="emergency">Emergency</a></li>
-                        <li class="link-item"><a href="#" data-translate="support">Support</a></li>
-                        <li class="link-item"><a href="#" data-translate="report">Report</a></li>
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p data-translate="copyright">© 2025/11/11 Student Business Chat. <span style="color:#d1d5db;" data-translate="empoweringAlways">Empowering entrepreneurs, always.</span></p>
-                <div class="footer-info">
-                    <p data-translate="availableLanguages">Available in: English, Français, Español, العربية</p>
-                    <p data-translate="supportedBy">Supported by Student Entrepreneurship Network</p>
+                <div class="footer-left-info">
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
+                </div>
+                <div class="footer-right-info">
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
                 </div>
             </div>
         </div>
@@ -1402,18 +1479,20 @@
                 searchPlaceholder: "Type to search messages...",
                 enterSearchTerm: "Enter a search term to find messages",
                 noResults: "No messages found matching your search",
-                empoweringStudents: "Empowering Students, Building Futures",
-                footerDescription: "A platform for student entrepreneurs to connect, collaborate, and grow their business ideas.",
+                empoweringGirls: "Empowering Girls, Building Futures",
+                footerDescription: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
                 quickLinks: "Quick Links",
-                joinChat: "Join Chat",
+                joinChatFooter: "Join Chat",
                 shareStory: "Share Story",
+                programsFooter: "Programs",
                 getHelp: "Get Help",
                 emergency: "Emergency",
+                supportFooter: "Support",
                 report: "Report",
-                copyright: "© 2025/11/11 Student Business Chat.",
-                empoweringAlways: "Empowering entrepreneurs, always.",
-                availableLanguages: "Available in: English, Français, Español, العربية",
-                supportedBy: "Supported by Student Entrepreneurship Network"
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Empowering girls, always.",
+                availableLanguages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+                supportedBy: "Supported by UNHCR, Save The Children, Alight"
             },
             ar: {
                 home: "الصفحة الرئيسية",
@@ -1460,18 +1539,20 @@
                 searchPlaceholder: "اكتب للبحث في الرسائل...",
                 enterSearchTerm: "أدخل مصطلح البحث للعثور على الرسائل",
                 noResults: "لم يتم العثور على رسائل تطابق بحثك",
-                empoweringStudents: "تمكين الطلاب، بناء المستقبل",
-                footerDescription: "منصة لرواد الأعمال الطلاب للتواصل والتعاون وتنمية أفكار أعمالهم.",
+                empoweringGirls: "تمكين الفتيات، بناء المستقبل",
+                footerDescription: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجر مهنة التواصل والتعلم والنمو والازدهار.",
                 quickLinks: "روابط سريعة",
-                joinChat: "انضم للدردشة",
+                joinChatFooter: "انضم للدردشة",
                 shareStory: "شارك قصة",
+                programsFooter: "البرامج",
                 getHelp: "احصل على المساعدة",
                 emergency: "طوارئ",
+                supportFooter: "الدعم",
                 report: "الإبلاغ",
-                copyright: "© 2025/11/11 دردشة الأعمال الطلابية.",
-                empoweringAlways: "تمكين رواد الأعمال، دائماً.",
-                availableLanguages: "متوفر بـ: الإنجليزية، الفرنسية، الإسبانية، العربية",
-                supportedBy: "بدعم من شبكة ريادة الأعمال الطلابية"
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "تمكين الفتيات، دائماً.",
+                availableLanguages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+                supportedBy: "بدعم من UNHCR، Save The Children، Alight"
             },
             sw: {
                 home: "Nyumbani",
@@ -1518,18 +1599,20 @@
                 searchPlaceholder: "Andika kutafuta ujumbe...",
                 enterSearchTerm: "Weka neno la kutafuta ili kupata ujumbe",
                 noResults: "Hakuna ujumbe uliopatikana unaolingana na utafutaji wako",
-                empoweringStudents: "Kuwawezesha Wanafunzi, Kujenga Mustakabali",
-                footerDescription: "Jukwaa kwa wafanyabiashara wanafunzi kuwasiliana, kushirikiana, na kukuza mawazo yao ya biashara.",
+                empoweringGirls: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+                footerDescription: "Kimbilio salama la kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuwasiliana, kujifunza, kukua, na kustawi.",
                 quickLinks: "Viungo vya Haraka",
-                joinChat: "Jiunge na Mazungumzo",
+                joinChatFooter: "Jiunge na Mazungumzo",
                 shareStory: "Shiriki Hadithi",
+                programsFooter: "Mipango",
                 getHelp: "Pata Usaidizi",
                 emergency: "Dharura",
+                supportFooter: "Usaidizi",
                 report: "Ripoti",
-                copyright: "© 2025/11/11 Mazungumzo ya Biashara ya Wanafunzi.",
-                empoweringAlways: "Kuwawezesha wafanyabiashara, kila wakati.",
-                availableLanguages: "Inapatikana katika: Kiingereza, Kifaransa, Kihispania, Kiarabu",
-                supportedBy: "Inasaidiwa na Mtandao wa Ujasiriamali wa Wanafunzi"
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Kuwawezesha wasichana, kila wakati.",
+                availableLanguages: "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+                supportedBy: "Inasaidiwa na UNHCR, Save The Children, Alight"
             },
             fr: {
                 home: "Accueil",
@@ -1576,18 +1659,20 @@
                 searchPlaceholder: "Tapez pour rechercher des messages...",
                 enterSearchTerm: "Entrez un terme de recherche pour trouver des messages",
                 noResults: "Aucun message trouvé correspondant à votre recherche",
-                empoweringStudents: "Autonomiser les étudiants, construire l'avenir",
-                footerDescription: "Une plateforme pour les entrepreneurs étudiants pour se connecter, collaborer et développer leurs idées d'entreprise.",
+                empoweringGirls: "Autonomiser les filles, construire l'avenir",
+                footerDescription: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
                 quickLinks: "Liens rapides",
-                joinChat: "Rejoindre le chat",
+                joinChatFooter: "Rejoindre le chat",
                 shareStory: "Partager une histoire",
+                programsFooter: "Programmes",
                 getHelp: "Obtenir de l'aide",
                 emergency: "Urgence",
+                supportFooter: "Soutien",
                 report: "Signaler",
-                copyright: "© 2025/11/11 Chat d'Affaires Étudiant.",
-                empoweringAlways: "Autonomiser les entrepreneurs, toujours.",
-                availableLanguages: "Disponible en : Anglais, Français, Espagnol, Arabe",
-                supportedBy: "Soutenu par le Réseau d'Entrepreneuriat Étudiant"
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Autonomiser les filles, toujours.",
+                availableLanguages: "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
+                supportedBy: "Soutenu par UNHCR, Save The Children, Alight"
             },
             rw: {
                 home: "Ahabanza",
@@ -1634,18 +1719,20 @@
                 searchPlaceholder: "Andika gushakisha ubutumwa...",
                 enterSearchTerm: "Shyiramo ijambo ry'ishakishwa kugirango ushake ubutumwa",
                 noResults: "Nta butumwa bwabonetse buhuye n'ishakishwa ryawe",
-                empoweringStudents: "Guharanira Abanyeshuri, Kubaka Ejo Hazaza",
-                footerDescription: "Uru ruhame rw'abanyeshuri ba rwiyemezamirimo rwo guhuza, gukorana, no gukura ibitekerezo byabo by'ubucuruzi.",
+                empoweringGirls: "Guharanira Abakobwa, Kubaka Ejo Hazaza",
+                footerDescription: "Ahantu heza h'ikoranabuhanga aho abakobwa bo mu mugi w'impunzi wa Mahama bashobora guhuza, kwiga, gukura, no gukuraho ubwoba.",
                 quickLinks: "Ihuza vya Vuba",
-                joinChat: "Injira mu Kuganira",
+                joinChatFooter: "Injira mu Kuganira",
                 shareStory: "Sangira Inkuru",
+                programsFooter: "Porogaramu",
                 getHelp: "Shaka Ubufasha",
                 emergency: "Gihutirwa",
+                supportFooter: "Gushigikira",
                 report: "Raporo",
-                copyright: "© 2025/11/11 Kuganira k'Ubucuruzi bw'Abanyeshuri.",
-                empoweringAlways: "Guharanira abarwiyemezamirimo, buri gihe.",
-                availableLanguages: "Biboneka mu: Icyongereza, Igifaransa, Icyesipanyoli, Icyarabu",
-                supportedBy: "Byashyigikiwe na Umuryango w'Ubwiyemezi bw'Abanyeshuri"
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Guharanira abakobwa, buri gihe.",
+                availableLanguages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+                supportedBy: "Byashyigikiwe na UNHCR, Save The Children, Alight"
             }
         };
 
