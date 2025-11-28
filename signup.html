@@ -524,7 +524,10 @@
 
   <script type="module">
     import { setupSignUp } from './firebase.js';
-    document.addEventListener('DOMContentLoaded', setupSignUp);
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Sign up page loaded');
+      setupSignUp();
+    });
   </script>
 </body>
 </html>
