@@ -1206,11 +1206,9 @@ The most powerful thing I learned is that healing happens in community. None of 
           element.placeholder = translations[lang][key];
         }
       });
-
       // Update page title
       document.title = translations[lang]["page.title"] || "Stories | GirlsSpace Mahama";
     }
-
     function updateLanguageSelector(lang) {
       const languageNames = {
         'en': 'English',
@@ -1225,7 +1223,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         currentLanguageElement.textContent = languageNames[lang];
       }
     }
-
     function updatePageDirection(lang) {
       // Set direction for RTL languages
       if (lang === 'ar') {
@@ -1236,7 +1233,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         document.body.style.textAlign = 'left';
       }
     }
-
     // Initialize language on page load
     document.addEventListener('DOMContentLoaded', function() {
       const currentLang = getCurrentLanguage();
@@ -1254,7 +1250,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         });
       });
     });
-
     // Mobile menu functionality
     const mobileMenu = document.getElementById('mobile-menu');
     const navLinks = document.getElementById('nav-links');
@@ -1281,7 +1276,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         }
       });
     }
-
     window.addEventListener('resize', () => {
       if (window.innerWidth > 768) {
         navLinks.classList.remove('active');
@@ -1290,7 +1284,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         dropdown?.classList.remove('active');
       }
     });
-
     // Rest of the stories functionality remains the same...
     // [All the existing stories JavaScript code remains unchanged]
   </script>
@@ -1304,7 +1297,6 @@ The most powerful thing I learned is that healing happens in community. None of 
         form_title: "Share Your Story",
         submit_button_text: "Share My Story"
     };
-
     // Reference stories data
     const referenceStories = {
         amina: {
@@ -1336,10 +1328,8 @@ We create a circle of trust where girls can share without judgment. We remind ea
 The most powerful thing I learned is that healing happens in community. None of us has to face these challenges alone.`
         }
     };
-
     let currentStories = [];
     let storyCount = 0;
-
     // Data SDK handler
     const dataHandler = {
         onDataChanged(data) {
@@ -1347,7 +1337,6 @@ The most powerful thing I learned is that healing happens in community. None of 
             renderUserStories();
         }
     };
-
     // Initialize SDKs
     async function initializeApp() {
         // Initialize Data SDK
@@ -1357,7 +1346,6 @@ The most powerful thing I learned is that healing happens in community. None of 
             showToast("Failed to load stories", "error");
             return;
         }
-
         // Initialize Element SDK
         if (window.elementSdk) {
             window.elementSdk.init({
