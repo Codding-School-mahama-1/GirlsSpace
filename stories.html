@@ -906,6 +906,9 @@ The most powerful thing I learned is that healing happens in community. None of 
       </div>
     </div>
   </footer>
+  <script>
+    
+  </script>
 
   <script>
     // Language data with complete translations for stories section
@@ -1578,6 +1581,213 @@ The most powerful thing I learned is that healing happens in community. None of 
 
     // Initialize the app
     initializeApp();
+
+    
+// استبدال كود الـ Data SDK القديم بهذا الكود
+
+// تهيئة Firebase للقصص
+async function initializeFirebaseStories() {
+    try {
+        console.log("Initializing Firebase Stories...");
+        
+        // جلب القصص عند تحميل الصفحة
+        await loadStoriesFromFirebase();
+        
+        // الاستماع للتحديثات الفورية
+        listenToStoriesFromFirebase();
+        
+        console.log("Firebase Stories initialized successfully");
+    } catch (error) {
+        console.error("Error initializing Firebase Stories:", error);
+        showToast("Failed to load stories. Please refresh the page.", "error");
+    }
+}
+
+// جلب القصص من Firebase
+async function loadStoriesFromFirebase() {
+    try {
+        console.log("Loading stories from Firebase...");
+        const result = await getApprovedStories();
+        
+        if (result.success) {
+            console.log("Stories loaded:", result.stories.length);
+            currentStories = result.stories.map(story => ({
+                id: story.id,
+                title: story.title,
+                author_name: story.author_name,
+                story_content: story.content,
+                category: story.category,
+                created_at: story.createdAt ? story.createdAt.toDate() : new Date(),
+                is_approved: story.status === "approved"
+            }));
+            
+            renderUserStories();
+        } else {
+            console.error("Error loading stories:", result.error);
+            showToast("Error loading stories: " + result.error, "error");
+        }
+    } catch (error) {
+        console.error("Error in loadStoriesFromFirebase:", error);
+        showToast("Error loading stories", "error");
+    }
+}
+
+// الاستماع للتحديثات الفورية
+function listenToStoriesFromFirebase() {
+    try {
+        listenToStories((stories) => {
+            console.log("Real-time update received:", stories.length);
+            currentStories = stories.map(story => ({
+                id: story.id,
+                title: story.title,
+                author_name: story.author_name,
+                story_content: story.content,
+                category: story.category,
+                created_at: story.createdAt ? story.createdAt.toDate() : new Date(),
+                is_approved: story.status === "approved"
+            }));
+            
+            renderUserStories();
+        });
+    } catch (error) {
+        console.error("Error in listenToStoriesFromFirebase:", error);
+    }
+}
+
+// تحديث دالة إرسال النموذج
+document.getElementById('story-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    const submitLoading = document.getElementById('submit-loading');
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitText.classList.add('hidden');
+    submitLoading.classList.remove('hidden');
+    
+    const formData = new FormData(e.target);
+    const storyData = {
+        title: formData.get('title').trim(),
+        author_name: formData.get('author').trim() || 'Anonymous',
+        content: formData.get('content').trim(),
+        category: formData.get('category'),
+        language: getCurrentLanguage()
+    };
+    
+    // التحقق من البيانات
+    if (!storyData.title || !storyData.content) {
+        showToast("Please fill in all required fields", "error");
+        submitBtn.disabled = false;
+        submitText.classList.remove('hidden');
+        submitLoading.classList.add('hidden');
+        return;
+    }
+    
+    try {
+        console.log("Submitting story:", storyData);
+        const result = await addStory(storyData);
+        
+        if (result.success) {
+            showToast("Your story has been shared successfully!", "success");
+            e.target.reset();
+        } else {
+            showToast("Failed to share your story: " + result.error, "error");
+        }
+    } catch (error) {
+        console.error("Submission error:", error);
+        showToast("An error occurred. Please try again.", "error");
+    } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitText.classList.remove('hidden');
+        submitLoading.classList.add('hidden');
+    }
+});
+
+// تحديث دالة عرض القصص
+function renderUserStories() {
+    const container = document.getElementById('user-stories');
+    const noStoriesMsg = document.getElementById('no-stories');
+    
+    if (currentStories.length === 0) {
+        container.innerHTML = '';
+        noStoriesMsg.classList.remove('hidden');
+        return;
+    }
+    
+    noStoriesMsg.classList.add('hidden');
+    
+    // Sort stories by creation date (newest first)
+    const sortedStories = [...currentStories].sort((a, b) => 
+        new Date(b.created_at) - new Date(a.created_at)
+    );
+    
+    container.innerHTML = sortedStories.map(story => {
+        const initial = story.author_name.charAt(0).toUpperCase();
+        const colors = [
+            'from-green-400 to-emerald-500',
+            'from-orange-400 to-red-500',
+            'from-purple-400 to-indigo-500',
+            'from-yellow-400 to-orange-500',
+            'from-teal-400 to-cyan-500'
+        ];
+        const colorClass = colors[Math.abs(story.id.split('').reduce((a, b) => {
+            return a + b.charCodeAt(0);
+        }, 0)) % colors.length];
+        
+        const createdDate = new Date(story.created_at);
+        const timeAgo = getTimeAgo(createdDate);
+        
+        return `
+            <div class="story-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-r ${colorClass} rounded-full flex items-center justify-center text-white font-bold">
+                        ${initial}
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="font-semibold text-gray-900">${escapeHtml(story.title)}</h3>
+                        <p class="text-sm text-gray-600">${timeAgo} • ${escapeHtml(story.category)}</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    ${escapeHtml(story.story_content.substring(0, 150))}${story.story_content.length > 150 ? '...' : ''}
+                </p>
+                <button onclick="showUserStory('${story.id}')" class="text-pink-600 font-medium mt-4 hover:text-pink-800 transition-colors">
+                    Read full story →
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+// تحديث دالة عرض القصة الكاملة
+function showUserStory(storyId) {
+    const story = currentStories.find(s => s.id === storyId);
+    if (story) {
+        document.getElementById('modal-title').textContent = story.title;
+        document.getElementById('modal-author').textContent = `By ${story.author_name} • ${story.category}`;
+        document.getElementById('modal-content').textContent = story.story_content;
+        document.getElementById('story-modal').classList.remove('hidden');
+    }
+}
+
+// استبدال استدعاء initializeApp القديم
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing Firebase Stories...");
+    initializeFirebaseStories();
+});
   </script>
+  <script type="module">
+    import { addStory, getStories, listenToStories, getApprovedStories } from './firebase-stories.js';
+    
+    // جعل الدوال متاحة globally
+    window.addStory = addStory;
+    window.getStories = getStories;
+    window.listenToStories = listenToStories;
+    window.getApprovedStories = getApprovedStories;
+</script>
+  <script type="module" src="firebase-stories.js"></script>
 </body>
 </html>
