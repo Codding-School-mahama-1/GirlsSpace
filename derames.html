@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Business Success Stories</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-
-         .one{
+        .one {
             height: 190px;
-        } 
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -27,269 +28,281 @@
         }
 
         body {
-            /* background-color: #06070c; */
             color: var(--dark);
             line-height: 1.6;
+            background: #f5f5f5;
         }
 
-   *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #7c7b7b;
-      color: rgb(0, 0, 0);
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: rgb(0, 0, 0);
+        }
 
-    a, button {
-      cursor: pointer;
-      color: inherit;
-      text-decoration: none;
-    }
+        a,
+        button {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+        }
 
-    ul {
-      list-style: none;
-    }
+        ul {
+            list-style: none;
+        }
 
-    /* ____ navbar ____ */
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      background: #d8d5d57e;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+        /* ____ navbar ____ */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: #d8d5d57e;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
 
-    .nav-logo img {
-      width: 60px;
-      height: 50px;
-      object-fit: contain;
-      border-radius: 50%;
-      
-    }
+        .nav-logo img {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
 
-    /* ____ hamburger ____ */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      z-index: 1001;
-    }
+        /* ____ hamburger ____ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
 
-    .hamburger span {
-      width: 28px;
-      height: 3px;
-      background: #374151;
-      border-radius: 3px;
-      transition: all 0.3s ease;
-    }
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #374151;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
 
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
 
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
 
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
 
-    /* ____ nav links ____ */
-    .nav-links {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      font-size: 14px;
-    }
+        /* ____ nav links ____ */
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+        }
 
-    .nav-link {
-      position: relative;
-      color: #374151;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
+        .nav-link {
+            position: relative;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
 
-    .nav-link:hover {
-      color: #ec4899;
-    }
+        .nav-link:hover {
+            color: #ec4899;
+        }
 
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 50%;
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
-    }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
 
-    .nav-link:hover::after {
-      width: 100%;
-    }
+        .nav-link:hover::after {
+            width: 100%;
+        }
 
-    .login-btn {
-      padding: 6px 14px;
-      border: 1.5px solid #c23cb6;
-      border-radius: 30px;
-      color: #c23cb6;
-      font-weight: 600;
-      font-size: 13px;
-    }
+        .login-btn {
+            padding: 6px 14px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            color: #c23cb6;
+            font-weight: 600;
+            font-size: 13px;
+        }
 
-    .login-btn:hover {
-      background: #fbe7ff;
-    }
+        .login-btn:hover {
+            background: #fbe7ff;
+        }
 
-    .donate-btn {
-      padding: 8px 16px;
-      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
-      color: white;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 13px;
-    }
+        .donate-btn {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+        }
 
-    .donate-btn:hover {
-      border: 1px solid #c23cb6;
-      box-shadow: 0 1px 10px 3px #c23cb6;
-    }
+        .donate-btn:hover {
+            border: 1px solid #c23cb6;
+            box-shadow: 0 1px 10px 3px #c23cb6;
+        }
 
-    .nav-search input {
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      outline: none;
-      font-size: 13px;
-      width: 130px;
-    }
+        .nav-search input {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 13px;
+            width: 130px;
+        }
 
-    /* ____ Dropdown ____ */
-    .dropdown {
-      position: relative;
-    }
+        /* ____ Dropdown ____ */
+        .dropdown {
+            position: relative;
+        }
 
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      min-width: 130px;
-      display: none;
-      z-index: 1000;
-    }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            min-width: 130px;
+            display: none;
+            z-index: 1000;
+        }
 
-    .dropdown-menu li a {
-      display: block;
-      padding: 8px 14px;
-      color: #374151;
-      font-size: 13px;
-    }
+        .dropdown-menu li a {
+            display: block;
+            padding: 8px 14px;
+            color: #374151;
+            font-size: 13px;
+            cursor: pointer;
+        }
 
-    .dropdown-menu li a:hover {
-      background: #f3e5f8;
-      color: #c23cb6;
-    }
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
 
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
 
-    /* ____ Overlay ____ */
-    .nav-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      z-index: 999;
-    }
+        /* ____ Overlay ____ */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
 
-    .nav-overlay.active {
-      display: block;
-    }
+        .nav-overlay.active {
+            display: block;
+        }
 
-    /* _____ Responsive _______ */
-    @media (max-width: 768px) {
-      .hamburger {
-        display: flex;
-      }
+        /* _____ Responsive _______ */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
 
-      .nav-links {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 280px;
-        height: 100vh;
-        background: white;
-        flex-direction: column;
-        padding: 80px 20px 20px;
-        gap: 20px;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        transition: left 0.4s ease;
-        z-index: 1000;
-        overflow-y: auto;
-      }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                gap: 20px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                transition: left 0.4s ease;
+                z-index: 1000;
+                overflow-y: auto;
+            }
 
-      .nav-links.active {
-        left: 0;
-      }
+            .nav-links.active {
+                left: 0;
+            }
 
-      .nav-link, .login-btn, .donate-btn {
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-        color: #374151;
-        font-size: 16px;
-      }
+            .nav-link,
+            .login-btn,
+            .donate-btn {
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+                color: #374151;
+                font-size: 16px;
+            }
 
-      .nav-search {
-        order: 3;
-        width: 100%;
-        margin-top: 10px;
-      }
+            .nav-search {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+            }
 
-      .nav-search input {
-        width: 100%;
-      }
-    }
+            .nav-search input {
+                width: 100%;
+            }
 
-    @media (min-width: 769px) {
-      .navbar {
-        padding: 12px 40px;
-      }
+            /* Fix for dropdown in mobile */
+            .dropdown-menu {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background: transparent;
+                padding-left: 20px;
+            }
 
-      .nav-search input {
-        width: 160px;
-      }
-    }
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
 
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+        }
 
+        @media (min-width: 769px) {
+            .navbar {
+                padding: 12px 40px;
+            }
 
-
-
-
-
-
-        /* last naverd */
+            .nav-search input {
+                width: 160px;
+            }
+        }
 
         .container {
             width: 90%;
@@ -301,11 +314,6 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-    /* body {
-      font-family: 'Poppins', sans-serif;
-      background: #000;
-      color: white;
-    } */
             padding: 2rem 0;
             text-align: center;
             border-radius: 0 0 20px 20px;
@@ -409,6 +417,12 @@
             height: 200px;
             background-size: cover;
             background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #888;
+            font-weight: bold;
         }
 
         .story-content {
@@ -664,340 +678,949 @@
             text-align: center;
             margin-top: 20px;
         }
-    .butt{ 
+
+        .butt {
             border: black solid 3px;
             background-color: #7a2010;
             width: 80px;
             height: 40px;
             border-radius: 20px 15px 20px 0px;
             text-align: center;
-            text-decoration:none;
+            text-decoration: none;
             margin-bottom: 10px;
-            box-shadow:cornflowerblue ;
+            box-shadow: cornflowerblue;
             color: #ebe2e286;
-            font-size:23px;
+            font-size: 23px;
         }
 
-        .butt,a{        
+        .butt,
+        a {
+            text-decoration: none;
+        }
+
+        /* Language selector styles */
+        .language-selector {
+            position: relative;
+        }
+
+        .language-selector .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            min-width: 130px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .language-selector:hover .dropdown-menu {
+            display: block;
+        }
+
+        .language-selector .dropdown-menu li a {
+            display: block;
+            padding: 8px 14px;
+            color: #374151;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .language-selector .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
+        /* footer */
+          .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .footer-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-btn:hover {
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .links-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        linke-list ,li> a {
             text-decoration: none;
 
         }
-    
-            
+
+        .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .link-item:hover {
+            color: #db78e4;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .footer-left-info p {
+            margin: 0;
+        }
+
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
+        }
+
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
+        }
 
 
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
             }
-            
+
             .subtitle {
                 font-size: 1rem;
             }
-            
+
             .stats {
                 flex-direction: column;
             }
-            
+
             .footer-content {
                 flex-direction: column;
             }
-            
+
             .form-row {
                 flex-direction: column;
                 gap: 0;
             }
+            
+            .stories {
+                grid-template-columns: 1fr;
+            }
+            
+            .advice-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .resource-list {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
-<body>
-<!-- navber -->
 
-      <nav class="navbar">
+<body>
+    <!-- navber -->
+    <nav class="navbar">
         <div class="nav-logo">
-            <img src="./imge/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
+            <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
         </div>
 
-        <div class="menu-toggle" id="mobile-menu">
+        <!-- Fixed hamburger menu -->
+        <div class="hamburger" id="mobile-menu">
             <span></span>
             <span></span>
             <span></span>
         </div>
 
         <ul class="nav-links" id="nav-links">
-            <li><a href="./indea.html">Home</a></li>
-            <li><a href="./AboutUs.html">About</a></li>
-            <li><a href="./chat.html">Chat</a></li>
-            <li><a href="./stoies.html">Stories</a></li>
-            <li><a href="./learning_programs">Programs</a></li>
-            <li><a href="./protection.html">protection</a></li>
+            <li><a href="./indea.html" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" data-translate="about">About</a></li>
+            <li><a href="./chat.html" data-translate="chat">Chat</a></li>
+            <li><a href="./stoies.html" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs" data-translate="programs">Programs</a></li>
+            <li><a href="./support.html" data-translate="support">Support</a></li>
 
             <!-- Language Dropdown -->
-            <li class="dropdown" id="language-dropdown">
-                <a href="#">Languages</a>
+            <li class="language-selector" id="language-dropdown">
+                <a href="#" data-translate="languages">Languages</a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Arabic</a></li>
-                    <li><a href="#">Swahili</a></li>
-                    <li><a href="#">French</a></li>
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
-            <li><a href="./login.html" class="login-btn">Log In</a></li>
-            <li><a href="#" class="donate-btn">Donate</a></li>
+            <li><a href="./login.html" class="login-btn" data-translate="login">Log In</a></li>
+            <li><a href="./Donate.html" class="donate-btn" data-translate="donate">Donate</a></li>
         </ul>
 
         <div class="nav-search">
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Search..." data-translate="search">
         </div>
-     </nav>
+    </nav>
 
-
-
-
-
-
-
-
-
-
-     <header class="one">
-         <a href="./chat.html"></a>
-
-         <div class="container">
+    <header class="one">
+        <a href="./chat.html"></a>
+        <div class="container">
             <div class="logo">
                 <i class="fas fa-graduation-cap"></i>
-                <h1> Success Stories</h1>
+                <h1 data-translate="success_stories">Success Stories</h1>
             </div>
-            <p class="subtitle">Discover how students turned their ideas into successful businesses while still in school</p>
-         </div>
-         </header>
+            <p class="subtitle" data-translate="subtitle">Discover how students turned their ideas into successful
+                businesses while still in school</p>
+        </div>
+    </header>
 
-         <div class="container">
-         <section class="intro">
-            <h2>From Classroom to Boardroom .</h2>
-            <p>These inspiring students balanced their academic responsibilities with entrepreneurial ambitions, creating successful businesses that continue to thrive today.</p>
-            
+    <div class="container">
+        <section class="intro">
+            <h2 data-translate="classroom_to_boardroom">From Classroom to Boardroom</h2>
+            <p data-translate="intro_text">These inspiring students balanced their academic responsibilities with
+                entrepreneurial ambitions, creating successful businesses that continue to thrive today.</p>
+
             <div class="stats">
                 <div class="stat-item">
                     <span class="stat-number">85%</span>
-                    <span class="stat-label">Still in business after graduation</span>
+                    <span class="stat-label" data-translate="still_in_business">Still in business after
+                        graduation</span>
                 </div>
-    
+
                 <div class="stat-item">
                     <span class="stat-number">$2.3M</span>
-                    <span class="stat-label">Average annual revenue</span>
+                    <span class="stat-label" data-translate="average_revenue">Average annual revenue</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-number">64%</span>
-                    <span class="stat-label">Hired other students</span>
+                    <span class="stat-label" data-translate="hired_students">Hired other students</span>
                 </div>
             </div>
-         </section>
+        </section>
 
-         <section class="stories">
+        <section class="stories">
             <div class="story-card">
-                <div class="story-img" ><img src="/good .png" alt=""></div>
+                <div class="story-img">[Sarah Johnson Image]</div>
                 <div class="story-content">
                     <h3>Sarah Johnson</h3>
                     <span class="business-name">EcoPack Solutions</span>
-                    <p>While studying environmental science, Sarah noticed the excessive plastic waste on campus. She launched EcoPack, creating sustainable packaging from agricultural waste. Within two years, her company secured contracts with major campus vendors and expanded to three other universities.</p>
-                    <p><strong>Advice:</strong> "Start with a problem you're passionate about solving. The business aspect follows naturally when you genuinely care about your mission."</p>
+                    <p data-translate="sarah_story">While studying environmental science, Sarah noticed the excessive
+                        plastic waste on campus. She launched EcoPack, creating sustainable packaging from agricultural
+                        waste. Within two years, her company secured contracts with major campus vendors and expanded to
+                        three other universities.</p>
+                    <p><strong data-translate="advice">Advice:</strong> <span data-translate="sarah_advice">"Start with
+                            a problem you're passionate about solving. The business aspect follows naturally when you
+                            genuinely care about your mission."</span></p>
                 </div>
             </div>
 
             <div class="story-card">
-                <div class="story-img"> 
-                    <img src="/Untitled design.png"alt=""> 
-                </div>
+                <div class="story-img">[Marcus Chen Image]</div>
                 <div class="story-content">
                     <h3>Marcus Chen</h3>
                     <span class="business-name">StudyStream App</span>
-                    <p>As a computer science major struggling with focus, Marcus developed StudyStream - an app that connects students for virtual study sessions. The app gained 50,000 users in its first year and now features AI-powered productivity tracking.</p>
-                    <p><strong>Advice:</strong> "Build something you need yourself. Your personal pain points can reveal business opportunities that resonate with others."</p>
+                    <p data-translate="marcus_story">As a computer science major struggling with focus, Marcus developed
+                        StudyStream - an app that connects students for virtual study sessions. The app gained 50,000
+                        users in its first year and now features AI-powered productivity tracking.</p>
+                    <p><strong data-translate="advice">Advice:</strong> <span data-translate="marcus_advice">"Build
+                            something you need yourself. Your personal pain points can reveal business opportunities
+                            that resonate with others."</span></p>
                 </div>
             </div>
 
             <div class="story-card">
-                <div class="story-img"> <img src="/jazeal.png" alt=""></div>
+                <div class="story-img">[Jasmine Rodriguez Image]</div>
                 <div class="story-content">
                     <h3>Jasmine Rodriguez</h3>
                     <span class="business-name">Campus Connect</span>
-                    <p>Jasmine noticed international students struggling to adapt to campus life. She created Campus Connect, a platform that pairs international students with local mentors. The service now operates on 12 campuses and has helped over 5,000 students.</p>
-                    <p><strong>Advice:</strong> "Don't wait for the perfect idea. Start with what you have, learn from feedback, and iterate quickly. Progress beats perfection every time."</p>
+                    <p data-translate="jasmine_story">Jasmine noticed international students struggling to adapt to
+                        campus life. She created Campus Connect, a platform that pairs international students with local
+                        mentors. The service now operates on 12 campuses and has helped over 5,000 students.</p>
+                    <p><strong data-translate="advice">Advice:</strong> <span data-translate="jasmine_advice">"Don't
+                            wait for the perfect idea. Start with what you have, learn from feedback, and iterate
+                            quickly. Progress beats perfection every time."</span></p>
                 </div>
             </div>
-         </section>
+        </section>
 
-         <section class="add-story-section">
-            <h2>Share Your Success Story</h2>
+        <section class="add-story-section">
+            <h2 data-translate="share_story">Share Your Success Story</h2>
             <div class="form-container">
                 <form id="story-form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="name">Your Name</label>
+                            <label for="name" data-translate="your_name">Your Name</label>
                             <input type="text" id="name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="business"> type of story Name</label>
+                            <label for="business" data-translate="story_name">Type of Story Name</label>
                             <input type="text" id="business" name="business" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="email">Email Address</label>
+                            <label for="email" data-translate="email">Email Address</label>
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="university">University</label>
+                            <label for="university" data-translate="university">University</label>
                             <input type="text" id="university" name="university" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="category">Business Category</label>
+                        <label for="category" data-translate="business_category">Business Category</label>
                         <select id="category" name="category" required>
-                            <option value="">Select a category</option>
-                            <option value="Technology">Technology</option>
-                            <option value="E-commerce">E-commerce</option>
-                            <option value="Food & Beverage">Food & Beverage</option>
-                            <option value="Education">Education</option>
-                            <option value="Sustainability">Sustainability</option>
-                            <option value="Health & Wellness">Health & Wellness</option>
-                            <option value="Other">Other</option>
+                            <option value="" data-translate="select_category">Select a category</option>
+                            <option value="Technology" data-translate="technology">Technology</option>
+                            <option value="E-commerce" data-translate="ecommerce">E-commerce</option>
+                            <option value="Food & Beverage" data-translate="food_beverage">Food & Beverage</option>
+                            <option value="Education" data-translate="education">Education</option>
+                            <option value="Sustainability" data-translate="sustainability">Sustainability</option>
+                            <option value="Health & Wellness" data-translate="health_wellness">Health & Wellness
+                            </option>
+                            <option value="Other" data-translate="other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="story">Your Success Story</label>
-                        <textarea id="story" name="story" placeholder="Tell us about your business journey, challenges you faced, and what you've achieved..." required></textarea>
+                        <label for="story" data-translate="success_story">Your Success Story</label>
+                        <textarea id="story" name="story"
+                            placeholder="Tell us about your business journey, challenges you faced, and what you've achieved..."
+                            required></textarea>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="advice">Advice for Other galrs</label>
-                        <textarea id="advice" name="advice" placeholder="What advice would you give to other student entrepreneurs?" required></textarea>
+                        <label for="advice" data-translate="advice_students">Advice for Other Students</label>
+                        <textarea id="advice" name="advice"
+                            placeholder="What advice would you give to other student entrepreneurs?"
+                            required></textarea>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="website">Business Website (optional)</label>
+                        <label for="website" data-translate="business_website">Business Website (optional)</label>
                         <input type="url" id="website" name="website" placeholder="https://">
                     </div>
-                    
-                    <button type="submit" class="submit-btn"> Submit Your Story </button>
-                    
-                    <div id="success-message" class="success-message">
+
+                    <button type="submit" class="submit-btn" data-translate="submit_story">Submit Your Story</button>
+
+                    <div id="success-message" class="success-message" data-translate="thank_you">
                         Thank you for sharing your story! We'll review it and may feature it on our website.
                     </div>
                 </form>
             </div>
-         </section>
+        </section>
 
-         <section class="advice-section">
-            <h2>Essential Advice for Student Entrepreneurs</h2>
+        <section class="advice-section">
+            <h2 data-translate="essential_advice">Essential Advice for Student Entrepreneurs</h2>
             <div class="advice-cards">
                 <div class="advice-card">
                     <i class="fas fa-lightbulb"></i>
-                    <h3>Validate Your Idea</h3>
-                    <p>Test your concept with a small group before investing significant time and resources.</p>
+                    <h3 data-translate="validate_idea">Validate Your Idea</h3>
+                    <p data-translate="validate_text">Test your concept with a small group before investing significant
+                        time and resources.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-clock"></i>
-                    <h3>Manage Time Wisely</h3>
-                    <p>Create a strict schedule that balances academic responsibilities with business development.</p>
+                    <h3 data-translate="manage_time">Manage Time Wisely</h3>
+                    <p data-translate="manage_time_text">Create a strict schedule that balances academic
+                        responsibilities with business development.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-users"></i>
-                    <h3>Build Your Network</h3>
-                    <p>Leverage campus resources, professors, and fellow students for support and guidance.</p>
+                    <h3 data-translate="build_network">Build Your Network</h3>
+                    <p data-translate="network_text">Leverage campus resources, professors, and fellow students for
+                        support and guidance.</p>
                 </div>
                 <div class="advice-card">
                     <i class="fas fa-hand-holding-usd"></i>
-                    <h3>Bootstrap When Possible</h3>
-                    <p>Start with minimal investment and reinvest profits to grow your business organically.</p>
-                </div>
-            </div>
-         </section>
-
-         <section class="resources">
-            <h2>Resources for Student Entrepreneurs</h2>
-            <div class="resource-list">
-                <div class="resource-item">
-                    <i class="fas fa-university"></i>
-                    <h3>Campus Incubators</h3>
-                    <p>Access to mentorship, workspace, and funding opportunities</p>
-                    <!-- <img src=".imge/scs.jpg" alt=""> -->
-                </div>
-                <div class="resource-item">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Business Competitions</h3>
-                    <p>Pitch your idea and win seed funding and recognition</p>
-                </div>
-                <div class="resource-item">
-                    <i class="fas fa-handshake"></i>
-                    <h3>Alumni Networks</h3>
-                    <p>Connect with successful graduates for guidance and investment</p>
+                    <h3 data-translate="bootstrap">Bootstrap When Possible</h3>
+                    <p data-translate="bootstrap_text">Start with minimal investment and reinvest profits to grow your
+                        business organically.</p>
                 </div>
             </div>
         </section>
-          <div class="butt">
-<a href="chat.html" > Home</a>
 
-    </div>
-    </div>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Student Business Success</h3>
-                    <p>Inspiring and supporting the next generation of entrepreneurs through real stories and practical advice.</p>
+        <section class="resources">
+            <h2 data-translate="resources">Resources for Student Entrepreneurs</h2>
+            <div class="resource-list">
+                <div class="resource-item">
+                    <i class="fas fa-university"></i>
+                    <h3 data-translate="campus_incubators">Campus Incubators</h3>
+                    <p data-translate="incubators_text">Access to mentorship, workspace, and funding opportunities</p>
                 </div>
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <p>Email: adamhusseinhussein27@gmail.com</p>
-                    <p>Phone: + 256 735 668 997 </p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
+                <div class="resource-item">
+                    <i class="fas fa-trophy"></i>
+                    <h3 data-translate="business_competitions">Business Competitions</h3>
+                    <p data-translate="competitions_text">Pitch your idea and win seed funding and recognition</p>
                 </div>
-                <div class="footer-section">
-                    <h3>Newsletter</h3>
-                    <p>Subscribe to receive success stories and entrepreneurial tips directly in your inbox.</p>
-                    <form>
-                        <input type="email" placeholder="Your email" style="padding: 10px; width: 100%; margin-top: 10px; border-radius: 5px; border: none;">
-                        <button type="submit" style="padding: 10px 20px; margin-top: 10px; background: var(--accent); color: white; border: none; border-radius: 5px; cursor: pointer;">Subscribe</button>
-                    </form>
+                <div class="resource-item">
+                    <i class="fas fa-handshake"></i>
+                    <h3 data-translate="alumni_networks">Alumni Networks</h3>
+                    <p data-translate="alumni_text">Connect with successful graduates for guidance and investment</p>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2025 Student Business Success Stories. All rights reserved.</p>
+        </section>
+    </div>
+    <!-- footer -->
+         <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
+                    </div>
+                    <p class="footer-desc" data-translate="footerDescription">
+                        A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title" data-translate="getHelp">Get Help</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-left-info">
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
+                </div>
+                <div class="footer-right-info">
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
+                </div>
             </div>
         </div>
     </footer>
 
+   
+
     <script>
-        document.getElementById('story-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // In a real application, you would send the form data to a server here
-            // For this example, we'll just show a success message
-            
-            document.getElementById('success-message').style.display = 'block';
-            
-            // Reset the form
-            setTimeout(function() {
-                document.getElementById('story-form').reset();
-                document.getElementById('success-message').style.display = 'none';
-            }, 5000);
+        // Translation data
+        const translations = {
+            en: {
+                // Navigation
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                login: "Log In",
+                donate: "Donate",
+                search: "Search...",
+
+                // Header
+                success_stories: "Success Stories",
+                subtitle: "Discover how students turned their ideas into successful businesses while still in school",
+
+                // Intro section
+                classroom_to_boardroom: "From Classroom to Boardroom",
+                intro_text: "These inspiring students balanced their academic responsibilities with entrepreneurial ambitions, creating successful businesses that continue to thrive today.",
+                still_in_business: "Still in business after graduation",
+                average_revenue: "Average annual revenue",
+                hired_students: "Hired other students",
+
+                // Stories
+                sarah_story: "While studying environmental science, Sarah noticed the excessive plastic waste on campus. She launched EcoPack, creating sustainable packaging from agricultural waste. Within two years, her company secured contracts with major campus vendors and expanded to three other universities.",
+                sarah_advice: "\"Start with a problem you're passionate about solving. The business aspect follows naturally when you genuinely care about your mission.\"",
+                marcus_story: "As a computer science major struggling with focus, Marcus developed StudyStream - an app that connects students for virtual study sessions. The app gained 50,000 users in its first year and now features AI-powered productivity tracking.",
+                marcus_advice: "\"Build something you need yourself. Your personal pain points can reveal business opportunities that resonate with others.\"",
+                jasmine_story: "Jasmine noticed international students struggling to adapt to campus life. She created Campus Connect, a platform that pairs international students with local mentors. The service now operates on 12 campuses and has helped over 5,000 students.",
+                jasmine_advice: "\"Don't wait for the perfect idea. Start with what you have, learn from feedback, and iterate quickly. Progress beats perfection every time.\"",
+                advice: "Advice:",
+
+                // Form section
+                share_story: "Share Your Success Story",
+                your_name: "Your Name",
+                story_name: "Type of Story Name",
+                email: "Email Address",
+                university: "University",
+                business_category: "Business Category",
+                select_category: "Select a category",
+                technology: "Technology",
+                ecommerce: "E-commerce",
+                food_beverage: "Food & Beverage",
+                education: "Education",
+                sustainability: "Sustainability",
+                health_wellness: "Health & Wellness",
+                other: "Other",
+                success_story: "Your Success Story",
+                advice_students: "Advice for Other Students",
+                business_website: "Business Website (optional)",
+                submit_story: "Submit Your Story",
+                thank_you: "Thank you for sharing your story! We'll review it and may feature it on our website.",
+
+                // Advice section
+                essential_advice: "Essential Advice for Student Entrepreneurs",
+                validate_idea: "Validate Your Idea",
+                validate_text: "Test your concept with a small group before investing significant time and resources.",
+                manage_time: "Manage Time Wisely",
+                manage_time_text: "Create a strict schedule that balances academic responsibilities with business development.",
+                build_network: "Build Your Network",
+                network_text: "Leverage campus resources, professors, and fellow students for support and guidance.",
+                bootstrap: "Bootstrap When Possible",
+                bootstrap_text: "Start with minimal investment and reinvest profits to grow your business organically.",
+
+                // Resources section
+                resources: "Resources for Student Entrepreneurs",
+                campus_incubators: "Campus Incubators",
+                incubators_text: "Access to mentorship, workspace, and funding opportunities",
+                business_competitions: "Business Competitions",
+                competitions_text: "Pitch your idea and win seed funding and recognition",
+                alumni_networks: "Alumni Networks",
+                alumni_text: "Connect with successful graduates for guidance and investment",
+
+                // Footer
+                student_business: "Student Business Success",
+                footer_description: "Inspiring and supporting the next generation of entrepreneurs through real stories and practical advice.",
+                contact_us: "Contact Us",
+                newsletter: "Newsletter",
+                newsletter_text: "Subscribe to receive success stories and entrepreneurial tips directly in your inbox.",
+                email_placeholder: "Your email",
+                subscribe: "Subscribe"
+            },
+            ar: {
+                // Arabic translations
+                home: "الرئيسية",
+                about: "من نحن",
+                chat: "الدردشة",
+                stories: "القصص",
+                programs: "البرامج",
+                support: "الدعم",
+                languages: "اللغات",
+                login: "تسجيل الدخول",
+                donate: "تبرع",
+                search: "بحث...",
+                success_stories: "قصص النجاح",
+                subtitle: "اكتشف كيف حول الطلاب أفكارهم إلى أعمال ناجحة أثناء وجودهم في المدرسة",
+                classroom_to_boardroom: "من الفصل الدراسي إلى غرفة الاجتماعات",
+                intro_text: "وازن هؤلاء الطلاب الملهمون بين مسؤولياتهم الأكاديمية وطموحاتهم الريادية، مما أدى إلى إنشاء أعمال ناجحة تستمر في الازدهار اليوم.",
+                still_in_business: "لا يزالون في العمل بعد التخرج",
+                average_revenue: "متوسط الإيرادات السنوية",
+                hired_students: "وظفوا طلابًا آخرين",
+                share_story: "شارك قصتك الناجحة",
+                your_name: "اسمك",
+                story_name: "نوع اسم القصة",
+                email: "عنوان البريد الإلكتروني",
+                university: "الجامعة",
+                business_category: "فئة الأعمال",
+                select_category: "اختر فئة",
+                technology: "التكنولوجيا",
+                ecommerce: "التجارة الإلكترونية",
+                food_beverage: "الطعام والشراب",
+                education: "التعليم",
+                sustainability: "الاستدامة",
+                health_wellness: "الصحة والعافية",
+                other: "أخرى",
+                success_story: "قصتك الناجحة",
+                advice_students: "نصيحة للطلاب الآخرين",
+                business_website: "موقع الويب الخاص بالأعمال (اختياري)",
+                submit_story: "قدم قصتك",
+                thank_you: "شكرا لك لمشاركة قصتك! سنراجعها وقد نعرضها على موقعنا.",
+                essential_advice: "نصائح أساسية لرواد الأعمال الطلاب",
+                validate_idea: "تحقق من فكرتك",
+                validate_text: "اختبر مفهومك مع مجموعة صغيرة قبل استثمار وقت وموارد كبيرة.",
+                manage_time: "إدارة الوقت بحكمة",
+                manage_time_text: "أنشئ جدولًا صارمًا يوازن بين المسؤوليات الأكاديمية وتطوير الأعمال.",
+                build_network: "ابني شبكتك",
+                network_text: "استفد من موارد الحرم الجامعي والأساتذة والزملاء الطلاب للحصول على الدعم والتوجيه.",
+                bootstrap: "ابدأ بموارد محدودة عندما يكون ذلك ممكنًا",
+                bootstrap_text: "ابدأ باستثمار ضئيل وأعد استثمار الأرباح لتنمية عملك بشكل طبيعي.",
+                resources: "موارد لرواد الأعمال الطلاب",
+                campus_incubators: "حاضنات الحرم الجامعي",
+                incubators_text: "الوصول إلى الإرشاد ومساحة العمل وفرص التمويل",
+                business_competitions: "مسابقات الأعمال",
+                competitions_text: "قدم فكرتك واربح تمويلاً أوليًا واعترافًا",
+                alumni_networks: "شبكات الخريجين",
+                alumni_text: "تواصل مع الخريجين الناجحين للحصول على التوجيه والاستثمار",
+                student_business: "نجاح الأعمال الطلابية",
+                footer_description: "إلهام ودعم الجيل القادم من رواد الأعمال من خلال قصص حقيقية ونصائح عملية.",
+                contact_us: "اتصل بنا",
+                newsletter: "النشرة الإخبارية",
+                newsletter_text: "اشترك لتلقي قصص النجاح ونصائح ريادة الأعمال مباشرة في بريدك الوارد.",
+                email_placeholder: "بريدك الإلكتروني",
+                subscribe: "اشترك"
+            },
+            fr: {
+                // French translations
+                home: "Accueil",
+                about: "À propos",
+                chat: "Chat",
+                stories: "Histoires",
+                programs: "Programmes",
+                support: "Soutien",
+                languages: "Langues",
+                login: "Connexion",
+                donate: "Faire un don",
+                search: "Rechercher...",
+                success_stories: "Histoires de réussite",
+                subtitle: "Découvrez comment des étudiants ont transformé leurs idées en entreprises prospères tout en étant encore à l'école",
+                classroom_to_boardroom: "De la salle de classe à la salle de réunion",
+                intro_text: "Ces étudiants inspirants ont équilibré leurs responsabilités académiques avec des ambitions entrepreneuriales, créant des entreprises prospères qui continuent de prospérer aujourd'hui.",
+                still_in_business: "Toujours en activité après l'obtention du diplôme",
+                average_revenue: "Revenu annuel moyen",
+                hired_students: "Ont embauché d'autres étudiants",
+                share_story: "Partagez votre histoire de réussite",
+                your_name: "Votre nom",
+                story_name: "Type de nom d'histoire",
+                email: "Adresse e-mail",
+                university: "Université",
+                business_category: "Catégorie d'entreprise",
+                select_category: "Sélectionnez une catégorie",
+                technology: "Technologie",
+                ecommerce: "Commerce électronique",
+                food_beverage: "Alimentation et boissons",
+                education: "Éducation",
+                sustainability: "Durabilité",
+                health_wellness: "Santé et bien-être",
+                other: "Autre",
+                success_story: "Votre histoire de réussite",
+                advice_students: "Conseils pour les autres étudiants",
+                business_website: "Site Web de l'entreprise (facultatif)",
+                submit_story: "Soumettre votre histoire",
+                thank_you: "Merci d'avoir partagé votre histoire ! Nous l'examinerons et pourrons la présenter sur notre site Web.",
+                essential_advice: "Conseils essentiels pour les entrepreneurs étudiants",
+                validate_idea: "Validez votre idée",
+                validate_text: "Testez votre concept avec un petit groupe avant d'investir du temps et des ressources importants.",
+                manage_time: "Gérez votre temps judicieusement",
+                manage_time_text: "Créez un emploi du temps strict qui équilibre les responsabilités académiques et le développement de l'entreprise.",
+                build_network: "Construisez votre réseau",
+                network_text: "Tirez parti des ressources du campus, des professeurs et des autres étudiants pour obtenir du soutien et des conseils.",
+                bootstrap: "Auto-financez lorsque c'est possible",
+                bootstrap_text: "Commencez avec un investissement minimal et réinvestissez les bénéfices pour développer votre entreprise organiquement.",
+                resources: "Ressources pour les entrepreneurs étudiants",
+                campus_incubators: "Incubateurs de campus",
+                incubators_text: "Accès au mentorat, à l'espace de travail et aux opportunités de financement",
+                business_competitions: "Concours d'entreprise",
+                competitions_text: "Présentez votre idée et gagnez un financement de démarrage et une reconnaissance",
+                alumni_networks: "Réseaux d'anciens élèves",
+                alumni_text: "Connectez-vous avec des diplômés réussis pour obtenir des conseils et des investissements",
+                student_business: "Succès des entreprises étudiantes",
+                footer_description: "Inspirer et soutenir la prochaine génération d'entrepreneurs grâce à des histoires réelles et des conseils pratiques.",
+                contact_us: "Contactez-nous",
+                newsletter: "Bulletin d'information",
+                newsletter_text: "Abonnez-vous pour recevoir des histoires de réussite et des conseils entrepreneuriaux directement dans votre boîte de réception.",
+                email_placeholder: "Votre email",
+                subscribe: "S'abonner"
+            },
+            sw: {
+                // Swahili translations
+                home: "Nyumbani",
+                about: "Kuhusu",
+                chat: "Gumzo",
+                stories: "Hadithi",
+                programs: "Mipango",
+                support: "Msaada",
+                languages: "Lugha",
+                login: "Ingia",
+                donate: "Changia",
+                search: "Tafuta...",
+                success_stories: "Hadithi za Mafanikio",
+                subtitle: "Gundua jinsi wanafunzi walivyobadilisha mawazo yao kuwa biashara zilizofanikiwa wakiwa bado shuleni",
+                classroom_to_boardroom: "Kutoka Darasani Hadi Ukumbini",
+                intro_text: "Wanafunzi hawa wa kusisimua waliweza kuweka usawa kati ya majukumu yao ya kimasomo na matarajio ya ujasiriamali, wakianzisha biashara zilizofanikiwa ambazo zinaendelea kufanikiwa leo.",
+                still_in_business: "Bado wako kwenye biashara baada ya kuhitimu",
+                average_revenue: "Mapato ya wastani ya mwaka",
+                hired_students: "Waliwajiri wanafunzi wengine",
+                share_story: "Shiriki Hadithi Yako ya Mafanikio",
+                your_name: "Jina Lako",
+                story_name: "Aina ya Jina la Hadithi",
+                email: "Anwani ya Barua Pepe",
+                university: "Chuo Kikuu",
+                business_category: "Kategoria ya Biashara",
+                select_category: "Chagua kategoria",
+                technology: "Teknolojia",
+                ecommerce: "Biashara Mtandaoni",
+                food_beverage: "Chakula na Vinywaji",
+                education: "Elimu",
+                sustainability: "Uendelevu",
+                health_wellness: "Afya na Ustawi",
+                other: "Nyingine",
+                success_story: "Hadithi Yako ya Mafanikio",
+                advice_students: "Ushauri kwa Wanafunzi Wengine",
+                business_website: "Tovuti ya Biashara (hiari)",
+                submit_story: "Wasilisha Hadithi Yako",
+                thank_you: "Asante kwa kushiriki hadithi yako! Tutaihakiki na huenda tukaionyesha kwenye tovuti yetu.",
+                essential_advice: "Ushauri Muhimu kwa Wajasiriamali Wanafunzi",
+                validate_idea: "Thibitisha Wazo Lako",
+                validate_text: "Jaribu dhana yako na kundi dogo kabla ya kuwekeza wakati na rasilimali kubwa.",
+                manage_time: "Dhibiti Muda Kwa Hekima",
+                manage_time_text: "Unda ratiba madhubuti inayoweka usawa kati ya majukumu ya kimasomo na ukuzaji wa biashara.",
+                build_network: "Jenga Mtandao Wako",
+                network_text: "Tumia rasilimali za chuo, profesa, na wanafunzi wenzako kwa msaada na mwongozo.",
+                bootstrap: "Anzisha Kwa Rasilimali Ndogo Inapowezekana",
+                bootstrap_text: "Anza kwa uwekezaji mdogo na uwekeze tena faida ili kukuza biashara yako kiasili.",
+                resources: "Rasilimali kwa Wajasiriamali Wanafunzi",
+                campus_incubators: "Vituo vya Kuza Biashara Vyuo",
+                incubators_text: "Ufikiaji wa ushauri, nafasi ya kufanya kazi, na fursa za ufadhili",
+                business_competitions: "Mashindano ya Biashara",
+                competitions_text: "Wasilisha wazo lako na ushindi ufadhili wa mwanzo na kutambuliwa",
+                alumni_networks: "Mitandao ya Wahitimu",
+                alumni_text: "Wasiliana na wahitimu waliofanikiwa kwa mwongozo na uwekezaji",
+                student_business: "Mafanikio ya Biashara za Wanafunzi",
+                footer_description: "Kuwahimiza na kuwaunga mkono kizazi kijacho cha wajasiriamali kupitia hadithi halisi na ushauri wa vitendo.",
+                contact_us: "Wasiliana Nasi",
+                newsletter: "Barua pepe ya habari",
+                newsletter_text: "Jiandikishe kupokea hadithi za mafanikio na vidokezo vya ujasiriamali moja kwa moja kwenye kikasha chako cha barua pepe.",
+                email_placeholder: "Barua pepe yako",
+                subscribe: "Jiandikishe"
+            },
+            rw: {
+                // Kinyarwanda translations
+                home: "Ahabanza",
+                about: "Ibyerekeye",
+                chat: "Kuvugisha",
+                stories: "Inkuru",
+                programs: "Gahunda",
+                support: "Gushigikira",
+                languages: "Indimi",
+                login: "Injira",
+                donate: "Tanga",
+                search: "Shaka...",
+                success_stories: "Inkuru Z'Intsinzi",
+                subtitle: "Menya uko abanyeshuri bahinduye ibitekerezo byabo kuba ibikorwa by'ubucuruzi byatsinze bari batarangiye amashuli",
+                classroom_to_boardroom: "Kuva mu Ishuri Kugeza mu Nteko",
+                intro_text: "Aba banyeshuri bashishikajwe bahuje inshingano zabo z'amasomo n'ibyifuzo by'ubucuruzi, bakazana ibikorwa by'ubucuruzi byatsinze bikomeze gutsinda uyu munsi.",
+                still_in_business: "Bari bari mu bicuruzi nyuma yuko bamaze kwiga",
+                average_revenue: "Amafaranga y'injiza y'umwaka",
+                hired_students: "Bakoze abandi banyeshuri",
+                share_story: "Sangiza Inkuru Yawe Y'Intsinzi",
+                your_name: "Izina Ryawe",
+                story_name: "Ubwoko bw'Izina ry'Inkuru",
+                email: "Aderesi ya Imeyili",
+                university: "Kaminuza",
+                business_category: "Icyiciro cy'Ubucuruzi",
+                select_category: "Hitamo icyiciro",
+                technology: "Ikoranabuhanga",
+                ecommerce: "Ubucuruzi bwa Kuri Internet",
+                food_beverage: "Ibiryo n'Ibinyobwa",
+                education: "Uburezi",
+                sustainability: "Komeza",
+                health_wellness: "Ubuzima n'Ubwiza",
+                other: "Ikindi",
+                success_story: "Inkuru Yawe Y'Intsinzi",
+                advice_students: "Inama ku bandi Banyeshuri",
+                business_website: "Urubuga rw'Ubucuruzi (bishoboka)",
+                submit_story: "Ohereza Inkuru Yawe",
+                thank_you: "Murakoze gusangiza inkuru yawe! Tuzayigereranya kandi dushobora kuyerekana kuri uru rubuga.",
+                essential_advice: "Inama Ngenderwaho ku Banyamabanga b'Ubucuruzi b'Abanyeshuri",
+                validate_idea: "Emeza Icyo Utekereza",
+                validate_text: "Gerageza igitekerezo cyawe hamwe n'itsinda ritoya mbere yo gushora umwanya n'ibikoresho byinshi.",
+                manage_time: "Gucunga Igihe neza",
+                manage_time_text: "Kora gahunda ikomeye ihuzanye inshingano z'amasomo n'iterambere ry'ubucuruzi.",
+                build_network: "Kora Urusobe Rwawe",
+                network_text: "Koresha ibikoresho byo mu ishuri, abarimu, n'abandi banyeshuri kugirango ubone ubufasha n'umuyoboro.",
+                bootstrap: "Tangira uko bishoboka",
+                bootstrap_text: "Tangira amafaranga make kandi usubize inyungu kugirango ukure ubucuruzi bwawe mu buryo bw'ikirere.",
+                resources: "Ibikoresho ku Banyamabanga b'Ubucuruzi b'Abanyeshuri",
+                campus_incubators: "Inyubako z'Ubucuruzi mu Ishuri",
+                incubators_text: "Kugera kubujyanama, ahantu hokora, n'amahirwe yo kubona amafaranga",
+                business_competitions: "Ibirori by'Ubucuruzi",
+                competitions_text: "Vuga ibyo utekereza unatsinde amafaranga yo gutangira no kwitabwaho",
+                alumni_networks: "Inzira z'Abize",
+                alumni_text: "Sangira n'abize batsinze kugirango ubone inama n'amafaranga",
+                student_business: "Intsinzi y'Ubucuruzi bw'Abanyeshuri",
+                footer_description: "Gushishikariza no gushigikira ishyaka rikurikira ry'abanyamabanga b'ubucuruzi binyuze mu nkuru nyakuri n'inama zikoreshwa.",
+                contact_us: "Twandikire",
+                newsletter: "Ibaruwa y'Itangazo",
+                newsletter_text: "Iyandikishe kugirango wakire inkuru z'intsinzi n'ibyifuzo by'ubucuruzi moja kwa moja mu rubuga rwawe rw'imyirondoro.",
+                email_placeholder: "Imeyili yawe",
+                subscribe: "Iyandikishe"
+            }
+        };
+
+        // Function to change language
+        function changeLanguage(lang) {
+            // Update all elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update select options
+            document.querySelectorAll('option[data-translate]').forEach(option => {
+                const key = option.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    option.textContent = translations[lang][key];
+                }
+            });
+
+            // Store the selected language
+            localStorage.setItem('selectedLanguage', lang);
+        }
+
+        // Add event listeners to language links
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const hamburger = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Language selection
+            var languageLinks = document.querySelectorAll('.language-selector .dropdown-menu a');
+            languageLinks.forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+
+                    // Close mobile menu after language selection
+                    if (window.innerWidth <= 768) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+
+            // Check for previously selected language
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage) {
+                changeLanguage(savedLanguage);
+            }
+
+            // Form submission handler
+            document.getElementById('story-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // In a real application, you would send the form data to a server here
+                // For this example, we'll just show a success message
+
+                document.getElementById('success-message').style.display = 'block';
+
+                // Reset the form
+                setTimeout(function () {
+                    document.getElementById('story-form').reset();
+                    document.getElementById('success-message').style.display = 'none';
+                }, 5000);
+            });
         });
     </script>
-
-
-
-     
-
 </body>
+
 </html>

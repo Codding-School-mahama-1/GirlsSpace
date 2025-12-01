@@ -33,7 +33,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #c23cb6 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+  </style>
 </head>
+
 <body class="bg-light text-gray-800 font-sans">
 
   <!-- ==================== NAVBAR ==================== -->
@@ -46,74 +64,21 @@
           <img src="img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-14 h-12 object-contain rounded-full">
         </div>
 
-        <!-- Hamburger (Mobile) -->
-        <div class="sm:hidden flex items-center">
-          <button id="mobile-menu" class="text-dark focus:outline-none">
-            <span class="block w-7 h-0.5 bg-dark mb-1 transition-all"></span>
-            <span class="block w-7 h-0.5 bg-dark mb-1 transition-all"></span>
-            <span class="block w-7 h-0.5 bg-dark transition-all"></span>
-          </button>
-        </div>
-
         <!-- Desktop Nav Links -->
         <div class="hidden sm:flex sm:items-center sm:space-x-4 text-sm">
-          <a href="./index.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">Home</a>
-          <a href="./AboutUs.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">About</a>
-          <a href="./chat.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">Chat</a>
-          <a href="./stories.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">Stories</a>
-          <a href="./Learning_Programs.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">Programs</a>
-          <a href="./protection.html" class="text-dark hover:text-accent font-medium relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-accent after:to-primary after:bottom-[-4px] after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all hover:after:w-full">Protection</a>
-
-          <!-- Language Dropdown -->
-          <div class="relative" id="language-dropdown">
-            <button class="text-dark hover:text-accent font-medium flex items-center gap-1">
-              Languages <i class="fas fa-chevron-down text-xs"></i>
-            </button>
-            <div class="absolute top-full left-0 mt-2 w-36 bg-white rounded-lg shadow-lg opacity-0 invisible transition-all duration-200" id="lang-menu">
-              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary">English</a>
-              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary">العربية</a>
-              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary">Kiswahili</a>
-              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary">Français</a>
-            </div>
-          </div>
+          <a href="./index.html" class="nav-link text-dark hover:text-accent font-medium relative">Home</a>
+          <a href="./AboutUs.html" class="nav-link text-dark hover:text-accent font-medium relative">About</a>
+          <a href="./chat.html" class="nav-link text-dark hover:text-accent font-medium relative">Chat</a>
+          <a href="./stories.html" class="nav-link text-dark hover:text-accent font-medium relative">Stories</a>
+          <a href="./Learning_Programs.html" class="nav-link text-dark hover:text-accent font-medium relative">Programs</a>
+          <a href="./protection.html" class="nav-link text-dark hover:text-accent font-medium relative">Protection</a>
 
           <a href="./login.html" class="px-3 py-1.5 border-2 border-primary text-primary rounded-full text-xs font-semibold hover:bg-purple-50">Log In</a>
           <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-accent to-primary text-white rounded-full text-xs font-semibold hover:shadow-lg hover:shadow-primary/50 transition-shadow">Donate</a>
         </div>
-
-        <!-- Search -->
-        <div class="hidden sm:block">
-          <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm w-32 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20">
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div class="sm:hidden hidden" id="nav-links">
-      <div class="px-4 pt-2 pb-3 space-y-1 bg-white border-t">
-        <a href="index.html" class="block py-2 text-dark font-medium border-b">Home</a>
-        <a href="about.html" class="block py-2 text-dark font-medium border-b">About</a>
-        <a href="chat.html" class="block py-2 text-dark font-medium border-b">Chat</a>
-        <div class="py-2">
-          <button class="w-full text-left text-dark font-medium flex justify-between items-center" onclick="document.getElementById('mobile-lang').classList.toggle('hidden')">
-            Languages <i class="fas fa-chevron-down text-xs"></i>
-          </button>
-          <div class="hidden mt-2 space-y-1 pl-4" id="mobile-lang">
-            <a href="#" class="block text-sm text-dark hover:text-primary">English</a>
-            <a href="#" class="block text-sm text-dark hover:text-primary">العربية</a>
-            <a href="#" class="block text-sm text-dark hover:text-primary">Kiswahili</a>
-            <a href="#" class="block text-sm text-dark hover:text-primary">Français</a>
-          </div>
-        </div>
-        <a href="login.html" class="block py-2 text-primary font-semibold border-b">Log In</a>
-        <a href="#" class="block py-2 text-white bg-gradient-to-r from-accent to-primary rounded-lg text-center font-semibold">Donate</a>
-        <input type="text" placeholder="Search..." class="w-full mt-3 px-3 py-2 border rounded-lg text-sm">
       </div>
     </div>
   </nav>
-
-  <!-- Overlay -->
-  <div class="fixed inset-0 bg-black/50 z-40 hidden" id="nav-overlay"></div>
 
   <!-- ==================== MAIN CONTENT ==================== -->
   <main class="max-w-7xl mx-auto px-4 py-12">
@@ -147,9 +112,9 @@
             <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition">
               Login
             </button>
-            <button type="button" 
+            <button type="button" onclick="window.location.href='signup.html'"
                     class="flex-1 px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition">
-             <a href="./sinup.html"> Sign Up</a>
+              Sign Up
             </button>
           </div>
         </form>
@@ -165,26 +130,12 @@
         <!-- Left -->
         <div class="space-y-4 text-center md:text-left">
           <div class="flex items-center justify-center md:justify-start gap-3">
-            <img src="img/Girls Space (1) (1).png" alt="Logo" class="w-12 h-12 object-contain rounded-full border-2 border-accent">
+            <img src="img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-12 h-12 object-contain rounded-full border-2 border-accent">
             <p class="text-pink-400 font-semibold">Empowering Girls, Building Futures</p>
           </div>
           <p class="text-sm text-gray-400 max-w-xs mx-auto md:mx-0">
             A safe digital haven for girls in Mahama refugee camp.
           </p>
-          <div class="flex justify-center md:justify-start gap-3">
-            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
-              <i class="fab fa-youtube"></i>
-            </a>
-          </div>
         </div>
 
         <!-- Links 1 -->
@@ -193,7 +144,7 @@
           <ul class="space-y-2 text-sm">
             <li><a href="./chat.html" class="hover:text-pink-400 transition">Join Chat</a></li>
             <li><a href="./stories.html" class="hover:text-pink-400 transition">Share Story</a></li>
-            <li><a href="./Learning_Programs.html" class="link-item text-gray-400 hover:text-primary-pink transition">Programs</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-pink-400 transition">Programs</a></li>
           </ul>
         </div>
 
@@ -209,18 +160,17 @@
 
       <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
         <p>© 2024 GirlsSpace Mahama. <span class="text-purple-500 font-medium">Empowering girls, always.</span></p>
-        <div class="text-center md:text-right">
-          <p>Available in: English, Français, Kiswahili, Kinyarwanda, العربية</p>
-          <p>Supported by UNHCR, Save The Children, Alight</p>
-        </div>
       </div>
     </div>
   </footer>
 
-<!-- استبدل السكريبت الأخير بهذا -->
-<script type="module">
-  import { setupSignIn } from './firebase.js';
-  document.addEventListener('DOMContentLoaded', setupSignIn);
-</script>
+  <script type="module">
+    import { setupSignIn } from './firebase.js';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Login page loaded, initializing sign in...');
+      setupSignIn();
+    });
+  </script>
 </body>
 </html>

@@ -1,16 +1,18 @@
-// firebase.js
+// firebase.js - Complete working version
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
-  sendPasswordResetEmail 
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { 
   getFirestore, 
   doc, 
   setDoc, 
-  getDoc 
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // Firebase configuration
@@ -26,227 +28,264 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+console.log('✅ Firebase initialized successfully');
 
 // دالة لعرض الرسائل
 function showMessage(message, type = 'error') {
+  console.log(`📢 ${type.toUpperCase()}: ${message}`);
+  
+  // Remove any existing messages
+  const existingMessages = document.querySelectorAll('.custom-message');
+  existingMessages.forEach(msg => msg.remove());
+  
   const messageDiv = document.createElement('div');
-  messageDiv.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium ${
+  messageDiv.className = `custom-message fixed top-4 left-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg text-white font-medium text-center ${
     type === 'success' ? 'bg-green-500' : 'bg-red-500'
   }`;
   messageDiv.textContent = message;
+  messageDiv.style.cssText = 'z-index: 9999;';
   
   document.body.appendChild(messageDiv);
   
   setTimeout(() => {
-    messageDiv.remove();
-  }, 4000);
+    if (messageDiv.parentNode) {
+      messageDiv.remove();
+    }
+  }, 5000);
 }
 
 // ================ SIGN UP ================
 export function setupSignUp() {
   const signupForm = document.getElementById('signupForm');
+  console.log('🔧 Setting up sign up...');
+  
   if (signupForm) {
+    console.log('✅ Sign up form found');
+    
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log('Sign up form submitted');
+      console.log('📝 Sign up form submitted');
 
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
-      console.log('Form data:', { fullName, email, password });
+      console.log('📧 Form data:', { fullName, email, password: '***' });
 
       if (!fullName || !email || !password) {
         showMessage('Please fill all fields');
         return;
       }
 
+      if (password.length < 6) {
+        showMessage('Password should be at least 6 characters');
+        return;
+      }
+
       try {
-        // إضافة مؤشر تحميل
         const submitBtn = signupForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Creating Account...';
         submitBtn.disabled = true;
 
-        // إنشاء المستخدم في Authentication
-        console.log('Creating user in Firebase Auth...');
+        // Create user in Authentication
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log('User created in Auth:', user.uid);
+        console.log('✅ User created:', user.uid);
         
-        // تقسيم الاسم إلى firstName و lastName
+        // Split name
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0];
         const lastName = nameParts.slice(1).join(' ') || '';
 
-        // حفظ بيانات المستخدم في Firestore
+        // Save user data to Firestore
         const userData = {
           fullName: fullName,
           firstName: firstName,
           lastName: lastName,
           email: email,
-          createdAt: new Date().toISOString(),
           role: 'user',
+          createdAt: new Date().toISOString(),
           uid: user.uid
         };
 
-        console.log('Saving user data to Firestore:', userData);
         await setDoc(doc(db, "users", user.uid), userData);
-        console.log('User data saved to Firestore successfully');
+        console.log('✅ User data saved to Firestore');
         
         showMessage('Account created successfully! Redirecting...', 'success');
         
-        // حفظ بيانات المستخدم في localStorage
+        // Save to localStorage
         localStorage.setItem('userFullName', fullName);
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userUID', user.uid);
         localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userRole', 'user');
         
-        // الانتقال إلى index.html بعد التسجيل الناجح
+        // Redirect to home page
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 2000);
 
       } catch (error) {
-        console.error('Sign up error:', error);
+        console.error('❌ Sign up error:', error);
+        
+        let errorMessage = 'Error creating account';
         if (error.code === 'auth/email-already-in-use') {
-          showMessage('Email already in use!');
+          errorMessage = 'Email already in use!';
         } else if (error.code === 'auth/weak-password') {
-          showMessage('Password should be at least 6 characters');
+          errorMessage = 'Password should be at least 6 characters';
         } else if (error.code === 'auth/invalid-email') {
-          showMessage('Invalid email address');
+          errorMessage = 'Invalid email address';
         } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
+          errorMessage = 'Network error. Please check your internet connection';
         } else {
-          showMessage(`Error: ${error.message}`);
+          errorMessage = `Error: ${error.message}`;
         }
         
-        // إعادة تفعيل الزر
+        showMessage(errorMessage);
+        
         const submitBtn = signupForm.querySelector('button[type="submit"]');
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
       }
     });
   } else {
-    console.log('Signup form not found');
+    console.error('❌ Sign up form not found!');
   }
 }
 
 // ================ SIGN IN ================
 export function setupSignIn() {
   const loginForm = document.getElementById('loginForm');
+  console.log('🔧 Setting up sign in...');
+  
   if (loginForm) {
+    console.log('✅ Login form found');
+    
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      console.log('Login form submitted');
+      console.log('🔐 Login form submitted');
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const rememberMe = document.getElementById('remember').checked;
+      const rememberMe = document.getElementById('remember') ? document.getElementById('remember').checked : false;
 
-      console.log('Login data:', { email, password });
+      console.log('📧 Login data:', { email, password: '***', rememberMe });
 
       if (!email || !password) {
         showMessage('Please enter email and password');
         return;
       }
+
       try {
-        // إضافة مؤشر تحميل
         const submitBtn = loginForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Signing In...';
         submitBtn.disabled = true;
 
-        // تسجيل الدخول
-        console.log('Signing in user...');
+        console.log('🔄 Attempting to sign in...');
+
+        // Sign in user
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log('User signed in:', user.uid);
+        console.log('✅ User signed in:', user.uid);
 
-        // جلب بيانات المستخدم من Firestore
+        // Get user data from Firestore
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          console.log('User data from Firestore:', userData);
-          showMessage(`Welcome back, ${userData.firstName}! Redirecting...`, 'success');
+          console.log('✅ User role:', userData.role);
           
-          // حفظ بيانات المستخدم في localStorage
+          // Save to localStorage
           localStorage.setItem('userFullName', userData.fullName);
           localStorage.setItem('userEmail', userData.email);
           localStorage.setItem('userUID', user.uid);
           localStorage.setItem('userFirstName', userData.firstName);
+          localStorage.setItem('userRole', userData.role);
           
           if (rememberMe) {
             localStorage.setItem('rememberMe', 'true');
           }
+
+          // Redirect based on role
+          if (userData.role === 'admin') {
+            showMessage(`Welcome Admin ${userData.firstName}! Redirecting to dashboard...`, 'success');
+            setTimeout(() => {
+              window.location.href = 'admin-dashboard.html';
+            }, 2000);
+          } else {
+            showMessage(`Welcome back, ${userData.firstName}! Redirecting...`, 'success');
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 2000);
+          }
         } else {
-          console.log('No user data found in Firestore, creating now...');
-          // إذا لم توجد بيانات في Firestore، نقوم بإنشائها
-          const userData = {
-            email: email,
-            fullName: email.split('@')[0], // استخدام جزء من الإيميل كاسم
-            firstName: 'User',
-            createdAt: new Date().toISOString(),
-            role: 'user',
-            uid: user.uid
-          };
-          
-          await setDoc(doc(db, "users", user.uid), userData);
-          console.log('New user data created in Firestore');
-          
-          showMessage('Welcome! Account setup completed. Redirecting...', 'success');
-          localStorage.setItem('userFullName', userData.fullName);
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('userUID', user.uid);
-          localStorage.setItem('userFirstName', userData.firstName);
+          showMessage('User data not found. Please contact support.', 'error');
         }
 
-        // الانتقال إلى index.html بعد تسجيل الدخول الناجح
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 2000);
-
       } catch (error) {
-        console.error('Sign in error:', error);
+        console.error('❌ Sign in error:', error);
+        console.error('❌ Error code:', error.code);
+        console.error('❌ Error message:', error.message);
         
-        // إعادة تفعيل الزر
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
+        let errorMessage = 'Error signing in';
         
         if (error.code === 'auth/user-not-found' || 
             error.code === 'auth/wrong-password' || 
             error.code === 'auth/invalid-credential') {
-          showMessage('Incorrect email or password');
+          errorMessage = 'Incorrect email or password';
         } else if (error.code === 'auth/invalid-email') {
-          showMessage('Invalid email address');
+          errorMessage = 'Invalid email address';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = 'Too many failed attempts. Please try again later';
         } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
+          errorMessage = 'Network error. Please check your internet connection';
+        } else if (error.code === 'auth/user-disabled') {
+          errorMessage = 'This account has been disabled';
         } else {
-          showMessage(`Error: ${error.message}`);
+          errorMessage = `Error: ${error.message}`;
         }
+        
+        showMessage(errorMessage);
+        
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
       }
     });
   } else {
-    console.log('Login form not found');
+    console.error('❌ Login form not found!');
   }
 }
 
-// = FORGOT PASSWORD 
+// ================ FORGOT PASSWORD ================
 export function setupForgotPassword() {
   const forgotForm = document.getElementById('forgotForm');
+  console.log('🔧 Setting up forgot password...');
+  
   if (forgotForm) {
+    console.log('✅ Forgot password form found');
+    
     forgotForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.log('📧 Forgot password form submitted');
 
       const email = document.getElementById('email').value.trim();
+      console.log('📨 Email:', email);
 
       if (!email) {
         showMessage('Please enter your email address');
+        return;
+      }
+
+      // Basic email validation
+      if (!email.includes('@')) {
+        showMessage('Please enter a valid email address');
         return;
       }
 
@@ -256,59 +295,63 @@ export function setupForgotPassword() {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
 
+        console.log('🔄 Sending password reset email...');
+
+        // Send password reset email
         await sendPasswordResetEmail(auth, email);
-        showMessage('Password reset email sent! Check your inbox.', 'success');
         
+        console.log('✅ Password reset email sent successfully');
+        showMessage('Password reset email sent! Check your inbox and spam folder.', 'success');
+        
+        // Reset form
+        forgotForm.reset();
+        
+        // Redirect to login page after 5 seconds
         setTimeout(() => {
           window.location.href = 'login.html';
-        }, 3000);
+        }, 5000);
 
       } catch (error) {
-        console.error('Password reset error:', error);
+        console.error('❌ Password reset error:', error);
+        
+        let errorMessage = 'Error sending reset email';
+        
         if (error.code === 'auth/user-not-found') {
-          showMessage('No account found with this email');
+          errorMessage = 'No account found with this email';
         } else if (error.code === 'auth/invalid-email') {
-          showMessage('Invalid email address');
+          errorMessage = 'Invalid email address';
+        } else if (error.code === 'auth/too-many-requests') {
+          errorMessage = 'Too many requests. Please try again later';
         } else if (error.code === 'auth/network-request-failed') {
-          showMessage('Network error. Please check your connection.');
+          errorMessage = 'Network error. Please check your internet connection';
         } else {
-          showMessage(`Error: ${error.message}`);
+          errorMessage = `Error: ${error.message}`;
         }
+        
+        showMessage(errorMessage);
         
         const submitBtn = forgotForm.querySelector('button[type="submit"]');
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
       }
     });
+  } else {
+    console.error('❌ Forgot password form not found!');
   }
 }
 
 // ================ CHECK AUTH STATE ================
 export function checkAuthState() {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log('User is signed in:', user.uid);
-      const userFullName = localStorage.getItem('userFullName');
-      if (userFullName) {
-        const welcomeElement = document.getElementById('welcomeText');
-        if (welcomeElement) {
-          welcomeElement.textContent = `Welcome, ${userFullName}`;
-        }
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('✅ User is signed in:', user.uid);
+        resolve(user);
+      } else {
+        console.log('❌ User is signed out');
+        resolve(null);
       }
-      
-      // إخفاء أزرار Login/Register إذا كان المستخدم مسجلاً
-      const loginBtn = document.querySelector('a[href="login.html"]');
-      if (loginBtn) {
-        loginBtn.style.display = 'none';
-      }
-    } else {
-      console.log('User is signed out');
-      // إظهار أزرار Login/Register
-      const loginBtn = document.querySelector('a[href="login.html"]');
-      if (loginBtn) {
-        loginBtn.style.display = 'block';
-      }
-    }
+    });
   });
 }
 
@@ -318,12 +361,8 @@ export function setupLogout() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       try {
-        await auth.signOut();
-        localStorage.removeItem('userFullName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userUID');
-        localStorage.removeItem('userFirstName');
-        localStorage.removeItem('rememberMe');
+        await signOut(auth);
+        localStorage.clear();
         window.location.href = 'login.html';
       } catch (error) {
         console.error('Logout error:', error);
@@ -333,5 +372,5 @@ export function setupLogout() {
   }
 }
 
-// تهيئة التطبيق
-console.log('Firebase initialized successfully');
+// Export auth and db for other uses
+export { auth, db };

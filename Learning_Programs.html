@@ -17,6 +17,7 @@
             'primary-pink': '#f472b6',
             'muted': '#6b7280',
             'dark-bg': '#0f172a',
+            'custom-purple': '#c23cb6',
           },
           borderRadius: {
             'card': '16px',
@@ -24,6 +25,8 @@
           },
           fontFamily: {
             sans: ['Poppins', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
           },
         },
       },
@@ -46,56 +49,92 @@
       transform: perspective(800px) rotateX(6deg) scale(0.9) translate(-10px, -20px);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), inset 0 -4px 8px rgba(0, 38, 255, 0.06);
     }
-    /* Hamburger Animation */
-    .hamburger span { transition: all 0.3s ease; }
-    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
-    .hamburger.active span:nth-child(2) { opacity: 0; }
-    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+    /* Custom Scrollbar for mobile menu */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
   </style>
 </head>
-<body class="font-sans bg-black text-white">
-  <nav class="navbar sticky top-0 z-50 bg-white shadow-md flex flex-wrap items-center justify-between px-5 py-3 md:px-10 gap-3">
-    <div class="nav-logo">
-      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="GirlsSpace Logo" class="w-12 h-12 md:w-14 md:h-14 rounded-full object-contain">
+<body class="font-poppins bg-black text-white overflow-x-hidden">
+
+  <!-- Navigation Bar -->
+  <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
-    <div id="hamburger-btn" class="hamburger flex flex-col gap-1 cursor-pointer md:hidden z-50" onclick="toggleMenu()">
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-    </div>
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="home">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="about">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="chat">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="stories">Stories</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="programs">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="protection">Protection</a>
 
-    <ul id="nav-links" class="fixed top-0 left-[-100%] w-72 h-screen bg-white flex flex-col pt-20 gap-5 transition-all duration-300 ease-in-out md:static md:flex-row md:w-auto md:h-auto md:p-0 md:items-center md:gap-4 lg:gap-6 z-40 md:z-auto shadow-2xl md:shadow-none overflow-y-auto md:overflow-visible text-gray-800">
-      
-      <li><a href="./index.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="home">Home</a></li>
-      <li><a href="./AboutUs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="about">About</a></li>
-      <li><a href="./chat.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="chat">Chat</a></li>
-      <li><a href="./stories.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="stories">Stories</a></li>
-      <li><a href="./Learning_Programs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="programs">Programs</a></li>
-      <li><a href="./protection.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm" data-i18n="protection">Protection</a></li>
-      <li class="relative group w-full md:w-auto">
-        <button onclick="toggleLanguageDropdown()" class="nav-link text-gray-700 font-medium hover:text-pink-500 flex items-center gap-1 w-full md:w-auto justify-center md:justify-start">
-          <span data-i18n="languages">Languages</span> 
-          <i class="fa-solid fa-chevron-down text-xs ml-1 transition-transform duration-200" id="lang-arrow"></i>
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary-pink transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
         </button>
-        
-        <ul id="lang-dropdown" class="hidden md:group-hover:block md:absolute top-full left-0 bg-gray-50 md:bg-white shadow-none md:shadow-lg rounded-xl min-w-32 z-50 border-t md:border border-gray-100 w-full md:w-auto text-center md:text-left transition-all cursor-pointer">
-          <li><button onclick="changeLanguage('en')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600 text-center md:text-left">English</button></li>
-          <li><button onclick="changeLanguage('ar')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600 text-center md:text-left">العربية</button></li>
-          <li><button onclick="changeLanguage('sw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600 text-center md:text-left">Swahili</button></li>
-          <li><button onclick="changeLanguage('fr')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600 text-center md:text-left">Français</button></li>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><button onclick="changeLanguage('en')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">English</button></li>
+          <li><button onclick="changeLanguage('ar')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Arabic</button></li>
+          <li><button onclick="changeLanguage('sw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Swahili</button></li>
+          <li><button onclick="changeLanguage('fr')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">French</button></li>
+          <li><button onclick="changeLanguage('rw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Kinyarwanda</button></li>
         </ul>
-      </li>
-      <li class="mt-4 md:mt-0 text-center md:text-left"><a href="./login.html" class="px-3 py-1.5 border-2 border-pink-500 text-pink-500 rounded-full text-sm font-semibold hover:bg-pink-50 transition" data-i18n="login">Log In</a></li>
-      <li class="text-center md:text-left mb-8 md:mb-0"><a href="#" class="px-4 py-2 gradient-btn text-white rounded-full text-sm font-semibold transition hover:opacity-90" data-i18n="donate">Donate</a></li>
-    </ul>
-
-    <div class="nav-search hidden sm:block">
-      <input type="text" placeholder="Search..." class="px-3 py-1.5 rounded-lg border border-gray-300 text-sm w-32 md:w-40 focus:outline-none focus:border-pink-500" data-i18n-placeholder="search">
+      </div>
+      
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-i18n="login">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
     </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary-pink w-[140px]" data-i18n-placeholder="search">
+      </div>
+    </div>
+
+    <!-- Hamburger Button -->
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
   </nav>
 
-  <div id="nav-overlay" class="fixed inset-0 bg-black/50 hidden z-30 backdrop-blur-sm" onclick="closeMenu()"></div>
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed top-0 left-[-100%] w-full h-full bg-white z-40 transition-all duration-300 lg:hidden overflow-y-auto no-scrollbar">
+    <div class="pt-20 px-6 pb-10">
+      <div class="flex flex-col gap-6 text-gray-700 font-medium">
+        <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="home">Home</a>
+        <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="about">About</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="chat">Chat</a>
+        <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="stories">Stories</a>
+        <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="programs">Programs</a>
+        <a href="./protection.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="protection">Protection</a>
+        
+        <div class="py-2 border-b border-gray-100">
+          <div class="flex justify-between items-center">
+            <span data-i18n="languages">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">Arabic</option>
+              <option value="sw">Swahili</option>
+              <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-i18n="login">Log In</a>
+        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
+      </div>
+    </div>
+  </div>
 
   <div class="wrap min-h-screen bg-gradient-to-b from-black/50 to-black/70 bg-cover bg-center mt-12 px-5 py-8 md:px-10" style="background-image: url('./img/pexels-merlin-11167638.jpg');">
     <header class="text-center mb-10 text-pink-100">
@@ -215,7 +254,7 @@
         <div class="footer-links">
           <h4 class="links-title text-white font-bold mb-4" data-i18n="quick_links">Quick Links</h4>
           <ul class="links-list space-y-2">
-            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="join_chat">Join Chat</a></li>
+            <li><a href="./chat.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="join_chat">Join Chat</a></li>
             <li><a href="./stories.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="share_story">Share Story</a></li>
             <li><a href="./Learning_Programs.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="programs">Programs</a></li>
           </ul>
@@ -243,12 +282,7 @@
     </div>
   </footer>
   <script>
-    const navLinks = document.getElementById('nav-links');
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const overlay = document.getElementById('nav-overlay');
-    const langDropdown = document.getElementById('lang-dropdown');
-    const langArrow = document.getElementById('lang-arrow');
-
+    // Complete translations object with all languages
     const translations = {
       en: {
         // Navigation
@@ -409,14 +443,14 @@
         supported_by: "بدعم من UNHCR، Save The Children، Alight"
       },
       fr: {
-      // Navigation
+        // Navigation
         home: "Accueil", about: "À propos", chat: "Discuter", stories: "Histoires", programs: "Programmes", 
         protection: "Protection", languages: "Langues", login: "Connexion", donate: "Donner",
         search: "Rechercher...",      
         // Main content
         prog_title: "Programmes d'apprentissage",
         prog_desc: "Des programmes de formation complets conçus pour autonomiser, éduquer et protéger.",      
-      // Card 1 - GBV
+        // Card 1 - GBV
         gbv_title: "Prévention et réponse à la VBG",
         gbv_desc: "Formation essentielle sur la prévention, la reconnaissance et la réponse à la violence basée sur le genre.",
         gbv_feature1: "Comprendre les types de VBG",
@@ -564,15 +598,120 @@
         empowering_girls: "Kuwawezesha wasichana, daima.",
         available_languages: "Inapatikana kwa: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
         supported_by: "Inasaidiwa na UNHCR, Save The Children, Alight"
+      },
+      rw: {
+        // Navigation
+        home: "Ahabanza", about: "Abo turi", chat: "Kuganira", stories: "Inkuru", programs: "Porogaramu", 
+        protection: "Umutekano", languages: "Indimi", login: "Injira", donate: "Tanga",
+        search: "Shakisha...",      
+        // Main content
+        prog_title: "Porogaramu zo Kwiga",
+        prog_desc: "Porogaramu zuzuye zo kwigisha ziteguriwe guha imbaraga, kwigisha, no kurinda. Fasha ubwenge, menya ubumenyi, kandi witegure ejo hazaza ryiza.",      
+        // Card 1 - GBV
+        gbv_title: "Kwirinda no Gukemura GBV",
+        gbv_desc: "Amasomo ngenderwaho ku birinda ubukobwe, kubona, no gukemura ibikorwa by'ubugome bushingiye ku gitsina. Menya uburenganzira bwawe n'uburyo wo kwitonda.",
+        gbv_feature1: "Gusobanukirwa ubwoko bw'ibikorwa by'ubugome bushingiye ku gitsina",
+        gbv_feature2: "Gutegeka umutekano",
+        gbv_feature3: "Uburyo bwo gutanga raporo",
+        gbv_feature4: "Ibikoresho byo gufasha",
+        start_training: "Tangira Amasomo",
+        gbv_icon_alt: "Ishusho ya GBV",       
+        // Card 2 - Language
+        lang_title: "Kwiga Indimi",
+        lang_desc: "Menya indimi nshya kugirango wanduze amahirwe no guhuza n'abantu benshi. Amasomo yihariye hamwe n'abavugabwabyo.",
+        english: "Icyongereza",
+        swahili: "Igiswahili",
+        french: "Igifaransa",
+        kinyarwanda: "Ikinyarwanda",
+        arabic: "Icyarabu",
+        choose_language: "Hitamo Ururimi",
+        lang_icon_alt: "Ishusho y'Ururimi",      
+        // Card 3 - Life Skills
+        life_skills_title: "Amasomo y'Ubuzima",
+        life_skills_desc: "Ubumenyi ngenderwaho bw'ubwenge, ubuhatsi, n'ubwigenge. Fasha ubwenge, witegure amahirwe.",
+        life_skills_feature1: "Ubumenyi bwo kuvugisana",
+        life_skills_feature2: "Gukura ubuhatsi",
+        life_skills_feature3: "Ubumenyi bw'imari",
+        life_skills_feature4: "Ubumenyi bwa digitale",
+        start_learning: "Tangira Kwiga",
+        life_skills_icon_alt: "Ishusho y'Ubuzima",      
+        // Card 4 - Vocational
+        vocational_title: "Ubumenyi bw'Umwuga",
+        vocational_desc: "Jya ubona ubumenyi bushobora kuguza amafaranga. Amasomo yihariye hamwe n'abigishwa bafite ubwenge.",
+        vocational_feature1: "Gutera umwenda no kudoda",
+        vocational_feature2: "Kogosha no guteka",
+        vocational_feature3: "Ubukorikori no gukora imitako",
+        vocational_feature4: "Amasomo y'ibanze ya mudasobwa",
+        explore_skills: "Shakisha Ubumenyi",
+        vocational_icon_alt: "Ubumenyi bw'Umwuga",     
+        // Card 5 - Health
+        health_title: "Ubuzima n'Imibereho",
+        health_desc: "Amasomo yuzuye y'ubuzima aboneka ku buzima bw'umubiri, ubwenge, n'ubuzima bw'imyororokere. Amakuru ahuje imyaka n'umuco.",
+        health_feature1: "Ubuzima bw'imyororokere",
+        health_feature2: "Kumenya ubuzima bw'ubwenge",
+        health_feature3: "Ibiribwa n'isuku",
+        health_feature4: "Amasomo y'ibanze yo gufasha abarwayi",
+        learn_more: "Menya Birenze",
+        health_icon_alt: "Ubuzima n'Imibereho",    
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "Ubucuruzi",
+        entrepreneurship_desc: "Jya ubona uburyo bwo gutangiza no gucunga ubucuruzi bwawe. Kuva mu gutegura ingingo kugeza mu gucunga imari n'uburyo bwo kwegura.",
+        entrepreneurship_feature1: "Gutegura ubucuruzi",
+        entrepreneurship_feature2: "Kwegura no kugurisha",
+        entrepreneurship_feature3: "Gucunga imari",
+        entrepreneurship_feature4: "Kubona amafaranga",
+        start_journey: "Tangira Urugendo",
+        entrepreneurship_icon_alt: "Ubucuruzi",      
+        // Footer
+        footer_subtitle: "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        footer_desc: "Ahantu hatekanye h'ikijyambere aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        quick_links: "Amahuza Yihuse",
+        join_chat: "Injira mu Kuganira",
+        share_story: "Sangiza Inkuru",
+        get_help: "Kwakira Ubufasha",
+        emergency: "Ubutabazi",
+        support: "Gushigikira",
+        report: "Gutanga Raporo",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Guharanira abakobwa, buri gihe.",
+        available_languages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        supported_by: "Bishigikijwe na: UNHCR, Save The Children, Alight"
       }
     };
 
-    function changeLanguage(lang) {
-      console.log("Changing language to:", lang);
+    // Mobile menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
 
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = lang;
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      const isOpen = hamburger.classList.contains('active');
+      if (isOpen) {
+        mobileMenu.style.left = '0';
+        overlay.classList.remove('hidden');
+      } else {
+        mobileMenu.style.left = '-100%';
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // Language management functions
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updatePageDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      console.log('Applying translations for:', lang);
       
+      // Update all elements with data-i18n
       document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (translations[lang] && translations[lang][key]) {
@@ -580,6 +719,7 @@
         }
       });
       
+      // Update placeholder texts
       document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         if (translations[lang] && translations[lang][key]) {
@@ -587,52 +727,80 @@
         }
       });
       
+      // Update alt texts
       document.querySelectorAll('[data-i18n-alt]').forEach(element => {
         const key = element.getAttribute('data-i18n-alt');
         if (translations[lang] && translations[lang][key]) {
           element.alt = translations[lang][key];
         }
       });
+    }
 
-      closeMenu();
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'Arabic',
+        'sw': 'Swahili',
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
+      };
       
-      localStorage.setItem('preferred-language', lang);
-    }
-    function loadSavedLanguage() {
-      const savedLang = localStorage.getItem('preferred-language') || 'en';
-      changeLanguage(savedLang);
-    }
-    function toggleMenu() {
-      if (navLinks.classList.contains('left-[-100%]')) {
-        navLinks.classList.remove('left-[-100%]');
-        navLinks.classList.add('left-0');
-        hamburgerBtn.classList.add('active');
-        overlay.classList.remove('hidden');
-      } else {
-        closeMenu();
+      // Update desktop language button
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.textContent = languageNames[lang];
+      }
+      
+      // Update mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.value = lang;
       }
     }
-    function closeMenu() {
-      navLinks.classList.add('left-[-100%]');
-      navLinks.classList.remove('left-0');
-      hamburgerBtn.classList.remove('active');
-      overlay.classList.add('hidden');
-      
-      if (langDropdown) langDropdown.classList.add('hidden');
-      if (langArrow) langArrow.style.transform = 'rotate(0deg)';
+
+    function updatePageDirection(lang) {
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
     }
-    function toggleLanguageDropdown() {
-      if (langDropdown) {
-        langDropdown.classList.toggle('hidden');
-        if (langDropdown.classList.contains('hidden')) {
-          langArrow.style.transform = 'rotate(0deg)';
-        } else {
-          langArrow.style.transform = 'rotate(180deg)';
-        }
+
+    function changeLanguage(lang) {
+      console.log('Changing language to:', lang);
+      setCurrentLanguage(lang);
+      // Close mobile menu after language change
+      if (mobileMenu.style.left === '0px') {
+        toggleMenu();
       }
     }
+
+    // Initialize everything when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      loadSavedLanguage();
+      const currentLang = getCurrentLanguage();
+      console.log('Initializing with language:', currentLang);
+      
+      // Apply translations
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updatePageDirection(currentLang);
+      
+      // Add event listeners
+      hamburger.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+      
+      // Mobile language selector event
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.addEventListener('change', function() {
+          changeLanguage(this.value);
+        });
+      }
+
+      // Add click events to desktop language buttons
+      document.querySelectorAll('#language-button + ul button').forEach(button => {
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          changeLanguage(lang);
+        });
+      });
     });
   </script>
 </body>

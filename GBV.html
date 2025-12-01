@@ -16,7 +16,7 @@
     body { font-family: 'Poppins', sans-serif; background: #f9f7fd; }
     .font-serif { font-family: 'Playfair Display', serif; }
 
-            .nav-link::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
@@ -30,10 +30,6 @@
     .nav-link:hover::after {
       width: 100%;
     }
-    
-    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-    .hamburger.active span:nth-child(2) { opacity: 0; }
-    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
     
     .gradient-btn { background: linear-gradient(90deg, #ff5f8d, #c23cb6); transition: all 0.3s ease; }
     .gradient-btn:hover { box-shadow: 0 12px 30px rgba(194, 59, 182, 0.4); transform: translateY(-3px); }
@@ -92,77 +88,118 @@
 
     .modal-enter { animation: fadeIn 0.4s ease-out forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    
+    /* Custom Scrollbar for mobile menu */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hamburger Animation */
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
   </style>
 </head>
 <body class="bg-purple-50 text-gray-800">
-    <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-nav md:px-10">
-    
+
+  <!-- Navigation Bar -->
+  <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
     <div class="w-[60px] h-[50px]">
-      <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-full h-full object-contain rounded-full">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
-    <div class="flex flex-col gap-[5px] cursor-pointer z-[1001] md:hidden hamburger" onclick="toggleMenu()">
-      <span class="w-7 h-[3px] bg-gray-700 rounded transition-all duration-300"></span>
-      <span class="w-7 h-[3px] bg-gray-700 rounded transition-all duration-300"></span>
-      <span class="w-7 h-[3px] bg-gray-700 rounded transition-all duration-300"></span>
-    </div>
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="home">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="about">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="chat">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="stories">Stories</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="programs">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="protection">Protection</a>
 
-    <ul class="nav-links fixed top-0 left-[-100%] w-[280px] h-screen bg-white flex flex-col pt-20 gap-5 shadow-md transition-all duration-300 z-[1000] md:static md:flex-row md:w-auto md:h-auto md:p-0 md:shadow-none md:bg-transparent overflow-y-auto md:overflow-visible">
-      
-      <li><a href="./index.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">Home</a></li>
-      <li><a href="./AboutUs.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">About</a></li>
-      <li><a href="./chat.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">Chat</a></li>
-      <li><a href="./stories.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">Stories</a></li>
-      <li><a href="./Learning_Programs.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">Programs</a></li>
-      <li><a href="./protection.html" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block w-full text-center py-2 md:py-0 md:w-auto border-b border-gray-100 md:border-none">Protection</a></li>
-
-      <li class="relative group w-full md:w-auto text-center">
-        <a href="#" class="nav-link relative text-gray-text font-medium text-base md:text-sm hover:text-pink-primary transition-colors block py-2 md:py-0 border-b border-gray-100 md:border-none">Languages</a>
-        <ul class="absolute top-full left-0 bg-white shadow-lg rounded-lg min-w-[130px] hidden group-hover:block z-50 py-2">
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-text hover:bg-purple-light hover:text-purple-btn">English</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-text hover:bg-purple-light hover:text-purple-btn">Arabic</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-text hover:bg-purple-light hover:text-purple-btn">Swahili</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-text hover:bg-purple-light hover:text-purple-btn">French</a></li>
-        </ul>
-      </li>
-
-      <li class="w-full md:w-auto text-center mt-2 md:mt-0">
-        <a href="./login.html" class="inline-block px-4 py-1.5 border-[1.5px] border-purple-btn text-purple-btn rounded-full font-semibold text-[13px] hover:bg-purple-light transition-colors">Log In</a>
-      </li>
-      <li class="w-full md:w-auto text-center mb-4 md:mb-0">
-        <a href="./Donate.html" class="inline-block px-4 py-2 bg-gradient-to-r from-gradient-start to-purple-btn text-black rounded-full font-semibold text-[13px] hover:border hover:border-purple-btn hover:shadow-glow transition-all">Donate</a>
-      </li>
-    </ul>
-
-    <div class="mt-2 w-full md:mt-0 md:w-auto order-3 md:order-none">
-      <input type="text" placeholder="Search..." class="w-full md:w-[160px] px-3 py-1.5 rounded-[10px] border border-gray-200 outline-none text-[13px] focus:border-pink-primary">
-    </div>
-
-  </nav>
-
-  <div class="nav-overlay fixed inset-0 bg-black/50 hidden z-[999]" onclick="closeMenu()"></div>
-
-  <nav class="sticky top-0 z-50 bg-white shadow-xl flex flex-wrap items-center justify-between px-5 py-4 md:px-10">
-
-    <div class="hamburger cursor-pointer space-y-1.5 md:hidden z-50">
-      <span class="block w-8 h-1 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-300"></span>
-      <span class="block w-8 h-1 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-300"></span>
-      <span class="block w-8 h-1 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-300"></span>
-    </div>
-    <ul class="nav-links fixed top-0 -left-full w-80 h-full bg-white/98 backdrop-blur-lg flex flex-col p-6 pt-24 gap-8 transition-all duration-500 md:static md:flex-row md:w-auto md:h-auto md:p-0 md:gap-8 md:items-center z-40 shadow-2xl md:shadow-none border-r md:border-none border-purple-100">
-      <li id="auth-section" class="md:border-l md:border-gray-200 md:pl-6 flex items-center gap-4">
-        <button onclick="openLoginModal()" class="text-purple-700 font-bold hover:text-pink-600 flex items-center gap-2">
-          <i class="fas fa-user-circle text-2xl"></i> <span>Login</span>
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary-pink transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
         </button>
-      </li>
-    </ul>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><button onclick="changeLanguage('en')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">English</button></li>
+          <li><button onclick="changeLanguage('ar')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Arabic</button></li>
+          <li><button onclick="changeLanguage('sw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Swahili</button></li>
+          <li><button onclick="changeLanguage('fr')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">French</button></li>
+          <li><button onclick="changeLanguage('rw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Kinyarwanda</button></li>
+        </ul>
+      </div>
+      
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-i18n="login">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary-pink w-[140px]" data-i18n-placeholder="search">
+      </div>
+    </div>
+
+    <!-- Hamburger Button -->
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
   </nav>
-  <div class="nav-overlay fixed inset-0 bg-black/70 hidden z-30"></div>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed top-0 left-[-100%] w-full h-full bg-white z-40 transition-all duration-300 lg:hidden overflow-y-auto no-scrollbar">
+    <div class="pt-20 px-6 pb-10">
+      <div class="flex flex-col gap-6 text-gray-700 font-medium">
+        <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="home">Home</a>
+        <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="about">About</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="chat">Chat</a>
+        <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="stories">Stories</a>
+        <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="programs">Programs</a>
+        <a href="./protection.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="protection">Protection</a>
+        
+        <div class="py-2 border-b border-gray-100">
+          <div class="flex justify-between items-center">
+            <span data-i18n="languages">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">Arabic</option>
+              <option value="sw">Swahili</option>
+              <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-i18n="login">Log In</a>
+        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Navigation Bar (User Auth) -->
+  <nav class="sticky top-14 z-40 bg-white shadow-sm border-b border-gray-200">
+    <div class="container max-w-7xl mx-auto px-6 py-3">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-600" data-i18n="gbv_course">GBV Prevention & Response Course</span>
+        </div>
+        <div id="auth-section" class="flex items-center gap-4">
+          <button onclick="openLoginModal()" class="text-purple-700 font-semibold hover:text-pink-600 flex items-center gap-2 text-sm">
+            <i class="fas fa-user-circle text-lg"></i> <span data-i18n="login">Log In</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
 
   <header class="bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-700 text-white py-20 text-center">
     <div class="max-w-6xl mx-auto px-6">
-      <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Prevention & Response to <br/> Gender-Based Violence</h1>
-      <p class="text-xl md:text-2xl opacity-95 max-w-3xl mx-auto">Learn how to protect yourself and others.</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight" data-i18n="gbv_title">Prevention & Response to <br/> Gender-Based Violence</h1>
+      <p class="text-xl md:text-2xl opacity-95 max-w-3xl mx-auto" data-i18n="gbv_subtitle">Learn how to protect yourself and others.</p>
     </div>
   </header>
 
@@ -170,8 +207,8 @@
     <div class="mb-12 bg-white rounded-3xl shadow-2xl p-8 border border-purple-100">
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="text-center md:text-left">
-          <h2 class="text-3xl font-bold text-purple-700">Your Progress</h2>
-          <p class="text-gray-500 mt-2" id="user-greeting">Guest User</p>
+          <h2 class="text-3xl font-bold text-purple-700" data-i18n="your_progress">Your Progress</h2>
+          <p class="text-gray-500 mt-2" id="user-greeting" data-i18n="guest_user">Guest User</p>
         </div>
         <span id="progress-text" class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">0%</span>
       </div>
@@ -182,10 +219,10 @@
 
     <div id="completion-section" class="hidden mt-20 text-center space-y-8 animate-bounce-in">
         <div class="p-10 bg-gradient-to-r from-pink-100 to-purple-100 rounded-3xl border-4 border-white shadow-2xl">
-            <h2 class="text-4xl font-extrabold text-purple-800 mb-4">Course Completed! 🌟</h2>
-            <p class="text-xl text-gray-600 mb-8">You have passed all modules.</p>
+            <h2 class="text-4xl font-extrabold text-purple-800 mb-4" data-i18n="course_completed">Course Completed! 🌟</h2>
+            <p class="text-xl text-gray-600 mb-8" data-i18n="all_modules_passed">You have passed all modules.</p>
             <button onclick="showCertificate()" class="gradient-btn text-white px-12 py-6 rounded-full text-2xl font-bold shadow-2xl hover:scale-105 transition-transform">
-                <i class="fas fa-certificate mr-3"></i> Get Certificate
+                <i class="fas fa-certificate mr-3"></i> <span data-i18n="get_certificate">Get Certificate</span>
             </button>
         </div>
     </div>
@@ -195,13 +232,13 @@
     <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden modal-enter relative">
       <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl"><i class="fas fa-times"></i></button>
       <div class="p-8 text-center">
-        <h3 class="text-2xl font-bold text-gray-800 mb-2">Welcome!</h3>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2" data-i18n="welcome">Welcome!</h3>
         <form id="login-form" class="space-y-4 text-left mt-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1" data-i18n="your_name">Your Name</label>
             <input type="text" id="username-input" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 outline-none" placeholder="Jane Doe">
           </div>
-          <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold text-lg shadow-md">Login / Sign Up</button>
+          <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold text-lg shadow-md" data-i18n="login_signup">Login / Sign Up</button>
         </form>
       </div>
     </div>
@@ -213,22 +250,21 @@
       <div id="certificate-content" class="p-8 md:p-16 text-center certificate-border certificate-bg-pattern relative" style="width: 100%;">
         <i class="fas fa-award text-pink-500 text-4xl absolute top-6 left-6 opacity-50"></i>
         <i class="fas fa-award text-purple-500 text-4xl absolute top-6 right-6 opacity-50"></i>
-        <h2 class="text-xl uppercase tracking-[0.3em] text-gray-500 font-semibold mb-4">Certificate of Completion</h2>
+        <h2 class="text-xl uppercase tracking-[0.3em] text-gray-500 font-semibold mb-4" data-i18n="certificate_of_completion">Certificate of Completion</h2>
         <h1 class="font-serif text-4xl md:text-5xl text-purple-800 font-bold italic mb-4">GirlsSpace Academy</h1>
-        <p class="text-lg text-gray-600 my-4">This is to certify that</p>
+        <p class="text-lg text-gray-600 my-4" data-i18n="this_certifies">This is to certify that</p>
         <div class="font-serif text-3xl md:text-4xl text-pink-600 border-b-2 border-gray-300 pb-2 px-10 mb-6 inline-block" id="cert-name">Name</div>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10">Has successfully completed the program on <br><strong class="text-purple-700">"Prevention and Response to Gender-Based Violence"</strong></p>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10" data-i18n="has_completed">Has successfully completed the program on <br><strong class="text-purple-700">"Prevention and Response to Gender-Based Violence"</strong></p>
         <div class="flex flex-row justify-between w-full px-8 mt-12">
-          <div class="text-center"><p class="font-serif text-lg text-gray-800 border-t border-gray-400 pt-2 px-6" id="cert-date">Date</p><span class="text-xs text-gray-500 uppercase tracking-widest">Date</span></div>
-          <div class="text-center"><div class="font-serif text-xl text-gray-800 mb-[-5px]" style="font-family: cursive;">GirlsSpace Team</div><p class="text-lg border-t border-gray-400 pt-2 px-6 mt-2"></p><span class="text-xs text-gray-500 uppercase tracking-widest">Signature</span></div>
+          <div class="text-center"><p class="font-serif text-lg text-gray-800 border-t border-gray-400 pt-2 px-6" id="cert-date">Date</p><span class="text-xs text-gray-500 uppercase tracking-widest" data-i18n="date">Date</span></div>
+          <div class="text-center"><div class="font-serif text-xl text-gray-800 mb-[-5px]" style="font-family: cursive;">GirlsSpace Team</div><p class="text-lg border-t border-gray-400 pt-2 px-6 mt-2"></p><span class="text-xs text-gray-500 uppercase tracking-widest" data-i18n="signature">Signature</span></div>
         </div>
       </div>
       <div class="text-center p-6 bg-gray-50 border-t border-gray-200">
-         <button onclick="downloadPDF()" class="gradient-btn text-white px-10 py-3 rounded-full text-lg font-bold shadow-lg"><i class="fas fa-file-pdf mr-2"></i> Download PDF</button>
+         <button onclick="downloadPDF()" class="gradient-btn text-white px-10 py-3 rounded-full text-lg font-bold shadow-lg"><i class="fas fa-file-pdf mr-2"></i> <span data-i18n="download_pdf">Download PDF</span></button>
       </div>
     </div>
   </div>
-
 
   <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
     <div class="max-w-7xl mx-auto">
@@ -237,9 +273,9 @@
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center gap-3 mb-4">
             <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
-            <p class="font-semibold text-[rgb(255,135,219)] text-base">Empowering Girls, Building Futures</p>
+            <p class="font-semibold text-[rgb(255,135,219)] text-base" data-i18n="footer_subtitle">Empowering Girls, Building Futures</p>
           </div>
-          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6">
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6" data-i18n="footer_desc">
             A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
           </p>
           <div class="flex gap-3">
@@ -251,37 +287,326 @@
         </div>
 
         <div>
-          <h4 class="text-white font-semibold text-lg mb-4">Quick Links</h4>
+          <h4 class="text-white font-semibold text-lg mb-4" data-i18n="quick_links">Quick Links</h4>
           <ul class="space-y-3 text-sm text-slate-400">
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Join Chat</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Share Story</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Programs</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="join_chat">Join Chat</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="share_story">Share Story</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="programs">Programs</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="text-white font-semibold text-lg mb-4">Get Help</h4>
+          <h4 class="text-white font-semibold text-lg mb-4" data-i18n="get_help">Get Help</h4>
           <ul class="space-y-3 text-sm text-slate-400">
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Emergency</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Support</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Report</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="emergency">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="support">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="report">Report</a></li>
           </ul>
         </div>
       </div>
 
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
         <div>
-          <p>© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium">Empowering girls, always.</span></p>
+          <p data-i18n="copyright">© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium" data-i18n="empowering_girls">Empowering girls, always.</span></p>
         </div>
         <div class="text-left md:text-right">
-          <p class="mb-1">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-          <p>Supported by UNHCR, Save The Children, Alight</p>
+          <p class="mb-1" data-i18n="available_languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-i18n="supported_by">Supported by UNHCR, Save The Children, Alight</p>
         </div>
       </div>
     </div>
   </footer>
 
   <script>
+    // --- Translations ---
+    const translations = {
+      en: {
+        // Navigation
+        home: "Home", about: "About", chat: "Chat", stories: "Stories", programs: "Programs", 
+        protection: "Protection", languages: "Languages", login: "Log In", donate: "Donate",
+        search: "Search...",
+        gbv_course: "GBV Prevention & Response Course",
+        
+        // Page Content
+        gbv_title: "Prevention & Response to Gender-Based Violence",
+        gbv_subtitle: "Learn how to protect yourself and others.",
+        your_progress: "Your Progress",
+        guest_user: "Guest User",
+        course_completed: "Course Completed! 🌟",
+        all_modules_passed: "You have passed all modules.",
+        get_certificate: "Get Certificate",
+        welcome: "Welcome!",
+        your_name: "Your Name",
+        login_signup: "Login / Sign Up",
+        certificate_of_completion: "Certificate of Completion",
+        this_certifies: "This is to certify that",
+        has_completed: "Has successfully completed the program on",
+        date: "Date",
+        signature: "Signature",
+        download_pdf: "Download PDF",
+        
+        // Footer
+        footer_subtitle: "Empowering Girls, Building Futures",
+        footer_desc: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+        quick_links: "Quick Links",
+        join_chat: "Join Chat",
+        share_story: "Share Story",
+        get_help: "Get Help",
+        emergency: "Emergency",
+        support: "Support",
+        report: "Report",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Empowering girls, always.",
+        available_languages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+        supported_by: "Supported by UNHCR, Save The Children, Alight"
+      },
+      ar: {
+        // Navigation
+        home: "الرئيسية", about: "عن الموقع", chat: "دردشة", stories: "قصص", programs: "البرامج", 
+        protection: "حماية", languages: "اللغات", login: "دخول", donate: "تبرع",
+        search: "بحث...",
+        gbv_course: "دورة الوقاية من العنف القائم على النوع والاستجابة له",
+        
+        // Page Content
+        gbv_title: "الوقاية من العنف القائم على النوع والاستجابة له",
+        gbv_subtitle: "تعلم كيفية حماية نفسك والآخرين.",
+        your_progress: "تقدمك",
+        guest_user: "مستخدم زائر",
+        course_completed: "تم إكمال الدورة! 🌟",
+        all_modules_passed: "لقد اجتزت جميع الوحدات.",
+        get_certificate: "الحصول على الشهادة",
+        welcome: "مرحباً!",
+        your_name: "اسمك",
+        login_signup: "تسجيل الدخول / إنشاء حساب",
+        certificate_of_completion: "شهادة إتمام",
+        this_certifies: "هذا يشهد بأن",
+        has_completed: "قد أتم بنجاح البرنامج حول",
+        date: "التاريخ",
+        signature: "التوقيع",
+        download_pdf: "تحميل PDF",
+        
+        // Footer
+        footer_subtitle: "تمكين الفتيات، بناء المستقبل",
+        footer_desc: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم ماهاما للاجئين التواصل والتعلم والنمو.",
+        quick_links: "روابط سريعة",
+        join_chat: "انضم للدردشة",
+        share_story: "شارك قصة",
+        get_help: "احصل على المساعدة",
+        emergency: "طوارئ",
+        support: "دعم",
+        report: "الإبلاغ",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "تمكين الفتيات، دائماً.",
+        available_languages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+        supported_by: "بدعم من UNHCR، Save The Children، Alight"
+      },
+      fr: {
+        // Navigation
+        home: "Accueil", about: "À propos", chat: "Discuter", stories: "Histoires", programs: "Programmes", 
+        protection: "Protection", languages: "Langues", login: "Connexion", donate: "Donner",
+        search: "Rechercher...",
+        gbv_course: "Cours de Prévention et Réponse à la VBG",
+        
+        // Page Content
+        gbv_title: "Prévention et réponse à la violence basée sur le genre",
+        gbv_subtitle: "Apprenez à vous protéger et à protéger les autres.",
+        your_progress: "Votre progression",
+        guest_user: "Utilisateur invité",
+        course_completed: "Cours terminé ! 🌟",
+        all_modules_passed: "Vous avez réussi tous les modules.",
+        get_certificate: "Obtenir le certificat",
+        welcome: "Bienvenue !",
+        your_name: "Votre nom",
+        login_signup: "Connexion / Inscription",
+        certificate_of_completion: "Certificat d'achèvement",
+        this_certifies: "Ceci certifie que",
+        has_completed: "A terminé avec succès le programme sur",
+        date: "Date",
+        signature: "Signature",
+        download_pdf: "Télécharger PDF",
+        
+        // Footer
+        footer_subtitle: "Autonomiser les filles, construire l'avenir",
+        footer_desc: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter.",
+        quick_links: "Liens rapides",
+        join_chat: "Rejoindre le chat",
+        share_story: "Partager une histoire",
+        get_help: "Obtenir de l'aide",
+        emergency: "Urgence",
+        support: "Soutien",
+        report: "Signaler",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Autonomiser les filles, toujours.",
+        available_languages: "Disponible en: Anglais, Français, Kiswahili, Kinyarwanda, Arabe",
+        supported_by: "Soutenu par UNHCR, Save The Children, Alight"
+      },
+      sw: {
+        // Navigation
+        home: "Nyumbani", about: "Kuhusu", chat: "Ongea", stories: "Hadithi", programs: "Mipango", 
+        protection: "Ulinzi", languages: "Lugha", login: "Ingia", donate: "Changia",
+        search: "Tafuta...",
+        gbv_course: "Kozi ya Kuzuia na Kukabiliana na GBV",
+        
+        // Page Content
+        gbv_title: "Kuzuia na Kukabiliana na Unyanyasaji wa Kijinsia",
+        gbv_subtitle: "Jifunze jinsi ya kujilinda na kuwalinda wengine.",
+        your_progress: "Maendeleo Yako",
+        guest_user: "Mtumiaji Mgeni",
+        course_completed: "Kozi Imekamilika! 🌟",
+        all_modules_passed: "Umefanikiwa kupita moduli zote.",
+        get_certificate: "Pata Cheti",
+        welcome: "Karibu!",
+        your_name: "Jina Lako",
+        login_signup: "Ingia / Jisajili",
+        certificate_of_completion: "Cheti ya Kukamilisha",
+        this_certifies: "Hii inathibitisha kuwa",
+        has_completed: "Amehitimu mafanikio programu kuhusu",
+        date: "Tarehe",
+        signature: "Sahihi",
+        download_pdf: "Pakua PDF",
+        
+        // Footer
+        footer_subtitle: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+        footer_desc: "Mahali salama pa kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana.",
+        quick_links: "Viungo vya Haraka",
+        join_chat: "Jiunge na Mazungumzo",
+        share_story: "Shiriki Hadithi",
+        get_help: "Pata Msaada",
+        emergency: "Dharura",
+        support: "Msaada",
+        report: "Ripoti",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Kuwawezesha wasichana, daima.",
+        available_languages: "Inapatikana kwa: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+        supported_by: "Inasaidiwa na UNHCR, Save The Children, Alight"
+      },
+      rw: {
+        // Navigation
+        home: "Ahabanza", about: "Abo turi", chat: "Kuganira", stories: "Inkuru", programs: "Porogaramu", 
+        protection: "Umutekano", languages: "Indimi", login: "Injira", donate: "Tanga",
+        search: "Shakisha...",
+        gbv_course: "Isomo ryo Kwirinda no Gukemura GBV",
+        
+        // Page Content
+        gbv_title: "Kwirinda no Gukemura Ibikorwa by'Ubugome Bushingiye ku Gitsina",
+        gbv_subtitle: "Jya ubona uburyo bwo kwirinda no kurinda abandi.",
+        your_progress: "Iterambere Ryawe",
+        guest_user: "Ukoresha utazwe",
+        course_completed: "Isomo Ryarakozwe! 🌟",
+        all_modules_passed: "Waratsinze modulo zose.",
+        get_certificate: "Kwakira Icyangombwa",
+        welcome: "Murakaza neza!",
+        your_name: "Izina ryawe",
+        login_signup: "Injira / Iyandike",
+        certificate_of_completion: "Icyangombwa cyo Kurangiza",
+        this_certifies: "Ibi bihamya ko",
+        has_completed: "Yarangiye neza porogaramu ku",
+        date: "Itariki",
+        signature: "Umukono",
+        download_pdf: "Kuramo PDF",
+        
+        // Footer
+        footer_subtitle: "Guharanira Abahungu, Kubaka Ejo Hazaza",
+        footer_desc: "Ahantu hatekanye h'ikijyambere aho abahungu bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza.",
+        quick_links: "Amahuza Yihuse",
+        join_chat: "Injira mu Kuganira",
+        share_story: "Sangiza Inkuru",
+        get_help: "Kwakira Ubufasha",
+        emergency: "Ubutabazi",
+        support: "Gushigikira",
+        report: "Gutanga Raporo",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Guharanira abahungu, buri gihe.",
+        available_languages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        supported_by: "Bishigikijwe na: UNHCR, Save The Children, Alight"
+      }
+    };
+
+    // --- Language Management ---
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updatePageDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      console.log('Applying translations for:', lang);
+      
+      // Update all elements with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+      
+      // Update placeholder texts
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+    }
+
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'Arabic',
+        'sw': 'Swahili',
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
+      };
+      
+      // Update desktop language button
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.textContent = languageNames[lang];
+      }
+      
+      // Update mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.value = lang;
+      }
+    }
+
+    function updatePageDirection(lang) {
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+    }
+
+    function changeLanguage(lang) {
+      console.log('Changing language to:', lang);
+      setCurrentLanguage(lang);
+      // Close mobile menu after language change
+      if (document.getElementById('mobile-menu').style.left === '0px') {
+        toggleMenu();
+      }
+    }
+
+    // --- Mobile Menu Functionality ---
+    function toggleMenu() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const overlay = document.getElementById('mobile-menu-overlay');
+      
+      hamburger.classList.toggle('active');
+      const isOpen = hamburger.classList.contains('active');
+      if (isOpen) {
+        mobileMenu.style.left = '0';
+        overlay.classList.remove('hidden');
+      } else {
+        mobileMenu.style.left = '-100%';
+        overlay.classList.add('hidden');
+      }
+    }
+
     // --- Module Data (Using Video IDs instead of full URLs for API) ---
     const modules = [
       {title: "Introduction to GBV", videoId: "-eVdXMmYC_E"},
@@ -311,22 +636,50 @@
     function updateAuthUI() {
       const authSection = document.getElementById('auth-section');
       const greeting = document.getElementById('user-greeting');
+      
       if (currentUser) {
         greeting.textContent = `Welcome back, ${currentUser}`;
-        authSection.innerHTML = `<div class="flex items-center gap-3"><span class="font-semibold text-purple-800 hidden md:inline">${currentUser}</span><button onclick="logout()" class="text-sm border border-red-200 px-3 py-1 rounded text-red-500 hover:bg-red-50">Logout</button></div>`;
+        authSection.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-purple-700 font-semibold hidden md:inline">${currentUser}</span>
+            <button onclick="logout()" class="text-xs border border-red-200 px-2 py-1 rounded text-red-500 hover:bg-red-50" data-i18n="logout">Logout</button>
+          </div>
+        `;
       } else {
-        greeting.textContent = "Guest User (Progress not saved)";
-        authSection.innerHTML = `<button onclick="openLoginModal()" class="text-purple-700 font-bold hover:text-pink-600 flex items-center gap-2"><i class="fas fa-user-circle text-2xl"></i> <span>Login</span></button>`;
+        greeting.textContent = translations[getCurrentLanguage()].guest_user || "Guest User (Progress not saved)";
+        authSection.innerHTML = `
+          <button onclick="openLoginModal()" class="text-purple-700 font-semibold hover:text-pink-600 flex items-center gap-2 text-sm">
+            <i class="fas fa-user-circle text-lg"></i> <span data-i18n="login">Log In</span>
+          </button>
+        `;
       }
+      
+      // Re-apply translations after updating auth section
+      applyTranslations(getCurrentLanguage());
     }
+
     function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
     function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+    
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const name = document.getElementById('username-input').value;
-      if(name) { currentUser = name; localStorage.setItem('gs_user_name', name); updateAuthUI(); closeLoginModal(); renderModules(); }
+      if(name) { 
+        currentUser = name; 
+        localStorage.setItem('gs_user_name', name); 
+        updateAuthUI(); 
+        closeLoginModal(); 
+        renderModules(); 
+      }
     });
-    function logout() { if(confirm("Logout?")) { localStorage.removeItem('gs_user_name'); currentUser = null; window.location.reload(); } }
+
+    function logout() { 
+      if(confirm("Logout?")) { 
+        localStorage.removeItem('gs_user_name'); 
+        currentUser = null; 
+        window.location.reload(); 
+      } 
+    }
 
     // --- Helper Functions ---
     function getStorageKey(index, type = 'quiz') {
@@ -364,9 +717,7 @@
               
               <div class="video-container mb-6 shadow-lg rounded-2xl overflow-hidden">
                  ${hasWatched ? 
-                    // If watched, show iframe directly or a placeholder saying watched
                     `<iframe src="https://www.youtube.com/embed/${mod.videoId}" allowfullscreen></iframe>` :
-                    // If NOT watched, show clickable overlay to init API
                     `<div id="player-wrapper-${i}" class="w-full h-full">
                         <div class="overlay" onclick="initPlayer(${i}, '${mod.videoId}')">
                             <div class="play-icon w-16 h-16 bg-pink-600 rounded-full flex items-center justify-center shadow-lg text-white transition-transform duration-300">
@@ -401,13 +752,10 @@
     }
 
     // --- YouTube API Logic ---
-    // This function is called when the overlay is clicked
     function initPlayer(index, videoId) {
-        // Remove overlay visually
         const wrapper = document.getElementById(`player-wrapper-${index}`);
         wrapper.querySelector('.overlay').style.display = 'none';
 
-        // Create Player
         players[index] = new YT.Player(`yt-player-${index}`, {
             height: '100%',
             width: '100%',
@@ -419,9 +767,7 @@
         });
     }
 
-    // Called when video state changes (Playing, Paused, Ended)
     function onPlayerStateChange(event, index) {
-        // YT.PlayerState.ENDED is 0
         if (event.data === YT.PlayerState.ENDED) {
             unlockQuiz(index);
         }
@@ -431,7 +777,6 @@
         localStorage.setItem(getStorageKey(index, 'watched'), 'true');
         const actionArea = document.getElementById(`action-area-${index}`);
         
-        // Update UI immediately to show Quiz Button
         actionArea.innerHTML = `
             <div class="text-center mb-2 text-green-600 font-bold animate-bounce">Video Completed!</div>
             <button onclick="startQuiz(${index})" class="w-full gradient-btn text-white py-4 rounded-2xl font-bold text-lg shadow-xl">
@@ -491,16 +836,54 @@
       document.getElementById('cert-date').textContent = new Date().toLocaleDateString();
       document.getElementById('certificate-modal').classList.remove('hidden');
     }
+    
     function downloadPDF() {
         const btn = document.querySelector('#certificate-modal button.gradient-btn');
         btn.innerHTML = 'Generating...';
-        html2pdf().set({ margin: 0.5, filename: 'Certificate.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' } }).from(document.getElementById('certificate-content')).save().then(() => btn.innerHTML = '<i class="fas fa-file-pdf mr-2"></i> Download PDF');
+        html2pdf().set({ margin: 0.5, filename: 'Certificate.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' } }).from(document.getElementById('certificate-content')).save().then(() => btn.innerHTML = '<i class="fas fa-file-pdf mr-2"></i> ' + (translations[getCurrentLanguage()].download_pdf || 'Download PDF'));
     }
 
-    document.querySelector('.hamburger').addEventListener('click', () => { document.querySelector('.nav-links').classList.toggle('-left-full'); document.querySelector('.nav-links').classList.toggle('left-0'); document.querySelector('.nav-overlay').classList.toggle('hidden'); });
-    document.querySelector('.nav-overlay').addEventListener('click', () => { document.querySelector('.nav-links').classList.add('-left-full'); document.querySelector('.nav-overlay').classList.add('hidden'); });
+    // --- Initialize Everything ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      console.log('Initializing with language:', currentLang);
+      
+      // Apply translations
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updatePageDirection(currentLang);
+      
+      // Add event listeners for mobile menu
+      const hamburger = document.getElementById('hamburger');
+      const overlay = document.getElementById('mobile-menu-overlay');
+      
+      if (hamburger) {
+        hamburger.addEventListener('click', toggleMenu);
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', toggleMenu);
+      }
+      
+      // Mobile language selector event
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.addEventListener('change', function() {
+          changeLanguage(this.value);
+        });
+      }
 
-    window.onload = renderModules;
+      // Add click events to desktop language buttons
+      document.querySelectorAll('#language-button + ul button').forEach(button => {
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          changeLanguage(lang);
+        });
+      });
+
+      // Render modules
+      renderModules();
+    });
   </script>
 </body>
 </html>

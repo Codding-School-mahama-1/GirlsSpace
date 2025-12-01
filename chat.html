@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <title>| GirlsSpace Mahama</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVd/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         * {
             margin: 0;
@@ -88,6 +90,7 @@
             padding: 10px 16px;
             color: #374151;
             font-size: 14px;
+            cursor: pointer;
         }
 
         .dropdown-menu li a:hover {
@@ -199,7 +202,7 @@
             color: #161616;
         }
         .chat > h2{
-            color: #0e5ae7;
+          color: #e203038c;
         }
 
         
@@ -245,7 +248,7 @@
         .card h3 {
             font-size: 1.5rem;
             margin-bottom: 0.8rem;
-            color: #0e5ae7;
+            color: #e70e20d0;
         }
         
         .card p {
@@ -534,7 +537,7 @@
     <!-- Fixed Navbar -->
     <nav class="navbar">
         <div class="nav-logo">
-            <img src="/imge/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
+            <img src="/img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
         </div>
 
         <div class="menu-toggle" id="mobile-menu">
@@ -544,68 +547,69 @@
         </div>
 
         <ul class="nav-links" id="nav-links">
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./AboutUs.html">About</a></li>
-            <li><a href="./chat.html">Chat</a></li>
-            <li><a href="./stories.html">Stories</a></li>
-            <li><a href="./learning_programs.html">Programs</a></li>
-            <li><a href="./protection.html">protection</a></li>
+            <li><a href="./index.html" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" data-translate="about">About</a></li>
+            <li><a href="./chat.html" data-translate="chat">Chat</a></li>
+            <li><a href="./stories.html" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs.html" data-translate="programs">Programs</a></li>
+            <li><a href=" ./protection.html" data-translate="protection">Protection</a></li>
 
             <!-- Language Dropdown -->
             <li class="dropdown" id="language-dropdown">
-                <a href="#">Languages</a>
+                <a href="#" data-translate="languages">Languages</a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Arabic</a></li>
-                    <li><a href="#">Swahili</a></li>
-                    <li><a href="#">French</a></li>
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
-            <li><a href="./login.html" class="login-btn">Log In</a></li>
-            <li><a href="#" class="donate-btn">Donate</a></li>
+            <li><a href="./login.html" class="login-btn" data-translate="login">Log In</a></li>
+            <li><a href="Donate.html " class="donate-btn" data-translate="donate">Donate</a></li>
         </ul>
 
         <div class="nav-search">
-            <input type="text" placeholder="Search...">
+            <input type="text" placeholder="Search..." data-translate="search">
         </div>
     </nav>
 
     <!-- Main Content -->
     <main class="containers">
         <section class="chat">
-            <h2>Safe Chat Rooms</h2>
-            <p>Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.</p>
+            <h2 data-translate="safeChatRooms">Safe Chat Rooms</h2>
+            <p data-translate="chatDescription">Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.</p>
 
             <div class="grid-3">
                 <div class="card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="card-image"><img src="./img/confident.png" width="370" height="200" alt=""></div>
                     <div class="card-content">
-                        <h3>Confidence Corner</h3>
-                        <p>Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.</p>
-                        <p class="muted">👥 245 online • Active</p>
-                        <a class="btn btn-primary" href="./confident.html">Join Chat</a>
+                        <h3 data-translate="confidenceCorner">Confidence Corner</h3>
+                        <p data-translate="confidenceDescription">Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.</p>
+                        <p class="muted" data-translate="confidenceStats">👥 245 online • Active</p>
+                        <a class="btn btn-primary" href="./confident.html" data-translate="joinChat">Join Chat</a>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-image"><img src="./imge/hellthe.png" width="370" height="200" alt=""></div>
+                    <div class="card-image"><img src="./img/hellthe.png" width="370" height="200" alt=""></div>
                     <div class="card-content">
-                        <h3>Health & Wellness</h3>
-                        <p>Discuss health topics in a safe space with trained moderators and healthcare professionals.</p>
-                        <p class="muted">👥 89 online • Active</p>
-                        <a class="btn btn-primary" href="/heathwellness.html">Join Study</a>
+                        <h3 data-translate="healthWellness">Health & Wellness</h3>
+                        <p data-translate="healthDescription">Discuss health topics in a safe space with trained moderators and healthcare professionals.</p>
+                        <p class="muted" data-translate="healthStats">👥 89 online • Active</p>
+                        <a class="btn btn-primary" href="/heathwellness.html" data-translate="joinStudy">Join Study</a>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-image"> <img src="./imge/dermsgaslias.png" width="370" height="200" alt=""></div>
+                    <div class="card-image"> <img src="./img/gals.png" width="370" height="200" alt=""></div>
                     <div class="card-content">
-                        <h3>Dreams & Goals</h3>
-                        <p>Share aspirations and support each other in achieving personal and professional goals.</p>
-                        <p class="muted">Private • Secure</p>
-                        <a class="btn btn-outline" href="./derames.html">Request Access</a>
+                        <h3 data-translate="dreamsGoals">Dreams & Goals</h3>
+                        <p data-translate="dreamsDescription">Share aspirations and support each other in achieving personal and professional goals.</p>
+                        <p class="muted" data-translate="dreamsStats">Private • Secure</p>
+                        <a class="btn btn-outline" href="./derames.html" data-translate="requestAccess">Request Access</a>
                     </div>
                 </div>
             </div>
-        </section>
+        </section> 
     </main>
 
     <!-- Footer -->
@@ -614,10 +618,10 @@
             <div class="footer-main">
                 <div class="footer-left">
                     <div class="footer-logo-section">
-                        <img src="./imge/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
-                        <p class="footer-subtitle">Empowering Girls, Building Futures</p>
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
                     </div>
-                    <p class="footer-desc">
+                    <p class="footer-desc" data-translate="footerDescription">
                         A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
                     </p>
                     <div class="social-links">
@@ -629,42 +633,250 @@
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title">Quick Links</h4>
+                    <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
                     <ul class="links-list">
-                        <li><a href="#" class="link-item">Join Chat</a></li>
-                        <li><a href="#" class="link-item">Share Story</a></li>
-                        <li><a href="#" class="link-item">Programs</a></li>
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title">Get Help</h4>
+                    <h4 class="links-title" data-translate="getHelp">Get Help</h4>
                     <ul class="links-list">
-                        <li><a href="#" class="link-item">Emergency</a></li>
-                        <li><a href="#" class="link-item">Support</a></li>
-                        <li><a href="#" class="link-item">Report</a></li>
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <div class="footer-left-info">
-                    <p>© 2025 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
                 </div>
                 <div class="footer-right-info">
-                    <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-                    <p>Supported by UNHCR, Save The Children, Alight</p>
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
+        // Translation data
+        const translations = {
+            en: {
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                login: "Log In",
+                donate: "Donate",
+                search: "Search...",
+                safeChatRooms: "Safe Chat Rooms",
+                chatDescription: "Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.",
+                confidenceCorner: "Confidence Corner",
+                confidenceDescription: "Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.",
+                confidenceStats: "👥 245 online • Active",
+                joinChat: "Join Chat",
+                healthWellness: "Health & Wellness",
+                healthDescription: "Discuss health topics in a safe space with trained moderators and healthcare professionals.",
+                healthStats: "👥 89 online • Active",
+                joinStudy: "Join Study",
+                dreamsGoals: "Dreams & Goals",
+                dreamsDescription: "Share aspirations and support each other in achieving personal and professional goals.",
+                dreamsStats: "Private • Secure",
+                requestAccess: "Request Access",
+                empoweringGirls: "Empowering Girls, Building Futures",
+                footerDescription: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+                quickLinks: "Quick Links",
+                joinChatFooter: "Join Chat",
+                shareStory: "Share Story",
+                programsFooter: "Programs",
+                getHelp: "Get Help",
+                emergency: "Emergency",
+                supportFooter: "Support",
+                report: "Report",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Empowering girls, always.",
+                availableLanguages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+                supportedBy: "Supported by UNHCR, Save The Children, Alight"
+            },
+            ar: {
+                home: "الصفحة الرئيسية",
+                about: "حول",
+                chat: "الدردشة",
+                stories: "القصص",
+                programs: "البرامج",
+                support: "الدعم",
+                languages: "اللغات",
+                login: "تسجيل الدخول",
+                donate: "تبرع",
+                search: "بحث...",
+                safeChatRooms: "غرف الدردشة الآمنة",
+                chatDescription: "انضم إلى غرف الدردشة الآمنة والمُدارة. شارك التجارب وادعم بعضكما البعض في بيئة آمنة ومُمكنة.",
+                confidenceCorner: "ركن الثقة",
+                confidenceDescription: "ابني احترام الذات وشارك نصائح الثقة في مجتمع داعم مخصص للنمو الشخصي.",
+                confidenceStats: "👥 245 متصل • نشط",
+                joinChat: "انضم للدردشة",
+                healthWellness: "الصحة والعافية",
+                healthDescription: "ناقش مواضيع الصحة في مساحة آمنة مع مشرفين مدربين ومتخصصين في الرعاية الصحية.",
+                healthStats: "👥 89 متصل • نشط",
+                joinStudy: "انضم للدراسة",
+                dreamsGoals: "الأحلام والأهداف",
+                dreamsDescription: "شارك الطموحات وادعم بعضكما البعض في تحقيق الأهداف الشخصية والمهنية.",
+                dreamsStats: "خاص • آمن",
+                requestAccess: "طلب الوصول",
+                empoweringGirls: "تمكين الفتيات، بناء المستقبل",
+                footerDescription: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
+                quickLinks: "روابط سريعة",
+                joinChatFooter: "انضم للدردشة",
+                shareStory: "شارك قصة",
+                programsFooter: "البرامج",
+                getHelp: "احصل على المساعدة",
+                emergency: "طوارئ",
+                supportFooter: "الدعم",
+                report: "الإبلاغ",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "تمكين الفتيات، دائماً.",
+                availableLanguages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+                supportedBy: "بدعم من UNHCR، Save The Children، Alight"
+            },
+            sw: {
+                home: "Nyumbani",
+                about: "Kuhusu",
+                chat: "Gumzo",
+                stories: "Hadithi",
+                programs: "Mipango",
+                support: "Usaidizi",
+                languages: "Lugha",
+                login: "Ingia",
+                donate: "Changia",
+                search: "Tafuta...",
+                safeChatRooms: "Vyanzo Vya Mazungumzo Salama",
+                chatDescription: "Jiunge na vyumba vya mazungumzo vilivyodhibitiwa na salama. Shiriki uzoefu na kusaidiana katika mazingira salama na yenye kuwezesha.",
+                confidenceCorner: "Kona ya Ujasiri",
+                confidenceDescription: "Jenga kujithamini na shiriki vidokezo vya ujasiri katika jamii ya kuunga mkono iliyojitolea kwa ukuaji wa kibinafsi.",
+                confidenceStats: "👥 245 wako mtandaoni • Inatumika",
+                joinChat: "Jiunge na Mazungumzo",
+                healthWellness: "Afya na Ustawi",
+                healthDescription: "Jadili mada za kiafya katika nafasi salama na wakaguzi waliofunzwa na wataalamu wa afya.",
+                healthStats: "👥 89 wako mtandaoni • Inatumika",
+                joinStudy: "Jiunge na Somo",
+                dreamsGoals: "Ndoto na Malengo",
+                dreamsDescription: "Shiriki matarajio na kusaidiana katika kufikia malengo ya kibinafsi na ya kikazi.",
+                dreamsStats: "Privat • Salama",
+                requestAccess: "Omba Ruhusa",
+                empoweringGirls: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+                footerDescription: "Kimbilio la kidijitali salama ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuwasiliana, kujifunza, kukua, na kustawi.",
+                quickLinks: "Viungo vya Haraka",
+                joinChatFooter: "Jiunge na Mazungumzo",
+                shareStory: "Shiriki Hadithi",
+                programsFooter: "Mipango",
+                getHelp: "Pata Usaidizi",
+                emergency: "Dharura",
+                supportFooter: "Usaidizi",
+                report: "Ripoti",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Kuwawezesha wasichana, kila wakati.",
+                availableLanguages: "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+                supportedBy: "Inasaidiwa na UNHCR, Save The Children, Alight"
+            },
+            fr: {
+                home: "Accueil",
+                about: "À propos",
+                chat: "Chat",
+                stories: "Histoires",
+                programs: "Programmes",
+                support: "Soutien",
+                languages: "Langues",
+                login: "Connexion",
+                donate: "Faire un don",
+                search: "Rechercher...",
+                safeChatRooms: "Salons de discussion sécurisés",
+                chatDescription: "Rejoignez des salons de discussion modérés et sécurisés. Partagez des expériences et soutenez-vous mutuellement dans un environnement sûr et responsabilisant.",
+                confidenceCorner: "Coin de la Confiance",
+                confidenceDescription: "Développez l'estime de soi et partagez des conseils de confiance dans une communauté de soutien dédiée à la croissance personnelle.",
+                confidenceStats: "👥 245 en ligne • Actif",
+                joinChat: "Rejoindre le chat",
+                healthWellness: "Santé et bien-être",
+                healthDescription: "Discutez de sujets de santé dans un espace sûr avec des modérateurs formés et des professionnels de santé.",
+                healthStats: "👥 89 en ligne • Actif",
+                joinStudy: "Rejoindre l'étude",
+                dreamsGoals: "Rêves et objectifs",
+                dreamsDescription: "Partagez des aspirations et soutenez-vous mutuellement pour atteindre des objectifs personnels et professionnels.",
+                dreamsStats: "Privé • Sécurisé",
+                requestAccess: "Demander l'accès",
+                empoweringGirls: "Autonomiser les filles, construire l'avenir",
+                footerDescription: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
+                quickLinks: "Liens rapides",
+                joinChatFooter: "Rejoindre le chat",
+                shareStory: "Partager une histoire",
+                programsFooter: "Programmes",
+                getHelp: "Obtenir de l'aide",
+                emergency: "Urgence",
+                supportFooter: "Soutien",
+                report: "Signaler",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Autonomiser les filles, toujours.",
+                availableLanguages: "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
+                supportedBy: "Soutenu par UNHCR, Save The Children, Alight"
+            },
+            rw: {
+                home: "Ahabanza",
+                about: "Abo",
+                chat: "Kuganira",
+                stories: "Inkuru",
+                programs: "Porogaramu",
+                support: "Gushigikira",
+                languages: "Indimi",
+                login: "Injira",
+                donate: "Tanga",
+                search: "Shakisha...",
+                safeChatRooms: "Ibyumba byo Kuganira Biteganyijwe",
+                chatDescription: "Winjire mu byumba byo kuganira byagenzuwe kandi bitunganye. Sanga ibitekerezo kandi wushigikire undi muri ako gace gato kazira kandi gashishikaje.",
+                confidenceCorner: "Ikibuga cy'Ubwizige",
+                confidenceDescription: "Kura ubwizige no gusangira inama z'ubwizige mu muryango ushyigikiye ushinzwe iterambere ry'umuntu.",
+                confidenceStats: "👥 245 kumurongo • Bikora",
+                joinChat: "Injira mu Kuganira",
+                healthWellness: "Ubuzima n'Iterambere",
+                healthDescription: "Suzuma iby'ubuzima mu gace kazira hamwe n'abategura baratoje n'abenegihugu mu buzima.",
+                healthStats: "👥 89 kumurongo • Bikora",
+                joinStudy: "Injira mu Isomo",
+                dreamsGoals: "Ibyifuzo n'Ibitego",
+                dreamsDescription: "Sangira ibyo ushaka kandi wushigikire undi mu gushyika ku bitego by'umuntu n'ibikorwa.",
+                dreamsStats: "Yihariye • Yizewe",
+                requestAccess: "Saba Uruhushya",
+                empoweringGirls: "Guharanira Abakobwa, Kubaka Ejo Hazaza",
+                footerDescription: "Ubuturo bwo kumurongo bwiteganyijwe aho abakobwa bo mu gituza cy'abimukira cya Mahama bashobora guhuza, kwiga, gukura, no gukura neza.",
+                quickLinks: "Ihuza vya Vuba",
+                joinChatFooter: "Injira mu Kuganira",
+                shareStory: "Sangira Inkuru",
+                programsFooter: "Porogaramu",
+                getHelp: "Shaka Ubufasha",
+                emergency: "Gihutirwa",
+                supportFooter: "Gushigikira",
+                report: "Raporo",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Guharanira abakobwa, buri gihe.",
+                availableLanguages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+                supportedBy: "Byashyigikiwe na UNHCR, Save The Children, Alight"
+            }
+        };
+
+        // Current language
+        let currentLang = 'en';
+
         // Mobile menu functionality
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenu = document.getElementById('mobile-menu');
             const navLinks = document.getElementById('nav-links');
             const languageDropdown = document.getElementById('language-dropdown');
+            const languageLinks = document.querySelectorAll('.dropdown-menu a[data-lang]');
 
             // Toggle mobile menu
             mobileMenu.addEventListener('click', function() {
@@ -689,7 +901,44 @@
                     mobileMenu.classList.remove('active');
                 }
             });
+
+            // Language switching functionality
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+
+            // Initialize with English
+            changeLanguage('en');
         });
+
+        // Function to change language
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update all elements with data-translate attribute
+            const translatableElements = document.querySelectorAll('[data-translate]');
+            translatableElements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                    
+                    // Update placeholder for search input
+                    if (element.tagName === 'INPUT' && element.getAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    }
+                }
+            });
+            
+            // Update the language dropdown text
+            const languageLink = document.querySelector('#language-dropdown > a');
+            if (languageLink && translations[lang] && translations[lang]['languages']) {
+                languageLink.textContent = translations[lang]['languages'];
+            }
+        }
     </script>
 </body>
 </html>
