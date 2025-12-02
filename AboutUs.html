@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Us | GirlsSpace Mahama</title>
+  <title data-translate="page.title">About Us | GirlsSpace Mahama</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
   <style>
-    
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -218,9 +219,16 @@
 
     .about h1 {
       font-size: 2.5rem;
-      color: #f705ff;
+      color:#ec4899;
       margin-bottom: 1rem;
     }
+.text{
+        background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
 
     .about p.lead {
       font-size: 1.2rem;
@@ -274,10 +282,6 @@
       margin-top: 2rem;
     }
 
-     /* .values-grid:hover{
-        
-     } */
-
     .value-card {
       background: white;
       padding: 1.5rem;
@@ -289,7 +293,6 @@
 
     .value-card:hover {
       transition: 2s;
-      /* background: repeating-linear-gradient(to right ,#f705ff31,#ffffff65 20%); */
       background: repeating-radial-gradient(circle, #ffffff23, #c23cb73d 40%);
       transition: 1s;
       transform: translateY(-8px);
@@ -565,32 +568,32 @@
     </div>
 
     <ul class="nav-links" id="nav-links">
-      <li><a href="./index.html" class="nav-link">Home</a></li>
-      <li><a href="./about.html" class="nav-link">About</a></li>
-      <li><a href="./chat.html" class="nav-link">Chat</a></li>
-      <li><a href="./stories.html" class="nav-link">Stories</a></li>
-      <li><a href="./Learning_Programs.html" class="nav-link">Programs</a></li>
-      <li> <a href="#protection" class="nav-link text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium">Protection</a></li>
+      <li><a href="./index.html" class="nav-link" data-translate="nav.home">Home</a></li>
+      <li><a href="./about.html" class="nav-link" data-translate="nav.about">About</a></li>
+      <li><a href="./chat.html" class="nav-link" data-translate="nav.chat">Chat</a></li>
+      <li><a href="./stories.html" class="nav-link" data-translate="nav.stories">Stories</a></li>
+      <li><a href="./Learning_Programs.html" class="nav-link" data-translate="nav.programs">Programs</a></li>
+      <li><a href="./protection.html" class="nav-link" data-translate="nav.protection">Protection</a></li>
 
       <li class="dropdown" id="language-dropdown">
-        <a href="#" class="nav-link">Languages</a>
-        <ul class="dropdown-menu">
-          <li><a href="#">English</a></li>
-          <li><a href="#">Arabic</a></li>
-          <li><a href="#">Swahili</a></li>
-          <li><a href="#">French</a></li>
+        <a href="#" class="nav-link" id="current-language">Languages</a>
+        <ul class="dropdown-menu" id="lang-menu">
+          <li><a href="#" class="language-option" data-lang="en">English</a></li>
+          <li><a href="#" class="language-option" data-lang="ar">Arabic</a></li>
+          <li><a href="#" class="language-option" data-lang="sw">Swahili</a></li>
+          <li><a href="#" class="language-option" data-lang="fr">French</a></li>
+          <li><a href="#" class="language-option" data-lang="rw">Kinyarwanda</a></li>
         </ul>
       </li>
 
-      <li><a href="./login.html" class="login-btn">Log In</a></li>
-      <li><a href="./Donate.html" class="donate-btn">Donate</a></li>
+      <li><a href="./login.html" class="login-btn" data-translate="nav.login">Log In</a></li>
+      <li><a href="./Donate.html" class="donate-btn" data-translate="nav.donate">Donate</a></li>
     </ul>
 
     <div class="nav-search">
-      <input type="text" placeholder="Search...">
+      <input type="text" placeholder="Search..." data-translate="nav.search">
     </div>
   </nav>
-
 
   <div class="nav-overlay"></div>
 
@@ -599,7 +602,7 @@
         -->
   <main class="container">
     <section class="about">
-      <h1>About Us</h1>
+      <h1 class="text">About Us</h1>
       <p class="lead">
         Empowering girls in Mahama Refugee Camp through connection, education, and resources.
       </p>
@@ -610,8 +613,8 @@
           <img src="./img/mision.jpg" alt="Girls learning together">
         </div>
         <div class="section-content">
-          <h2>Our Mission</h2>
-          <p>
+          <h2 data-translate="about.mission.title">Our Mission</h2>
+          <p data-translate="about.mission.content">
             To provide a safe, empowering digital platform where girls in Mahama Refugee Camp can connect, learn, share their stories, and access essential resources for personal growth and protection.
           </p>
         </div>
@@ -620,8 +623,8 @@
       <!-- Vision -->
       <div class="section" style="direction: rtl;">
         <div class="section-content">
-          <h2>Our Vision</h2>
-          <p>
+          <h2 data-translate="about.vision.title">Our Vision</h2>
+          <p data-translate="about.vision.content">
             A world where every girl has access to education, protection, and opportunities to thrive, regardless of their circumstances or location.
           </p>
         </div>
@@ -632,32 +635,32 @@
 
       <!-- Values -->
       <div class="sections" style="grid-column: 1 / -1; text-align: center;">
-        <h2 style="font-size: 2rem; color: #df35c8; margin-bottom: 1.5rem;">Our Values</h2>
+        <h2 style="font-size: 2rem; color: #df35c8; margin-bottom: 1.5rem;" data-translate="about.values.title">Our Values</h2>
         <div class="values-grid">
           <div class="value-card">
             <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
-            <h3>Safety</h3>
-            <p>Creating secure spaces for girls.</p>
+            <h3 data-translate="about.values.safety.title">Safety</h3>
+            <p data-translate="about.values.safety.description">Creating secure spaces for girls.</p>
           </div>
           <div class="value-card">
             <div class="value-icon"><i class="fas fa-star"></i></div>
-            <h3>Empowerment</h3>
-            <p>Supporting girls to reach their potential.</p>
+            <h3 data-translate="about.values.empowerment.title">Empowerment</h3>
+            <p data-translate="about.values.empowerment.description">Supporting girls to reach their potential.</p>
           </div>
           <div class="value-card">
             <div class="value-icon"><i class="fas fa-users"></i></div>
-            <h3>Inclusivity</h3>
-            <p>Embracing diversity and ensuring every voice matters.</p>
+            <h3 data-translate="about.values.inclusivity.title">Inclusivity</h3>
+            <p data-translate="about.values.inclusivity.description">Embracing diversity and ensuring every voice matters.</p>
           </div>
           <div class="value-card">
             <div class="value-icon"><i class="fas fa-heart"></i></div>
-            <h3>Respect</h3>
-            <p>Valuing every individual.</p>
+            <h3 data-translate="about.values.respect.title">Respect</h3>
+            <p data-translate="about.values.respect.description">Valuing every individual.</p>
           </div>
           <div class="value-card">
             <div class="value-icon"><i class="fas fa-handshake"></i></div>
-            <h3>Community</h3>
-            <p>Building strong, supportive networks.</p>
+            <h3 data-translate="about.values.community.title">Community</h3>
+            <p data-translate="about.values.community.description">Building strong, supportive networks.</p>
           </div>
         </div>
       </div>
@@ -670,12 +673,12 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-main">
-        <div class="footVisioner-left">
+        <div class="footer-left">
           <div class="footer-logo-section">
             <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="footer-logo">
-            <p class="footer-subtitle">Empowering Girls, Building Futures</p>
+            <p class="footer-subtitle" data-translate="footer.tagline">Empowering Girls, Building Futures</p>
           </div>
-          <p class="footer-desc">
+          <p class="footer-desc" data-translate="footer.description">
             A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
           </p>
           <div class="social-links">
@@ -687,34 +690,369 @@
         </div>
 
         <div class="footer-links">
-          <h4 class="links-title">Quick Links</h4>
+          <h4 class="links-title" data-translate="footer.quickLinks">Quick Links</h4>
           <ul class="links-list">
-            <li><a href="./chat.html" class="link-item">Join Chat</a></li>
-            <li><a href="./stories.html" class="link-item">Share Story</a></li>
-            <li><a href="./Learning_Programs.html" class="link-item">Programs</a></li>
+            <li><a href="./chat.html" class="link-item" data-translate="footer.joinChat">Join Chat</a></li>
+            <li><a href="./stories.html" class="link-item" data-translate="footer.shareStory">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="link-item" data-translate="footer.programs">Programs</a></li>
           </ul>
         </div>
 
         <div class="footer-links">
-          <h4 class="links-title">Get Help</h4>
+          <h4 class="links-title" data-translate="footer.getHelp">Get Help</h4>
           <ul class="links-list">
-            <li><a href="#" class="link-item">Emergency</a></li>
-            <li><a href="#" class="link-item">Support</a></li>
-            <li><a href="#" class="link-item">Report</a></li>
+            <li><a href="#" class="link-item" data-translate="footer.emergency">Emergency</a></li>
+            <li><a href="#" class="link-item" data-translate="footer.support">Support</a></li>
+            <li><a href="#" class="link-item" data-translate="footer.report">Report</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
         <div class="footer-left-info">
-          <p>© 2025 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
+          <p data-translate="footer.copyright">© 2025 GirlsSpace Mahama. <span class="highlight">Empowering girls, always.</span></p>
         </div>
         <div class="footer-right-info">
-          <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-          <p>Supported by UNHCR, Save The Children, Alight</p>
+          <p data-translate="footer.languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-translate="footer.supporters">Supported by UNHCR, Save The Children, Alight</p>
         </div>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Language data with complete translations for about page
+    const translations = {
+      en: {
+        "page.title": "About Us | GirlsSpace Mahama",
+        "nav.home": "Home",
+        "nav.about": "About",
+        "nav.chat": "Chat",
+        "nav.stories": "Stories",
+        "nav.programs": "Programs",
+        "nav.protection": "Protection",
+        "nav.login": "Log In",
+        "nav.donate": "Donate",
+        "nav.search": "Search...",
+        "about.title": "About Us",
+        "about.subtitle": "Empowering girls in Mahama Refugee Camp through connection, education, and resources.",
+        "about.mission.title": "Our Mission",
+        "about.mission.content": "To provide a safe, empowering digital platform where girls in Mahama Refugee Camp can connect, learn, share their stories, and access essential resources for personal growth and protection.",
+        "about.vision.title": "Our Vision",
+        "about.vision.content": "A world where every girl has access to education, protection, and opportunities to thrive, regardless of their circumstances or location.",
+        "about.values.title": "Our Values",
+        "about.values.safety.title": "Safety",
+        "about.values.safety.description": "Creating secure spaces for girls.",
+        "about.values.empowerment.title": "Empowerment",
+        "about.values.empowerment.description": "Supporting girls to reach their potential.",
+        "about.values.inclusivity.title": "Inclusivity",
+        "about.values.inclusivity.description": "Embracing diversity and ensuring every voice matters.",
+        "about.values.respect.title": "Respect",
+        "about.values.respect.description": "Valuing every individual.",
+        "about.values.community.title": "Community",
+        "about.values.community.description": "Building strong, supportive networks.",
+        "footer.tagline": "Empowering Girls, Building Futures",
+        "footer.description": "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+        "footer.quickLinks": "Quick Links",
+        "footer.joinChat": "Join Chat",
+        "footer.shareStory": "Share Story",
+        "footer.programs": "Programs",
+        "footer.getHelp": "Get Help",
+        "footer.emergency": "Emergency",
+        "footer.support": "Support",
+        "footer.report": "Report",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. Empowering girls, always.",
+        "footer.languages": "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+        "footer.supporters": "Supported by UNHCR, Save The Children, Alight"
+      },
+      ar: {
+        "page.title": "من نحن | GirlsSpace Mahama",
+        "nav.home": "الرئيسية",
+        "nav.about": "من نحن",
+        "nav.chat": "الدردشة",
+        "nav.stories": "القصص",
+        "nav.programs": "البرامج",
+        "nav.protection": "الحماية",
+        "nav.login": "تسجيل الدخول",
+        "nav.donate": "تبرع",
+        "nav.search": "بحث...",
+        "about.title": "من نحن",
+        "about.subtitle": "تمكين الفتيات في مخيم مهاجمة للاجئين من خلال التواصل والتعليم والموارد.",
+        "about.mission.title": "مهمتنا",
+        "about.mission.content": "توفير منصة رقمية آمنة وتمكينية حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم ومشاركة قصصهن والوصول إلى الموارد الأساسية للنمو الشخصي والحماية.",
+        "about.vision.title": "رؤيتنا",
+        "about.vision.content": "عالم حيث يكون لكل فتاة إمكانية الوصول إلى التعليم والحماية والفرص للازدهار، بغض النظر عن ظروفها أو موقعها.",
+        "about.values.title": "قيمنا",
+        "about.values.safety.title": "السلامة",
+        "about.values.safety.description": "خلق مساحات آمنة للفتيات.",
+        "about.values.empowerment.title": "التمكين",
+        "about.values.empowerment.description": "دعم الفتيات للوصول إلى إمكاناتهن.",
+        "about.values.inclusivity.title": "الشمولية",
+        "about.values.inclusivity.description": "احتضان التنوع وضمان أهمية كل صوت.",
+        "about.values.respect.title": "الاحترام",
+        "about.values.respect.description": "تقدير كل فرد.",
+        "about.values.community.title": "المجتمع",
+        "about.values.community.description": "بناء شبكات قوية وداعمة.",
+        "footer.tagline": "تمكين الفتيات، بناء المستقبل",
+        "footer.description": "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
+        "footer.quickLinks": "روابط سريعة",
+        "footer.joinChat": "انضم للدردشة",
+        "footer.shareStory": "شارك قصة",
+        "footer.programs": "البرامج",
+        "footer.getHelp": "احصل على المساعدة",
+        "footer.emergency": "طوارئ",
+        "footer.support": "الدعم",
+        "footer.report": "الإبلاغ",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. تمكين الفتيات، دائمًا.",
+        "footer.languages": "متاح بـ: العربية، الإنجليزية، الفرنسية، السواحيلية، الكينيارواندية",
+        "footer.supporters": "بدعم من: UNHCR، Save The Children، Alight"
+      },
+      sw: {
+        "page.title": "Kuhusu Sisi | GirlsSpace Mahama",
+        "nav.home": "Nyumbani",
+        "nav.about": "Kuhusu Sisi",
+        "nav.chat": "Gumzo",
+        "nav.stories": "Hadithi",
+        "nav.programs": "Mipango",
+        "nav.protection": "Ulinzi",
+        "nav.login": "Ingia",
+        "nav.donate": "Changia",
+        "nav.search": "Tafuta...",
+        "about.title": "Kuhusu Sisi",
+        "about.subtitle": "Kuwawezesha wasichana katika Kambi ya Wakimbizi ya Mahama kupitia muunganisho, elimu, na rasilimali.",
+        "about.mission.title": "Dhumu Letu",
+        "about.mission.content": "Kutoa jukwaa la kidijitali salama na lenye nguvu ambapo wasichana katika Kambi ya Wakimbizi ya Mahama wanaweza kuungana, kujifunza, kushiriki hadithi zao, na kufikia rasilimali muhimu za ukuaji wa kibinafsi na ulinzi.",
+        "about.vision.title": "Maono Yetu",
+        "about.vision.content": "Dunia ambapo kila msichana ana ufikiaji wa elimu, ulinzi, na fursa za kustawi, bila kujali hali yao au eneo.",
+        "about.values.title": "Maadili Yetu",
+        "about.values.safety.title": "Usalama",
+        "about.values.safety.description": "Kuunda nafasi salama kwa wasichana.",
+        "about.values.empowerment.title": "Kuwawezesha",
+        "about.values.empowerment.description": "Kuwasaidia wasichana kufikia uwezo wao.",
+        "about.values.inclusivity.title": "Uwiano",
+        "about.values.inclusivity.description": "Kukumbatia utofauti na kuhakikisha kila sauti ina maana.",
+        "about.values.respect.title": "Heshima",
+        "about.values.respect.description": "Kuwaheshimu kila mtu.",
+        "about.values.community.title": "Jamii",
+        "about.values.community.description": "Kujenga mitandao yenye nguvu na ya kusaidia.",
+        "footer.tagline": "Kuwawezesha Wasichana, Kujenga Mustakabali",
+        "footer.description": "Kimbilio la salama la kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana, kujifunza, kukua, na kustawi.",
+        "footer.quickLinks": "Viungo Vya Haraka",
+        "footer.joinChat": "Jiunge na Gumzo",
+        "footer.shareStory": "Shiriki Hadithi",
+        "footer.programs": "Mipango",
+        "footer.getHelp": "Pata Msaada",
+        "footer.emergency": "Dharura",
+        "footer.support": "Msaada",
+        "footer.report": "Ripoti",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. Kuwawezesha wasichana, kila wakati.",
+        "footer.languages": "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+        "footer.supporters": "Inasaidiwa na: UNHCR, Save The Children, Alight"
+      },
+      fr: {
+        "page.title": "À propos | GirlsSpace Mahama",
+        "nav.home": "Accueil",
+        "nav.about": "À propos",
+        "nav.chat": "Chat",
+        "nav.stories": "Histoires",
+        "nav.programs": "Programmes",
+        "nav.protection": "Protection",
+        "nav.login": "Connexion",
+        "nav.donate": "Faire un don",
+        "nav.search": "Rechercher...",
+        "about.title": "À propos de nous",
+        "about.subtitle": "Autonomiser les filles du camp de réfugiés de Mahama par la connexion, l'éducation et les ressources.",
+        "about.mission.title": "Notre Mission",
+        "about.mission.content": "Fournir une plateforme numérique sûre et responsabilisante où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, partager leurs histoires et accéder aux ressources essentielles pour leur croissance personnelle et leur protection.",
+        "about.vision.title": "Notre Vision",
+        "about.vision.content": "Un monde où chaque fille a accès à l'éducation, à la protection et à des opportunités de s'épanouir, quelles que soient ses circonstances ou sa localisation.",
+        "about.values.title": "Nos Valeurs",
+        "about.values.safety.title": "Sécurité",
+        "about.values.safety.description": "Créer des espaces sécurisés pour les filles.",
+        "about.values.empowerment.title": "Autonomisation",
+        "about.values.empowerment.description": "Soutenir les filles pour qu'elles atteignent leur potentiel.",
+        "about.values.inclusivity.title": "Inclusivité",
+        "about.values.inclusivity.description": "Embrasser la diversité et garantir que chaque voix compte.",
+        "about.values.respect.title": "Respect",
+        "about.values.respect.description": "Valoriser chaque individu.",
+        "about.values.community.title": "Communauté",
+        "about.values.community.description": "Construire des réseaux solides et solidaires.",
+        "footer.tagline": "Autonomiser les Filles, Bâtir l'Avenir",
+        "footer.description": "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
+        "footer.quickLinks": "Liens Rapides",
+        "footer.joinChat": "Rejoindre le Chat",
+        "footer.shareStory": "Partager une Histoire",
+        "footer.programs": "Programmes",
+        "footer.getHelp": "Obtenir de l'Aide",
+        "footer.emergency": "Urgence",
+        "footer.support": "Soutien",
+        "footer.report": "Signaler",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. Autonomiser les filles, toujours.",
+        "footer.languages": "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
+        "footer.supporters": "Soutenu par : HCR, Save The Children, Alight"
+      },
+      rw: {
+        "page.title": "Abo Turi | GirlsSpace Mahama",
+        "nav.home": "Ahabanza",
+        "nav.about": "Abo Turi",
+        "nav.chat": "Kuganira",
+        "nav.stories": "Inkuru",
+        "nav.programs": "Porogaramu",
+        "nav.protection": "Umutekano",
+        "nav.login": "Injira",
+        "nav.donate": "Tanga",
+        "nav.search": "Shaka...",
+        "about.title": "Abo Turi",
+        "about.subtitle": "Guharanira abakobwa mu rugo rw'abimukanyi rwa Mahama binyuze mu guhuza, amasomo, n'ibikoresho.",
+        "about.mission.title": "Intego Yacu",
+        "about.mission.content": "Kugira urubuga rwa digitale rutekanye n'uriharanira aho abakobwa mu rugo rw'abimukanyi rwa Mahama bashobora guhuza, kwiga, gusangiza inkuru zabo, no gushaka ibikoresho ngenderwaho z'ubukungu bw'umuntu n'umutekano.",
+        "about.vision.title": "Icyerekezo Cyacu",
+        "about.vision.content": "Isi aho buri muhungu afite uburenganzira bwo kubona amasomo, umutekano, n'amahirwe yo kongera ubuzima, utitaye ku mimerere ye cyangwa aho ari.",
+        "about.values.title": "Indangagaciro Zacu",
+        "about.values.safety.title": "Umutekano",
+        "about.values.safety.description": "Gushyiraho ahantu hatekanye kuri abakobwa.",
+        "about.values.empowerment.title": "Guharanira",
+        "about.values.empowerment.description": "Gushyigikira abakobwa kugirango bagere ku bushobozi bwabo.",
+        "about.values.inclusivity.title": "Gutitabira",
+        "about.values.inclusivity.description": "Kwakira itandukaniro no kureba neza ko ijwi ryose rirafite agaciro.",
+        "about.values.respect.title": "Gukunda",
+        "about.values.respect.description": "Gukunda buri muntu.",
+        "about.values.community.title": "Umuryango",
+        "about.values.community.description": "Kubaka urusobe rw'inkunga n'ubufasha.",
+        "footer.tagline": "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        "footer.description": "Ubuturo butekanye bwa digitale aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        "footer.quickLinks": "Amahuza Yihuse",
+        "footer.joinChat": "Injira mu kuganira",
+        "footer.shareStory": "Sangiza inkuru",
+        "footer.programs": "Porogaramu",
+        "footer.getHelp": "Kwakira ubufasha",
+        "footer.emergency": "Ubutabazi",
+        "footer.support": "Gushigikira",
+        "footer.report": "Raporo",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. Guharanira abakobwa, buri gihe.",
+        "footer.languages": "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        "footer.supporters": "Bishigikijwe na: UNHCR, Save The Children, Alight"
+      }
+    };
+
+    // Language management functions
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updatePageDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[data-translate]');
+      
+      elements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.placeholder = translations[lang][key];
+          } else {
+            element.innerHTML = translations[lang][key];
+          }
+        }
+      });
+
+      // Handle placeholder translations
+      const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+      placeholderElements.forEach(element => {
+        const key = element.getAttribute('data-translate-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+
+      // Update page title
+      document.title = translations[lang]["page.title"] || "About Us | GirlsSpace Mahama";
+    }
+
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'Arabic',
+        'sw': 'Swahili',
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
+      };
+      
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.textContent = languageNames[lang];
+      }
+    }
+
+    function updatePageDirection(lang) {
+      // Set direction for RTL languages
+      if (lang === 'ar') {
+        document.body.style.direction = 'rtl';
+        document.body.style.textAlign = 'right';
+      } else {
+        document.body.style.direction = 'ltr';
+        document.body.style.textAlign = 'left';
+      }
+    }
+
+    // Initialize language on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updatePageDirection(currentLang);
+      
+      // Add event listeners for language options
+      const languageOptions = document.querySelectorAll('.language-option');
+      languageOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+          e.preventDefault();
+          const lang = this.getAttribute('data-lang');
+          setCurrentLanguage(lang);
+        });
+      });
+    });
+
+    // Mobile menu functionality
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.querySelector('.nav-overlay');
+    const dropdown = document.getElementById('language-dropdown');
+
+    mobileMenu.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      navLinks.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    if (dropdown) {
+      dropdown.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          dropdown.classList.toggle('active');
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        navLinks.classList.remove('active');
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        dropdown?.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
