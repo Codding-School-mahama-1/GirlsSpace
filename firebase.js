@@ -374,3 +374,124 @@ export function setupLogout() {
 
 // Export auth and db for other uses
 export { auth, db };
+// ================ ADMIN SIGN UP ================
+export function setupAdminSignUp() {
+  const adminSignupForm = document.getElementById('adminSignupForm');
+  console.log('🔧 Setting up admin sign up...');
+  
+  if (adminSignupForm) {
+    console.log('✅ Admin sign up form found');
+    
+    // Secret admin code (in production, this should be more secure)
+    const ADMIN_SECRET_CODE = "GirlsSpaceAdmin2025";
+    
+    adminSignupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('👑 Admin sign up form submitted');
+
+      const fullName = document.getElementById('adminFullName').value.trim();
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const secretCode = document.getElementById('adminSecretCode').value;
+
+      console.log('📧 Admin form data:', { fullName, email, password: '***' });
+
+      if (!fullName || !email || !password || !secretCode) {
+        showMessage('Please fill all fields');
+        return;
+      }
+
+      if (secretCode !== ADMIN_SECRET_CODE) {
+        showMessage('Invalid admin secret code');
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage('Password should be at least 6 characters');
+        return;
+      }
+
+      try {
+        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Creating Admin Account...';
+        submitBtn.disabled = true;
+
+        // Create admin user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log('✅ Admin user created:', user.uid);
+        
+        // Split name
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        // Save admin data to Firestore
+        const adminData = {
+          fullName: fullName,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          role: 'admin',
+          createdAt: new Date().toISOString(),
+          uid: user.uid,
+          permissions: ['manage_users', 'manage_content', 'view_reports', 'moderate']
+        };
+
+        // Save to users collection
+        await setDoc(doc(db, "users", user.uid), {
+          fullName: fullName,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          role: 'admin',
+          createdAt: new Date().toISOString()
+        });
+
+        // Save to admins collection
+        await setDoc(doc(db, "admins", user.uid), adminData);
+        
+        console.log('✅ Admin data saved to Firestore');
+        
+        showMessage('Admin account created successfully! Redirecting...', 'success');
+        
+        // Save to localStorage
+        localStorage.setItem('userFullName', fullName);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userUID', user.uid);
+        localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userRole', 'admin');
+        
+        // Redirect to admin dashboard
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 2000);
+
+      } catch (error) {
+        console.error('❌ Admin sign up error:', error);
+        
+        let errorMessage = 'Error creating admin account';
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'Email already in use!';
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = 'Password should be at least 6 characters';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'Invalid email address';
+        } else if (error.code === 'auth/network-request-failed') {
+          errorMessage = 'Network error. Please check your internet connection';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+        
+        showMessage(errorMessage);
+        
+        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  } else {
+    console.error('❌ Admin sign up form not found!');
+  }
+}

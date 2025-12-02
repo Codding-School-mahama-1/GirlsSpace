@@ -6,10 +6,175 @@
   <title data-translate="page.title">stories | GirlsSpace Mahama</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
+  
+  <!-- Firebase Integration -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged,
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { 
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      Timestamp,
+      onSnapshot,
+      where
+    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+      authDomain: "sigin-b3aa1.firebaseapp.com",
+      projectId: "sigin-b3aa1",
+      storageBucket: "sigin-b3aa1.firebasestorage.app",
+      messagingSenderId: "390069352394",
+      appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
+      measurementId: "G-WF0H2KJN02"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    console.log("Firebase initialized successfully");
+
+    // Make Firebase available globally
+    window.firebaseApp = app;
+    window.firebaseAuth = auth;
+    window.firebaseDB = db;
+    
+    // Firestore collections
+    const STORIES_COLLECTION = "stories";
+
+    // Current user state
+    let currentUser = null;
+
+    // Check authentication state
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      console.log("Auth state changed. User:", user ? user.email : "Not logged in");
+      
+      // Load stories after auth state is known
+      loadStories();
+    });
+
+    // Load stories from Firebase
+    async function loadStories() {
+      try {
+        console.log("Loading stories from Firestore...");
+        
+        // Query based on authentication status
+        let storiesQuery;
+        if (currentUser) {
+          // If user is logged in, show all stories (including pending)
+          storiesQuery = query(
+            collection(db, STORIES_COLLECTION),
+            orderBy("createdAt", "desc")
+          );
+          console.log("Query: All stories (user logged in)");
+        } else {
+          // If not logged in, only show approved stories
+          storiesQuery = query(
+            collection(db, STORIES_COLLECTION),
+            where("status", "==", "approved"),
+            orderBy("createdAt", "desc")
+          );
+          console.log("Query: Approved stories only (user not logged in)");
+        }
+        
+        // Use onSnapshot for real-time updates
+        const unsubscribe = onSnapshot(storiesQuery, (snapshot) => {
+          console.log("Firestore snapshot received. Size:", snapshot.size);
+          
+          const stories = [];
+          snapshot.forEach((doc) => {
+            const storyData = doc.data();
+            stories.push({
+              id: doc.id,
+              ...storyData,
+              createdAt: storyData.createdAt?.toDate() || new Date()
+            });
+          });
+          
+          console.log(`Processed ${stories.length} stories`);
+          
+          // Call the global render function
+          if (window.renderUserStories) {
+            window.renderUserStories(stories);
+          } else {
+            console.error("renderUserStories function not available");
+          }
+        }, (error) => {
+          console.error("Error in stories snapshot:", error);
+        });
+        
+        // Store unsubscribe function for cleanup
+        window.firebaseUnsubscribe = unsubscribe;
+        
+      } catch (error) {
+        console.error("Error loading stories:", error);
+      }
+    }
+
+    // Submit a new story
+    async function submitStory(storyData) {
+      try {
+        // Check if user is logged in
+        if (!currentUser) {
+          return { 
+            success: false, 
+            error: "Please log in to submit a story",
+            redirect: "./login.html"
+          };
+        }
+
+        // Prepare story data with user info
+        const storyWithUser = {
+          title: storyData.title,
+          author_name: storyData.author_name,
+          story_content: storyData.story_content,
+          category: storyData.category,
+          authorId: currentUser.uid, // Important for security rules
+          userEmail: currentUser.email,
+          status: "pending", // Stories need approval
+          likes: 0,
+          views: 0,
+          createdAt: Timestamp.now()
+        };
+
+        console.log("Submitting story:", storyWithUser);
+        
+        const docRef = await addDoc(collection(db, STORIES_COLLECTION), storyWithUser);
+        console.log("Story submitted with ID:", docRef.id);
+        return { success: true, id: docRef.id };
+        
+      } catch (error) {
+        console.error("Error submitting story:", error);
+        return { success: false, error: error.message };
+      }
+    }
+
+    // Export functions to window object
+    window.firebaseStories = {
+      loadStories,
+      submitStory,
+      auth,
+      db,
+      currentUser: () => currentUser
+    };
+
+  </script>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    /* All your existing CSS styles remain here */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -210,10 +375,6 @@
     }
 
     /* Stories Section Styles */
-    body {
-        box-sizing: border-box;
-    }
-    
     .text-gradient {
         background: linear-gradient(135deg, #ec4899, #8b5cf6);
         -webkit-background-clip: text;
@@ -571,13 +732,18 @@
             </div>
           </div>
 
-          <!-- User Submitted Stories -->
+          <!-- User Submitted Stories from Firebase -->
           <div id="user-stories" class="space-y-6">
-            <!-- User stories will be populated here -->
+            <!-- User stories will be populated from Firebase -->
           </div>
           
           <div id="no-stories" class="text-center py-8 text-gray-500 hidden">
             <p data-translate="stories.noStories">No community stories yet. Be the first to share your experience!</p>
+          </div>
+          
+          <div id="loading-stories" class="text-center py-8">
+            <div class="loading-spinner mx-auto"></div>
+            <p class="text-gray-500 mt-2">Loading stories...</p>
           </div>
         </div>
 
@@ -587,37 +753,53 @@
           <form id="story-form" class="space-y-4">
             <div>
               <label for="story-title" class="block text-sm font-medium mb-2" data-translate="stories.form.title">Story Title</label>
-              <input type="text" id="story-title" name="title" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" data-translate-placeholder="stories.form.titlePlaceholder">
+              <input type="text" id="story-title" name="title" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" placeholder="Give your story a meaningful title">
             </div>
             
             <div>
               <label for="author-name" class="block text-sm font-medium mb-2" data-translate="stories.form.author">Your Name (or Anonymous)</label>
-              <input type="text" id="author-name" name="author" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" data-translate-placeholder="stories.form.authorPlaceholder">
+              <input type="text" id="author-name" name="author" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none" placeholder="How would you like to be known?">
             </div>
             
             <div>
               <label for="story-category" class="block text-sm font-medium mb-2" data-translate="stories.form.category">Story Category</label>
               <select id="story-category" name="category" required class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none">
-                <option value="" data-translate="stories.form.chooseCategory">Choose a category</option>
-                <option value="education" data-translate="stories.categories.education">Education & Learning</option>
-                <option value="empowerment" data-translate="stories.categories.empowerment">Personal Empowerment</option>
-                <option value="community" data-translate="stories.categories.community">Community Support</option>
-                <option value="career" data-translate="stories.categories.career">Career & Dreams</option>
-                <option value="health" data-translate="stories.categories.health">Health & Wellbeing</option>
-                <option value="other" data-translate="stories.categories.other">Other</option>
+                <option value="">Choose a category</option>
+                <option value="education">Education & Learning</option>
+                <option value="empowerment">Personal Empowerment</option>
+                <option value="community">Community Support</option>
+                <option value="career">Career & Dreams</option>
+                <option value="health">Health & Wellbeing</option>
+                <option value="other">Other</option>
               </select>
             </div>
             
             <div>
               <label for="story-content" class="block text-sm font-medium mb-2" data-translate="stories.form.content">Your Story</label>
-              <textarea id="story-content" name="content" required rows="6" class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none resize-none" data-translate-placeholder="stories.form.contentPlaceholder"></textarea>
+              <textarea id="story-content" name="content" required rows="6" class="w-full px-4 py-3 rounded-lg text-gray-900 border-0 focus:ring-2 focus:ring-pink-300 focus:outline-none resize-none" placeholder="Share your experience, challenges overcome, lessons learned, or how you've grown. Your story can inspire others..."></textarea>
+              <div class="text-right mt-2">
+                <span id="char-count" class="text-sm text-white">0/2000 characters</span>
+              </div>
             </div>
             
-            <button type="submit" id="submit-btn" class="w-full bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-pink-500">
+            <button type="submit" id="submit-btn" class="w-full bg-white text-pink-600 font-bold py-3 px-6 rounded-lg hover:bg-pink-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-pink-500 disabled:opacity-50 disabled:cursor-not-allowed">
               <span id="submit-text" data-translate="stories.form.submit">Share My Story</span>
               <div id="submit-loading" class="loading-spinner mx-auto hidden"></div>
             </button>
           </form>
+          
+          <div id="login-prompt" class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl p-6 text-white shadow-lg mt-6 hidden">
+            <h3 class="text-xl font-bold mb-4">Login Required</h3>
+            <p class="mb-4">You need to be logged in to share your story. This helps us keep the community safe.</p>
+            <div class="flex gap-4">
+                <a href="./login.html" class="flex-1 bg-white text-blue-600 font-bold py-3 px-6 rounded-lg hover:bg-blue-50 transition-colors text-center">
+                    Log In
+                </a>
+                <a href="./signup.html" class="flex-1 bg-transparent border-2 border-white text-white font-bold py-3 px-6 rounded-lg hover:bg-white/10 transition-colors text-center">
+                    Sign Up
+                </a>
+            </div>
+          </div>
           
           <p class="text-pink-100 text-sm mt-4 text-center" data-translate="stories.form.note">Stories are reviewed before being shared to ensure a safe space for everyone.</p>
         </div>
@@ -633,6 +815,7 @@
           <div>
             <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-2"></h3>
             <p id="modal-author" class="text-gray-600"></p>
+            <p id="modal-date" class="text-gray-400 text-sm mt-1"></p>
           </div>
           <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
         </div>
@@ -690,12 +873,400 @@
       </div>
     </div>
   </footer>
-  <script>
-    
-  </script>
 
   <script>
-    // Language data with complete translations for stories section
+    // Global variables
+    let currentUserStories = [];
+
+    // Reference stories data
+    const referenceStories = {
+        amina: {
+            title: "Amina's Journey to Teaching",
+            author: "Amina",
+            content: `Learning English through GirlsSpace has completely transformed my life...`,
+            date: "2 months ago"
+        },
+        fatima: {
+            title: "Finding My Voice and Helping Others",
+            author: "Fatima",
+            content: `The Gender-Based Violence training at GirlsSpace opened my eyes to rights I didn't even know I had...`,
+            date: "1 month ago"
+        }
+    };
+
+    // Initialize app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM loaded, initializing stories page...");
+        
+        // Initialize language
+        const currentLang = getCurrentLanguage();
+        applyTranslations(currentLang);
+        updateLanguageSelector(currentLang);
+        updatePageDirection(currentLang);
+        
+        // Add event listeners for language options
+        const languageOptions = document.querySelectorAll('.language-option');
+        languageOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.getAttribute('data-lang');
+                setCurrentLanguage(lang);
+            });
+        });
+
+        // Character counter for story content
+        const storyContent = document.getElementById('story-content');
+        const charCount = document.getElementById('char-count');
+        
+        if (storyContent && charCount) {
+            storyContent.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = `${length}/2000 characters`;
+                
+                if (length > 2000) {
+                    charCount.classList.add('text-red-300');
+                } else {
+                    charCount.classList.remove('text-red-300');
+                }
+            });
+        }
+
+        // Setup form submission
+        const storyForm = document.getElementById('story-form');
+        if (storyForm) {
+            storyForm.addEventListener('submit', handleFormSubmit);
+        }
+
+        // Auto-load stories after a short delay
+        setTimeout(() => {
+            if (window.firebaseStories && window.firebaseStories.loadStories) {
+                console.log("Auto-loading stories...");
+            }
+        }, 1000);
+    });
+
+    // Make renderUserStories available globally
+    window.renderUserStories = function(stories) {
+        console.log("renderUserStories called with", stories.length, "stories");
+        
+        const container = document.getElementById('user-stories');
+        const noStoriesMsg = document.getElementById('no-stories');
+        const loadingElement = document.getElementById('loading-stories');
+        
+        if (!container) {
+            console.error("user-stories container not found!");
+            return;
+        }
+        
+        // Hide loading spinner
+        if (loadingElement) {
+            loadingElement.classList.add('hidden');
+            console.log("Hidden loading spinner");
+        }
+        
+        // Store stories globally
+        currentUserStories = stories;
+        
+        // Filter stories based on login status
+        const user = window.firebaseStories ? window.firebaseStories.currentUser() : null;
+        let displayStories;
+        
+        if (user) {
+            // Logged in users see all stories
+            displayStories = stories;
+            console.log("User logged in, showing all stories");
+        } else {
+            // Non-logged in users only see approved stories
+            displayStories = stories.filter(story => story.status === 'approved');
+            console.log("User not logged in, showing only approved stories:", displayStories.length);
+        }
+        
+        if (displayStories.length === 0) {
+            console.log("No stories to display");
+            container.innerHTML = '';
+            if (noStoriesMsg) {
+                noStoriesMsg.classList.remove('hidden');
+                console.log("Showing no-stories message");
+            }
+            return;
+        }
+        
+        console.log("Hiding no-stories message");
+        if (noStoriesMsg) noStoriesMsg.classList.add('hidden');
+        
+        // Sort by date (newest first)
+        displayStories.sort((a, b) => {
+            const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+            const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+            return dateB - dateA;
+        });
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        // Render each story
+        displayStories.forEach((story, index) => {
+            console.log("Rendering story", index + 1, ":", story.title);
+            
+            const storyElement = document.createElement('div');
+            storyElement.className = 'story-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100';
+            
+            const initial = story.author_name ? story.author_name.charAt(0).toUpperCase() : 'A';
+            const colors = [
+                'from-green-400 to-emerald-500',
+                'from-orange-400 to-red-500',
+                'from-purple-400 to-indigo-500',
+                'from-yellow-400 to-orange-500',
+                'from-teal-400 to-cyan-500'
+            ];
+            const colorClass = colors[index % colors.length];
+            
+            const storyDate = story.createdAt ? new Date(story.createdAt) : new Date();
+            const timeAgo = getTimeAgo(storyDate);
+            
+            // Truncate content for preview
+            const previewContent = story.story_content && story.story_content.length > 150 
+                ? story.story_content.substring(0, 150) + '...' 
+                : story.story_content || 'No content';
+            
+            storyElement.innerHTML = `
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-r ${colorClass} rounded-full flex items-center justify-center text-white font-bold">
+                        ${initial}
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="font-semibold text-gray-900">${escapeHtml(story.title || 'Untitled')}</h3>
+                        <p class="text-sm text-gray-600">${timeAgo} • ${escapeHtml(story.category || 'General')}</p>
+                        ${story.status === 'pending' ? 
+                            '<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded ml-2">Pending Review</span>' : 
+                            ''}
+                    </div>
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    ${escapeHtml(previewContent)}
+                </p>
+                <button onclick="showFirebaseStory('${story.id}')" class="text-pink-600 font-medium mt-4 hover:text-pink-800 transition-colors">
+                    Read full story →
+                </button>
+            `;
+            
+            container.appendChild(storyElement);
+        });
+        
+        console.log("Finished rendering", displayStories.length, "stories");
+    };
+
+    // Handle form submission
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const submitLoading = document.getElementById('submit-loading');
+        
+        // Check Firebase connection
+        if (!window.firebaseStories) {
+            showToast("Firebase connection not available. Please refresh the page.", "error");
+            return;
+        }
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        if (submitText) submitText.classList.add('hidden');
+        if (submitLoading) submitLoading.classList.remove('hidden');
+        
+        const formData = new FormData(e.target);
+        const storyData = {
+            title: formData.get('title').trim(),
+            author_name: formData.get('author').trim() || 'Anonymous',
+            story_content: formData.get('content').trim(),
+            category: formData.get('category'),
+        };
+        
+        // Validate data
+        if (!storyData.title || !storyData.story_content) {
+            showToast("Please fill in all required fields", "error");
+            resetButtonState();
+            return;
+        }
+        
+        if (storyData.story_content.length > 2000) {
+            showToast("Story content is too long (max 2000 characters)", "error");
+            resetButtonState();
+            return;
+        }
+        
+        try {
+            const result = await window.firebaseStories.submitStory(storyData);
+            
+            if (result.success) {
+                showToast("Your story has been submitted for review! Thank you for sharing.", "success");
+                e.target.reset();
+                const charCount = document.getElementById('char-count');
+                if (charCount) charCount.textContent = "0/2000 characters";
+            } else {
+                if (result.redirect) {
+                    // Redirect to login page
+                    showToast("Please log in to submit a story", "error");
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 1500);
+                } else {
+                    showToast("Failed to submit story: " + (result.error || "Unknown error"), "error");
+                }
+            }
+        } catch (error) {
+            console.error("Error submitting story:", error);
+            showToast("An error occurred. Please try again.", "error");
+        } finally {
+            resetButtonState();
+        }
+        
+        function resetButtonState() {
+            submitBtn.disabled = false;
+            if (submitText) submitText.classList.remove('hidden');
+            if (submitLoading) submitLoading.classList.add('hidden');
+        }
+    }
+
+    // Show full story from Firebase
+    function showFirebaseStory(storyId) {
+        const story = currentUserStories.find(s => s.id === storyId);
+        if (story) {
+            document.getElementById('modal-title').textContent = story.title;
+            document.getElementById('modal-author').textContent = `By ${story.author_name}`;
+            
+            const storyDate = story.createdAt ? new Date(story.createdAt) : new Date();
+            document.getElementById('modal-date').textContent = formatDate(storyDate);
+            
+            document.getElementById('modal-content').textContent = story.story_content;
+            document.getElementById('story-modal').classList.remove('hidden');
+        } else {
+            showToast("Story not found", "error");
+        }
+    }
+
+    // Show full story modal for reference stories
+    function showFullStory(storyKey) {
+        const story = referenceStories[storyKey];
+        if (story) {
+            document.getElementById('modal-title').textContent = story.title;
+            document.getElementById('modal-author').textContent = `By ${story.author}`;
+            document.getElementById('modal-date').textContent = story.date;
+            document.getElementById('modal-content').textContent = story.content;
+            document.getElementById('story-modal').classList.remove('hidden');
+        }
+    }
+
+    // Close modal
+    function closeModal() {
+        document.getElementById('story-modal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    const storyModal = document.getElementById('story-modal');
+    if (storyModal) {
+        storyModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    }
+
+    // Show toast notification
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => document.body.removeChild(toast), 300);
+        }, 3000);
+    }
+
+    // Utility functions
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function getTimeAgo(date) {
+        if (!date) return '';
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+        
+        return formatDate(date);
+    }
+
+    function formatDate(date) {
+        if (!date) return '';
+        return date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric',
+            year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+        });
+    }
+
+    // Mobile menu functionality
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+    const overlay = document.querySelector('.nav-overlay');
+    const dropdown = document.getElementById('language-dropdown');
+
+    if (mobileMenu) {
+        mobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            if (navLinks) navLinks.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (mobileMenu) mobileMenu.classList.remove('active');
+            if (navLinks) navLinks.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+
+    if (dropdown) {
+        dropdown.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+    }
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            if (navLinks) navLinks.classList.remove('active');
+            if (mobileMenu) mobileMenu.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+            if (dropdown) dropdown.classList.remove('active');
+        }
+    });
+
+    // Debug function
+    window.debugStories = function() {
+        console.log("=== DEBUG ===");
+        console.log("Firebase available:", !!window.firebaseApp);
+        console.log("firebaseStories:", window.firebaseStories);
+        console.log("currentUserStories:", currentUserStories);
+        console.log("renderUserStories function:", typeof window.renderUserStories);
+    };
+
+    // Language management functions
     const translations = {
       en: {
         "page.title": "Stories | GirlsSpace Mahama",
@@ -748,218 +1319,9 @@
         "footer.copyright": "© 2025 GirlsSpace Mahama. Empowering girls, always.",
         "footer.languages": "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
         "footer.supporters": "Supported by UNHCR, Save The Children, Alight"
-      },
-      ar: {
-        "page.title": "القصص | GirlsSpace Mahama",
-        "nav.home": "الرئيسية",
-        "nav.about": "من نحن",
-        "nav.chat": "الدردشة",
-        "nav.stories": "القصص",
-        "nav.programs": "البرامج",
-        "nav.protection": "الحماية",
-        "nav.login": "تسجيل الدخول",
-        "nav.donate": "تبرع",
-        "nav.search": "بحث...",
-        "stories.title": "شارك قصتك",
-        "stories.subtitle": "صوتك مهم. شارك تجاربك، ألهم الآخرين، وتواصل من خلال قوة سرد القصص في بيئة آمنة وداعمة.",
-        "stories.featured": "القصص المميزة",
-        "stories.featuredTag": "قصة مميزة",
-        "stories.amina.title": "رحلة أمينة",
-        "stories.amina.preview": "\"فتح تعلم اللغة الإنجليزية من خلال GirlsSpace العديد من الأبواب أمامي. يمكنني الآن المساعدة في الترجمة للفتيات الأخريات وأحلم بأن أصبح معلمة...\"",
-        "stories.fatima.title": "أمل فاطمة",
-        "stories.fatima.preview": "\"ساعدني تدريب العنف القائم على النوع الاجتماعي في فهم حقوقي وأعطاني الشجاعة للتحدث. الآن أساعد الفتيات الأخريات ليعرفن أنهن لسن وحيدات...\"",
-        "stories.readFull": "اقرأ القصة كاملة →",
-        "stories.noStories": "لا توجد قصص مجتمعية بعد. كن أول من يشارك تجربته!",
-        "stories.formTitle": "شارك قصتك",
-        "stories.form.title": "عنوان القصة",
-        "stories.form.titlePlaceholder": "أعط قصتك عنوانًا ذا معنى",
-        "stories.form.author": "اسمك (أو مجهول)",
-        "stories.form.authorPlaceholder": "كيف تريد أن يُعرف عنك؟",
-        "stories.form.category": "فئة القصة",
-        "stories.form.chooseCategory": "اختر فئة",
-        "stories.form.content": "قصتك",
-        "stories.form.contentPlaceholder": "شارك تجربتك، التحديات التي تغلبت عليها، الدروس المستفادة، أو كيف تطورت. قصتك يمكن أن تلهم الآخرين...",
-        "stories.form.submit": "شارك قصتي",
-        "stories.form.note": "يتم مراجعة القصص قبل مشاركتها لضمان مساحة آمنة للجميع.",
-        "stories.categories.education": "التعلم والتعليم",
-        "stories.categories.empowerment": "التمكين الشخصي",
-        "stories.categories.community": "الدعم المجتمعي",
-        "stories.categories.career": "المسيرة المهنية والأحلام",
-        "stories.categories.health": "الصحة والعافية",
-        "stories.categories.other": "أخرى",
-        "footer.tagline": "تمكين الفتيات، بناء المستقبل",
-        "footer.description": "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
-        "footer.quickLinks": "روابط سريعة",
-        "footer.joinChat": "انضم للدردشة",
-        "footer.shareStory": "شارك قصة",
-        "footer.programs": "البرامج",
-        "footer.getHelp": "احصل على المساعدة",
-        "footer.emergency": "طوارئ",
-        "footer.support": "الدعم",
-        "footer.report": "الإبلاغ",
-        "footer.copyright": "© 2025 GirlsSpace Mahama. تمكين الفتيات، دائمًا.",
-        "footer.languages": "متاح بـ: العربية، الإنجليزية، الفرنسية، السواحيلية، الكينيارواندية",
-        "footer.supporters": "بدعم من: UNHCR، Save The Children، Alight"
-      },
-      sw: {
-        "page.title": "Hadithi | GirlsSpace Mahama",
-        "nav.home": "Nyumbani",
-        "nav.about": "Kuhusu Sisi",
-        "nav.chat": "Gumzo",
-        "nav.stories": "Hadithi",
-        "nav.programs": "Mipango",
-        "nav.protection": "Ulinzi",
-        "nav.login": "Ingia",
-        "nav.donate": "Changia",
-        "nav.search": "Tafuta...",
-        "stories.title": "Shiriki Hadithi Yako",
-        "stories.subtitle": "Sauti yako ni muhimu. Shiriki uzoefu wako, vutia wengine, na uunganishe kupitia nguvu ya hadithi katika mazingira salama na ya kusaidia.",
-        "stories.featured": "Hadithi Zilizokaguliwa",
-        "stories.featuredTag": "Hadithi Iliyokaguliwa",
-        "stories.amina.title": "Safari ya Amina",
-        "stories.amina.preview": "\"Kujifunza Kiingereza kupitia GirlsSpace kumenifungua milango mingi. Sasa naweza kusaidia kutafsiri kwa wasichana wengine na kuota kuwa mwalimu...\"",
-        "stories.fatima.title": "Matumaini ya Fatima",
-        "stories.fatima.preview": "\"Mafunzo ya GBV yalinisaidia kuelewa haki zangu na kunipa ujasiri wa kusema. Sasa namsaidia wasichana wengine wajue hawako peke yao...\"",
-        "stories.readFull": "Soma hadithi kamili →",
-        "stories.noStories": "Bado hakuna hadithi za jamii. Kuwa wa kwanza kushiriki uzoefu wako!",
-        "stories.formTitle": "Shiriki Hadithi Yako",
-        "stories.form.title": "Kichwa cha Hadithi",
-        "stories.form.titlePlaceholder": "Pa hadithi yako kichwa chenye maana",
-        "stories.form.author": "Jina Lako (au Bila Kujulikana)",
-        "stories.form.authorPlaceholder": "Ungependa kujulikana vipi?",
-        "stories.form.category": "Aina ya Hadithi",
-        "stories.form.chooseCategory": "Chagua aina",
-        "stories.form.content": "Hadithi Yako",
-        "stories.form.contentPlaceholder": "Shiriki uzoefu wako, changamoto ulizoshinda, masomo uliyojifunza, au jinsi ulivyokua. Hadithi yako inaweza kuwatia moyo wengine...",
-        "stories.form.submit": "Shiriki Hadithi Yangu",
-        "stories.form.note": "Hadithi hukaguliwa kabla ya kushirikiwa kuhakikisha nafasi salama kwa wote.",
-        "stories.categories.education": "Elimu na Kujifunza",
-        "stories.categories.empowerment": "Kuwaweka Wenyewe",
-        "stories.categories.community": "Msaada wa Jamii",
-        "stories.categories.career": "Kazi na Ndoto",
-        "stories.categories.health": "Afya na Ustawi",
-        "stories.categories.other": "Nyingine",
-        "footer.tagline": "Kuwawezesha Wasichana, Kujenga Mustakabali",
-        "footer.description": "Kimbilio la salama la kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana, kujifunza, kukua, na kustawi.",
-        "footer.quickLinks": "Viungo Vya Haraka",
-        "footer.joinChat": "Jiunge na Gumzo",
-        "footer.shareStory": "Shiriki Hadithi",
-        "footer.programs": "Mipango",
-        "footer.getHelp": "Pata Msaada",
-        "footer.emergency": "Dharura",
-        "footer.support": "Msaada",
-        "footer.report": "Ripoti",
-        "footer.copyright": "© 2025 GirlsSpace Mahama. Kuwawezesha wasichana, kila wakati.",
-        "footer.languages": "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
-        "footer.supporters": "Inasaidiwa na: UNHCR, Save The Children, Alight"
-      },
-      fr: {
-        "page.title": "Histoires | GirlsSpace Mahama",
-        "nav.home": "Accueil",
-        "nav.about": "À propos",
-        "nav.chat": "Chat",
-        "nav.stories": "Histoires",
-        "nav.programs": "Programmes",
-        "nav.protection": "Protection",
-        "nav.login": "Connexion",
-        "nav.donate": "Faire un don",
-        "nav.search": "Rechercher...",
-        "stories.title": "Partagez Votre Histoire",
-        "stories.subtitle": "Votre voix compte. Partagez vos expériences, inspirez les autres et connectez-vous grâce à la puissance de la narration dans un environnement sûr et favorable.",
-        "stories.featured": "Histoires en Vedette",
-        "stories.featuredTag": "Histoire en Vedette",
-        "stories.amina.title": "Le Parcours d'Amina",
-        "stories.amina.preview": "\"Apprendre l'anglais grâce à GirlsSpace m'a ouvert de nombreuses portes. Je peux maintenant aider à traduire pour d'autres filles et rêver de devenir enseignante...\"",
-        "stories.fatima.title": "L'Espoir de Fatima",
-        "stories.fatima.preview": "\"La formation sur les VBG m'a aidée à comprendre mes droits et m'a donné le courage de m'exprimer. Maintenant, j'aide les autres filles à savoir qu'elles ne sont pas seules...\"",
-        "stories.readFull": "Lire l'histoire complète →",
-        "stories.noStories": "Aucune histoire communautaire pour le moment. Soyez le premier à partager votre expérience!",
-        "stories.formTitle": "Partagez Votre Histoire",
-        "stories.form.title": "Titre de l'Histoire",
-        "stories.form.titlePlaceholder": "Donnez un titre significatif à votre histoire",
-        "stories.form.author": "Votre Nom (ou Anonyme)",
-        "stories.form.authorPlaceholder": "Comment souhaitez-vous être connu?",
-        "stories.form.category": "Catégorie de l'Histoire",
-        "stories.form.chooseCategory": "Choisissez une catégorie",
-        "stories.form.content": "Votre Histoire",
-        "stories.form.contentPlaceholder": "Partagez votre expérience, les défis surmontés, les leçons apprises ou comment vous avez grandi. Votre histoire peut inspirer les autres...",
-        "stories.form.submit": "Partager Mon Histoire",
-        "stories.form.note": "Les histoires sont revues avant d'être partagées pour assurer un espace sûr pour tous.",
-        "stories.categories.education": "Éducation et Apprentissage",
-        "stories.categories.empowerment": "Autonomisation Personnelle",
-        "stories.categories.community": "Soutien Communautaire",
-        "stories.categories.career": "Carrière et Rêves",
-        "stories.categories.health": "Santé et Bien-être",
-        "stories.categories.other": "Autre",
-        "footer.tagline": "Autonomiser les Filles, Bâtir l'Avenir",
-        "footer.description": "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
-        "footer.quickLinks": "Liens Rapides",
-        "footer.joinChat": "Rejoindre le Chat",
-        "footer.shareStory": "Partager une Histoire",
-        "footer.programs": "Programmes",
-        "footer.getHelp": "Obtenir de l'Aide",
-        "footer.emergency": "Urgence",
-        "footer.support": "Soutien",
-        "footer.report": "Signaler",
-        "footer.copyright": "© 2025 GirlsSpace Mahama. Autonomiser les filles, toujours.",
-        "footer.languages": "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
-        "footer.supporters": "Soutenu par : HCR, Save The Children, Alight"
-      },
-      rw: {
-        "page.title": "Inkuru | GirlsSpace Mahama",
-        "nav.home": "Ahabanza",
-        "nav.about": "Abo turi",
-        "nav.chat": "Kuganira",
-        "nav.stories": "Inkuru",
-        "nav.programs": "Porogaramu",
-        "nav.protection": "Umutekano",
-        "nav.login": "Injira",
-        "nav.donate": "Tanga",
-        "nav.search": "Shaka...",
-        "stories.title": "Sangiza Inkuru Yawe",
-        "stories.subtitle": "Ijwi ryawe rirahari. Sangiza ibigeragezo byawe, kurarikira abandi, no guhuza binyuze ku ngufu z'ikuvuga inkuru mu mwanya utekanye n'ushyigikira.",
-        "stories.featured": "Inkuru Zerekwa",
-        "stories.featuredTag": "Inkuru Yerekwa",
-        "stories.amina.title": "Urugendo rwa Amina",
-        "stories.amina.preview": "\"Kwiga Icyongereza binyuze muri GirlsSpace byanze amarembo menshi. Noneho nshobora gutabara mu guhuriza abakobwa bandi kandi nshoreka kuba umwarimu...\"",
-        "stories.fatima.title": "Icyizere cya Fatima",
-        "stories.fatima.preview": "\"Amahugurwa ya GBV yampaye gusobanukirwa uburenganzira bwanjye kandi yangiye imbaraga zo kuvuga. Noneho mfasha abakobwa bandi kumenya ko badasanzwe...\"",
-        "stories.readFull": "Soma inkuru yuzuye →",
-        "stories.noStories": "Nta makuru y'umuryango ubu. Ba wa mbere gusangiza uburambe bwawe!",
-        "stories.formTitle": "Sangiza Inkuru Yawe",
-        "stories.form.title": "Umutwe w'Inkuru",
-        "stories.form.titlePlaceholder": "Ha inkuru yawe umutwe ufite inshinga",
-        "stories.form.author": "Izina ryawe (cyangwa Utazwi)",
-        "stories.form.authorPlaceholder": "Ushaka kumenekana gute?",
-        "stories.form.category": "Ubwoko bw'Inkuru",
-        "stories.form.chooseCategory": "Hitamo ubwoko",
-        "stories.form.content": "Inkuru Yawe",
-        "stories.form.contentPlaceholder": "Sangiza uburambe bwawe, ingorane washinduye, amasomo wize, cyangwa uko wakuze. Inkuru yawe ishobora kurarikira abandi...",
-        "stories.form.submit": "Sangiza Inkuru Yanjye",
-        "stories.form.note": "Inkuru zisuzumwa mbere yo gusangizwa kugirango zimurike umwanya utekanye kuri bose.",
-        "stories.categories.education": "Amasomo no Kwiga",
-        "stories.categories.empowerment": "Guharanira Umuntu",
-        "stories.categories.community": "Gushigikira Umuryango",
-        "stories.categories.career": "Akazi n'Inzozi",
-        "stories.categories.health": "Ubuzima n'Ubwiza",
-        "stories.categories.other": "Ikind",
-        "footer.tagline": "Guharanira abakobwa, Kubaka Ejo Hazaza",
-        "footer.description": "Ubuturo butekanye bwa digitale aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
-        "footer.quickLinks": "Amahuza Yihuse",
-        "footer.joinChat": "Injira mu kuganira",
-        "footer.shareStory": "Sangiza inkuru",
-        "footer.programs": "Porogaramu",
-        "footer.getHelp": "Kwakira ubufasha",
-        "footer.emergency": "Ubutabazi",
-        "footer.support": "Gushigikira",
-        "footer.report": "Raporo",
-        "footer.copyright": "© 2025 GirlsSpace Mahama. Guharanira abakobwa, buri gihe.",
-        "footer.languages": "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
-        "footer.supporters": "Bishigikijwe na: UNHCR, Save The Children, Alight"
       }
     };
 
-    // Language management functions
     function getCurrentLanguage() {
       return localStorage.getItem('selectedLanguage') || 'en';
     }
@@ -985,15 +1347,6 @@
         }
       });
 
-      // Handle placeholder translations
-      const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
-      placeholderElements.forEach(element => {
-        const key = element.getAttribute('data-translate-placeholder');
-        if (translations[lang] && translations[lang][key]) {
-          element.placeholder = translations[lang][key];
-        }
-      });
-
       // Update page title
       document.title = translations[lang]["page.title"] || "Stories | GirlsSpace Mahama";
     }
@@ -1014,7 +1367,6 @@
     }
 
     function updatePageDirection(lang) {
-      // Set direction for RTL languages
       if (lang === 'ar') {
         document.body.style.direction = 'rtl';
         document.body.style.textAlign = 'right';
@@ -1024,566 +1376,6 @@
       }
     }
 
-    // Initialize language on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      const currentLang = getCurrentLanguage();
-      applyTranslations(currentLang);
-      updateLanguageSelector(currentLang);
-      updatePageDirection(currentLang);
-      
-      // Add event listeners for language options
-      const languageOptions = document.querySelectorAll('.language-option');
-      languageOptions.forEach(option => {
-        option.addEventListener('click', function(e) {
-          e.preventDefault();
-          const lang = this.getAttribute('data-lang');
-          setCurrentLanguage(lang);
-        });
-      });
-    });
-
-    // Mobile menu functionality
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.getElementById('nav-links');
-    const overlay = document.querySelector('.nav-overlay');
-    const dropdown = document.getElementById('language-dropdown');
-
-    mobileMenu.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
-      navLinks.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
-
-    overlay.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-      navLinks.classList.remove('active');
-      overlay.classList.remove('active');
-    });
-
-    if (dropdown) {
-      dropdown.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          dropdown.classList.toggle('active');
-        }
-      });
-    }
-
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        navLinks.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        dropdown?.classList.remove('active');
-      }
-    });
-
-    // Rest of the stories functionality remains the same...
-    // [All the existing stories JavaScript code remains unchanged]
   </script>
-
-  <!-- Include the original stories JavaScript functionality -->
-  <script>
-    // Configuration object
-    const defaultConfig = {
-        main_title: "Share Your Story",
-        subtitle: "Your voice matters. Share your experiences, inspire others, and connect through the power of storytelling in a safe and supportive environment.",
-        form_title: "Share Your Story",
-        submit_button_text: "Share My Story"
-    };
-
-    // Reference stories data
-    const referenceStories = {
-        amina: {
-            title: "Amina's Journey to Teaching",
-            author: "Amina",
-            content: `Learning English through GirlsSpace has completely transformed my life. When I first arrived as a refugee, I felt isolated and voiceless. The language barrier made everything seem impossible.
-
-But through the English classes at GirlsSpace, I not only learned to communicate but found my confidence. The teachers were patient and understanding, creating a safe space where I could make mistakes and learn.
-
-Now, I can help translate for other girls who are just starting their journey. I've become a bridge between cultures and languages. My dream is to become a teacher myself, to give back to the community that gave me so much hope.
-
-Every day, I see new girls walking through the doors of GirlsSpace, carrying the same fears I once had. And every day, I get to show them that their dreams are possible, just like mine became possible.
-
-Education is the key that unlocks every door. GirlsSpace gave me that key, and now I'm helping others find theirs.`
-        },
-        fatima: {
-            title: "Finding My Voice and Helping Others",
-            author: "Fatima",
-            content: `The Gender-Based Violence training at GirlsSpace opened my eyes to rights I didn't even know I had. Growing up, I thought certain treatments were just "normal" - that I had to accept them.
-
-Learning about consent, boundaries, and my right to safety was life-changing. But more importantly, the training gave me the tools and courage to speak up - not just for myself, but for others.
-
-I remember the first time I helped another girl recognize that what she was experiencing wasn't okay. Seeing her realize she wasn't alone, that she deserved better, reminded me why this work is so important.
-
-Now I volunteer with the GBV program, helping facilitate workshops and providing peer support. Every girl who walks through our doors carrying shame or fear reminds me of my own journey.
-
-We create a circle of trust where girls can share without judgment. We remind each other that we are strong, that we deserve respect, and that together we can break cycles of violence.
-
-The most powerful thing I learned is that healing happens in community. None of us has to face these challenges alone.`
-        }
-    };
-
-    let currentStories = [];
-    let storyCount = 0;
-
-    // Data SDK handler
-    const dataHandler = {
-        onDataChanged(data) {
-            currentStories = data;
-            renderUserStories();
-        }
-    };
-
-    // Initialize SDKs
-    async function initializeApp() {
-        // Initialize Data SDK
-        const dataResult = await window.dataSdk.init(dataHandler);
-        if (!dataResult.isOk) {
-            console.error("Failed to initialize data SDK");
-            showToast("Failed to load stories", "error");
-            return;
-        }
-
-        // Initialize Element SDK
-        if (window.elementSdk) {
-            window.elementSdk.init({
-                defaultConfig,
-                onConfigChange: async (config) => {
-                    document.getElementById('main-title').innerHTML = 
-                        (config.main_title || defaultConfig.main_title).replace('Story', '<span class="text-gradient">Story</span>');
-                    document.getElementById('subtitle').textContent = 
-                        config.subtitle || defaultConfig.subtitle;
-                    document.getElementById('form-title').textContent = 
-                        config.form_title || defaultConfig.form_title;
-                    document.getElementById('submit-text').textContent = 
-                        config.submit_button_text || defaultConfig.submit_button_text;
-                },
-                mapToCapabilities: (config) => ({
-                    recolorables: [
-                        {
-                            get: () => config.background_color || "#fdf2f8",
-                            set: (value) => {
-                                config.background_color = value;
-                                window.elementSdk.setConfig({ background_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.primary_color || "#ec4899",
-                            set: (value) => {
-                                config.primary_color = value;
-                                window.elementSdk.setConfig({ primary_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.text_color || "#1f2937",
-                            set: (value) => {
-                                config.text_color = value;
-                                window.elementSdk.setConfig({ text_color: value });
-                            }
-                        }
-                    ],
-                    borderables: [],
-                    fontEditable: {
-                        get: () => config.font_family || "system-ui",
-                        set: (value) => {
-                            config.font_family = value;
-                            window.elementSdk.setConfig({ font_family: value });
-                        }
-                    },
-                    fontSizeable: {
-                        get: () => config.font_size || 16,
-                        set: (value) => {
-                            config.font_size = value;
-                            window.elementSdk.setConfig({ font_size: value });
-                        }
-                    }
-                }),
-                mapToEditPanelValues: (config) => new Map([
-                    ["main_title", config.main_title || defaultConfig.main_title],
-                    ["subtitle", config.subtitle || defaultConfig.subtitle],
-                    ["form_title", config.form_title || defaultConfig.form_title],
-                    ["submit_button_text", config.submit_button_text || defaultConfig.submit_button_text]
-                ])
-            });
-        }
-    }
-
-    // Render user submitted stories
-    function renderUserStories() {
-        const container = document.getElementById('user-stories');
-        const noStoriesMsg = document.getElementById('no-stories');
-        
-        if (currentStories.length === 0) {
-            container.innerHTML = '';
-            noStoriesMsg.classList.remove('hidden');
-            return;
-        }
-        
-        noStoriesMsg.classList.add('hidden');
-        
-        // Sort stories by creation date (newest first)
-        const sortedStories = [...currentStories].sort((a, b) => 
-            new Date(b.created_at) - new Date(a.created_at)
-        );
-        
-        container.innerHTML = sortedStories.map(story => {
-            const initial = story.author_name.charAt(0).toUpperCase();
-            const colors = [
-                'from-green-400 to-emerald-500',
-                'from-orange-400 to-red-500',
-                'from-purple-400 to-indigo-500',
-                'from-yellow-400 to-orange-500',
-                'from-teal-400 to-cyan-500'
-            ];
-            const colorClass = colors[Math.abs(story.id.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % colors.length];
-            
-            const createdDate = new Date(story.created_at);
-            const timeAgo = getTimeAgo(createdDate);
-            
-            return `
-                <div class="story-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-r ${colorClass} rounded-full flex items-center justify-center text-white font-bold">
-                            ${initial}
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="font-semibold text-gray-900">${escapeHtml(story.title)}</h3>
-                            <p class="text-sm text-gray-600">${timeAgo} • ${escapeHtml(story.category)}</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700 leading-relaxed">
-                        ${escapeHtml(story.story_content.substring(0, 150))}${story.story_content.length > 150 ? '...' : ''}
-                    </p>
-                    <button onclick="showUserStory('${story.id}')" class="text-pink-600 font-medium mt-4 hover:text-pink-800 transition-colors">
-                        Read full story →
-                    </button>
-                </div>
-            `;
-        }).join('');
-    }
-    // Handle form submission
-    document.getElementById('story-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        if (currentStories.length >= 999) {
-            showToast("Maximum limit of 999 stories reached. Please contact support.", "error");
-            return;
-        }
-        const submitBtn = document.getElementById('submit-btn');
-        const submitText = document.getElementById('submit-text');
-        const submitLoading = document.getElementById('submit-loading');
-        
-        // Show loading state
-        submitBtn.disabled = true;
-        submitText.classList.add('hidden');
-        submitLoading.classList.remove('hidden');
-        
-        const formData = new FormData(e.target);
-        const storyData = {
-            id: `story_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            title: formData.get('title').trim(),
-            author_name: formData.get('author').trim(),
-            story_content: formData.get('content').trim(),
-            category: formData.get('category'),
-            created_at: new Date().toISOString(),
-            is_approved: true // Auto-approve for demo purposes
-        };
-        
-        try {
-            const result = await window.dataSdk.create(storyData);
-            
-            if (result.isOk) {
-                showToast("Your story has been shared successfully!", "success");
-                e.target.reset();
-            } else {
-                showToast("Failed to share your story. Please try again.", "error");
-            }
-        } catch (error) {
-            showToast("An error occurred. Please try again.", "error");
-        } finally {
-            // Reset button state
-            submitBtn.disabled = false;
-            submitText.classList.remove('hidden');
-            submitLoading.classList.add('hidden');
-        }
-    });
-
-    // Show full story modal
-    function showFullStory(storyKey) {
-        const story = referenceStories[storyKey];
-        if (story) {
-            document.getElementById('modal-title').textContent = story.title;
-            document.getElementById('modal-author').textContent = `By ${story.author}`;
-            document.getElementById('modal-content').textContent = story.content;
-            document.getElementById('story-modal').classList.remove('hidden');
-        }
-    }
-
-    // Show user story modal
-    function showUserStory(storyId) {
-        const story = currentStories.find(s => s.id === storyId);
-        if (story) {
-            document.getElementById('modal-title').textContent = story.title;
-            document.getElementById('modal-author').textContent = `By ${story.author_name} • ${story.category}`;
-            document.getElementById('modal-content').textContent = story.story_content;
-            document.getElementById('story-modal').classList.remove('hidden');
-        }
-    }
-
-    // Close modal\\\\\\
-    function closeModal() {
-        document.getElementById('story-modal').classList.add('hidden');
-    }
-
-    // Close modal when clicking outside
-    document.getElementById('story-modal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeModal();
-        }
-    });
-
-    // Show toast notification
-    function showToast(message, type) {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => document.body.removeChild(toast), 300);
-        }, 3000);
-    }
-
-    // Utility functions
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function getTimeAgo(date) {
-        const now = new Date();
-        const diffInSeconds = Math.floor((now - date) / 1000);
-        
-        if (diffInSeconds < 60) return 'Just now';
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
-        return date.toLocaleDateString();
-    }
-
-    // Initialize the app
-    initializeApp();
-
-    
-// استبدال كود الـ Data SDK القديم بهذا الكود
-
-// تهيئة Firebase للقصص
-async function initializeFirebaseStories() {
-    try {
-        console.log("Initializing Firebase Stories...");
-        
-        // جلب القصص عند تحميل الصفحة
-        await loadStoriesFromFirebase();
-        
-        // الاستماع للتحديثات الفورية
-        listenToStoriesFromFirebase();
-        
-        console.log("Firebase Stories initialized successfully");
-    } catch (error) {
-        console.error("Error initializing Firebase Stories:", error);
-        showToast("Failed to load stories. Please refresh the page.", "error");
-    }
-}
-
-// جلب القصص من Firebase
-async function loadStoriesFromFirebase() {
-    try {
-        console.log("Loading stories from Firebase...");
-        const result = await getApprovedStories();
-        
-        if (result.success) {
-            console.log("Stories loaded:", result.stories.length);
-            currentStories = result.stories.map(story => ({
-                id: story.id,
-                title: story.title,
-                author_name: story.author_name,
-                story_content: story.content,
-                category: story.category,
-                created_at: story.createdAt ? story.createdAt.toDate() : new Date(),
-                is_approved: story.status === "approved"
-            }));
-            
-            renderUserStories();
-        } else {
-            console.error("Error loading stories:", result.error);
-            showToast("Error loading stories: " + result.error, "error");
-        }
-    } catch (error) {
-        console.error("Error in loadStoriesFromFirebase:", error);
-        showToast("Error loading stories", "error");
-    }
-}
-
-// الاستماع للتحديثات الفورية
-function listenToStoriesFromFirebase() {
-    try {
-        listenToStories((stories) => {
-            console.log("Real-time update received:", stories.length);
-            currentStories = stories.map(story => ({
-                id: story.id,
-                title: story.title,
-                author_name: story.author_name,
-                story_content: story.content,
-                category: story.category,
-                created_at: story.createdAt ? story.createdAt.toDate() : new Date(),
-                is_approved: story.status === "approved"
-            }));
-            
-            renderUserStories();
-        });
-    } catch (error) {
-        console.error("Error in listenToStoriesFromFirebase:", error);
-    }
-}
-
-// تحديث دالة إرسال النموذج
-document.getElementById('story-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submit-btn');
-    const submitText = document.getElementById('submit-text');
-    const submitLoading = document.getElementById('submit-loading');
-    
-    // Show loading state
-    submitBtn.disabled = true;
-    submitText.classList.add('hidden');
-    submitLoading.classList.remove('hidden');
-    
-    const formData = new FormData(e.target);
-    const storyData = {
-        title: formData.get('title').trim(),
-        author_name: formData.get('author').trim() || 'Anonymous',
-        content: formData.get('content').trim(),
-        category: formData.get('category'),
-        language: getCurrentLanguage()
-    };
-    
-    // التحقق من البيانات
-    if (!storyData.title || !storyData.content) {
-        showToast("Please fill in all required fields", "error");
-        submitBtn.disabled = false;
-        submitText.classList.remove('hidden');
-        submitLoading.classList.add('hidden');
-        return;
-    }
-    
-    try {
-        console.log("Submitting story:", storyData);
-        const result = await addStory(storyData);
-        
-        if (result.success) {
-            showToast("Your story has been shared successfully!", "success");
-            e.target.reset();
-        } else {
-            showToast("Failed to share your story: " + result.error, "error");
-        }
-    } catch (error) {
-        console.error("Submission error:", error);
-        showToast("An error occurred. Please try again.", "error");
-    } finally {
-        // Reset button state
-        submitBtn.disabled = false;
-        submitText.classList.remove('hidden');
-        submitLoading.classList.add('hidden');
-    }
-});
-
-// تحديث دالة عرض القصص
-function renderUserStories() {
-    const container = document.getElementById('user-stories');
-    const noStoriesMsg = document.getElementById('no-stories');
-    
-    if (currentStories.length === 0) {
-        container.innerHTML = '';
-        noStoriesMsg.classList.remove('hidden');
-        return;
-    }
-    
-    noStoriesMsg.classList.add('hidden');
-    
-    // Sort stories by creation date (newest first)
-    const sortedStories = [...currentStories].sort((a, b) => 
-        new Date(b.created_at) - new Date(a.created_at)
-    );
-    
-    container.innerHTML = sortedStories.map(story => {
-        const initial = story.author_name.charAt(0).toUpperCase();
-        const colors = [
-            'from-green-400 to-emerald-500',
-            'from-orange-400 to-red-500',
-            'from-purple-400 to-indigo-500',
-            'from-yellow-400 to-orange-500',
-            'from-teal-400 to-cyan-500'
-        ];
-        const colorClass = colors[Math.abs(story.id.split('').reduce((a, b) => {
-            return a + b.charCodeAt(0);
-        }, 0)) % colors.length];
-        
-        const createdDate = new Date(story.created_at);
-        const timeAgo = getTimeAgo(createdDate);
-        
-        return `
-            <div class="story-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-r ${colorClass} rounded-full flex items-center justify-center text-white font-bold">
-                        ${initial}
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="font-semibold text-gray-900">${escapeHtml(story.title)}</h3>
-                        <p class="text-sm text-gray-600">${timeAgo} • ${escapeHtml(story.category)}</p>
-                    </div>
-                </div>
-                <p class="text-gray-700 leading-relaxed">
-                    ${escapeHtml(story.story_content.substring(0, 150))}${story.story_content.length > 150 ? '...' : ''}
-                </p>
-                <button onclick="showUserStory('${story.id}')" class="text-pink-600 font-medium mt-4 hover:text-pink-800 transition-colors">
-                    Read full story →
-                </button>
-            </div>
-        `;
-    }).join('');
-}
-
-// تحديث دالة عرض القصة الكاملة
-function showUserStory(storyId) {
-    const story = currentStories.find(s => s.id === storyId);
-    if (story) {
-        document.getElementById('modal-title').textContent = story.title;
-        document.getElementById('modal-author').textContent = `By ${story.author_name} • ${story.category}`;
-        document.getElementById('modal-content').textContent = story.story_content;
-        document.getElementById('story-modal').classList.remove('hidden');
-    }
-}
-
-// استبدال استدعاء initializeApp القديم
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, initializing Firebase Stories...");
-    initializeFirebaseStories();
-});
-  </script>
-  <script type="module">
-    import { addStory, getStories, listenToStories, getApprovedStories } from './firebase-stories.js';
-    
-    // جعل الدوال متاحة globally
-    window.addStory = addStory;
-    window.getStories = getStories;
-    window.listenToStories = listenToStories;
-    window.getApprovedStories = getApprovedStories;
-</script>
-  <script type="module" src="firebase-stories.js"></script>
 </body>
 </html>
