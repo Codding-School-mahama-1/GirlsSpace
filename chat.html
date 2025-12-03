@@ -2,1020 +2,943 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chat Room - Girls Space</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>| GirlsSpace Mahama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVd/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .message { animation: fadeIn 0.3s ease; }
-        body { background: radial-gradient(circle, #be185d, #e9ecef 95%); }
-        .messages { background-image: url(./imge/hp1.png); background-size: cover; background-position: center; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+        body {
+            background-color: #f5f0ff;
+            padding-top: 85px; /* Add padding to prevent content from hiding behind fixed navbar */
+        }
+
+        /* FIXED NAVBAR - Only change made */
+        .navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 40px;
+            background: #ffffff;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            position: fixed; /* Changed from sticky to fixed */
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Rest of your original CSS remains exactly the same */
+        .nav-logo img {
+            width: 80px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 60%;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #374151;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #c23cb6;
+        }
+
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            list-style: none;
+            padding: 8px 0;
+            display: none;
+            min-width: 140px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Buttons */
+        .login-btn {
+            padding: 8px 16px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #c23cb6;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #fbe7ff;
+            color: #b02ca1;
+        }
+
+        .donate-btn {
+            padding: 10px 18px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: rgb(255, 255, 255);
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(194, 60, 182, 0.3);
+        }
+
+        /* Search */
+        .nav-search {
+            position: relative;
+        }
+
+        .nav-search input {
+            padding: 8px 12px 8px 36px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            width: 160px;
+            transition: border-color 0.2s;
+        }
+
+        .nav-search input:focus {
+            border-color: #c23cb6;
+        }
+
+        .nav-search::before {
+            content: "🔍";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            height: 3px;
+            width: 25px;
+            background: #374151;
+            margin-bottom: 4px;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        .containers {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .chat {
+            text-align: center;
+        }
+
+        .chat h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #5d1a9e;
+        }
+
+        .chat > p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: #161616;
+        }
+        .chat > h2{
+          color: #e203038c;
+        }
+
+        
+        /* Grid Layout */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            color: #161616;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: #e70e20d0;
+        }
+        
+        .card p {
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+        
+        .muted {
+            color: #131111;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #ff6b8b;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff4d73;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 139, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #8a2be2;
+            border: 2px solid #8a2be2;
+        }
+        
+        .btn-outline:hover {
+            background-color: #a34b90;
+            color: white;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .footer-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-btn:hover {
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .links-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        linke-list ,li> a {
+            text-decoration: none;
+
+        }
+
+        .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .link-item:hover {
+            color: #db78e4;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .footer-left-info p {
+            margin: 0;
+        }
+
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
+        }
+
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 12px 20px;
+            }
+            
+            .nav-links {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                width: 100%;
+                text-align: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                display: none;
+            }
+            
+            .dropdown:hover .dropdown-menu {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+            
+            .nav-search {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .nav-search input {
+                width: 100%;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-logo-section {
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .footer-right-info {
+                text-align: center;
+            }
+            
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .chat h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            createUserWithEmailAndPassword,
-            signInWithPopup,
-            GoogleAuthProvider,
-            signOut,
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc,
-            query,
-            where,
-            orderBy,
-            onSnapshot,
-            serverTimestamp,
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-        // Your Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyC5_OQUVnBC1BE_0C4At39xSR0pHBp-wws",
-            authDomain: "chat-room-5c3e5.firebaseapp.com",
-            projectId: "chat-room-5c3e5",
-            storageBucket: "chat-room-5c3e5.firebasestorage.app",
-            messagingSenderId: "637694009856",
-            appId: "1:637694009856:web:8de78eda815ac24d3daee5"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        console.log("🔥 Firebase initialized with project: chat-room-5c3e5");
-
-        // Global variables
-        let currentUser = null;
-        let currentChannel = 'ideas';
-        let unsubscribeMessages = null;
-        let currentLang = 'en';
-
-        // DOM Elements
-        const messagesContainer = document.getElementById('messages-container');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        const searchBtn = document.getElementById('search-btn');
-        const searchModal = document.getElementById('search-modal');
-        const searchModalInput = document.getElementById('search-modal-input');
-        const searchResults = document.getElementById('search-results');
-        const channelTitle = document.getElementById('channel-title');
-        const channelDescription = document.getElementById('channel-description');
-        const loginModal = document.getElementById('login-modal');
-
-        // Image error handler
-        function handleImageError(img) {
-            img.onerror = null;
-            img.src = 'https://ui-avatars.com/api/?name=User&background=ec4899&color=fff';
-        }
-
-        // Authentication Manager
-        class AuthManager {
-            constructor() {
-                console.log("🔐 AuthManager initialized");
-                this.initAuth();
-            }
-
-            initAuth() {
-                onAuthStateChanged(auth, (user) => {
-                    console.log("Auth state changed:", user ? `Logged in as ${user.email}` : "Logged out");
-                    if (user) {
-                        currentUser = user;
-                        this.updateUIForLoggedInUser(user);
-                        if (window.chatManager) {
-                            window.chatManager.switchChannel(currentChannel);
-                        }
-                        loginModal.classList.add('hidden');
-                    } else {
-                        currentUser = null;
-                        this.updateUIForLoggedOut();
-                        loginModal.classList.remove('hidden');
-                    }
-                }, (error) => {
-                    console.error("Auth error:", error);
-                });
-            }
-
-            updateUIForLoggedInUser(user) {
-                const userAvatar = document.querySelector('.user-avatar img');
-                const userName = document.querySelector('.user-info h3');
-                const userRole = document.querySelector('.user-info p');
-                const onlineStatus = document.querySelector('.online-status span');
-                const statusDot = document.querySelector('.status-dot');
-                
-                if (user.photoURL) {
-                    userAvatar.src = user.photoURL;
-                }
-                
-                userName.textContent = user.displayName || user.email.split('@')[0];
-                userRole.textContent = user.email;
-                
-                if (statusDot) {
-                    statusDot.classList.remove('bg-gray-500');
-                    statusDot.classList.add('bg-green-500');
-                }
-                if (onlineStatus) onlineStatus.textContent = 'Online';
-                
-                const loginBtn = document.querySelector('.login-btn[data-translate="login"]');
-                if (loginBtn) {
-                    loginBtn.textContent = 'Logout';
-                    loginBtn.onclick = (e) => {
-                        e.preventDefault();
-                        this.logout();
-                    };
-                }
-            }
-
-            updateUIForLoggedOut() {
-                const userAvatar = document.querySelector('.user-avatar img');
-                const userName = document.querySelector('.user-info h3');
-                const userRole = document.querySelector('.user-info p');
-                const onlineStatus = document.querySelector('.online-status span');
-                const statusDot = document.querySelector('.status-dot');
-                
-                if (userAvatar) userAvatar.src = 'img/girl.png';
-                if (userName) userName.textContent = 'Guest User';
-                if (userRole) userRole.textContent = 'Sign in to chat';
-                
-                if (statusDot) {
-                    statusDot.classList.remove('bg-green-500');
-                    statusDot.classList.add('bg-gray-500');
-                }
-                if (onlineStatus) onlineStatus.textContent = 'Offline';
-                
-                if (messagesContainer) {
-                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Please sign in to view messages</div>';
-                }
-                
-                const loginBtn = document.querySelector('.login-btn[data-translate="login"]');
-                if (loginBtn) {
-                    loginBtn.textContent = 'Login';
-                    loginBtn.onclick = null;
-                }
-                
-                if (unsubscribeMessages) {
-                    unsubscribeMessages();
-                    unsubscribeMessages = null;
-                }
-            }
-
-            async loginWithGoogle() {
-                try {
-                    const provider = new GoogleAuthProvider();
-                    const result = await signInWithPopup(auth, provider);
-                    console.log("✅ Google login successful");
-                    return result.user;
-                } catch (error) {
-                    console.error("Google login error:", error);
-                    this.showError("Google login failed");
-                    throw error;
-                }
-            }
-
-            async loginWithEmail(email, password) {
-                try {
-                    const result = await signInWithEmailAndPassword(auth, email, password);
-                    console.log("✅ Email login successful");
-                    return result.user;
-                } catch (error) {
-                    console.error("Email login error:", error.code);
-                    let errorMessage = "Login failed";
-                    switch(error.code) {
-                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
-                        case 'auth/user-not-found': errorMessage = "No account found"; break;
-                        case 'auth/wrong-password': errorMessage = "Wrong password"; break;
-                        case 'auth/too-many-requests': errorMessage = "Too many attempts"; break;
-                        default: errorMessage = "Login failed";
-                    }
-                    this.showError(errorMessage);
-                    throw error;
-                }
-            }
-
-            async signupWithEmail(email, password) {
-                try {
-                    const result = await createUserWithEmailAndPassword(auth, email, password);
-                    console.log("✅ Account created successfully");
-                    
-                    // Create user profile in Firestore
-                    try {
-                        await addDoc(collection(db, "users"), {
-                            uid: result.user.uid,
-                            email: result.user.email,
-                            displayName: result.user.email.split('@')[0],
-                            createdAt: serverTimestamp()
-                        });
-                    } catch (firestoreError) {
-                        console.warn("Note: User profile not saved to Firestore (optional)");
-                    }
-                    
-                    return result.user;
-                } catch (error) {
-                    console.error("Signup error:", error.code);
-                    let errorMessage = "Signup failed";
-                    switch(error.code) {
-                        case 'auth/email-already-in-use': errorMessage = "Email already in use"; break;
-                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
-                        case 'auth/weak-password': errorMessage = "Password too weak (min 6 chars)"; break;
-                        default: errorMessage = "Signup failed";
-                    }
-                    this.showError(errorMessage);
-                    throw error;
-                }
-            }
-
-            async logout() {
-                try {
-                    await signOut(auth);
-                    console.log("✅ Logout successful");
-                } catch (error) {
-                    console.error("Logout error:", error);
-                    this.showError("Logout failed");
-                }
-            }
-
-            showError(message) {
-                const errorDiv = document.getElementById('error-message');
-                if (errorDiv) {
-                    errorDiv.textContent = message;
-                    errorDiv.classList.remove('hidden');
-                    setTimeout(() => {
-                        errorDiv.textContent = '';
-                        errorDiv.classList.add('hidden');
-                    }, 5000);
-                } else {
-                    alert(message);
-                }
-            }
-        }
-
-        // Chat Manager
-        class ChatManager {
-            constructor() {
-                console.log("💬 ChatManager initialized");
-                this.setupEventListeners();
-            }
-
-            setupEventListeners() {
-                // Send message
-                if (sendButton) {
-                    sendButton.addEventListener('click', () => this.sendMessage());
-                }
-                
-                if (messageInput) {
-                    messageInput.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            this.sendMessage();
-                        }
-                    });
-                }
-
-                // Channel switching
-                document.querySelectorAll('.channel-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        document.querySelectorAll('.channel-item').forEach(i => {
-                            i.classList.remove('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
-                        });
-                        item.classList.add('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
-                        const channelId = item.getAttribute('data-channel');
-                        this.switchChannel(channelId);
-                    });
-                });
-
-                // Search functionality
-                if (searchBtn) {
-                    searchBtn.addEventListener('click', () => {
-                        searchModal.classList.remove('hidden');
-                        setTimeout(() => {
-                            if (searchModalInput) searchModalInput.focus();
-                        }, 100);
-                    });
-                }
-
-                const searchModalClose = document.getElementById('search-modal-close');
-                if (searchModalClose) {
-                    searchModalClose.addEventListener('click', () => {
-                        searchModal.classList.add('hidden');
-                        if (searchModalInput) searchModalInput.value = '';
-                        if (searchResults) {
-                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                        }
-                    });
-                }
-
-                if (searchModalInput) {
-                    searchModalInput.addEventListener('input', () => this.searchMessages());
-                }
-            }
-
-            async sendMessage() {
-                if (!currentUser) {
-                    alert("Please sign in to send messages");
-                    return;
-                }
-
-                const messageText = messageInput.value.trim();
-                if (!messageText) return;
-
-                try {
-                    const message = {
-                        text: messageText,
-                        senderId: currentUser.uid,
-                        senderName: currentUser.displayName || currentUser.email.split('@')[0],
-                        senderAvatar: currentUser.photoURL || '',
-                        channel: currentChannel,
-                        timestamp: serverTimestamp(),
-                        readBy: []
-                    };
-
-                    console.log("📨 Sending message to Firestore...");
-                    
-                    await addDoc(collection(db, "messages"), message);
-                    
-                    messageInput.value = '';
-                    messageInput.focus();
-                    console.log("✅ Message sent successfully!");
-                    
-                } catch (error) {
-                    console.error("❌ Error sending message:", error);
-                    alert("Failed to send message. Check console for details.");
-                }
-            }
-
-            switchChannel(channelId) {
-                console.log(`🔄 Switching to channel: #${channelId}`);
-                currentChannel = channelId;
-                
-                if (channelTitle) channelTitle.textContent = `#${channelId}`;
-                
-                const channelDescriptions = {
-                    ideas: "Share and discuss business ideas with the community",
-                    support: "Get answers to your questions and help others",
-                    partnerships: "Find collaborators and business partners",
-                    growth: "Discuss strategies for scaling your business",
-                    resources: "Share and discover helpful student resources"
-                };
-                
-                if (channelDescription && channelDescriptions[channelId]) {
-                    channelDescription.textContent = channelDescriptions[channelId];
-                }
-                
-                this.loadMessages(channelId);
-            }
-
-            loadMessages(channelId) {
-                console.log(`📥 Loading messages for #${channelId}...`);
-                
-                if (messagesContainer) {
-                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Loading messages...</div>';
-                }
-                
-                if (unsubscribeMessages) {
-                    unsubscribeMessages();
-                }
-                
-                try {
-                    const messagesQuery = query(
-                        collection(db, "messages"),
-                        where("channel", "==", channelId),
-                        orderBy("timestamp", "asc")
-                    );
-                    
-                    unsubscribeMessages = onSnapshot(messagesQuery, 
-                        (snapshot) => {
-                            console.log(`📊 Received ${snapshot.size} messages`);
-                            
-                            if (messagesContainer) {
-                                messagesContainer.innerHTML = '';
-                                
-                                if (snapshot.empty) {
-                                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">No messages yet. Be the first to say hi! 👋</div>';
-                                    return;
-                                }
-                                
-                                snapshot.forEach((doc) => {
-                                    const message = doc.data();
-                                    this.displayMessage(message);
-                                });
-                                
-                                setTimeout(() => {
-                                    if (messagesContainer) {
-                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                    }
-                                }, 100);
-                            }
-                        }, 
-                        (error) => {
-                            console.error("❌ Error loading messages:", error);
-                            
-                            // Check for index error
-                            if (error.code === 'failed-precondition') {
-                                console.error("⚠️ Firestore index required! Please create the composite index:");
-                                console.error("Collection: 'messages'");
-                                console.error("Fields indexed: 'channel' Ascending, 'timestamp' Ascending");
-                                console.error("Click the link in the error message to create it automatically.");
-                                
-                                if (messagesContainer) {
-                                    messagesContainer.innerHTML = `
-                                        <div class="text-red-500 text-center py-4">
-                                            <p class="font-bold">Firestore Index Required</p>
-                                            <p class="text-sm mt-2">Check browser console for details and click the link to create the index.</p>
-                                        </div>`;
-                                }
-                            } else {
-                                if (messagesContainer) {
-                                    messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Failed to load messages</div>';
-                                }
-                            }
-                        }
-                    );
-                } catch (error) {
-                    console.error("❌ Error setting up listener:", error);
-                    if (messagesContainer) {
-                        messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Error setting up chat</div>';
-                    }
-                }
-            }
-
-            displayMessage(message) {
-                if (!messagesContainer) return;
-                
-                const messageDiv = document.createElement('div');
-                const isCurrentUser = currentUser && message.senderId === currentUser.uid;
-                
-                messageDiv.className = `message flex max-w-[80%] ${isCurrentUser ? 'self-end flex-row-reverse' : 'self-start'}`;
-                
-                let timeString = 'Just now';
-                if (message.timestamp && message.timestamp.toDate) {
-                    try {
-                        const date = message.timestamp.toDate();
-                        timeString = this.formatTime(date);
-                    } catch (error) {
-                        console.error("Error formatting time:", error);
-                    }
-                }
-                
-                const avatarImg = message.senderAvatar || '';
-                const displayName = message.senderName || 'Anonymous';
-                
-                messageDiv.innerHTML = `
-                    <div class="message-avatar w-10 h-10 rounded-full flex items-center justify-center text-white mx-2 flex-shrink-0 overflow-hidden ${isCurrentUser ? 'bg-yellow-600' : 'bg-pink-300'}">
-                        ${avatarImg ? 
-                            `<img src="${avatarImg}" alt="${displayName}" class="w-full h-full object-cover" onerror="handleImageError(this)">` :
-                            `<span class="text-lg font-semibold">${displayName.charAt(0).toUpperCase()}</span>`
-                        }
-                    </div>
-                    <div class="message-content px-4 py-3 rounded-2xl shadow-sm ${isCurrentUser ? 'bg-pink-300 text-white rounded-tr-none' : 'bg-pink-100 rounded-tl-none'}">
-                        <div class="message-sender font-semibold text-sm mb-1 ${isCurrentUser ? 'text-gray-100' : 'text-pink-600'}">${displayName}</div>
-                        <div class="message-text text-sm">${message.text.replace(/\n/g, '<br>')}</div>
-                        <div class="message-time text-xs opacity-70 mt-1 text-right">${timeString}</div>
-                    </div>
-                `;
-                
-                messagesContainer.appendChild(messageDiv);
-            }
-
-            async searchMessages() {
-                const searchTerm = searchModalInput.value.trim().toLowerCase();
-                
-                if (!searchTerm) {
-                    if (searchResults) {
-                        searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                    }
-                    return;
-                }
-                
-                try {
-                    const messagesQuery = query(
-                        collection(db, "messages"),
-                        orderBy("timestamp", "desc")
-                    );
-                    
-                    const snapshot = await getDocs(messagesQuery);
-                    if (searchResults) {
-                        searchResults.innerHTML = '';
-                    }
-                    
-                    let foundMessages = [];
-                    
-                    snapshot.forEach((doc) => {
-                        const message = doc.data();
-                        if (message.text && message.text.toLowerCase().includes(searchTerm) || 
-                            message.senderName && message.senderName.toLowerCase().includes(searchTerm)) {
-                            foundMessages.push({...message, id: doc.id});
-                        }
-                    });
-                    
-                    if (foundMessages.length === 0) {
-                        if (searchResults) {
-                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">No messages found</div>';
-                        }
-                        return;
-                    }
-                    
-                    foundMessages.forEach((message) => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'search-result-item px-3 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors';
-                        resultItem.innerHTML = `
-                            <div class="search-result-sender font-bold text-pink-600">${message.senderName || 'Anonymous'}</div>
-                            <div class="search-result-text text-sm mt-1">${message.text || ''}</div>
-                            <div class="message-time text-xs text-gray-500 mt-1">${this.formatTime(message.timestamp?.toDate())} • #${message.channel || 'unknown'}</div>
-                        `;
-                        
-                        resultItem.addEventListener('click', () => {
-                            if (message.channel) {
-                                this.switchChannel(message.channel);
-                            }
-                            searchModal.classList.add('hidden');
-                            if (searchModalInput) searchModalInput.value = '';
-                            if (searchResults) searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                        });
-                        
-                        if (searchResults) {
-                            searchResults.appendChild(resultItem);
-                        }
-                    });
-                } catch (error) {
-                    console.error("Search error:", error);
-                    if (searchResults) {
-                        searchResults.innerHTML = '<div class="text-red-500 text-center py-4">Search failed</div>';
-                    }
-                }
-            }
-
-            formatTime(date) {
-                if (!date) return 'Just now';
-                
-                try {
-                    const now = new Date();
-                    const diffMs = now - date;
-                    const diffMins = Math.floor(diffMs / 60000);
-                    
-                    if (diffMins < 1) return 'Just now';
-                    if (diffMins < 60) return `${diffMins}m ago`;
-                    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
-                    
-                    return date.toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                } catch (error) {
-                    return 'Just now';
-                }
-            }
-        }
-
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("🚀 DOM loaded, initializing Girls Chat...");
-            
-            // Make managers globally available
-            window.authManager = new AuthManager();
-            window.chatManager = new ChatManager();
-
-            // Login modal event listeners
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            if (googleLoginBtn) {
-                googleLoginBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    try {
-                        const btn = googleLoginBtn;
-                        const originalText = btn.innerHTML;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-                        
-                        await window.authManager.loginWithGoogle();
-                        
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                    } catch (error) {
-                        const btn = googleLoginBtn;
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fab fa-google"></i> Sign in with Google';
-                    }
-                });
-            }
-            
-            // Email login
-            const emailLoginBtn = document.getElementById('email-login-btn');
-            if (emailLoginBtn) {
-                emailLoginBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('email-input')?.value.trim();
-                    const password = document.getElementById('password-input')?.value;
-                    
-                    if (!email) {
-                        window.authManager.showError("Please enter email");
-                        return;
-                    }
-                    
-                    if (!password) {
-                        window.authManager.showError("Please enter password");
-                        return;
-                    }
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        window.authManager.showError("Invalid email");
-                        return;
-                    }
-                    
-                    if (password.length < 6) {
-                        window.authManager.showError("Password too short (min 6)");
-                        return;
-                    }
-                    
-                    try {
-                        const btn = emailLoginBtn;
-                        const originalText = btn.textContent;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-                        
-                        await window.authManager.loginWithEmail(email, password);
-                        
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                        
-                    } catch (error) {
-                        const btn = emailLoginBtn;
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = 'Sign in with Email';
-                        }
-                    }
-                });
-            }
-            
-            // Signup button
-            const signupBtn = document.getElementById('signup-btn');
-            if (signupBtn) {
-                signupBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('email-input')?.value.trim();
-                    const password = document.getElementById('password-input')?.value;
-                    
-                    if (!email) {
-                        window.authManager.showError("Please enter email");
-                        return;
-                    }
-                    
-                    if (!password) {
-                        window.authManager.showError("Please enter password");
-                        return;
-                    }
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        window.authManager.showError("Invalid email");
-                        return;
-                    }
-                    
-                    if (password.length < 6) {
-                        window.authManager.showError("Password too short (min 6)");
-                        return;
-                    }
-                    
-                    try {
-                        const btn = signupBtn;
-                        const originalText = btn.textContent;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-                        
-                        await window.authManager.signupWithEmail(email, password);
-                        window.authManager.showError("✅ Account created! You are now signed in.");
-                        
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                        
-                    } catch (error) {
-                        const btn = signupBtn;
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = 'Create Account';
-                        }
-                    }
-                });
-            }
-
-            // Enter key support
-            const emailInput = document.getElementById('email-input');
-            const passwordInput = document.getElementById('password-input');
-            
-            if (emailInput) {
-                emailInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        if (emailLoginBtn) emailLoginBtn.click();
-                    }
-                });
-            }
-            
-            if (passwordInput) {
-                passwordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        if (emailLoginBtn) emailLoginBtn.click();
-                    }
-                });
-            }
-
-            // Set initial active channel
-            const initialChannel = document.querySelector('.channel-item[data-channel="ideas"]');
-            if (initialChannel) {
-                initialChannel.click();
-            }
-            
-            console.log("✅ Girls Chat initialization complete!");
-            console.log("👉 Next steps:");
-            console.log("1. Create Firestore Database in Firebase Console");
-            console.log("2. Test login/signup");
-            console.log("3. Send a message (might need to create an index)");
-        });
-
-        // Make functions available globally
-        window.handleImageError = handleImageError;
-        
-        // Global error handling
-        window.addEventListener('error', function(e) {
-            console.error('Global error:', e.error);
-        });
-    </script>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
-    <!-- Login Modal -->
-    <div class="login-modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[2000]" id="login-modal">
-        <div class="login-content bg-white p-8 rounded-2xl w-[90%] max-w-[400px] shadow-2xl">
-            <h2 class="text-pink-600 text-center text-2xl font-bold mb-6">Welcome to Girls Chat</h2>
-            
-            <button id="google-login-btn" class="w-full py-3 bg-blue-600 text-white rounded-lg mb-4 flex items-center justify-center gap-3 hover:bg-blue-700 transition-colors">
-                <i class="fab fa-google"></i> Sign in with Google
-            </button>
-            
-            <div class="divider relative my-6 text-center text-gray-600">
-                <span class="bg-white px-4 relative z-10">or</span>
-                <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-300 -translate-y-1/2 z-0"></div>
-            </div>
-            
-            <div id="email-form">
-                <input type="email" id="email-input" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                <input type="password" id="password-input" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                <button id="email-login-btn" class="w-full py-3 bg-pink-600 text-white rounded-lg mb-3 hover:bg-pink-700 transition-colors font-medium">Sign in with Email</button>
-                <button id="signup-btn" class="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium">Create New Account</button>
-            </div>
-            
-            <div id="error-message" class="text-red-500 text-center mt-3 min-h-[20px] text-sm hidden"></div>
-            
-            <p class="text-xs text-gray-600 mt-5 text-center">
-                By signing in, you agree to our Terms of Service and Privacy Policy
-            </p>
-        </div>
-    </div>
-
-    <!-- Modern Navigation -->
-    <nav class="navbar sticky top-0 z-[1000] bg-white shadow-md px-4 py-3 md:px-10 flex flex-wrap items-center justify-between">
+ 
+<body>
+    <!-- Fixed Navbar -->
+    <nav class="navbar">
         <div class="nav-logo">
-            <img src="./img/Girls Space (1) (1) (2).png" alt="Logo" class="w-16 h-12 object-contain rounded-full max-w-full" onerror="handleImageError(this)">
+            <img src="/img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo">
         </div>
-        
-        <div class="hamburger flex flex-col gap-1 cursor-pointer z-[1001] md:hidden">
-            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
-            <span class="w-7 h-1 bg-gray-700 rounded transition-opacity"></span>
-            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        
-        <ul class="nav-links fixed top-0 left-[-100%] w-72 h-full bg-white flex flex-col gap-5 p-6 pt-20 shadow-xl transition-transform md:static md:w-auto md:h-auto md:flex-row md:items-center md:gap-4 md:p-0 md:shadow-none md:translate-x-0">
-            <li><a href="./index.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Home</a></li>
-            <li><a href="./AboutUs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">About</a></li>
-            <li><a href="./chat.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Chat</a></li>
-            <li><a href="./stoies.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Stories</a></li>
-            <li><a href="./learning_programs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Programs</a></li>
-            <li><a href="./protection.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Support</a></li>
-            
-            <li class="dropdown relative">
-                <a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Languages <i class="fas fa-chevron-down"></i></a>
-                <ul class="dropdown-menu absolute top-full left-0 bg-white shadow-xl rounded-lg min-w-[130px] p-2 z-[1000] hidden">
-                    <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors">English</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors">Arabic</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors">Swahili</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors">French</a></li>
-                    <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors">Kinyarwanda</a></li>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="./index.html" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" data-translate="about">About</a></li>
+            <li><a href="./chat.html" data-translate="chat">Chat</a></li>
+            <li><a href="./stories.html" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs.html" data-translate="programs">Programs</a></li>
+            <li><a href=" ./support.html" data-translate="support">Support</a></li>
+
+            <!-- Language Dropdown -->
+            <li class="dropdown" id="language-dropdown">
+                <a href="#" data-translate="languages">Languages</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
-            
-            <li><a href="#" class="login-btn px-4 py-2 border border-pink-500 text-pink-500 font-semibold rounded-full hover:bg-pink-50 transition-colors">Login</a></li>
-            <li><a href="./Donate.html" class="donate-btn px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-full hover:shadow-lg transition-shadow">Donate</a></li>
+            <li><a href="./login.html" class="login-btn" data-translate="login">Log In</a></li>
+            <li><a href="Donate.html " class="donate-btn" data-translate="donate">Donate</a></li>
         </ul>
-        
-        <div class="nav-overlay fixed inset-0 bg-black bg-opacity-50 hidden z-[999] md:hidden"></div>
+
+        <div class="nav-search">
+            <input type="text" placeholder="Search..." data-translate="search">
+        </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content flex-grow flex items-center justify-center p-5">
-        <div class="chat-container w-full max-w-7xl h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
-            <!-- Sidebar -->
-            <div class="sidebar w-full md:w-1/3 lg:w-1/4 bg-pink-100 border-r border-gray-300 flex flex-col">
-                <div class="sidebar-header bg-pink-600 text-white text-center p-5">
-                    <h2 class="text-xl font-bold mb-1">Let's Chat</h2>
-                    <p class="text-sm opacity-80">Connect with fellow entrepreneurs</p>
-                </div>
-                
-                <div class="user-profile flex items-center p-4 border-b border-gray-300">
-                    <div class="user-avatar w-12 h-12 rounded-full flex items-center justify-center text-white mr-4 overflow-hidden flex-shrink-0">
-                        <img src="img/girl.png" alt="User Avatar" class="w-full h-full object-cover" onerror="handleImageError(this)">
-                    </div>
-                    <div class="user-info flex-1 min-w-0">
-                        <h3 class="font-semibold text-sm truncate">Guest User</h3>
-                        <p class="text-xs text-gray-600 truncate">Sign in to chat</p>
-                        <div class="online-status flex items-center mt-1">
-                            <div class="status-dot w-2 h-2 rounded-full bg-gray-500 mr-1"></div>
-                            <span class="text-xs">Offline</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="sidebar-tabs flex border-b border-gray-300">
-                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 bg-white text-pink-600 border-b-2 border-pink-600" data-tab="channels">Channels</div>
-                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 hover:bg-gray-50 transition-colors" data-tab="people">People</div>
-                </div>
-                
-                <div class="channels flex-1 overflow-y-auto p-5">
-                    <h3 class="text-blue-500 font-semibold text-sm mb-4 flex items-center">
-                        <i class="fas fa-hashtag mr-2"></i> Discussion Channels
-                    </h3>
-                    <ul class="channel-list space-y-3">
-                        <li class="channel-item bg-white shadow border-l-4 border-pink-600 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md flex items-center" data-channel="ideas">
-                            <div class="channel-icon w-9 h-9 rounded-full bg-yellow-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
-                                <i class="fas fa-lightbulb"></i>
-                            </div>
-                            <div class="channel-info flex-1 min-w-0">
-                                <h4 class="font-semibold text-sm text-black truncate">Ideas & Brainstorming</h4>
-                                <p class="text-xs text-gray-600 truncate">23 members</p>
-                            </div>
-                        </li>
-                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="support">
-                            <div class="channel-icon w-9 h-9 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
-                                <i class="fas fa-question-circle"></i>
-                            </div>
-                            <div class="channel-info flex-1 min-w-0">
-                                <h4 class="font-semibold text-sm text-black truncate">Q&A Support</h4>
-                                <p class="text-xs text-gray-600 truncate">45 members</p>
-                            </div>
-                        </li>
-                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="partnerships">
-                            <div class="channel-icon w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
-                                <i class="fas fa-handshake"></i>
-                            </div>
-                            <div class="channel-info flex-1 min-w-0">
-                                <h4 class="font-semibold text-sm text-black truncate">Partnerships</h4>
-                                <p class="text-xs text-gray-600 truncate">18 members</p>
-                            </div>
-                        </li>
-                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="growth">
-                            <div class="channel-icon w-9 h-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <div class="channel-info flex-1 min-w-0">
-                                <h4 class="font-semibold text-sm text-black truncate">Growth Strategies</h4>
-                                <p class="text-xs text-gray-600 truncate">32 members</p>
-                            </div>
-                        </li>
-                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="resources">
-                            <div class="channel-icon w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <div class="channel-info flex-1 min-w-0">
-                                <h4 class="font-semibold text-sm text-black truncate">Student Resources</h4>
-                                <p class="text-xs text-gray-600 truncate">56 members</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Chat Area -->
-            <div class="chat-area flex-grow flex flex-col min-w-0">
-                <div class="chat-header bg-gray-50 border-b border-gray-300 p-5 flex items-center justify-between">
-                    <div class="chat-title flex-1 min-w-0">
-                        <h2 id="channel-title" class="text-blue-500 text-lg font-semibold truncate">#ideas</h2>
-                        <p id="channel-description" class="text-xs text-gray-600 mt-1 truncate">Share and discuss business ideas with the community</p>
-                    </div>
-                    <div class="chat-actions flex gap-4 items-center flex-shrink-0">
-                        <button id="search-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="Search messages">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <button class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="More options">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="messages flex-grow p-5 overflow-y-auto flex flex-col gap-5" id="messages-container">
-                    <div class="text-gray-500 text-center py-4">Please sign in to view messages</div>
-                </div>
-                
-                <div class="message-input border-t border-gray-300 p-5 flex items-center gap-3">
-                    <input type="text" id="message-input" placeholder="Type your message here..." class="flex-grow p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 transition-colors min-w-0" aria-label="Type your message">
-                    <button class="send-button bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors flex-shrink-0" id="send-button" aria-label="Send message">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <main class="containers">
+        <section class="chat">
+            <h2 data-translate="safeChatRooms">Safe Chat Rooms</h2>
+            <p data-translate="chatDescription">Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.</p>
 
-    <!-- Search Modal -->
-    <div class="search-modal hidden fixed inset-0 bg-black bg-opacity-80 z-[2000] items-center justify-center" id="search-modal">
-        <div class="search-modal-content bg-white p-5 rounded-lg w-[90%] max-w-[500px] max-h-[80vh] overflow-hidden flex flex-col">
-            <div class="search-modal-header flex justify-between items-center mb-4">
-                <h3 class="text-pink-600 font-semibold text-lg">Search Messages</h3>
-                <button class="search-modal-close bg-transparent border-none text-2xl text-gray-600 cursor-pointer hover:text-pink-600" id="search-modal-close" aria-label="Close search">&times;</button>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-image"><img src="./img/confident.png" width="370" height="200" alt=""></div>
+                    <div class="card-content">
+                        <h3 data-translate="confidenceCorner">Confidence Corner</h3>
+                        <p data-translate="confidenceDescription">Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.</p>
+                        <p class="muted" data-translate="confidenceStats">👥 245 online • Active</p>
+                        <a class="btn btn-primary" href="./confident.html" data-translate="joinChat">Join Chat</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"><img src="./img/hellthe.png" width="370" height="200" alt=""></div>
+                    <div class="card-content">
+                        <h3 data-translate="healthWellness">Health & Wellness</h3>
+                        <p data-translate="healthDescription">Discuss health topics in a safe space with trained moderators and healthcare professionals.</p>
+                        <p class="muted" data-translate="healthStats">👥 89 online • Active</p>
+                        <a class="btn btn-primary" href="/heathwellness.html" data-translate="joinStudy">Join Study</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"> <img src="./img/gals.png" width="370" height="200" alt=""></div>
+                    <div class="card-content">
+                        <h3 data-translate="dreamsGoals">Dreams & Goals</h3>
+                        <p data-translate="dreamsDescription">Share aspirations and support each other in achieving personal and professional goals.</p>
+                        <p class="muted" data-translate="dreamsStats">Private • Secure</p>
+                        <a class="btn btn-outline" href="./derames.html" data-translate="requestAccess">Request Access</a>
+                    </div>
+                </div>
             </div>
-            <input type="text" class="search-modal-input w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 mb-4" id="search-modal-input" placeholder="Type to search messages..." aria-label="Search messages">
-            <div class="search-results max-h-[300px] overflow-y-auto no-scrollbar" id="search-results">
-                <div class="text-gray-500 text-center py-4">Enter a search term to find messages</div>
-            </div>
-        </div>
-    </div>
+        </section> 
+    </main>
 
     <!-- Footer -->
-    <footer class="footer bg-black text-gray-300 py-12 px-6">
-        <div class="container max-w-7xl mx-auto">
-            <div class="footer-main grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-                <div class="footer-left flex flex-col gap-4">
-                    <div class="footer-logo-section flex items-center gap-3">
-                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo w-12 h-12 object-contain rounded-full border-2 border-pink-500" onerror="handleImageError(this)">
-                        <p class="footer-subtitle font-semibold text-pink-400 text-base">Empowering Girls, Building Futures</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
                     </div>
-                    <p class="footer-desc text-sm text-gray-400 max-w-[360px]">
+                    <p class="footer-desc" data-translate="footerDescription">
                         A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
                     </p>
-                    <div class="social-links flex gap-3">
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="YouTube">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title text-white font-semibold text-lg mb-4">Quick Links</h4>
-                    <ul class="links-list space-y-3">
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Join Chat</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Share Story</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Programs</a></li>
+                    <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title text-white font-semibold text-lg mb-4">Get Help</h4>
-                    <ul class="links-list space-y-3">
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Emergency</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Support</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Report</a></li>
+                    <h4 class="links-title" data-translate="getHelp">Get Help</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="footer-bottom pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                <div class="footer-left-info flex flex-col gap-2">
-                    <p class="text-sm">© 2025 GirlsSpace Mahama. <span class="text-pink-400 font-medium">Empowering girls, always.</span></p>
-                    <p class="text-xs text-gray-400">Firebase Chat Application - Connected to chat-room-5c3e5</p>
+            <div class="footer-bottom">
+                <div class="footer-left-info">
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
                 </div>
-                <div class="footer-right-info text-left md:text-right">
-                    <p class="text-sm">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-                    <p class="text-sm mt-1">Supported by UNHCR, Save The Children, Alight</p>
+                <div class="footer-right-info">
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                login: "Log In",
+                donate: "Donate",
+                search: "Search...",
+                safeChatRooms: "Safe Chat Rooms",
+                chatDescription: "Join moderated, secure chat rooms. Share experiences and support each other in a safe, empowering environment.",
+                confidenceCorner: "Confidence Corner",
+                confidenceDescription: "Build self-esteem and share confidence tips in a supportive community dedicated to personal growth.",
+                confidenceStats: "👥 245 online • Active",
+                joinChat: "Join Chat",
+                healthWellness: "Health & Wellness",
+                healthDescription: "Discuss health topics in a safe space with trained moderators and healthcare professionals.",
+                healthStats: "👥 89 online • Active",
+                joinStudy: "Join Study",
+                dreamsGoals: "Dreams & Goals",
+                dreamsDescription: "Share aspirations and support each other in achieving personal and professional goals.",
+                dreamsStats: "Private • Secure",
+                requestAccess: "Request Access",
+                empoweringGirls: "Empowering Girls, Building Futures",
+                footerDescription: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+                quickLinks: "Quick Links",
+                joinChatFooter: "Join Chat",
+                shareStory: "Share Story",
+                programsFooter: "Programs",
+                getHelp: "Get Help",
+                emergency: "Emergency",
+                supportFooter: "Support",
+                report: "Report",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Empowering girls, always.",
+                availableLanguages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+                supportedBy: "Supported by UNHCR, Save The Children, Alight"
+            },
+            ar: {
+                home: "الصفحة الرئيسية",
+                about: "حول",
+                chat: "الدردشة",
+                stories: "القصص",
+                programs: "البرامج",
+                support: "الدعم",
+                languages: "اللغات",
+                login: "تسجيل الدخول",
+                donate: "تبرع",
+                search: "بحث...",
+                safeChatRooms: "غرف الدردشة الآمنة",
+                chatDescription: "انضم إلى غرف الدردشة الآمنة والمُدارة. شارك التجارب وادعم بعضكما البعض في بيئة آمنة ومُمكنة.",
+                confidenceCorner: "ركن الثقة",
+                confidenceDescription: "ابني احترام الذات وشارك نصائح الثقة في مجتمع داعم مخصص للنمو الشخصي.",
+                confidenceStats: "👥 245 متصل • نشط",
+                joinChat: "انضم للدردشة",
+                healthWellness: "الصحة والعافية",
+                healthDescription: "ناقش مواضيع الصحة في مساحة آمنة مع مشرفين مدربين ومتخصصين في الرعاية الصحية.",
+                healthStats: "👥 89 متصل • نشط",
+                joinStudy: "انضم للدراسة",
+                dreamsGoals: "الأحلام والأهداف",
+                dreamsDescription: "شارك الطموحات وادعم بعضكما البعض في تحقيق الأهداف الشخصية والمهنية.",
+                dreamsStats: "خاص • آمن",
+                requestAccess: "طلب الوصول",
+                empoweringGirls: "تمكين الفتيات، بناء المستقبل",
+                footerDescription: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
+                quickLinks: "روابط سريعة",
+                joinChatFooter: "انضم للدردشة",
+                shareStory: "شارك قصة",
+                programsFooter: "البرامج",
+                getHelp: "احصل على المساعدة",
+                emergency: "طوارئ",
+                supportFooter: "الدعم",
+                report: "الإبلاغ",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "تمكين الفتيات، دائماً.",
+                availableLanguages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+                supportedBy: "بدعم من UNHCR، Save The Children، Alight"
+            },
+            sw: {
+                home: "Nyumbani",
+                about: "Kuhusu",
+                chat: "Gumzo",
+                stories: "Hadithi",
+                programs: "Mipango",
+                support: "Usaidizi",
+                languages: "Lugha",
+                login: "Ingia",
+                donate: "Changia",
+                search: "Tafuta...",
+                safeChatRooms: "Vyanzo Vya Mazungumzo Salama",
+                chatDescription: "Jiunge na vyumba vya mazungumzo vilivyodhibitiwa na salama. Shiriki uzoefu na kusaidiana katika mazingira salama na yenye kuwezesha.",
+                confidenceCorner: "Kona ya Ujasiri",
+                confidenceDescription: "Jenga kujithamini na shiriki vidokezo vya ujasiri katika jamii ya kuunga mkono iliyojitolea kwa ukuaji wa kibinafsi.",
+                confidenceStats: "👥 245 wako mtandaoni • Inatumika",
+                joinChat: "Jiunge na Mazungumzo",
+                healthWellness: "Afya na Ustawi",
+                healthDescription: "Jadili mada za kiafya katika nafasi salama na wakaguzi waliofunzwa na wataalamu wa afya.",
+                healthStats: "👥 89 wako mtandaoni • Inatumika",
+                joinStudy: "Jiunge na Somo",
+                dreamsGoals: "Ndoto na Malengo",
+                dreamsDescription: "Shiriki matarajio na kusaidiana katika kufikia malengo ya kibinafsi na ya kikazi.",
+                dreamsStats: "Privat • Salama",
+                requestAccess: "Omba Ruhusa",
+                empoweringGirls: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+                footerDescription: "Kimbilio la kidijitali salama ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuwasiliana, kujifunza, kukua, na kustawi.",
+                quickLinks: "Viungo vya Haraka",
+                joinChatFooter: "Jiunge na Mazungumzo",
+                shareStory: "Shiriki Hadithi",
+                programsFooter: "Mipango",
+                getHelp: "Pata Usaidizi",
+                emergency: "Dharura",
+                supportFooter: "Usaidizi",
+                report: "Ripoti",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Kuwawezesha wasichana, kila wakati.",
+                availableLanguages: "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+                supportedBy: "Inasaidiwa na UNHCR, Save The Children, Alight"
+            },
+            fr: {
+                home: "Accueil",
+                about: "À propos",
+                chat: "Chat",
+                stories: "Histoires",
+                programs: "Programmes",
+                support: "Soutien",
+                languages: "Langues",
+                login: "Connexion",
+                donate: "Faire un don",
+                search: "Rechercher...",
+                safeChatRooms: "Salons de discussion sécurisés",
+                chatDescription: "Rejoignez des salons de discussion modérés et sécurisés. Partagez des expériences et soutenez-vous mutuellement dans un environnement sûr et responsabilisant.",
+                confidenceCorner: "Coin de la Confiance",
+                confidenceDescription: "Développez l'estime de soi et partagez des conseils de confiance dans une communauté de soutien dédiée à la croissance personnelle.",
+                confidenceStats: "👥 245 en ligne • Actif",
+                joinChat: "Rejoindre le chat",
+                healthWellness: "Santé et bien-être",
+                healthDescription: "Discutez de sujets de santé dans un espace sûr avec des modérateurs formés et des professionnels de santé.",
+                healthStats: "👥 89 en ligne • Actif",
+                joinStudy: "Rejoindre l'étude",
+                dreamsGoals: "Rêves et objectifs",
+                dreamsDescription: "Partagez des aspirations et soutenez-vous mutuellement pour atteindre des objectifs personnels et professionnels.",
+                dreamsStats: "Privé • Sécurisé",
+                requestAccess: "Demander l'accès",
+                empoweringGirls: "Autonomiser les filles, construire l'avenir",
+                footerDescription: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
+                quickLinks: "Liens rapides",
+                joinChatFooter: "Rejoindre le chat",
+                shareStory: "Partager une histoire",
+                programsFooter: "Programmes",
+                getHelp: "Obtenir de l'aide",
+                emergency: "Urgence",
+                supportFooter: "Soutien",
+                report: "Signaler",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Autonomiser les filles, toujours.",
+                availableLanguages: "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
+                supportedBy: "Soutenu par UNHCR, Save The Children, Alight"
+            },
+            rw: {
+                home: "Ahabanza",
+                about: "Abo",
+                chat: "Kuganira",
+                stories: "Inkuru",
+                programs: "Porogaramu",
+                support: "Gushigikira",
+                languages: "Indimi",
+                login: "Injira",
+                donate: "Tanga",
+                search: "Shakisha...",
+                safeChatRooms: "Ibyumba byo Kuganira Biteganyijwe",
+                chatDescription: "Winjire mu byumba byo kuganira byagenzuwe kandi bitunganye. Sanga ibitekerezo kandi wushigikire undi muri ako gace gato kazira kandi gashishikaje.",
+                confidenceCorner: "Ikibuga cy'Ubwizige",
+                confidenceDescription: "Kura ubwizige no gusangira inama z'ubwizige mu muryango ushyigikiye ushinzwe iterambere ry'umuntu.",
+                confidenceStats: "👥 245 kumurongo • Bikora",
+                joinChat: "Injira mu Kuganira",
+                healthWellness: "Ubuzima n'Iterambere",
+                healthDescription: "Suzuma iby'ubuzima mu gace kazira hamwe n'abategura baratoje n'abenegihugu mu buzima.",
+                healthStats: "👥 89 kumurongo • Bikora",
+                joinStudy: "Injira mu Isomo",
+                dreamsGoals: "Ibyifuzo n'Ibitego",
+                dreamsDescription: "Sangira ibyo ushaka kandi wushigikire undi mu gushyika ku bitego by'umuntu n'ibikorwa.",
+                dreamsStats: "Yihariye • Yizewe",
+                requestAccess: "Saba Uruhushya",
+                empoweringGirls: "Guharanira Abakobwa, Kubaka Ejo Hazaza",
+                footerDescription: "Ubuturo bwo kumurongo bwiteganyijwe aho abakobwa bo mu gituza cy'abimukira cya Mahama bashobora guhuza, kwiga, gukura, no gukura neza.",
+                quickLinks: "Ihuza vya Vuba",
+                joinChatFooter: "Injira mu Kuganira",
+                shareStory: "Sangira Inkuru",
+                programsFooter: "Porogaramu",
+                getHelp: "Shaka Ubufasha",
+                emergency: "Gihutirwa",
+                supportFooter: "Gushigikira",
+                report: "Raporo",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Guharanira abakobwa, buri gihe.",
+                availableLanguages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+                supportedBy: "Byashyigikiwe na UNHCR, Save The Children, Alight"
+            }
+        };
+
+        // Current language
+        let currentLang = 'en';
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.getElementById('nav-links');
+            const languageDropdown = document.getElementById('language-dropdown');
+            const languageLinks = document.querySelectorAll('.dropdown-menu a[data-lang]');
+
+            // Toggle mobile menu
+            mobileMenu.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Handle dropdown on mobile
+            if (languageDropdown) {
+                languageDropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        this.classList.toggle('active');
+                    }
+                });
+            }
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                }
+            });
+
+            // Language switching functionality
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+
+            // Initialize with English
+            changeLanguage('en');
+        });
+
+        // Function to change language
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update all elements with data-translate attribute
+            const translatableElements = document.querySelectorAll('[data-translate]');
+            translatableElements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                    
+                    // Update placeholder for search input
+                    if (element.tagName === 'INPUT' && element.getAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    }
+                }
+            });
+            
+            // Update the language dropdown text
+            const languageLink = document.querySelector('#language-dropdown > a');
+            if (languageLink && translations[lang] && translations[lang]['languages']) {
+                languageLink.textContent = translations[lang]['languages'];
+            }
+        }
+    </script>
 </body>
 </html>
