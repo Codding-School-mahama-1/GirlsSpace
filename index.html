@@ -344,27 +344,27 @@
           <ul class="text-gray-300 text-sm space-y-1 mb-4">
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.gbv">Preventing Gender-Based Violence (GBV)</span>
+              <span data-translate="services.programs.gbv">منع  العنف القائم على النوع الاجتماعي  (GBV)  </span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.languages">Learning languages</span>
+              <span data-translate="services.programs.languages">تعلم اللغات</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.lifeSkills">Life skills</span>
+              <span data-translate="services.programs.lifeSkills">مهارات الحياة</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.professional">Professional Skills</span>
+              <span data-translate="services.programs.professional">المهارات المهنية</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.health">Health and well-being</span>
+              <span data-translate="services.programs.health">الصحة والرفاه</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-circle text-primary text-xs mr-2"></i>
-              <span data-translate="services.programs.entrepreneurship">Entrepreneurship</span>
+              <span data-translate="services.programs.entrepreneurship">ريادة الأعمال</span>
             </li>
           </ul>
           <a href="./Learning_Programs.html" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors">
@@ -771,7 +771,7 @@
         title: "GBV Prevention",
         description: "Learn about gender-based violence prevention and protection",
         category: "Protection",
-        url: "./GBV.html",
+        url: "./protection.html",
         tags: ["gbv", "prevention", "safety"]
       }
     ];
@@ -1084,5 +1084,50 @@
   });
 </script>
  <script type="module" src="firebase.js"></script>
+ <script type="module" src="./auth-ui.js"></script>
+ <!-- Add this at the VERY END of your index.html, just before </body> -->
+<script type="module">
+  import { initAuth, setupLogout } from './firebaseauth.js';
+  
+  // Add a small delay to ensure DOM is fully loaded
+  setTimeout(() => {
+    console.log('🚀 Initializing authentication on index.html');
+    initAuth();
+    setupLogout();
+  }, 100);
+</script>
+// Add this script to index.html
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check localStorage for user
+    const userData = localStorage.getItem('girlspaceUser');
+    
+    if (userData) {
+        // User is logged in
+        const loginButtons = document.querySelectorAll('a[href="./login.html"]');
+        loginButtons.forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-user-circle mr-2"></i> My Profile';
+            btn.href = './profile.html';
+            btn.classList.remove('border-2', 'border-primary', 'text-primary');
+            btn.classList.add('bg-primary', 'text-white', 'px-4', 'py-2', 'rounded-full');
+        });
+        
+        // Add logout button if not exists
+        // if (!document.getElementById('logoutBtn')) {
+        //     const logoutBtn = document.createElement('button');
+        //     logoutBtn.id = 'logoutBtn';
+        //     logoutBtn.className = 'ml-2 px-3 py-1 bg-red-500 text-white rounded text-sm';
+        //     logoutBtn.textContent = 'Logout';
+        //     logoutBtn.onclick = () => {
+        //         localStorage.removeItem('girlspaceUser');
+        //         window.location.reload();
+        //     };
+            
+        //     const nav = document.querySelector('.hidden.lg\\:flex.items-center.gap-6');
+        //     if (nav) nav.appendChild(logoutBtn);
+        // }
+    }
+});
+</script>
 </body>
 </html>

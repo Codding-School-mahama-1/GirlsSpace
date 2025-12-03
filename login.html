@@ -108,15 +108,16 @@
             <a href="./Forgot_password.html" class="text-primary hover:underline font-medium">Forgot password?</a>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-3">
-            <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition">
-              Login
-            </button>
-            <button type="button" onclick="window.location.href='signup.html'"
-                    class="flex-1 px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition">
-              Sign Up
-            </button>
-          </div>
+              <!-- In your login.html, update the button section: -->
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition">
+                  Login
+                </button>
+                <button type="button" onclick="window.location.href='signup.html'"
+                        class="flex-1 px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition">
+                  Sign Up
+                </button>
+              </div>
         </form>
       </div>
     </div>
@@ -172,14 +173,14 @@
       setupSignIn();
     });
   </script>
-  <script type="module" src="./auth-ui.js"></script>
-    <script type="module">
-    import { setupSignIn } from './firebase.js';
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Login page loaded, initializing sign in...');
-      setupSignIn();
-    });
-  </script>
+<!-- Replace your existing login form script with: -->
+<script type="module">
+  import { setupSignIn } from './firebase.js';
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Login page loaded, initializing sign in...');
+    setupSignIn();
+  });
+</script>
 </body>
 </html>

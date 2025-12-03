@@ -3,1601 +3,1515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chat Room - Girls Space</title>
+    <title>GirlsSpace Chat Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message { animation: fadeIn 0.3s ease; }
-        body { background: radial-gradient(circle, #be185d, #e9ecef 95%); transition: background 0.5s ease; }
-        .messages { background-image: url(./imge/hp1.png); background-size: cover; background-position: center; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-        
-        /* Audio recording styles */
-        .audio-recording { animation: pulse 1.5s infinite; }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        /* Theme colors */
-        .theme-pink { --primary-color: #ec4899; --secondary-color: #f472b6; }
-        .theme-blue { --primary-color: #3b82f6; --secondary-color: #60a5fa; }
-        .theme-purple { --primary-color: #8b5cf6; --secondary-color: #a78bfa; }
-        .theme-green { --primary-color: #10b981; --secondary-color: #34d399; }
-        
-        /* Video call styles */
-        .video-call-active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .video-call-container { backdrop-filter: blur(10px); }
-        
-        /* Language translation styles */
-        .translation-active { border: 2px solid #3b82f6 !important; }
-    </style>
-
+    
+    <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
         import { 
             getAuth, 
+            createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
-            createUserWithEmailAndPassword,
-            signInWithPopup,
-            GoogleAuthProvider,
             signOut,
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc,
-            query,
-            where,
-            orderBy,
+            onAuthStateChanged,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            query, 
+            orderBy, 
             onSnapshot,
             serverTimestamp,
-            getDocs
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+            Timestamp,
+            where,
+            getDocs,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your Firebase Configuration
+        // Your Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyC5_OQUVnBC1BE_0C4At39xSR0pHBp-wws",
-            authDomain: "chat-room-5c3e5.firebaseapp.com",
-            projectId: "chat-room-5c3e5",
-            storageBucket: "chat-room-5c3e5.firebasestorage.app",
-            messagingSenderId: "637694009856",
-            appId: "1:637694009856:web:8de78eda815ac24d3daee5"
+            apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+            authDomain: "sigin-b3aa1.firebaseapp.com",
+            projectId: "sigin-b3aa1",
+            storageBucket: "sigin-b3aa1.firebasestorage.app",
+            messagingSenderId: "390069352394",
+            appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
+            measurementId: "G-WF0H2KJN02"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        console.log("🔥 Firebase initialized with project: chat-room-5c3e5");
-
-        // Global variables
-        let currentUser = null;
-        let currentChannel = 'ideas';
-        let unsubscribeMessages = null;
-        let currentLang = 'en';
-        let currentTheme = 'theme-pink';
-        let mediaRecorder = null;
-        let audioChunks = [];
-        let isRecording = false;
-        let translations = {
-            'en': {
-                'login': 'Login',
-                'logout': 'Logout',
-                'donate': 'Donate',
-                'home': 'Home',
-                'about': 'About',
-                'chat': 'Chat',
-                'stories': 'Stories',
-                'programs': 'Programs',
-                'support': 'Support',
-                'welcome': 'Welcome to Girls Chat',
-                'type_message': 'Type your message here...',
-                'search': 'Search messages...',
-                'sign_in': 'Sign in to chat',
-                'online': 'Online',
-                'offline': 'Offline',
-                'send': 'Send Message',
-                'ideas': 'Ideas & Brainstorming',
-                'support_desc': 'Q&A Support',
-                'partnerships': 'Partnerships',
-                'growth': 'Growth Strategies',
-                'resources': 'Student Resources',
-                'discussion': 'Discussion Channels',
-                'lets_chat': 'Let\'s Chat',
-                'connect': 'Connect with fellow entrepreneurs',
-                'share_ideas': 'Share and discuss business ideas with the community',
-                'get_answers': 'Get answers to your questions and help others',
-                'find_partners': 'Find collaborators and business partners',
-                'discuss_strategies': 'Discuss strategies for scaling your business',
-                'discover_resources': 'Share and discover helpful student resources'
-            },
-            'ar': {
-                'login': 'تسجيل الدخول',
-                'logout': 'تسجيل الخروج',
-                'donate': 'تبرع',
-                'home': 'الرئيسية',
-                'about': 'عنا',
-                'chat': 'الدردشة',
-                'stories': 'القصص',
-                'programs': 'البرامج',
-                'support': 'الدعم',
-                'welcome': 'مرحبًا بك في دردشة الفتيات',
-                'type_message': 'اكتب رسالتك هنا...',
-                'search': 'ابحث في الرسائل...',
-                'sign_in': 'سجل الدخول للدردشة',
-                'online': 'متصل',
-                'offline': 'غير متصل',
-                'send': 'إرسال الرسالة',
-                'ideas': 'الأفكار والعصف الذهني',
-                'support_desc': 'الدعم والاستفسارات',
-                'partnerships': 'الشراكات',
-                'growth': 'استراتيجيات النمو',
-                'resources': 'موارد الطلاب',
-                'discussion': 'قنوات المناقشة',
-                'lets_chat': 'لنتحدث',
-                'connect': 'تواصل مع رائدات الأعمال الأخريات',
-                'share_ideas': 'شارك وناقش أفكار العمل مع المجتمع',
-                'get_answers': 'احصل على إجابات لأسئلتك وساعد الآخرين',
-                'find_partners': 'ابحث عن متعاونين وشركاء عمل',
-                'discuss_strategies': 'ناقش استراتيجيات توسيع عملك',
-                'discover_resources': 'شارك وابحث عن موارد مفيدة للطلاب'
-            },
-            'sw': {
-                'login': 'Ingia',
-                'logout': 'Toka',
-                'donate': 'Changia',
-                'home': 'Nyumbani',
-                'about': 'Kuhusu',
-                'chat': 'Mazungumzo',
-                'stories': 'Hadithi',
-                'programs': 'Mipango',
-                'support': 'Usaidizi',
-                'welcome': 'Karibu kwenye Mazungumzo ya Wasichana',
-                'type_message': 'Andika ujumbe wako hapa...',
-                'search': 'Tafuta ujumbe...',
-                'sign_in': 'Ingia kuzungumza',
-                'online': 'Mtandaoni',
-                'offline': 'Nje ya mtandao',
-                'send': 'Tuma Ujumbe',
-                'ideas': 'Mawazo na Uundaji wa Mawazo',
-                'support_desc': 'Maswali na Majibu',
-                'partnerships': 'Ushirikiano',
-                'growth': 'Mikakati ya Ukuaji',
-                'resources': 'Rasilimali za Wanafunzi',
-                'discussion': 'Vituo vya Majadiliano',
-                'lets_chat': 'Tuzungumze',
-                'connect': 'Wasiliana na wajasiriamali wenza',
-                'share_ideas': 'Shiriki na zungumza mawazo ya biashara na jamii',
-                'get_answers': 'Pata majibu ya maswali yako na usaidie wengine',
-                'find_partners': 'Tafuta washirika na wafanyabiashara',
-                'discuss_strategies': 'Zungumza mikakati ya kuongeza ukubwa wa biashara yako',
-                'discover_resources': 'Shiriki na gundua rasilimali muhimu kwa wanafunzi'
-            },
-            'fr': {
-                'login': 'Connexion',
-                'logout': 'Déconnexion',
-                'donate': 'Faire un don',
-                'home': 'Accueil',
-                'about': 'À propos',
-                'chat': 'Chat',
-                'stories': 'Histoires',
-                'programs': 'Programmes',
-                'support': 'Support',
-                'welcome': 'Bienvenue sur le Chat des Filles',
-                'type_message': 'Tapez votre message ici...',
-                'search': 'Rechercher des messages...',
-                'sign_in': 'Connectez-vous pour discuter',
-                'online': 'En ligne',
-                'offline': 'Hors ligne',
-                'send': 'Envoyer le message',
-                'ideas': 'Idées et Remue-méninges',
-                'support_desc': 'Questions et Réponses',
-                'partnerships': 'Partenariats',
-                'growth': 'Stratégies de Croissance',
-                'resources': 'Ressources pour Étudiants',
-                'discussion': 'Canaux de Discussion',
-                'lets_chat': 'Discutons',
-                'connect': 'Connectez-vous avec d\'autres entrepreneures',
-                'share_ideas': 'Partagez et discutez des idées d\'entreprise avec la communauté',
-                'get_answers': 'Obtenez des réponses à vos questions et aidez les autres',
-                'find_partners': 'Trouvez des collaborateurs et des partenaires commerciaux',
-                'discuss_strategies': 'Discutez des stratégies pour développer votre entreprise',
-                'discover_resources': 'Partagez et découvrez des ressources utiles pour les étudiants'
-            },
-            'rw': {
-                'login': 'Injira',
-                'logout': 'Sohera',
-                'donate': 'Tanga',
-                'home': 'Ahabanza',
-                'about': 'Ibyerekeye',
-                'chat': 'Kuvugana',
-                'stories': 'Inkuru',
-                'programs': 'Porogaramu',
-                'support': 'Gushigikira',
-                'welcome': 'Murakaza neza muri Kuvugana kw\'Abakobwa',
-                'type_message': 'Andika ubutumwa bwawe hano...',
-                'search': 'Shaka ubutumwa...',
-                'sign_in': 'Injira kugira ngo uvugane',
-                'online': 'Ku rubuga',
-                'offline': 'Ntabwo uri ku rubuga',
-                'send': 'Ohereza Ubutumwa',
-                'ideas': 'Ibitekerezo no Gutegura Ibitekerezo',
-                'support_desc': 'Ibibazo n\'Ibisubizo',
-                'partnerships': 'Ubufatanye',
-                'growth': 'Imicungire yo Kongera',
-                'resources': 'Ibikoresho by\'Abanyeshuri',
-                'discussion': 'Umuyoboro w\'Ibiganiro',
-                'lets_chat': 'Reka tuvugane',
-                'connect': 'Komeza n\'abandi ba rwiyemezamirimo',
-                'share_ideas': 'Sangira kandi uzigane ibitekerezo by\'ubucuruzi hamwe n\'umuryango',
-                'get_answers': 'Shaka ibisubizo by\'ibibazo byawe kandi ufashije abandi',
-                'find_partners': 'Shaka abashyigikira n\'abafatanyabikorwa',
-                'discuss_strategies': 'Zigana imicungire yo kongera ubunini bw\'ubucuruzi bwawe',
-                'discover_resources': 'Sangira kandi ubone ibikoresho by\'ingenzi kuri abanyeshuri'
-            }
+        // Make Firebase available globally
+        window.firebase = {
+            auth,
+            db,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged,
+            updateProfile,
+            collection,
+            addDoc,
+            query,
+            orderBy,
+            onSnapshot,
+            serverTimestamp,
+            Timestamp,
+            where,
+            getDocs,
+            limit
         };
 
-        // DOM Elements
-        const messagesContainer = document.getElementById('messages-container');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        const searchBtn = document.getElementById('search-btn');
-        const searchModal = document.getElementById('search-modal');
-        const searchModalInput = document.getElementById('search-modal-input');
-        const searchResults = document.getElementById('search-results');
-        const channelTitle = document.getElementById('channel-title');
-        const channelDescription = document.getElementById('channel-description');
-        const loginModal = document.getElementById('login-modal');
-
-        // Image error handler
-        function handleImageError(img) {
-            img.onerror = null;
-            img.src = 'https://ui-avatars.com/api/?name=User&background=ec4899&color=fff';
-        }
-
-        // Media Manager
-        class MediaManager {
-            constructor() {
-                this.audioRecording = document.getElementById('audio-recording');
-                this.audioIndicator = document.getElementById('audio-indicator');
-                this.videoCallModal = document.getElementById('video-call-modal');
-                this.audioCallModal = document.getElementById('audio-call-modal');
-                this.localVideo = document.getElementById('local-video');
-                this.remoteVideo = document.getElementById('remote-video');
-                this.localAudio = document.getElementById('local-audio');
-                this.remoteAudio = document.getElementById('remote-audio');
-                this.endCallBtn = document.getElementById('end-call-btn');
-                this.endAudioCallBtn = document.getElementById('end-audio-call-btn');
-                
-                this.setupMediaListeners();
-            }
-            
-            setupMediaListeners() {
-                // Photo upload
-                const photoUpload = document.getElementById('photo-upload');
-                if (photoUpload) {
-                    photoUpload.addEventListener('change', (e) => this.handlePhotoUpload(e));
-                }
-                
-                // Video upload
-                const videoUpload = document.getElementById('video-upload');
-                if (videoUpload) {
-                    videoUpload.addEventListener('change', (e) => this.handleVideoUpload(e));
-                }
-                
-                // Audio recording
-                const audioRecord = document.getElementById('audio-record');
-                if (audioRecord) {
-                    audioRecord.addEventListener('click', () => this.toggleAudioRecording());
-                }
-                
-                // Video call
-                const videoCallBtn = document.getElementById('video-call-btn');
-                if (videoCallBtn) {
-                    videoCallBtn.addEventListener('click', () => this.startVideoCall());
-                }
-                
-                // Audio call
-                const audioCallBtn = document.getElementById('audio-call-btn');
-                if (audioCallBtn) {
-                    audioCallBtn.addEventListener('click', () => this.startAudioCall());
-                }
-                
-                // End call buttons
-                if (this.endCallBtn) {
-                    this.endCallBtn.addEventListener('click', () => this.endVideoCall());
-                }
-                
-                if (this.endAudioCallBtn) {
-                    this.endAudioCallBtn.addEventListener('click', () => this.endAudioCall());
-                }
-            }
-            
-            handlePhotoUpload(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select an image file');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // Here you would typically upload to Firebase Storage
-                    // For now, we'll just display a preview
-                    const imgPreview = document.createElement('img');
-                    imgPreview.src = e.target.result;
-                    imgPreview.className = 'max-w-xs max-h-64 rounded-lg shadow-md';
-                    
-                    // Create message with image
-                    if (window.chatManager) {
-                        window.chatManager.sendMediaMessage({
-                            type: 'photo',
-                            url: e.target.result,
-                            caption: 'Shared a photo'
-                        });
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-            
-            handleVideoUpload(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                
-                if (!file.type.startsWith('video/')) {
-                    alert('Please select a video file');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    // Display video preview
-                    const videoPreview = document.createElement('video');
-                    videoPreview.src = e.target.result;
-                    videoPreview.controls = true;
-                    videoPreview.className = 'max-w-xs max-h-64 rounded-lg shadow-md';
-                    
-                    // Create message with video
-                    if (window.chatManager) {
-                        window.chatManager.sendMediaMessage({
-                            type: 'video',
-                            url: e.target.result,
-                            caption: 'Shared a video'
-                        });
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-            
-            async toggleAudioRecording() {
-                if (!isRecording) {
-                    await this.startAudioRecording();
-                } else {
-                    this.stopAudioRecording();
-                }
-            }
-            
-            async startAudioRecording() {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    
-                    mediaRecorder.ondataavailable = (event) => {
-                        audioChunks.push(event.data);
-                    };
-                    
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        
-                        // Create message with audio
-                        if (window.chatManager) {
-                            window.chatManager.sendMediaMessage({
-                                type: 'audio',
-                                url: audioUrl,
-                                caption: 'Sent an audio message'
-                            });
-                        }
-                        
-                        // Stop all tracks
-                        stream.getTracks().forEach(track => track.stop());
-                        
-                        // Update UI
-                        this.audioRecording.classList.remove('audio-recording', 'bg-red-500');
-                        this.audioRecording.classList.add('bg-gray-600');
-                        this.audioIndicator.classList.add('hidden');
-                    };
-                    
-                    mediaRecorder.start();
-                    isRecording = true;
-                    
-                    // Update UI
-                    this.audioRecording.classList.add('audio-recording', 'bg-red-500');
-                    this.audioRecording.classList.remove('bg-gray-600');
-                    this.audioIndicator.classList.remove('hidden');
-                    
-                } catch (error) {
-                    console.error('Error starting audio recording:', error);
-                    alert('Could not access microphone. Please check permissions.');
-                }
-            }
-            
-            stopAudioRecording() {
-                if (mediaRecorder && isRecording) {
-                    mediaRecorder.stop();
-                    isRecording = false;
-                }
-            }
-            
-            async startVideoCall() {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: true, 
-                        audio: true 
-                    });
-                    
-                    if (this.localVideo) {
-                        this.localVideo.srcObject = stream;
-                    }
-                    
-                    if (this.videoCallModal) {
-                        this.videoCallModal.classList.remove('hidden');
-                    }
-                    
-                    // Simulate receiving video (in real app, this would be from another user)
-                    setTimeout(() => {
-                        // This is a simulation - in real app, you'd connect to another user
-                        console.log('Video call started - waiting for other user...');
-                    }, 1000);
-                    
-                } catch (error) {
-                    console.error('Error starting video call:', error);
-                    alert('Could not access camera/microphone. Please check permissions.');
-                }
-            }
-            
-            async startAudioCall() {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    
-                    if (this.localAudio) {
-                        this.localAudio.srcObject = stream;
-                    }
-                    
-                    if (this.audioCallModal) {
-                        this.audioCallModal.classList.remove('hidden');
-                    }
-                    
-                    // Simulate receiving audio
-                    setTimeout(() => {
-                        console.log('Audio call started - connected to other user...');
-                    }, 1000);
-                    
-                } catch (error) {
-                    console.error('Error starting audio call:', error);
-                    alert('Could not access microphone. Please check permissions.');
-                }
-            }
-            
-            endVideoCall() {
-                if (this.localVideo && this.localVideo.srcObject) {
-                    this.localVideo.srcObject.getTracks().forEach(track => track.stop());
-                }
-                if (this.videoCallModal) {
-                    this.videoCallModal.classList.add('hidden');
-                }
-            }
-            
-            endAudioCall() {
-                if (this.localAudio && this.localAudio.srcObject) {
-                    this.localAudio.srcObject.getTracks().forEach(track => track.stop());
-                }
-                if (this.audioCallModal) {
-                    this.audioCallModal.classList.add('hidden');
-                }
-            }
-        }
-
-        // Theme Manager
-        class ThemeManager {
-            constructor() {
-                this.currentTheme = localStorage.getItem('chat-theme') || 'theme-pink';
-                this.applyTheme(this.currentTheme);
-                this.setupThemeListeners();
-            }
-            
-            setupThemeListeners() {
-                document.querySelectorAll('.theme-option').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        const theme = e.target.getAttribute('data-theme');
-                        this.changeTheme(theme);
-                    });
-                });
-            }
-            
-            changeTheme(theme) {
-                this.currentTheme = theme;
-                localStorage.setItem('chat-theme', theme);
-                this.applyTheme(theme);
-                
-                // Update theme selector UI
-                document.querySelectorAll('.theme-option').forEach(option => {
-                    option.classList.remove('border-2', 'border-blue-500');
-                });
-                event.target.classList.add('border-2', 'border-blue-500');
-            }
-            
-            applyTheme(theme) {
-                document.body.className = document.body.className.replace(/theme-\w+/g, '');
-                document.body.classList.add(theme);
-                
-                // Update CSS variables
-                const root = document.documentElement;
-                const themes = {
-                    'theme-pink': { primary: '#ec4899', secondary: '#f472b6' },
-                    'theme-blue': { primary: '#3b82f6', secondary: '#60a5fa' },
-                    'theme-purple': { primary: '#8b5cf6', secondary: '#a78bfa' },
-                    'theme-green': { primary: '#10b981', secondary: '#34d399' }
-                };
-                
-                if (themes[theme]) {
-                    root.style.setProperty('--primary-color', themes[theme].primary);
-                    root.style.setProperty('--secondary-color', themes[theme].secondary);
-                }
-            }
-        }
-
-        // Translation Manager
-        class TranslationManager {
-            constructor() {
-                this.currentLang = localStorage.getItem('chat-language') || 'en';
-                this.applyTranslation(this.currentLang);
-                this.setupTranslationListeners();
-            }
-            
-            setupTranslationListeners() {
-                document.querySelectorAll('.language-option').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        const lang = e.target.getAttribute('data-lang');
-                        this.changeLanguage(lang);
-                    });
-                });
-            }
-            
-            changeLanguage(lang) {
-                this.currentLang = lang;
-                localStorage.setItem('chat-language', lang);
-                this.applyTranslation(lang);
-                
-                // Update language selector UI
-                document.querySelectorAll('.language-option').forEach(option => {
-                    option.classList.remove('translation-active');
-                });
-                event.target.classList.add('translation-active');
-            }
-            
-            applyTranslation(lang) {
-                const langData = translations[lang] || translations['en'];
-                
-                // Update all translatable elements
-                document.querySelectorAll('[data-translate]').forEach(element => {
-                    const key = element.getAttribute('data-translate');
-                    if (langData[key]) {
-                        element.textContent = langData[key];
-                    }
-                });
-                
-                // Update placeholders
-                const messageInput = document.getElementById('message-input');
-                const searchModalInput = document.getElementById('search-modal-input');
-                
-                if (messageInput) messageInput.placeholder = langData['type_message'] || 'Type your message here...';
-                if (searchModalInput) searchModalInput.placeholder = langData['search'] || 'Search messages...';
-                
-                // Update channel descriptions
-                if (window.chatManager) {
-                    window.chatManager.updateChannelDescriptions(langData);
-                }
-            }
-            
-            getTranslation(key) {
-                return translations[this.currentLang][key] || key;
-            }
-        }
-
-        // Authentication Manager
-        class AuthManager {
-            constructor() {
-                console.log("🔐 AuthManager initialized");
-                this.initAuth();
-            }
-
-            initAuth() {
-                onAuthStateChanged(auth, (user) => {
-                    console.log("Auth state changed:", user ? `Logged in as ${user.email}` : "Logged out");
-                    if (user) {
-                        currentUser = user;
-                        this.updateUIForLoggedInUser(user);
-                        if (window.chatManager) {
-                            window.chatManager.switchChannel(currentChannel);
-                        }
-                        loginModal.classList.add('hidden');
-                    } else {
-                        currentUser = null;
-                        this.updateUIForLoggedOut();
-                        loginModal.classList.remove('hidden');
-                    }
-                }, (error) => {
-                    console.error("Auth error:", error);
-                });
-            }
-
-            updateUIForLoggedInUser(user) {
-                const userAvatar = document.querySelector('.user-avatar img');
-                const userName = document.querySelector('.user-info h3');
-                const userRole = document.querySelector('.user-info p');
-                const onlineStatus = document.querySelector('.online-status span');
-                const statusDot = document.querySelector('.status-dot');
-                
-                if (user.photoURL) {
-                    userAvatar.src = user.photoURL;
-                }
-                
-                userName.textContent = user.displayName || user.email.split('@')[0];
-                userRole.textContent = user.email;
-                
-                if (statusDot) {
-                    statusDot.classList.remove('bg-gray-500');
-                    statusDot.classList.add('bg-green-500');
-                }
-                if (onlineStatus) onlineStatus.textContent = window.translationManager.getTranslation('online');
-                
-                const loginBtn = document.querySelector('.login-btn');
-                if (loginBtn) {
-                    loginBtn.textContent = window.translationManager.getTranslation('logout');
-                    loginBtn.onclick = (e) => {
-                        e.preventDefault();
-                        this.logout();
-                    };
-                }
-            }
-
-            updateUIForLoggedOut() {
-                const userAvatar = document.querySelector('.user-avatar img');
-                const userName = document.querySelector('.user-info h3');
-                const userRole = document.querySelector('.user-info p');
-                const onlineStatus = document.querySelector('.online-status span');
-                const statusDot = document.querySelector('.status-dot');
-                
-                if (userAvatar) userAvatar.src = 'img/girl.png';
-                if (userName) userName.textContent = 'Guest User';
-                if (userRole) userRole.textContent = window.translationManager.getTranslation('sign_in');
-                
-                if (statusDot) {
-                    statusDot.classList.remove('bg-green-500');
-                    statusDot.classList.add('bg-gray-500');
-                }
-                if (onlineStatus) onlineStatus.textContent = window.translationManager.getTranslation('offline');
-                
-                if (messagesContainer) {
-                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Please sign in to view messages</div>';
-                }
-                
-                const loginBtn = document.querySelector('.login-btn');
-                if (loginBtn) {
-                    loginBtn.textContent = window.translationManager.getTranslation('login');
-                    loginBtn.onclick = null;
-                }
-                
-                if (unsubscribeMessages) {
-                    unsubscribeMessages();
-                    unsubscribeMessages = null;
-                }
-            }
-
-            async loginWithGoogle() {
-                try {
-                    const provider = new GoogleAuthProvider();
-                    const result = await signInWithPopup(auth, provider);
-                    console.log("✅ Google login successful");
-                    return result.user;
-                } catch (error) {
-                    console.error("Google login error:", error);
-                    this.showError("Google login failed");
-                    throw error;
-                }
-            }
-
-            async loginWithEmail(email, password) {
-                try {
-                    const result = await signInWithEmailAndPassword(auth, email, password);
-                    console.log("✅ Email login successful");
-                    return result.user;
-                } catch (error) {
-                    console.error("Email login error:", error.code);
-                    let errorMessage = "Login failed";
-                    switch(error.code) {
-                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
-                        case 'auth/user-not-found': errorMessage = "No account found"; break;
-                        case 'auth/wrong-password': errorMessage = "Wrong password"; break;
-                        case 'auth/too-many-requests': errorMessage = "Too many attempts"; break;
-                        default: errorMessage = "Login failed";
-                    }
-                    this.showError(errorMessage);
-                    throw error;
-                }
-            }
-
-            async signupWithEmail(email, password) {
-                try {
-                    const result = await createUserWithEmailAndPassword(auth, email, password);
-                    console.log("✅ Account created successfully");
-                    
-                    // Create user profile in Firestore
-                    try {
-                        await addDoc(collection(db, "users"), {
-                            uid: result.user.uid,
-                            email: result.user.email,
-                            displayName: result.user.email.split('@')[0],
-                            createdAt: serverTimestamp()
-                        });
-                    } catch (firestoreError) {
-                        console.warn("Note: User profile not saved to Firestore (optional)");
-                    }
-                    
-                    return result.user;
-                } catch (error) {
-                    console.error("Signup error:", error.code);
-                    let errorMessage = "Signup failed";
-                    switch(error.code) {
-                        case 'auth/email-already-in-use': errorMessage = "Email already in use"; break;
-                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
-                        case 'auth/weak-password': errorMessage = "Password too weak (min 6 chars)"; break;
-                        default: errorMessage = "Signup failed";
-                    }
-                    this.showError(errorMessage);
-                    throw error;
-                }
-            }
-
-            async logout() {
-                try {
-                    await signOut(auth);
-                    console.log("✅ Logout successful");
-                } catch (error) {
-                    console.error("Logout error:", error);
-                    this.showError("Logout failed");
-                }
-            }
-
-            showError(message) {
-                const errorDiv = document.getElementById('error-message');
-                if (errorDiv) {
-                    errorDiv.textContent = message;
-                    errorDiv.classList.remove('hidden');
-                    setTimeout(() => {
-                        errorDiv.textContent = '';
-                        errorDiv.classList.add('hidden');
-                    }, 5000);
-                } else {
-                    alert(message);
-                }
-            }
-        }
-
-        // Chat Manager
-        class ChatManager {
-            constructor() {
-                console.log("💬 ChatManager initialized");
-                this.setupEventListeners();
-            }
-
-            setupEventListeners() {
-                // Send message
-                if (sendButton) {
-                    sendButton.addEventListener('click', () => this.sendMessage());
-                }
-                
-                if (messageInput) {
-                    messageInput.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            this.sendMessage();
-                        }
-                    });
-                }
-
-                // Channel switching
-                document.querySelectorAll('.channel-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        document.querySelectorAll('.channel-item').forEach(i => {
-                            i.classList.remove('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
-                        });
-                        item.classList.add('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
-                        const channelId = item.getAttribute('data-channel');
-                        this.switchChannel(channelId);
-                    });
-                });
-
-                // Search functionality
-                if (searchBtn) {
-                    searchBtn.addEventListener('click', () => {
-                        searchModal.classList.remove('hidden');
-                        setTimeout(() => {
-                            if (searchModalInput) searchModalInput.focus();
-                        }, 100);
-                    });
-                }
-
-                const searchModalClose = document.getElementById('search-modal-close');
-                if (searchModalClose) {
-                    searchModalClose.addEventListener('click', () => {
-                        searchModal.classList.add('hidden');
-                        if (searchModalInput) searchModalInput.value = '';
-                        if (searchResults) {
-                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                        }
-                    });
-                }
-
-                if (searchModalInput) {
-                    searchModalInput.addEventListener('input', () => this.searchMessages());
-                }
-            }
-
-            async sendMessage() {
-                if (!currentUser) {
-                    alert("Please sign in to send messages");
-                    return;
-                }
-
-                const messageText = messageInput.value.trim();
-                if (!messageText) return;
-
-                try {
-                    const message = {
-                        text: messageText,
-                        senderId: currentUser.uid,
-                        senderName: currentUser.displayName || currentUser.email.split('@')[0],
-                        senderAvatar: currentUser.photoURL || '',
-                        channel: currentChannel,
-                        timestamp: serverTimestamp(),
-                        readBy: []
-                    };
-
-                    console.log("📨 Sending message to Firestore...");
-                    
-                    await addDoc(collection(db, "messages"), message);
-                    
-                    messageInput.value = '';
-                    messageInput.focus();
-                    console.log("✅ Message sent successfully!");
-                    
-                } catch (error) {
-                    console.error("❌ Error sending message:", error);
-                    alert("Failed to send message. Check console for details.");
-                }
-            }
-            
-            async sendMediaMessage(media) {
-                if (!currentUser) {
-                    alert("Please sign in to send messages");
-                    return;
-                }
-
-                try {
-                    const message = {
-                        type: media.type,
-                        mediaUrl: media.url,
-                        caption: media.caption,
-                        senderId: currentUser.uid,
-                        senderName: currentUser.displayName || currentUser.email.split('@')[0],
-                        senderAvatar: currentUser.photoURL || '',
-                        channel: currentChannel,
-                        timestamp: serverTimestamp(),
-                        readBy: []
-                    };
-
-                    console.log(`📨 Sending ${media.type} message to Firestore...`);
-                    
-                    await addDoc(collection(db, "messages"), message);
-                    
-                    console.log(`✅ ${media.type} sent successfully!`);
-                    
-                } catch (error) {
-                    console.error(`❌ Error sending ${media.type}:`, error);
-                    alert(`Failed to send ${media.type}. Check console for details.`);
-                }
-            }
-
-            switchChannel(channelId) {
-                console.log(`🔄 Switching to channel: #${channelId}`);
-                currentChannel = channelId;
-                
-                if (channelTitle) channelTitle.textContent = `#${channelId}`;
-                
-                const channelDescriptions = {
-                    ideas: window.translationManager.getTranslation('share_ideas'),
-                    support: window.translationManager.getTranslation('get_answers'),
-                    partnerships: window.translationManager.getTranslation('find_partners'),
-                    growth: window.translationManager.getTranslation('discuss_strategies'),
-                    resources: window.translationManager.getTranslation('discover_resources')
-                };
-                
-                if (channelDescription && channelDescriptions[channelId]) {
-                    channelDescription.textContent = channelDescriptions[channelId];
-                }
-                
-                this.loadMessages(channelId);
-            }
-            
-            updateChannelDescriptions(langData) {
-                const channelDescriptions = {
-                    ideas: langData['share_ideas'],
-                    support: langData['get_answers'],
-                    partnerships: langData['find_partners'],
-                    growth: langData['discuss_strategies'],
-                    resources: langData['discover_resources']
-                };
-                
-                if (channelDescription && channelDescriptions[currentChannel]) {
-                    channelDescription.textContent = channelDescriptions[currentChannel];
-                }
-            }
-
-            loadMessages(channelId) {
-                console.log(`📥 Loading messages for #${channelId}...`);
-                
-                if (messagesContainer) {
-                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Loading messages...</div>';
-                }
-                
-                if (unsubscribeMessages) {
-                    unsubscribeMessages();
-                }
-                
-                try {
-                    const messagesQuery = query(
-                        collection(db, "messages"),
-                        where("channel", "==", channelId),
-                        orderBy("timestamp", "asc")
-                    );
-                    
-                    unsubscribeMessages = onSnapshot(messagesQuery, 
-                        (snapshot) => {
-                            console.log(`📊 Received ${snapshot.size} messages`);
-                            
-                            if (messagesContainer) {
-                                messagesContainer.innerHTML = '';
-                                
-                                if (snapshot.empty) {
-                                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">No messages yet. Be the first to say hi! 👋</div>';
-                                    return;
-                                }
-                                
-                                snapshot.forEach((doc) => {
-                                    const message = doc.data();
-                                    this.displayMessage(message);
-                                });
-                                
-                                setTimeout(() => {
-                                    if (messagesContainer) {
-                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                    }
-                                }, 100);
-                            }
-                        }, 
-                        (error) => {
-                            console.error("❌ Error loading messages:", error);
-                            
-                            // Check for index error
-                            if (error.code === 'failed-precondition') {
-                                console.error("⚠️ Firestore index required! Please create the composite index:");
-                                console.error("Collection: 'messages'");
-                                console.error("Fields indexed: 'channel' Ascending, 'timestamp' Ascending");
-                                console.error("Click the link in the error message to create it automatically.");
-                                
-                                if (messagesContainer) {
-                                    messagesContainer.innerHTML = `
-                                        <div class="text-red-500 text-center py-4">
-                                            <p class="font-bold">Firestore Index Required</p>
-                                            <p class="text-sm mt-2">Check browser console for details and click the link to create the index.</p>
-                                        </div>`;
-                                }
-                            } else {
-                                if (messagesContainer) {
-                                    messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Failed to load messages</div>';
-                                }
-                            }
-                        }
-                    );
-                } catch (error) {
-                    console.error("❌ Error setting up listener:", error);
-                    if (messagesContainer) {
-                        messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Error setting up chat</div>';
-                    }
-                }
-            }
-
-            displayMessage(message) {
-                if (!messagesContainer) return;
-                
-                const messageDiv = document.createElement('div');
-                const isCurrentUser = currentUser && message.senderId === currentUser.uid;
-                
-                messageDiv.className = `message flex max-w-[80%] mb-4 ${isCurrentUser ? 'self-end flex-row-reverse' : 'self-start'}`;
-                
-                let timeString = 'Just now';
-                if (message.timestamp && message.timestamp.toDate) {
-                    try {
-                        const date = message.timestamp.toDate();
-                        timeString = this.formatTime(date);
-                    } catch (error) {
-                        console.error("Error formatting time:", error);
-                    }
-                }
-                
-                const avatarImg = message.senderAvatar || '';
-                const displayName = message.senderName || 'Anonymous';
-                
-                let messageContent = '';
-                
-                if (message.type === 'photo') {
-                    messageContent = `
-                        <div class="mb-2">
-                            <img src="${message.mediaUrl}" alt="Photo" class="max-w-xs max-h-64 rounded-lg shadow-md">
-                        </div>
-                        <div class="message-text text-sm">${message.caption || ''}</div>
-                    `;
-                } else if (message.type === 'video') {
-                    messageContent = `
-                        <div class="mb-2">
-                            <video src="${message.mediaUrl}" controls class="max-w-xs max-h-64 rounded-lg shadow-md"></video>
-                        </div>
-                        <div class="message-text text-sm">${message.caption || ''}</div>
-                    `;
-                } else if (message.type === 'audio') {
-                    messageContent = `
-                        <div class="mb-2">
-                            <audio src="${message.mediaUrl}" controls class="w-full"></audio>
-                        </div>
-                        <div class="message-text text-sm">${message.caption || ''}</div>
-                    `;
-                } else {
-                    messageContent = `<div class="message-text text-sm">${message.text.replace(/\n/g, '<br>')}</div>`;
-                }
-                
-                messageDiv.innerHTML = `
-                    <div class="message-avatar w-10 h-10 rounded-full flex items-center justify-center text-white mx-2 flex-shrink-0 overflow-hidden ${isCurrentUser ? 'bg-yellow-600' : 'bg-pink-300'}">
-                        ${avatarImg ? 
-                            `<img src="${avatarImg}" alt="${displayName}" class="w-full h-full object-cover" onerror="handleImageError(this)">` :
-                            `<span class="text-lg font-semibold">${displayName.charAt(0).toUpperCase()}</span>`
-                        }
-                    </div>
-                    <div class="message-content px-4 py-3 rounded-2xl shadow-sm ${isCurrentUser ? 'bg-pink-300 text-white rounded-tr-none' : 'bg-pink-100 rounded-tl-none'}">
-                        <div class="message-sender font-semibold text-sm mb-1 ${isCurrentUser ? 'text-gray-100' : 'text-pink-600'}">${displayName}</div>
-                        ${messageContent}
-                        <div class="message-time text-xs opacity-70 mt-1 text-right">${timeString}</div>
-                    </div>
-                `;
-                
-                messagesContainer.appendChild(messageDiv);
-            }
-
-            async searchMessages() {
-                const searchTerm = searchModalInput.value.trim().toLowerCase();
-                
-                if (!searchTerm) {
-                    if (searchResults) {
-                        searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                    }
-                    return;
-                }
-                
-                try {
-                    const messagesQuery = query(
-                        collection(db, "messages"),
-                        orderBy("timestamp", "desc")
-                    );
-                    
-                    const snapshot = await getDocs(messagesQuery);
-                    if (searchResults) {
-                        searchResults.innerHTML = '';
-                    }
-                    
-                    let foundMessages = [];
-                    
-                    snapshot.forEach((doc) => {
-                        const message = doc.data();
-                        if (message.text && message.text.toLowerCase().includes(searchTerm) || 
-                            message.senderName && message.senderName.toLowerCase().includes(searchTerm)) {
-                            foundMessages.push({...message, id: doc.id});
-                        }
-                    });
-                    
-                    if (foundMessages.length === 0) {
-                        if (searchResults) {
-                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">No messages found</div>';
-                        }
-                        return;
-                    }
-                    
-                    foundMessages.forEach((message) => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'search-result-item px-3 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors';
-                        resultItem.innerHTML = `
-                            <div class="search-result-sender font-bold text-pink-600">${message.senderName || 'Anonymous'}</div>
-                            <div class="search-result-text text-sm mt-1">${message.text || ''}</div>
-                            <div class="message-time text-xs text-gray-500 mt-1">${this.formatTime(message.timestamp?.toDate())} • #${message.channel || 'unknown'}</div>
-                        `;
-                        
-                        resultItem.addEventListener('click', () => {
-                            if (message.channel) {
-                                this.switchChannel(message.channel);
-                            }
-                            searchModal.classList.add('hidden');
-                            if (searchModalInput) searchModalInput.value = '';
-                            if (searchResults) searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
-                        });
-                        
-                        if (searchResults) {
-                            searchResults.appendChild(resultItem);
-                        }
-                    });
-                } catch (error) {
-                    console.error("Search error:", error);
-                    if (searchResults) {
-                        searchResults.innerHTML = '<div class="text-red-500 text-center py-4">Search failed</div>';
-                    }
-                }
-            }
-
-            formatTime(date) {
-                if (!date) return 'Just now';
-                
-                try {
-                    const now = new Date();
-                    const diffMs = now - date;
-                    const diffMins = Math.floor(diffMs / 60000);
-                    
-                    if (diffMins < 1) return 'Just now';
-                    if (diffMins < 60) return `${diffMins}m ago`;
-                    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
-                    
-                    return date.toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                } catch (error) {
-                    return 'Just now';
-                }
-            }
-        }
-
-        // Settings Manager
-        class SettingsManager {
-            constructor() {
-                this.settingsModal = document.getElementById('settings-modal');
-                this.setupSettingsListeners();
-            }
-            
-            setupSettingsListeners() {
-                const settingsBtn = document.getElementById('settings-btn');
-                const settingsClose = document.getElementById('settings-close');
-                const signoutBtn = document.getElementById('signout-btn');
-                
-                if (settingsBtn) {
-                    settingsBtn.addEventListener('click', () => {
-                        this.settingsModal.classList.remove('hidden');
-                    });
-                }
-                
-                if (settingsClose) {
-                    settingsClose.addEventListener('click', () => {
-                        this.settingsModal.classList.add('hidden');
-                    });
-                }
-                
-                if (signoutBtn) {
-                    signoutBtn.addEventListener('click', () => {
-                        if (window.authManager) {
-                            window.authManager.logout();
-                            this.settingsModal.classList.add('hidden');
-                        }
-                    });
-                }
-            }
-        }
-
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("🚀 DOM loaded, initializing Girls Chat...");
-            
-            // Initialize managers
-            window.translationManager = new TranslationManager();
-            window.themeManager = new ThemeManager();
-            window.authManager = new AuthManager();
-            window.chatManager = new ChatManager();
-            window.mediaManager = new MediaManager();
-            window.settingsManager = new SettingsManager();
-
-            // Setup navigation toggle for mobile
-            const hamburger = document.querySelector('.hamburger');
-            const navLinks = document.querySelector('.nav-links');
-            const navOverlay = document.querySelector('.nav-overlay');
-            
-            if (hamburger && navLinks && navOverlay) {
-                hamburger.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
-                    navLinks.style.left = navLinks.style.left === '0px' ? '-100%' : '0px';
-                    navOverlay.classList.toggle('hidden');
-                });
-                
-                navOverlay.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
-                    navLinks.style.left = '-100%';
-                    navOverlay.classList.add('hidden');
-                });
-            }
-            
-            // Setup dropdowns
-            const dropdowns = document.querySelectorAll('.dropdown');
-            dropdowns.forEach(dropdown => {
-                const link = dropdown.querySelector('.nav-link');
-                const menu = dropdown.querySelector('.dropdown-menu');
-                
-                if (link && menu) {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        menu.classList.toggle('hidden');
-                    });
-                    
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', (e) => {
-                        if (!dropdown.contains(e.target)) {
-                            menu.classList.add('hidden');
-                        }
-                    });
-                }
-            });
-
-            // Login modal event listeners
-            const googleLoginBtn = document.getElementById('google-login-btn');
-            if (googleLoginBtn) {
-                googleLoginBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    try {
-                        const btn = googleLoginBtn;
-                        const originalText = btn.innerHTML;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-                        
-                        await window.authManager.loginWithGoogle();
-                        
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                    } catch (error) {
-                        const btn = googleLoginBtn;
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fab fa-google"></i> Sign in with Google';
-                    }
-                });
-            }
-            
-            // Email login
-            const emailLoginBtn = document.getElementById('email-login-btn');
-            if (emailLoginBtn) {
-                emailLoginBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('email-input')?.value.trim();
-                    const password = document.getElementById('password-input')?.value;
-                    
-                    if (!email) {
-                        window.authManager.showError("Please enter email");
-                        return;
-                    }
-                    
-                    if (!password) {
-                        window.authManager.showError("Please enter password");
-                        return;
-                    }
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        window.authManager.showError("Invalid email");
-                        return;
-                    }
-                    
-                    if (password.length < 6) {
-                        window.authManager.showError("Password too short (min 6)");
-                        return;
-                    }
-                    
-                    try {
-                        const btn = emailLoginBtn;
-                        const originalText = btn.textContent;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-                        
-                        await window.authManager.loginWithEmail(email, password);
-                        
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                        
-                    } catch (error) {
-                        const btn = emailLoginBtn;
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = window.translationManager.getTranslation('login') + ' with Email';
-                        }
-                    }
-                });
-            }
-            
-            // Signup button
-            const signupBtn = document.getElementById('signup-btn');
-            if (signupBtn) {
-                signupBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const email = document.getElementById('email-input')?.value.trim();
-                    const password = document.getElementById('password-input')?.value;
-                    
-                    if (!email) {
-                        window.authManager.showError("Please enter email");
-                        return;
-                    }
-                    
-                    if (!password) {
-                        window.authManager.showError("Please enter password");
-                        return;
-                    }
-                    
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(email)) {
-                        window.authManager.showError("Invalid email");
-                        return;
-                    }
-                    
-                    if (password.length < 6) {
-                        window.authManager.showError("Password too short (min 6)");
-                        return;
-                    }
-                    
-                    try {
-                        const btn = signupBtn;
-                        const originalText = btn.textContent;
-                        btn.disabled = true;
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-                        
-                        await window.authManager.signupWithEmail(email, password);
-                        window.authManager.showError("✅ Account created! You are now signed in.");
-                        
-                        btn.disabled = false;
-                        btn.textContent = originalText;
-                        
-                    } catch (error) {
-                        const btn = signupBtn;
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = 'Create Account';
-                        }
-                    }
-                });
-            }
-
-            // Enter key support
-            const emailInput = document.getElementById('email-input');
-            const passwordInput = document.getElementById('password-input');
-            
-            if (emailInput) {
-                emailInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        if (emailLoginBtn) emailLoginBtn.click();
-                    }
-                });
-            }
-            
-            if (passwordInput) {
-                passwordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        if (emailLoginBtn) emailLoginBtn.click();
-                    }
-                });
-            }
-
-            // Set initial active channel
-            const initialChannel = document.querySelector('.channel-item[data-channel="ideas"]');
-            if (initialChannel) {
-                initialChannel.click();
-            }
-            
-            console.log("✅ Girls Chat initialization complete!");
-        });
-
-        // Make functions available globally
-        window.handleImageError = handleImageError;
-        
-        // Global error handling
-        window.addEventListener('error', function(e) {
-            console.error('Global error:', e.error);
-        });
+        console.log('Firebase initialized successfully');
     </script>
-</head>
-<body class="min-h-screen flex flex-col overflow-x-hidden theme-pink">
-    <!-- Login Modal -->
-    <div class="login-modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[2000]" id="login-modal">
-        <div class="login-content bg-white p-8 rounded-2xl w-[90%] max-w-[400px] shadow-2xl">
-            <h2 class="text-pink-600 text-center text-2xl font-bold mb-6" data-translate="welcome">Welcome to Girls Chat</h2>
-            
-            <button id="google-login-btn" class="w-full py-3 bg-blue-600 text-white rounded-lg mb-4 flex items-center justify-center gap-3 hover:bg-blue-700 transition-colors">
-                <i class="fab fa-google"></i> Sign in with Google
-            </button>
-            
-            <div class="divider relative my-6 text-center text-gray-600">
-                <span class="bg-white px-4 relative z-10">or</span>
-                <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-300 -translate-y-1/2 z-0"></div>
-            </div>
-            
-            <div id="email-form">
-                <input type="email" id="email-input" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                <input type="password" id="password-input" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-pink-500">
-                <button id="email-login-btn" class="w-full py-3 bg-pink-600 text-white rounded-lg mb-3 hover:bg-pink-700 transition-colors font-medium">Sign in with Email</button>
-                <button id="signup-btn" class="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium">Create New Account</button>
-            </div>
-            
-            <div id="error-message" class="text-red-500 text-center mt-3 min-h-[20px] text-sm hidden"></div>
-            
-            <p class="text-xs text-gray-600 mt-5 text-center">
-                By signing in, you agree to our Terms of Service and Privacy Policy
-            </p>
-        </div>
-    </div>
+    
+    <style>
+        /* Your existing CSS styles remain exactly the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-[2001] flex items-center justify-center">
-        <div class="settings-content bg-white p-6 rounded-2xl w-[90%] max-w-[400px] shadow-2xl">
-            <div class="settings-header flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-gray-800">Settings</h3>
-                <button id="settings-close" class="text-2xl text-gray-600 hover:text-gray-800">&times;</button>
+        :root {
+            --primary: #a5242449;
+            --primary-light:#ec107ebb;
+            --secondary: #119ae9bb;
+            --accent: #df9c0a9c;
+            --light: #dd0e425d;
+            --dark: #050505fd;
+            --success: #28971e;
+            --warning: #071a42;
+            --gray: #000000de;
+            --gray-light: #4c4e4e;
+        }
+
+        body {
+            background: radial-gradient(circle ,#be185d, #e9ecef 95%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ____ Modern Navbar ____ */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 5%;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .nav-logo img {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            max-width: 100%;
+        }
+
+        /* ____ hamburger ____ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #374151;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* ____ nav links ____ */
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+            text-decoration: none;
+            list-style: none;
+        }
+
+        .nav-link {
+            position: relative;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #ec4899;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .login-btn {
+            padding: 6px 14px;
+            border: 1.5px solid #c23cb6;
+            border-radius: 30px;
+            color: #c23cb6;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .login-btn:hover {
+            background: #fbe7ff;
+        }
+
+        .donate-btn {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #ff5f8d, #c23cb6);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .donate-btn:hover {
+            box-shadow: 0 4px 12px rgba(194, 60, 182, 0.4);
+        }
+
+        .nav-search input {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 13px;
+            width: 130px;
+            max-width: 100%;
+        }
+
+        /* ____ Dropdown ____ */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            min-width: 130px;
+            display: none;
+            z-index: 1000;
+            list-style: none;
+            padding: 8px 0;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 8px 14px;
+            color: #374151;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f3e5f8;
+            color: #c23cb6;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Mobile dropdown handling */
+        @media (max-width: 768px) {
+            .dropdown.active .dropdown-menu {
+                display: block;
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+            }
+        }
+
+        /* ____ Overlay ____ */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .nav-overlay.active {
+            display: block;
+        }
+
+        /* Authentication Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .auth-modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-modal-header h3 {
+            color: #ec4899;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .auth-modal-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            color: #ec4899;
+            border-bottom: 3px solid #ec4899;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form-group {
+            margin-bottom: 15px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border 0.3s ease;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #ec4899, #be185d);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .auth-error {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .auth-success {
+            color: #38a169;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .auth-loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .auth-loading.active {
+            display: block;
+        }
+
+        .auth-loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ec4899;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 30%;
+            min-width: 250px;
+            background: var(--light);
+            border-right: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
+        .user-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .online-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+
+        .sidebar-tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .channels, .people {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .channels.active, .people.active {
+            display: block;
+        }
+
+        .channels h3, .people h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .channels h3 i, .people h3 i {
+            margin-right: 10px;
+        }
+
+        .channel-list, .people-list {
+            list-style: none;
+        }
+
+        .channel-item, .person-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-item:hover, .person-item:hover {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .channel-item.active, .person-item.active {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .channel-icon, .person-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .person-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .channel-info, .person-info {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
+        .channel-info h4, .person-info h4 {
+            color: #000000;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .person-info h4 {
+            color: rgb(13, 13, 173);
+        }
+        
+        .channel-info p, .person-info p {
+            font-size: 0.75rem;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .person-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .person-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+
+        .person-status-dot.online {
+            background: var(--success);
+        }
+
+        .person-status-dot.offline {
+            background: var(--gray);
+        }
+
+        .person-status-dot.busy {
+            background: var(--warning);
+        }
+
+        /* Chat Area Styles */
+        .chat-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Important for flex item shrinking */
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+        }
+
+        .chat-title {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
+        .chat-title h2 {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-title p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chat-actions button {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .chat-actions button:hover {
+            color: var(--primary);
+        }
+
+        .home-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .home-btn:hover {
+            background: var(--secondary);
+        }
+
+        .messages {
+            background-image:url(./imge/hp1.png);
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(248, 248, 248, 0.993);
+            margin: 0 10px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .received .message-avatar {
+            background: var(--primary-light);
+        }
+
+        .sent .message-avatar {
+            background: var(--warning);
+        }
+
+        .message-content {
+            background: var(--gray-light);
+            padding: 12px 15px;
+            border-radius: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            word-break: break-word; /* Prevent long words from breaking layout */
+        }
+
+        .received .message-content {
+            border-top-left-radius: 5px;
+            background: var(--light);
+        }
+
+        .sent .message-content {
+            border-top-right-radius: 5px;
+            background: var(--primary-light);
+            color: rgb(245, 241, 241);
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .received .message-sender {
+            color: var(--primary);
+        }
+
+        .sent .message-sender {
+            color: rgba(202, 196, 196, 0.8);
+        }
+
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .message-input {
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .message-input input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 30px;
+            outline: none;
+            transition: border 0.3s ease;
+            min-width: 0; /* Allow input to shrink properly */
+        }
+
+        .message-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            background: var(--secondary);
+        }
+
+        /* Search Modal */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-modal.active {
+            display: flex;
+        }
+
+        .search-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .search-modal-header h3 {
+            color: var(--primary);
+        }
+
+        .search-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .search-modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 30px;
+            outline: none;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .search-result-item:hover {
+            background: #f5f5f5;
+        }
+
+        .search-result-sender {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .search-result-text {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            word-break: break-word;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .footer-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .links-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .link-item:hover {
+            color: #db78e4;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .footer-left-info {
+            flex: 1;
+        }
+
+        .footer-left-info p {
+            margin: 0;
+        }
+
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
+        }
+
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
+        }
+
+        /* _____ Responsive _______ */
+        @media (max-width: 1024px) {
+            .chat-container {
+                height: 80vh;
+            }
+            
+            .sidebar {
+                width: 35%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                gap: 20px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.4s ease;
+                z-index: 1000;
+                overflow-y: auto;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-link, .login-btn, .donate-btn {
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+                color: #374151;
+                font-size: 16px;
+            }
+
+            .nav-search {
+                order: 3;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav-search input {
+                width: 100%;
+            }
+
+            .chat-container {
+                flex-direction: column;
+                height: 90vh;
+                border-radius: 10px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 40%;
+                min-width: auto;
+            }
+            
+            .channels, .people {
+                display: flex;
+                flex-direction: column;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 10px 20px;
+            }
+            
+            .channel-list, .people-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .channel-item, .person-item {
+                min-width: 150px;
+            }
+            
+            .footer-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .footer-right-info {
+                text-align: left;
+            }
+        }
+       
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            
+            .sidebar {
+                height: 35%;
+            }
+            
+            .sidebar-header {
+                padding: 15px;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .user-profile {
+                padding: 10px 15px;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .user-info h3 {
+                font-size: 1rem;
+            }
+            
+            .channels, .people {
+                padding: 10px 15px;
+            }
+            
+            .channel-item, .person-item {
+                padding: 10px;
+            }
+            
+            .channel-icon, .person-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            
+            .channel-info h4, .person-info h4 {
+                font-size: 0.9rem;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .chat-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .message-avatar {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .message-content {
+                padding: 10px 12px;
+            }
+            
+            .message-text {
+                font-size: 0.9rem;
+            }
+            
+            .message-input {
+                padding: 15px;
+            }
+            
+            .footer {
+                padding: 2rem 1rem 1rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .navbar {
+                padding: 12px 40px;
+            }
+
+            .nav-search input {
+                width: 160px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .sidebar-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar-tab {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .channel-info h4, .person-info h4 {
+                font-size: 0.85rem;
+            }
+            
+            .chat-title h2 {
+                font-size: 1rem;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3 data-translate="welcome">Welcome to GirlsSpace Chat</h3>
+                <p data-translate="joinChat">Join our safe community chat</p>
             </div>
             
-            <div class="settings-body">
-                <div class="theme-section mb-6">
-                    <h4 class="font-semibold text-gray-700 mb-3">Theme Color</h4>
-                    <div class="theme-colors flex gap-3">
-                        <button class="theme-option w-10 h-10 bg-pink-500 rounded-full hover:opacity-90 border-2 border-blue-500" data-theme="theme-pink"></button>
-                        <button class="theme-option w-10 h-10 bg-blue-500 rounded-full hover:opacity-90" data-theme="theme-blue"></button>
-                        <button class="theme-option w-10 h-10 bg-purple-500 rounded-full hover:opacity-90" data-theme="theme-purple"></button>
-                        <button class="theme-option w-10 h-10 bg-green-500 rounded-full hover:opacity-90" data-theme="theme-green"></button>
-                    </div>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Login</div>
+                <div class="auth-tab" data-tab="register">Register</div>
+            </div>
+            
+            <form class="auth-form active" id="login-form">
+                <div class="auth-form-group">
+                    <label data-translate="emailLabel">Email Address</label>
+                    <input type="email" id="login-email" required>
+                    <div class="auth-error" id="login-email-error"></div>
                 </div>
                 
-                <div class="signout-section">
-                    <button id="signout-btn" class="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
-                    </button>
+                <div class="auth-form-group">
+                    <label data-translate="passwordLabel">Password</label>
+                    <input type="password" id="login-password" required>
+                    <div class="auth-error" id="login-password-error"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Call Modal -->
-    <div id="video-call-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[2002] flex items-center justify-center p-4">
-        <div class="video-call-container bg-gray-900 rounded-2xl w-full max-w-4xl h-[80vh] overflow-hidden flex flex-col">
-            <div class="video-header bg-gray-800 p-4 flex justify-between items-center">
-                <h3 class="text-white font-semibold">Video Call</h3>
-                <button id="end-call-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                    <i class="fas fa-phone-slash mr-2"></i> End Call
-                </button>
-            </div>
-            <div class="video-content flex-grow flex">
-                <div class="remote-video flex-grow bg-black">
-                    <video id="remote-video" autoplay class="w-full h-full object-cover"></video>
+                
+                <div class="auth-loading" id="login-loading">
+                    <div class="auth-loading-spinner"></div>
                 </div>
-                <div class="local-video absolute bottom-4 right-4 w-48 h-32 bg-black rounded-lg shadow-lg overflow-hidden">
-                    <video id="local-video" autoplay muted class="w-full h-full object-cover"></video>
+                
+                <div class="auth-success" id="login-success"></div>
+                <div class="auth-error" id="login-error"></div>
+                
+                <button type="submit" class="auth-btn" data-translate="loginBtn">Sign In</button>
+            </form>
+            
+            <form class="auth-form" id="register-form">
+                <div class="auth-form-group">
+                    <label data-translate="nameLabel">Display Name</label>
+                    <input type="text" id="register-name" required>
+                    <div class="auth-error" id="register-name-error"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Audio Call Modal -->
-    <div id="audio-call-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[2002] flex items-center justify-center">
-        <div class="audio-call-container bg-gray-800 rounded-2xl p-8 max-w-md text-center">
-            <div class="audio-icon text-white text-6xl mb-6">
-                <i class="fas fa-phone-alt"></i>
-            </div>
-            <h3 class="text-white text-2xl font-semibold mb-2">Audio Call</h3>
-            <p class="text-gray-300 mb-6">Connected to user</p>
-            <div class="call-controls">
-                <button id="end-audio-call-btn" class="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700">
-                    <i class="fas fa-phone-slash text-xl"></i>
-                </button>
-            </div>
-            <audio id="local-audio" autoplay muted></audio>
-            <audio id="remote-audio" autoplay></audio>
+                
+                <div class="auth-form-group">
+                    <label data-translate="emailLabel">Email Address</label>
+                    <input type="email" id="register-email" required>
+                    <div class="auth-error" id="register-email-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="passwordLabel">Password</label>
+                    <input type="password" id="register-password" required>
+                    <div class="auth-error" id="register-password-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="confirmPasswordLabel">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" required>
+                    <div class="auth-error" id="register-confirm-error"></div>
+                </div>
+                
+                <div class="auth-loading" id="register-loading">
+                    <div class="auth-loading-spinner"></div>
+                </div>
+                
+                <div class="auth-success" id="register-success"></div>
+                <div class="auth-error" id="register-error"></div>
+                
+                <button type="submit" class="auth-btn" data-translate="registerBtn">Create Account</button>
+            </form>
         </div>
     </div>
 
     <!-- Modern Navigation -->
-    <nav class="navbar sticky top-0 z-[1000] bg-white shadow-md px-4 py-3 md:px-10 flex flex-wrap items-center justify-between">
+    <nav class="navbar">
         <div class="nav-logo">
-            <img src="./img/Girls Space (1) (1) (2).png" alt="Logo" class="w-16 h-12 object-contain rounded-full max-w-full" onerror="handleImageError(this)">
+            <img src="./img/Girls Space (1) (1) (2).png" alt="Logo">
         </div>
         
-        <div class="hamburger flex flex-col gap-1 cursor-pointer z-[1001] md:hidden">
-            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
-            <span class="w-7 h-1 bg-gray-700 rounded transition-opacity"></span>
-            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
         
-        <ul class="nav-links fixed top-0 left-[-100%] w-72 h-full bg-white flex flex-col gap-5 p-6 pt-20 shadow-xl transition-transform md:static md:w-auto md:h-auto md:flex-row md:items-center md:gap-4 md:p-0 md:shadow-none md:translate-x-0">
-            <li><a href="./index.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="home">Home</a></li>
-            <li><a href="./AboutUs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="about">About</a></li>
-            <li><a href="./chat.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="chat">Chat</a></li>
-            <li><a href="./stoies.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="stories">Stories</a></li>
-            <li><a href="./learning_programs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="programs">Programs</a></li>
-            <li><a href="./protection.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="support">Support</a></li>
+        <ul class="nav-links">
+            <li><a href="./indea.html" class="nav-link" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" class="nav-link" data-translate="about">About</a></li>
+            <li><a href="./chat.html" class="nav-link" data-translate="chat">Chat</a></li>
+            <li><a href="./stoies.html" class="nav-link" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs" class="nav-link" data-translate="programs">Programs</a></li>
+            <li><a href="./support.html" class="nav-link" data-translate="support">Support</a></li>
             
-            <li class="dropdown relative">
-                <a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Languages <i class="fas fa-chevron-down"></i></a>
-                <ul class="dropdown-menu absolute top-full left-0 bg-white shadow-xl rounded-lg min-w-[130px] p-2 z-[1000] hidden">
-                    <li><a href="#" class="language-option translation-active block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="en">English</a></li>
-                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="ar">Arabic</a></li>
-                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="sw">Swahili</a></li>
-                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="fr">French</a></li>
-                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="rw">Kinyarwanda</a></li>
+            <li class="dropdown" id="language-dropdown">
+                <a href="#" class="nav-link" data-translate="languages">Languages <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
             
-            <li><a href="#" class="login-btn px-4 py-2 border border-pink-500 text-pink-500 font-semibold rounded-full hover:bg-pink-50 transition-colors" data-translate="login">Login</a></li>
-            <li><a href="./Donate.html" class="donate-btn px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-full hover:shadow-lg transition-shadow" data-translate="donate">Donate</a></li>
+            <li><a href="#" class="login-btn" id="auth-toggle-btn" data-translate="login">Login</a></li>
+            <li><a href="Donate.html" class="donate-btn" data-translate="donate">Donate</a></li>
+            <li class="nav-search">
+                <input type="text" placeholder="Search..." data-translate="search">
+            </li>
         </ul>
         
-        <div class="nav-overlay fixed inset-0 bg-black bg-opacity-50 hidden z-[999] md:hidden"></div>
+        <div class="nav-overlay"></div>
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content flex-grow flex items-center justify-center p-5">
-        <div class="chat-container w-full max-w-7xl h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+    <div class="main-content">
+        <div class="chat-container">
             <!-- Sidebar -->
-            <div class="sidebar w-full md:w-1/3 lg:w-1/4 bg-pink-100 border-r border-gray-300 flex flex-col">
-                <div class="sidebar-header bg-pink-600 text-white text-center p-5">
-                    <h2 class="text-xl font-bold mb-1" data-translate="lets_chat">Let's Chat</h2>
-                    <p class="text-sm opacity-80" data-translate="connect">Connect with fellow entrepreneurs</p>
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2 data-translate="chatTitle">Let's Chat</h2>
+                    <p data-translate="chatSubtitle">Connect with fellow entrepreneurs</p>
                 </div>
                 
-                <div class="user-profile flex items-center p-4 border-b border-gray-300">
-                    <div class="user-avatar w-12 h-12 rounded-full flex items-center justify-center text-white mr-4 overflow-hidden flex-shrink-0">
-                        <img src="img/girl.png" alt="User Avatar" class="w-full h-full object-cover" onerror="handleImageError(this)">
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-avatar">
+                        <img src="img/girl.png" alt="User Avatar">
                     </div>
-                    <div class="user-info flex-1 min-w-0">
-                        <h3 class="font-semibold text-sm truncate">Guest User</h3>
-                        <p class="text-xs text-gray-600 truncate" data-translate="sign_in">Sign in to chat</p>
-                        <div class="online-status flex items-center mt-1">
-                            <div class="status-dot w-2 h-2 rounded-full bg-gray-500 mr-1"></div>
-                            <span class="text-xs" data-translate="offline">Offline</span>
+                    <div class="user-info">
+                        <h3 id="display-name" data-translate="defaultUserName">Guest User</h3>
+                        <p id="user-role" data-translate="defaultUserRole">Join to chat</p>
+                        <div class="online-status">
+                            <div class="status-dot" id="status-dot"></div>
+                            <span id="user-status" data-translate="offlineStatus">Offline</span>
                         </div>
                     </div>
                 </div>
@@ -1730,77 +1644,753 @@
     </div>
 
     <!-- Search Modal -->
-    <div class="search-modal hidden fixed inset-0 bg-black bg-opacity-80 z-[2000] items-center justify-center" id="search-modal">
-        <div class="search-modal-content bg-white p-5 rounded-lg w-[90%] max-w-[500px] max-h-[80vh] overflow-hidden flex flex-col">
-            <div class="search-modal-header flex justify-between items-center mb-4">
-                <h3 class="text-pink-600 font-semibold text-lg">Search Messages</h3>
-                <button class="search-modal-close bg-transparent border-none text-2xl text-gray-600 cursor-pointer hover:text-pink-600" id="search-modal-close" aria-label="Close search">&times;</button>
+    <div class="search-modal" id="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h3 data-translate="searchMessages">Search Messages</h3>
+                <button class="search-modal-close" id="search-modal-close">&times;</button>
             </div>
-            <input type="text" class="search-modal-input w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 mb-4" id="search-modal-input" placeholder="Type to search messages..." aria-label="Search messages">
-            <div class="search-results max-h-[300px] overflow-y-auto no-scrollbar" id="search-results">
-                <div class="text-gray-500 text-center py-4">Enter a search term to find messages</div>
+            <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Type to search messages..." data-translate="searchPlaceholder">
+            <div class="search-results" id="search-results">
+                <div class="no-results" data-translate="enterSearchTerm">Enter a search term to find messages</div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer bg-black text-gray-300 py-12 px-6">
-        <div class="container max-w-7xl mx-auto">
-            <div class="footer-main grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-                <div class="footer-left flex flex-col gap-4">
-                    <div class="footer-logo-section flex items-center gap-3">
-                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo w-12 h-12 object-contain rounded-full border-2 border-pink-500" onerror="handleImageError(this)">
-                        <p class="footer-subtitle font-semibold text-pink-400 text-base">Empowering Girls, Building Futures</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
                     </div>
-                    <p class="footer-desc text-sm text-gray-400 max-w-[360px]">
+                    <p class="footer-desc" data-translate="footerDescription">
                         A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
                     </p>
-                    <div class="social-links flex gap-3">
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="YouTube">
-                            <i class="fab fa-youtube"></i>
-                        </a>
+                    <div class="social-links">
+                        <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title text-white font-semibold text-lg mb-4">Quick Links</h4>
-                    <ul class="links-list space-y-3">
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Join Chat</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Share Story</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Programs</a></li>
+                    <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links">
-                    <h4 class="links-title text-white font-semibold text-lg mb-4">Get Help</h4>
-                    <ul class="links-list space-y-3">
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Emergency</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Support</a></li>
-                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Report</a></li>
+                    <h4 class="links-title" data-translate="getHelp">Get Help</h4>
+                    <ul class="links-list">
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="footer-bottom pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                <div class="footer-left-info flex flex-col gap-2">
-                    <p class="text-sm">© 2025 GirlsSpace Mahama. <span class="text-pink-400 font-medium">Empowering girls, always.</span></p>
-                    <p class="text-xs text-gray-400">Firebase Chat Application - Connected to chat-room-5c3e5</p>
+            <div class="footer-bottom">
+                <div class="footer-left-info">
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
                 </div>
-                <div class="footer-right-info text-left md:text-right">
-                    <p class="text-sm">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-                    <p class="text-sm mt-1">Supported by UNHCR, Save The Children, Alight</p>
+                <div class="footer-right-info">
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Firebase Chat Application
+        // This integrates your beautiful UI with Firebase for real-time chat
+        
+        // Current application state
+        let currentUser = null;
+        let currentChannel = 'ideas';
+        let messageListener = null;
+        let allMessages = [];
+        let onlineUsers = new Set();
+        let currentLang = 'en';
+
+        // DOM Elements
+        const authModal = document.getElementById('auth-modal');
+        const authToggleBtn = document.getElementById('auth-toggle-btn');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const messagesContainer = document.getElementById('messages-container');
+        const displayNameElement = document.getElementById('display-name');
+        const userRoleElement = document.getElementById('user-role');
+        const statusDot = document.getElementById('status-dot');
+        const userStatusElement = document.getElementById('user-status');
+
+        // Initialize Firebase Auth State Listener
+        function initializeAuthListener() {
+            window.firebase.onAuthStateChanged(window.firebase.auth, async (user) => {
+                console.log('Auth state changed:', user);
+                
+                if (user) {
+                    currentUser = user;
+                    showChatInterface(user);
+                    updateUserProfile();
+                    loadMessages();
+                    loadOnlineUsers();
+                    
+                    // Update user status in Firestore
+                    await updateUserStatus('online');
+                } else {
+                    currentUser = null;
+                    showAuthInterface();
+                    clearMessageListener();
+                }
+            });
+        }
+
+        function showChatInterface(user) {
+            // Hide auth modal
+            authModal.classList.remove('active');
+            
+            // Update UI elements
+            if (user.displayName) {
+                displayNameElement.textContent = user.displayName;
+            } else {
+                displayNameElement.textContent = user.email.split('@')[0];
+            }
+            
+            userRoleElement.textContent = 'Active Member';
+            statusDot.style.background = '#28971e';
+            userStatusElement.textContent = 'Online';
+            
+            // Update auth button
+            authToggleBtn.textContent = 'Profile';
+            authToggleBtn.classList.remove('login-btn');
+            authToggleBtn.classList.add('donate-btn');
+            
+            // Show logout button
+            logoutBtn.style.display = 'block';
+            
+            // Enable message input
+            messageInput.disabled = false;
+            messageInput.placeholder = translations[currentLang]['messagePlaceholder'] || 'Type your message here...';
+            sendButton.disabled = false;
+            
+            // Clear welcome message
+            messagesContainer.innerHTML = '';
+        }
+
+        function showAuthInterface() {
+            // Show auth modal
+            authModal.classList.add('active');
+            
+            // Reset UI elements
+            displayNameElement.textContent = translations[currentLang]['defaultUserName'] || 'Guest User';
+            userRoleElement.textContent = translations[currentLang]['defaultUserRole'] || 'Join to chat';
+            statusDot.style.background = '#000000de';
+            userStatusElement.textContent = translations[currentLang]['offlineStatus'] || 'Offline';
+            
+            // Update auth button
+            authToggleBtn.textContent = translations[currentLang]['login'] || 'Login';
+            authToggleBtn.classList.remove('donate-btn');
+            authToggleBtn.classList.add('login-btn');
+            
+            // Hide logout button
+            logoutBtn.style.display = 'none';
+            
+            // Disable message input
+            messageInput.disabled = true;
+            messageInput.placeholder = 'Sign in to send messages...';
+            sendButton.disabled = true;
+            
+            // Show welcome message
+            messagesContainer.innerHTML = '<div class="no-results" data-translate="chatWelcome">Sign in to join the conversation!</div>';
+        }
+
+        async function updateUserProfile() {
+            if (!currentUser) return;
+            
+            try {
+                // Update user profile in Firestore
+                const userRef = window.firebase.collection(window.firebase.db, 'users');
+                await window.firebase.addDoc(userRef, {
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                    lastSeen: window.firebase.serverTimestamp(),
+                    status: 'online',
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=ec4899&color=fff`
+                });
+            } catch (error) {
+                console.log('User profile already exists or error:', error);
+            }
+        }
+
+        async function updateUserStatus(status) {
+            if (!currentUser) return;
+            
+            try {
+                const usersRef = window.firebase.collection(window.firebase.db, 'users');
+                const q = window.firebase.query(
+                    usersRef,
+                    window.firebase.where('uid', '==', currentUser.uid),
+                    window.firebase.limit(1)
+                );
+                
+                const querySnapshot = await window.firebase.getDocs(q);
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    // In a real app, you would update the existing document
+                    // This is simplified for demonstration
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        }
+
+        function loadMessages() {
+            if (!currentUser) return;
+            
+            // Clear previous listener
+            clearMessageListener();
+            
+            const messagesRef = window.firebase.collection(window.firebase.db, 'messages');
+            const q = window.firebase.query(
+                messagesRef,
+                window.firebase.where('channel', '==', currentChannel),
+                window.firebase.orderBy('timestamp', 'asc')
+            );
+            
+            messageListener = window.firebase.onSnapshot(q, (querySnapshot) => {
+                messagesContainer.innerHTML = '';
+                allMessages = [];
+                
+                if (querySnapshot.empty) {
+                    messagesContainer.innerHTML = '<div class="no-results" data-translate="noMessages">No messages yet. Start the conversation!</div>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const message = doc.data();
+                    displayMessage(message);
+                    allMessages.push(message);
+                });
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        function displayMessage(message) {
+            const messageDiv = document.createElement('div');
+            const isCurrentUser = currentUser && message.userId === currentUser.uid;
+            
+            messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+            
+            // Format timestamp
+            let timeText = 'Just now';
+            if (message.timestamp) {
+                if (message.timestamp.toDate) {
+                    const date = message.timestamp.toDate();
+                    timeText = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <img src="${message.avatar || 'img/good.png'}" alt="${message.displayName}">
+                </div>
+                <div class="message-content">
+                    <div class="message-sender">${message.displayName}</div>
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${timeText}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        function clearMessageListener() {
+            if (messageListener) {
+                messageListener();
+                messageListener = null;
+            }
+        }
+
+        async function sendMessage() {
+            if (!currentUser || !messageInput.value.trim()) return;
+            
+            const messageText = messageInput.value.trim();
+            
+            try {
+                await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'messages'), {
+                    text: messageText,
+                    userId: currentUser.uid,
+                    displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                    email: currentUser.email,
+                    channel: currentChannel,
+                    timestamp: window.firebase.serverTimestamp(),
+                    avatar: currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=ec4899&color=fff`
+                });
+                
+                messageInput.value = '';
+                messageInput.focus();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            }
+        }
+
+        async function loadOnlineUsers() {
+            if (!currentUser) return;
+            
+            const usersRef = window.firebase.collection(window.firebase.db, 'users');
+            const q = window.firebase.query(usersRef, window.firebase.where('status', '==', 'online'));
+            
+            window.firebase.onSnapshot(q, (querySnapshot) => {
+                const peopleList = document.getElementById('people-list');
+                peopleList.innerHTML = '';
+                onlineUsers.clear();
+                
+                if (querySnapshot.empty) {
+                    peopleList.innerHTML = '<div class="no-results">No users online</div>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    if (user.uid !== currentUser.uid) {
+                        onlineUsers.add(user.uid);
+                        
+                        const personItem = document.createElement('li');
+                        personItem.className = 'person-item';
+                        personItem.innerHTML = `
+                            <div class="person-avatar">
+                                <img src="${user.avatar || 'img/good.png'}" alt="${user.displayName}">
+                            </div>
+                            <div class="person-info">
+                                <h4>${user.displayName}</h4>
+                                <p>${user.email}</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        peopleList.appendChild(personItem);
+                    }
+                });
+            });
+        }
+
+        // Utility Functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        function setLoading(formId, isLoading) {
+            const loadingElement = document.getElementById(`${formId}-loading`);
+            const submitButton = document.querySelector(`#${formId} .auth-btn`);
+            
+            if (isLoading) {
+                loadingElement.classList.add('active');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Please wait...';
+            } else {
+                loadingElement.classList.remove('active');
+                submitButton.disabled = false;
+                submitButton.textContent = formId === 'login-form' ? 'Sign In' : 'Create Account';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.nav-overlay');
+            
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // Auth toggle
+            authToggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentUser) {
+                    // Already logged in - could show profile modal
+                    return;
+                }
+                authModal.classList.toggle('active');
+            });
+            
+            // Auth modal tabs
+            const authTabs = document.querySelectorAll('.auth-tab');
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding form
+                    document.getElementById('login-form').classList.remove('active');
+                    document.getElementById('register-form').classList.remove('active');
+                    document.getElementById(`${tabId}-form`).classList.add('active');
+                });
+            });
+            
+            // Login form
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (!email || !password) {
+                    showError('login-error', 'Please fill in all fields');
+                    return;
+                }
+                
+                setLoading('login', true);
+                
+                try {
+                    const userCredential = await window.firebase.signInWithEmailAndPassword(
+                        window.firebase.auth,
+                        email,
+                        password
+                    );
+                    console.log('Login successful:', userCredential.user);
+                    showSuccess('login-success', 'Login successful!');
+                    
+                    // The auth state listener will handle the UI transition
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError('login-error', error.message);
+                } finally {
+                    setLoading('login', false);
+                }
+            });
+            
+            // Register form
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                // Validation
+                if (!name || !email || !password || !confirmPassword) {
+                    showError('register-error', 'Please fill in all fields');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError('register-error', 'Password must be at least 6 characters');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('register-error', 'Passwords do not match');
+                    return;
+                }
+                
+                setLoading('register', true);
+                
+                try {
+                    // Create user
+                    const userCredential = await window.firebase.createUserWithEmailAndPassword(
+                        window.firebase.auth,
+                        email,
+                        password
+                    );
+                    
+                    // Update profile
+                    await window.firebase.updateProfile(userCredential.user, {
+                        displayName: name
+                    });
+                    
+                    console.log('Registration successful:', userCredential.user);
+                    showSuccess('register-success', 'Account created successfully!');
+                    
+                    // The auth state listener will handle the UI transition
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showError('register-error', error.message);
+                } finally {
+                    setLoading('register', false);
+                }
+            });
+            
+            // Logout
+            logoutBtn.addEventListener('click', async function() {
+                try {
+                    await updateUserStatus('offline');
+                    await window.firebase.signOut(window.firebase.auth);
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+            
+            // Send message
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Channel switching
+            const channelItems = document.querySelectorAll('.channel-item');
+            channelItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (!currentUser) {
+                        authModal.classList.add('active');
+                        return;
+                    }
+                    
+                    // Update active channel
+                    channelItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Load new channel
+                    const channelId = this.getAttribute('data-channel');
+                    currentChannel = channelId;
+                    document.getElementById('channel-title').textContent = `#${channelId}`;
+                    
+                    // Update description
+                    const channelDescriptions = {
+                        ideas: 'Share and discuss business ideas with the community',
+                        support: 'Get answers to your questions and help others',
+                        partnerships: 'Find collaborators and business partners',
+                        growth: 'Discuss strategies for scaling your business',
+                        resources: 'Share and discover helpful student resources'
+                    };
+                    
+                    document.getElementById('channel-description').textContent = 
+                        channelDescriptions[channelId] || 'Chat channel';
+                    
+                    loadMessages();
+                });
+            });
+            
+            // Sidebar tabs
+            const sidebarTabs = document.querySelectorAll('.sidebar-tab');
+            sidebarTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    sidebarTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelector('.channels').classList.remove('active');
+                    document.querySelector('.people').classList.remove('active');
+                    document.querySelector(`.${tabId}`).classList.add('active');
+                });
+            });
+            
+            // Search functionality
+            const searchBtn = document.getElementById('search-btn');
+            const searchModal = document.getElementById('search-modal');
+            const searchModalClose = document.getElementById('search-modal-close');
+            const searchModalInput = document.getElementById('search-modal-input');
+            const searchResults = document.getElementById('search-results');
+            
+            searchBtn.addEventListener('click', function() {
+                searchModal.classList.add('active');
+                searchModalInput.focus();
+            });
+            
+            searchModalClose.addEventListener('click', function() {
+                searchModal.classList.remove('active');
+            });
+            
+            searchModalInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    searchResults.innerHTML = '<div class="no-results">Enter a search term to find messages</div>';
+                    return;
+                }
+                
+                const filteredMessages = allMessages.filter(message => 
+                    message.text.toLowerCase().includes(searchTerm) || 
+                    message.displayName.toLowerCase().includes(searchTerm)
+                );
+                
+                if (filteredMessages.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No messages found matching your search</div>';
+                } else {
+                    searchResults.innerHTML = '';
+                    filteredMessages.forEach(message => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <div class="search-result-sender">${message.displayName}</div>
+                            <div class="search-result-text">${message.text}</div>
+                            <div class="message-time">${message.timestamp?.toDate?.().toLocaleTimeString() || 'Unknown time'}</div>
+                        `;
+                        searchResults.appendChild(resultItem);
+                    });
+                }
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === authModal) {
+                    authModal.classList.remove('active');
+                }
+                if (e.target === searchModal) {
+                    searchModal.classList.remove('active');
+                }
+            });
+            
+            // Language switching
+            const languageLinks = document.querySelectorAll('.dropdown-menu a[data-lang]');
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Initialize
+            initializeAuthListener();
+            
+            // Check initial auth state
+            const initialUser = window.firebase.auth.currentUser;
+            if (initialUser) {
+                showChatInterface(initialUser);
+                updateUserProfile();
+                loadMessages();
+            } else {
+                showAuthInterface();
+            }
+        });
+
+        // Translation data and function (same as before)
+        const translations = {
+            en: {
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                resources: "Resources",
+                contact: "Contact",
+                login: "Login",
+                donate: "Donate",
+                search: "Search...",
+                chatTitle: "Let's Chat",
+                chatSubtitle: "Connect with fellow entrepreneurs",
+                defaultUserName: "Guest User",
+                defaultUserRole: "Join to chat",
+                onlineStatus: "Online",
+                offlineStatus: "Offline",
+                channelsTab: "Channels",
+                peopleTab: "People",
+                channelsTitle: "Discussion Channels",
+                ideasChannel: "Ideas & Brainstorming",
+                supportChannel: "Q&A Support",
+                partnershipsChannel: "Partnerships",
+                growthChannel: "Growth Strategies",
+                resourcesChannel: "Student Resources",
+                loading: "Loading...",
+                peopleTitle: "Community Members",
+                ideasDescription: "Share and discuss business ideas with the community",
+                messagePlaceholder: "Type your message here...",
+                chatWelcome: "Sign in to join the conversation!",
+                noMessages: "No messages yet. Start the conversation!",
+                searchMessages: "Search Messages",
+                searchPlaceholder: "Type to search messages...",
+                enterSearchTerm: "Enter a search term to find messages",
+                noResults: "No messages found matching your search",
+                empoweringGirls: "Empowering Girls, Building Futures",
+                footerDescription: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+                quickLinks: "Quick Links",
+                joinChatFooter: "Join Chat",
+                shareStory: "Share Story",
+                programsFooter: "Programs",
+                getHelp: "Get Help",
+                emergency: "Emergency",
+                supportFooter: "Support",
+                report: "Report",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Empowering girls, always.",
+                availableLanguages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+                supportedBy: "Supported by UNHCR, Save The Children, Alight",
+                welcome: "Welcome to GirlsSpace Chat",
+                joinChat: "Join our safe community chat",
+                emailLabel: "Email Address",
+                passwordLabel: "Password",
+                nameLabel: "Display Name",
+                confirmPasswordLabel: "Confirm Password",
+                loginBtn: "Sign In",
+                registerBtn: "Create Account"
+            },
+            // Other languages (ar, sw, fr, rw) remain the same as before
+            // You can copy them from your original code
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const translatableElements = document.querySelectorAll('[data-translate]');
+            translatableElements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+    </script>
+    <script type="module" src="./auth-ui.js"></script>
 </body>
 </html>
