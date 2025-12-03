@@ -1,21 +1,33 @@
-// firebase.js - Complete working version
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+// firebase.js - UPDATED VERSION WITH PROFILE FUNCTIONS
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
-  sendPasswordResetEmail,
+  onAuthStateChanged,
   signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
   getFirestore, 
   doc, 
   setDoc, 
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  getDoc,
+  updateDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-// Firebase configuration
+// Firebase configuration - REPLACE WITH YOUR CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
   authDomain: "sigin-b3aa1.firebaseapp.com",
@@ -30,14 +42,399 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 console.log('✅ Firebase initialized successfully');
 
-// دالة لعرض الرسائل
-function showMessage(message, type = 'error') {
-  console.log(`📢 ${type.toUpperCase()}: ${message}`);
+// ================ USER PROFILE FUNCTIONS ================
+
+// Get current user profile
+export async function getCurrentUserProfile() {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log('❌ No user logged in');
+    return null;
+  }
+
+  try {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      return {
+        id: userDoc.id,
+        ...userDoc.data()
+      };
+    } else {
+      console.log('❌ User document not found');
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ Error getting user profile:', error);
+    return null;
+  }
+}
+
+// Update user profile
+export async function updateUserProfile(profileData) {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('No user logged in');
+  }
+
+  try {
+    // Update in Firestore
+    const userRef = doc(db, "users", user.uid);
+    await updateDoc(userRef, {
+      ...profileData,
+      updatedAt: new Date().toISOString()
+    });
+
+    // Update in Auth if displayName or photoURL changed
+    if (profileData.displayName || profileData.photoURL) {
+      await updateProfile(user, {
+        displayName: profileData.displayName || user.displayName,
+        photoURL: profileData.photoURL || user.photoURL
+      });
+    }
+
+    console.log('✅ Profile updated successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Error updating profile:', error);
+    throw error;
+  }
+}
+
+// Upload profile picture
+export async function uploadProfilePicture(file, userId) {
+  try {
+    // Create storage reference
+    const storageRef = ref(storage, `profile-pictures/${userId}/${Date.now()}_${file.name}`);
+    
+    // Upload file
+    const snapshot = await uploadBytes(storageRef, file);
+    
+    // Get download URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    
+    console.log('✅ Profile picture uploaded:', downloadURL);
+    return downloadURL;
+  } catch (error) {
+    console.error('❌ Error uploading profile picture:', error);
+    throw error;
+  }
+}
+
+// Save user story
+export async function saveUserStory(storyData) {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('No user logged in');
+  }
+
+  try {
+    const storyRef = await addDoc(collection(db, "stories"), {
+      ...storyData,
+      userId: user.uid,
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+      status: 'published'
+    });
+
+    console.log('✅ Story saved with ID:', storyRef.id);
+    return storyRef.id;
+  } catch (error) {
+    console.error('❌ Error saving story:', error);
+    throw error;
+  }
+}
+
+// Get user stories
+export async function getUserStories(userId) {
+  try {
+    const storiesQuery = query(
+      collection(db, "stories"),
+      where("userId", "==", userId)
+    );
+    
+    const querySnapshot = await getDocs(storiesQuery);
+    const stories = [];
+    
+    querySnapshot.forEach((doc) => {
+      stories.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    console.log(`✅ Found ${stories.length} stories for user ${userId}`);
+    return stories;
+  } catch (error) {
+    console.error('❌ Error getting user stories:', error);
+    throw error;
+  }
+}
+
+// Get user achievements
+export async function getUserAchievements(userId) {
+  try {
+    const achievementsQuery = query(
+      collection(db, "achievements"),
+      where("userId", "==", userId)
+    );
+    
+    const querySnapshot = await getDocs(achievementsQuery);
+    const achievements = [];
+    
+    querySnapshot.forEach((doc) => {
+      achievements.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    console.log(`✅ Found ${achievements.length} achievements for user ${userId}`);
+    return achievements;
+  } catch (error) {
+    console.error('❌ Error getting user achievements:', error);
+    throw error;
+  }
+}
+
+// Get user progress
+export async function getUserProgress(userId) {
+  try {
+    const progressRef = doc(db, "userProgress", userId);
+    const progressDoc = await getDoc(progressRef);
+    
+    if (progressDoc.exists()) {
+      return progressDoc.data();
+    } else {
+      // Create default progress if none exists
+      const defaultProgress = {
+        englishLanguage: 0,
+        lifeSkills: 0,
+        gbvPrevention: 0,
+        digitalSkills: 0,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      await setDoc(progressRef, defaultProgress);
+      return defaultProgress;
+    }
+  } catch (error) {
+    console.error('❌ Error getting user progress:', error);
+    throw error;
+  }
+}
+
+// Update user progress
+export async function updateUserProgress(progressData) {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error('No user logged in');
+  }
+
+  try {
+    const progressRef = doc(db, "userProgress", user.uid);
+    await updateDoc(progressRef, {
+      ...progressData,
+      lastUpdated: new Date().toISOString()
+    });
+
+    console.log('✅ Progress updated successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ Error updating progress:', error);
+    throw error;
+  }
+}
+
+// Get user statistics
+export async function getUserStatistics(userId) {
+  try {
+    // Get stories count
+    const storiesQuery = query(
+      collection(db, "stories"),
+      where("userId", "==", userId)
+    );
+    const storiesSnapshot = await getDocs(storiesQuery);
+    const storiesCount = storiesSnapshot.size;
+
+    // Get chat messages count (you'll need to implement this based on your chat structure)
+    const chatMessagesCount = 0; // Placeholder
+
+    // Get completed programs count
+    const programsQuery = query(
+      collection(db, "userPrograms"),
+      where("userId", "==", userId),
+      where("completed", "==", true)
+    );
+    const programsSnapshot = await getDocs(programsQuery);
+    const programsCount = programsSnapshot.size;
+
+    // Get badges count
+    const badgesQuery = query(
+      collection(db, "userBadges"),
+      where("userId", "==", userId)
+    );
+    const badgesSnapshot = await getDocs(badgesQuery);
+    const badgesCount = badgesSnapshot.size;
+
+    return {
+      storiesCount,
+      chatMessagesCount,
+      programsCount,
+      badgesCount
+    };
+  } catch (error) {
+    console.error('❌ Error getting user statistics:', error);
+    throw error;
+  }
+}
+
+// ================ AUTH FUNCTIONS ================
+
+// Sign up function
+export function setupSignUp() {
+  const signupForm = document.getElementById('signupForm');
   
-  // Remove any existing messages
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      
+      if (!fullName || !email || !password) {
+        showMessage('Please fill all fields');
+        return;
+      }
+      
+      try {
+        // Create user in Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Split name
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ') || '';
+        
+        // Create user profile in Firestore
+        const userData = {
+          fullName,
+          firstName,
+          lastName,
+          email,
+          role: 'user',
+          createdAt: new Date().toISOString(),
+          bio: '',
+          location: 'Mahama Refugee Camp',
+          preferredLanguage: 'en'
+        };
+        
+        await setDoc(doc(db, "users", user.uid), userData);
+        
+        // Update auth profile
+        await updateProfile(user, {
+          displayName: fullName
+        });
+        
+        showMessage('Account created successfully!', 'success');
+        
+        // Save to localStorage
+        localStorage.setItem('girlspaceUser', JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          displayName: fullName,
+          firstName: firstName,
+          role: 'user'
+        }));
+        
+        // Redirect to profile page
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 1500);
+        
+      } catch (error) {
+        console.error('Sign up error:', error);
+        showMessage(error.message);
+      }
+    });
+  }
+}
+
+// Sign in function
+export function setupSignIn() {
+  const loginForm = document.getElementById('loginForm');
+  
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Get user data from Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          
+          // Save to localStorage
+          localStorage.setItem('girlspaceUser', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: userData.fullName || user.email.split('@')[0],
+            firstName: userData.firstName,
+            role: userData.role,
+            photoURL: userData.photoURL
+          }));
+          
+          showMessage(`Welcome back, ${userData.firstName || user.email.split('@')[0]}!`, 'success');
+          
+          // Redirect based on role
+          setTimeout(() => {
+            if (userData.role === 'admin') {
+              window.location.href = 'admin-dashboard.html';
+            } else {
+              window.location.href = 'profile.html';
+            }
+          }, 1500);
+        }
+        
+      } catch (error) {
+        console.error('Sign in error:', error);
+        showMessage(error.message);
+      }
+    });
+  }
+}
+
+// Logout function
+export function logout() {
+  return signOut(auth);
+}
+
+// Check auth state
+export function onAuthStateChange(callback) {
+  return onAuthStateChanged(auth, callback);
+}
+
+// Get current user
+export function getCurrentUser() {
+  return auth.currentUser;
+}
+
+// Show message function
+function showMessage(message, type = 'error') {
+  // Remove existing messages
   const existingMessages = document.querySelectorAll('.custom-message');
   existingMessages.forEach(msg => msg.remove());
   
@@ -57,441 +454,56 @@ function showMessage(message, type = 'error') {
   }, 5000);
 }
 
-// ================ SIGN UP ================
-export function setupSignUp() {
-  const signupForm = document.getElementById('signupForm');
-  console.log('🔧 Setting up sign up...');
+// Export Firebase services
+export { auth, db, storage };
+// Add these to your existing firebase.js file
+
+// Get user profile
+export async function getUserProfile() {
+  const user = auth.currentUser;
+  if (!user) return null;
   
-  if (signupForm) {
-    console.log('✅ Sign up form found');
-    
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      console.log('📝 Sign up form submitted');
-
-      const fullName = document.getElementById('fullName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      console.log('📧 Form data:', { fullName, email, password: '***' });
-
-      if (!fullName || !email || !password) {
-        showMessage('Please fill all fields');
-        return;
-      }
-
-      if (password.length < 6) {
-        showMessage('Password should be at least 6 characters');
-        return;
-      }
-
-      try {
-        const submitBtn = signupForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Creating Account...';
-        submitBtn.disabled = true;
-
-        // Create user in Authentication
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log('✅ User created:', user.uid);
-        
-        // Split name
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(' ') || '';
-
-        // Save user data to Firestore
-        const userData = {
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          role: 'user',
-          createdAt: new Date().toISOString(),
-          uid: user.uid
-        };
-
-        await setDoc(doc(db, "users", user.uid), userData);
-        console.log('✅ User data saved to Firestore');
-        
-        showMessage('Account created successfully! Redirecting...', 'success');
-        
-        // Save to localStorage
-        localStorage.setItem('userFullName', fullName);
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userUID', user.uid);
-        localStorage.setItem('userFirstName', firstName);
-        localStorage.setItem('userRole', 'user');
-        
-        // Redirect to home page
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 2000);
-
-      } catch (error) {
-        console.error('❌ Sign up error:', error);
-        
-        let errorMessage = 'Error creating account';
-        if (error.code === 'auth/email-already-in-use') {
-          errorMessage = 'Email already in use!';
-        } else if (error.code === 'auth/weak-password') {
-          errorMessage = 'Password should be at least 6 characters';
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Invalid email address';
-        } else if (error.code === 'auth/network-request-failed') {
-          errorMessage = 'Network error. Please check your internet connection';
-        } else {
-          errorMessage = `Error: ${error.message}`;
-        }
-        
-        showMessage(errorMessage);
-        
-        const submitBtn = signupForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-  } else {
-    console.error('❌ Sign up form not found!');
+  try {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      return userDoc.data();
+    }
+    return null;
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    return null;
   }
 }
 
-// ================ SIGN IN ================
-export function setupSignIn() {
-  const loginForm = document.getElementById('loginForm');
-  console.log('🔧 Setting up sign in...');
+// Create user profile after signup
+export async function createUserProfileAfterSignup(userCredential, additionalData = {}) {
+  const user = userCredential.user;
   
-  if (loginForm) {
-    console.log('✅ Login form found');
-    
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      console.log('🔐 Login form submitted');
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const rememberMe = document.getElementById('remember') ? document.getElementById('remember').checked : false;
-
-      console.log('📧 Login data:', { email, password: '***', rememberMe });
-
-      if (!email || !password) {
-        showMessage('Please enter email and password');
-        return;
-      }
-
-      try {
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Signing In...';
-        submitBtn.disabled = true;
-
-        console.log('🔄 Attempting to sign in...');
-
-        // Sign in user
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log('✅ User signed in:', user.uid);
-
-        // Get user data from Firestore
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          console.log('✅ User role:', userData.role);
-          
-          // Save to localStorage
-          localStorage.setItem('userFullName', userData.fullName);
-          localStorage.setItem('userEmail', userData.email);
-          localStorage.setItem('userUID', user.uid);
-          localStorage.setItem('userFirstName', userData.firstName);
-          localStorage.setItem('userRole', userData.role);
-          
-          if (rememberMe) {
-            localStorage.setItem('rememberMe', 'true');
-          }
-
-          // Redirect based on role
-          if (userData.role === 'admin') {
-            showMessage(`Welcome Admin ${userData.firstName}! Redirecting to dashboard...`, 'success');
-            setTimeout(() => {
-              window.location.href = 'admin-dashboard.html';
-            }, 2000);
-          } else {
-            showMessage(`Welcome back, ${userData.firstName}! Redirecting...`, 'success');
-            setTimeout(() => {
-              window.location.href = 'index.html';
-            }, 2000);
-          }
-        } else {
-          showMessage('User data not found. Please contact support.', 'error');
-        }
-
-      } catch (error) {
-        console.error('❌ Sign in error:', error);
-        console.error('❌ Error code:', error.code);
-        console.error('❌ Error message:', error.message);
-        
-        let errorMessage = 'Error signing in';
-        
-        if (error.code === 'auth/user-not-found' || 
-            error.code === 'auth/wrong-password' || 
-            error.code === 'auth/invalid-credential') {
-          errorMessage = 'Incorrect email or password';
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Invalid email address';
-        } else if (error.code === 'auth/too-many-requests') {
-          errorMessage = 'Too many failed attempts. Please try again later';
-        } else if (error.code === 'auth/network-request-failed') {
-          errorMessage = 'Network error. Please check your internet connection';
-        } else if (error.code === 'auth/user-disabled') {
-          errorMessage = 'This account has been disabled';
-        } else {
-          errorMessage = `Error: ${error.message}`;
-        }
-        
-        showMessage(errorMessage);
-        
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-  } else {
-    console.error('❌ Login form not found!');
-  }
-}
-
-// ================ FORGOT PASSWORD ================
-export function setupForgotPassword() {
-  const forgotForm = document.getElementById('forgotForm');
-  console.log('🔧 Setting up forgot password...');
+  const userProfile = {
+    uid: user.uid,
+    email: user.email,
+    displayName: additionalData.fullName || user.email.split('@')[0],
+    firstName: additionalData.firstName || '',
+    lastName: additionalData.lastName || '',
+    role: 'user',
+    bio: '',
+    location: 'Mahama Refugee Camp',
+    photoURL: user.photoURL || '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    ...additionalData
+  };
   
-  if (forgotForm) {
-    console.log('✅ Forgot password form found');
+  try {
+    await setDoc(doc(db, "users", user.uid), userProfile);
+    console.log('✅ User profile created');
     
-    forgotForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      console.log('📧 Forgot password form submitted');
-
-      const email = document.getElementById('email').value.trim();
-      console.log('📨 Email:', email);
-
-      if (!email) {
-        showMessage('Please enter your email address');
-        return;
-      }
-
-      // Basic email validation
-      if (!email.includes('@')) {
-        showMessage('Please enter a valid email address');
-        return;
-      }
-
-      try {
-        const submitBtn = forgotForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-
-        console.log('🔄 Sending password reset email...');
-
-        // Send password reset email
-        await sendPasswordResetEmail(auth, email);
-        
-        console.log('✅ Password reset email sent successfully');
-        showMessage('Password reset email sent! Check your inbox and spam folder.', 'success');
-        
-        // Reset form
-        forgotForm.reset();
-        
-        // Redirect to login page after 5 seconds
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 5000);
-
-      } catch (error) {
-        console.error('❌ Password reset error:', error);
-        
-        let errorMessage = 'Error sending reset email';
-        
-        if (error.code === 'auth/user-not-found') {
-          errorMessage = 'No account found with this email';
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Invalid email address';
-        } else if (error.code === 'auth/too-many-requests') {
-          errorMessage = 'Too many requests. Please try again later';
-        } else if (error.code === 'auth/network-request-failed') {
-          errorMessage = 'Network error. Please check your internet connection';
-        } else {
-          errorMessage = `Error: ${error.message}`;
-        }
-        
-        showMessage(errorMessage);
-        
-        const submitBtn = forgotForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-  } else {
-    console.error('❌ Forgot password form not found!');
-  }
-}
-
-// ================ CHECK AUTH STATE ================
-export function checkAuthState() {
-  return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('✅ User is signed in:', user.uid);
-        resolve(user);
-      } else {
-        console.log('❌ User is signed out');
-        resolve(null);
-      }
-    });
-  });
-}
-
-// ================ LOGOUT ================
-export function setupLogout() {
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-        localStorage.clear();
-        window.location.href = 'login.html';
-      } catch (error) {
-        console.error('Logout error:', error);
-        showMessage('Error during logout');
-      }
-    });
-  }
-}
-
-// Export auth and db for other uses
-export { auth, db };
-// ================ ADMIN SIGN UP ================
-export function setupAdminSignUp() {
-  const adminSignupForm = document.getElementById('adminSignupForm');
-  console.log('🔧 Setting up admin sign up...');
-  
-  if (adminSignupForm) {
-    console.log('✅ Admin sign up form found');
+    // Save to localStorage for quick access
+    localStorage.setItem('girlspaceUser', JSON.stringify(userProfile));
     
-    // Secret admin code (in production, this should be more secure)
-    const ADMIN_SECRET_CODE = "GirlsSpaceAdmin2025";
-    
-    adminSignupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      console.log('👑 Admin sign up form submitted');
-
-      const fullName = document.getElementById('adminFullName').value.trim();
-      const email = document.getElementById('adminEmail').value.trim();
-      const password = document.getElementById('adminPassword').value;
-      const secretCode = document.getElementById('adminSecretCode').value;
-
-      console.log('📧 Admin form data:', { fullName, email, password: '***' });
-
-      if (!fullName || !email || !password || !secretCode) {
-        showMessage('Please fill all fields');
-        return;
-      }
-
-      if (secretCode !== ADMIN_SECRET_CODE) {
-        showMessage('Invalid admin secret code');
-        return;
-      }
-
-      if (password.length < 6) {
-        showMessage('Password should be at least 6 characters');
-        return;
-      }
-
-      try {
-        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Creating Admin Account...';
-        submitBtn.disabled = true;
-
-        // Create admin user
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log('✅ Admin user created:', user.uid);
-        
-        // Split name
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(' ') || '';
-
-        // Save admin data to Firestore
-        const adminData = {
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          role: 'admin',
-          createdAt: new Date().toISOString(),
-          uid: user.uid,
-          permissions: ['manage_users', 'manage_content', 'view_reports', 'moderate']
-        };
-
-        // Save to users collection
-        await setDoc(doc(db, "users", user.uid), {
-          fullName: fullName,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          role: 'admin',
-          createdAt: new Date().toISOString()
-        });
-
-        // Save to admins collection
-        await setDoc(doc(db, "admins", user.uid), adminData);
-        
-        console.log('✅ Admin data saved to Firestore');
-        
-        showMessage('Admin account created successfully! Redirecting...', 'success');
-        
-        // Save to localStorage
-        localStorage.setItem('userFullName', fullName);
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userUID', user.uid);
-        localStorage.setItem('userFirstName', firstName);
-        localStorage.setItem('userRole', 'admin');
-        
-        // Redirect to admin dashboard
-        setTimeout(() => {
-          window.location.href = 'admin-dashboard.html';
-        }, 2000);
-
-      } catch (error) {
-        console.error('❌ Admin sign up error:', error);
-        
-        let errorMessage = 'Error creating admin account';
-        if (error.code === 'auth/email-already-in-use') {
-          errorMessage = 'Email already in use!';
-        } else if (error.code === 'auth/weak-password') {
-          errorMessage = 'Password should be at least 6 characters';
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Invalid email address';
-        } else if (error.code === 'auth/network-request-failed') {
-          errorMessage = 'Network error. Please check your internet connection';
-        } else {
-          errorMessage = `Error: ${error.message}`;
-        }
-        
-        showMessage(errorMessage);
-        
-        const submitBtn = adminSignupForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    });
-  } else {
-    console.error('❌ Admin sign up form not found!');
+    return userProfile;
+  } catch (error) {
+    console.error('Error creating user profile:', error);
+    throw error;
   }
 }
