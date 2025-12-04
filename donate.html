@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Donate - GirlsSpace Mahama</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#ec4899',
+            'primary-dark': '#be185d',
+            accent: '#fbbf24',
+            dark: '#0f0f14',
+            'custom-purple': '#c23cb6',
+          },
+          animation: {
+            float: 'float 3s ease-in-out infinite',
+            'spin-slow': 'spin 10s linear infinite',
+            sparkle: 'sparkleAnim 2s infinite',
+            pulse: 'pulse-glow 2s ease-in-out infinite',
+            fadeIn: 'fadeIn 0.5s ease-in-out',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            sparkleAnim: {
+              '0%': { opacity: 0, transform: 'scale(0)' },
+              '50%': { opacity: 1, transform: 'scale(1.5)' },
+              '100%': { opacity: 0, transform: 'scale(0)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { boxShadow: '0 10px 30px rgba(236,72,154,0.2)' },
+              '50%': { boxShadow: '0 15px 40px rgba(236,72,154,0.4)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .donation-card {
+      background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(40, 40, 60, 0.9) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .donation-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(236, 72, 153, 0.5);
+      box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+    }
+    
+    .donation-amount {
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+    
+    .donation-amount:hover {
+      border-color: #ec4899;
+      transform: scale(1.05);
+    }
+    
+    .donation-amount.selected {
+      border-color: #ec4899;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(194, 60, 182, 0.1) 100%);
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: linear-gradient(90deg, #ec4899 0%, #c23cb6 100%);
+      border-radius: 4px;
+      transition: width 1s ease-in-out;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(30, 30, 40, 0.5);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ec4899 0%, #c23cb6 100%);
+      border-radius: 4px;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body class="font-poppins bg-black text-white overflow-x-hidden selection:bg-primary selection:text-white">
+
+  <!-- Navigation (Same as your main page) -->
+  <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
+    </div>
+
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary relative transition-colors">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors">Stories</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors">Protection</a>
+
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        </button>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="en">English</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="ar">Arabic</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="sw">Swahili</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="fr">French</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
+        </ul>
+      </div>
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors">Log In</a>
+      <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple">Donate</a>
+    </div>
+
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu (Same as your main page) -->
+  <!-- Add your mobile menu code here -->
+
+  <!-- Donation Hero Section -->
+  <section class="relative py-20 px-6 overflow-hidden bg-gradient-to-br from-dark via-black to-purple-900/30">
+    <!-- Animated background elements -->
+    <div class="absolute top-10 left-10 w-4 h-4 bg-accent rounded-full animate-sparkle opacity-70"></div>
+    <div class="absolute top-1/4 right-20 w-3 h-3 bg-primary rounded-full animate-sparkle delay-300 opacity-60"></div>
+    <div class="absolute bottom-1/3 left-1/4 w-2 h-2 bg-accent rounded-full animate-sparkle delay-700 opacity-50"></div>
+    
+    <div class="max-w-6xl mx-auto relative z-10">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl lg:text-6xl font-black mb-6">
+          Empower <span class="text-accent">Girls</span>, 
+          Transform <span class="text-primary">Futures</span>
+        </h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+          Your donation creates safe digital spaces, provides education, and builds brighter futures for girls in Mahama refugee camp.
+        </p>
+        
+        <!-- Donation Progress Bar -->
+        <div class="max-w-2xl mx-auto mb-12">
+          <div class="flex justify-between text-sm mb-2">
+            <span class="text-gray-400">Monthly Goal: $10,000</span>
+            <span class="text-accent font-semibold">$7,240 raised</span>
+          </div>
+          <div class="h-3 bg-gray-800 rounded-full overflow-hidden">
+            <div class="progress-bar" style="width: 72.4%"></div>
+          </div>
+          <div class="text-right text-sm text-gray-400 mt-1">72% of goal reached</div>
+        </div>
+      </div>
+
+      <!-- Impact Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        <div class="text-center p-6 donation-card rounded-2xl">
+          <div class="text-3xl font-bold text-primary mb-2">1,200+</div>
+          <div class="text-gray-300">Girls Impacted</div>
+        </div>
+        <div class="text-center p-6 donation-card rounded-2xl">
+          <div class="text-3xl font-bold text-accent mb-2">25</div>
+          <div class="text-gray-300">Programs Funded</div>
+        </div>
+        <div class="text-center p-6 donation-card rounded-2xl">
+          <div class="text-3xl font-bold text-custom-purple mb-2">50+</div>
+          <div class="text-gray-300">Safe Stories Shared</div>
+        </div>
+        <div class="text-center p-6 donation-card rounded-2xl">
+          <div class="text-3xl font-bold text-primary mb-2">24/7</div>
+          <div class="text-gray-300">Support Provided</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donation Options Section -->
+  <section class="py-16 px-6 bg-gradient-to-b from-slate-900 to-black">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Choose Your Impact</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Select an amount or choose a custom donation. Every contribution makes a difference.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Quick Donation Card -->
+        <div class="lg:col-span-2">
+          <div class="donation-card p-8 rounded-2xl mb-8">
+            <h3 class="text-2xl font-bold mb-6">Make a One-Time Donation</h3>
+            
+            <!-- Amount Selection -->
+            <div class="mb-8">
+              <div class="grid grid-cols-3 gap-4 mb-6">
+                <button class="donation-amount p-4 rounded-xl text-center bg-gray-800/50" data-amount="10">
+                  <div class="text-2xl font-bold">$10</div>
+                  <div class="text-sm text-gray-400 mt-1">Provides 1 month of internet</div>
+                </button>
+                <button class="donation-amount p-4 rounded-xl text-center bg-gray-800/50" data-amount="25">
+                  <div class="text-2xl font-bold">$25</div>
+                  <div class="text-sm text-gray-400 mt-1">Supports 1 learning kit</div>
+                </button>
+                <button class="donation-amount p-4 rounded-xl text-center bg-gray-800/50" data-amount="50">
+                  <div class="text-2xl font-bold">$50</div>
+                  <div class="text-sm text-gray-400 mt-1">Funds 1 week of programs</div>
+                </button>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <button class="donation-amount p-4 rounded-xl text-center bg-gray-800/50" data-amount="100">
+                  <div class="text-2xl font-bold">$100</div>
+                  <div class="text-sm text-gray-400 mt-1">Sponsors 1 girl for a month</div>
+                </button>
+                <button class="donation-amount p-4 rounded-xl text-center bg-gray-800/50" data-amount="250">
+                  <div class="text-2xl font-bold">$250</div>
+                  <div class="text-sm text-gray-400 mt-1">Equips a learning space</div>
+                </button>
+              </div>
+              
+              <!-- Custom Amount -->
+              <div class="mb-6">
+                <label class="block text-gray-300 mb-3">Or enter a custom amount:</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                  <input type="number" id="custom-amount" placeholder="Enter amount" 
+                         class="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl text-white outline-none focus:border-primary transition-all">
+                </div>
+              </div>
+              
+              <!-- Payment Method -->
+              <div class="mb-8">
+                <label class="block text-gray-300 mb-3">Payment Method:</label>
+                <div class="grid grid-cols-2 gap-4">
+                  <button class="payment-method p-4 rounded-xl text-center bg-gray-800/50 border border-transparent hover:border-primary transition-all">
+                    <i class="fab fa-cc-visa text-2xl text-blue-400 mb-2"></i>
+                    <div class="text-sm">Credit Card</div>
+                  </button>
+                  <button class="payment-method p-4 rounded-xl text-center bg-gray-800/50 border border-transparent hover:border-primary transition-all">
+                    <i class="fab fa-paypal text-2xl text-blue-500 mb-2"></i>
+                    <div class="text-sm">PayPal</div>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Donate Button -->
+              <button id="donate-now" class="w-full py-4 bg-gradient-to-r from-primary to-custom-purple text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-pink-500/30 transition-all transform hover:-translate-y-1">
+                Donate Now
+                <i class="fas fa-heart ml-2"></i>
+              </button>
+              
+              <p class="text-center text-gray-400 text-sm mt-4">
+                <i class="fas fa-lock mr-1"></i> Your donation is secure and encrypted
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Donation Card -->
+        <div>
+          <div class="donation-card p-8 rounded-2xl h-full">
+            <div class="text-center mb-6">
+              <div class="w-20 h-20 bg-gradient-to-r from-accent to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-star text-white text-2xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-2">Become a Monthly Supporter</h3>
+              <p class="text-gray-400">Make a lasting impact with recurring donations</p>
+            </div>
+            
+            <div class="space-y-4 mb-8">
+              <div class="p-4 bg-gray-800/30 rounded-xl">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="font-bold">$15/month</div>
+                    <div class="text-sm text-gray-400">Provides continuous internet access</div>
+                  </div>
+                  <button class="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors">
+                    Select
+                  </button>
+                </div>
+              </div>
+              
+              <div class="p-4 bg-gray-800/30 rounded-xl">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="font-bold">$30/month</div>
+                    <div class="text-sm text-gray-400">Sponsors educational materials</div>
+                  </div>
+                  <button class="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors">
+                    Select
+                  </button>
+                </div>
+              </div>
+              
+              <div class="p-4 bg-gray-800/30 rounded-xl">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="font-bold">$50/month</div>
+                    <div class="text-sm text-gray-400">Funds a girl's entire program</div>
+                  </div>
+                  <button class="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors">
+                    Select
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <div class="text-sm text-gray-400 mb-4">
+                <i class="fas fa-crown text-accent mr-2"></i>
+                Monthly supporters receive exclusive updates
+              </div>
+              <button class="w-full py-3 border-2 border-primary text-primary rounded-xl font-bold hover:bg-primary/10 transition-colors">
+                Start Monthly Support
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Stories Section -->
+  <section class="py-16 px-6 bg-gradient-to-b from-black to-dark">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4">See Your Impact</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Real stories from girls whose lives have been transformed through your support</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Story 1 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-gradient-to-r from-primary to-custom-purple rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-user-graduate text-white text-xl"></i>
+          </div>
+          <p class="text-gray-300 mb-4 italic">"Thanks to the learning programs, I now speak English and have started my own small business. I feel empowered!"</p>
+          <div class="font-bold">- Amina, 17</div>
+          <div class="text-sm text-gray-400">Entrepreneurship Program</div>
+        </div>
+        
+        <!-- Story 2 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-gradient-to-r from-accent to-orange-500 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-heart text-white text-xl"></i>
+          </div>
+          <p class="text-gray-300 mb-4 italic">"The safe chat room gave me friends who understand my journey. I'm no longer alone in my struggles."</p>
+          <div class="font-bold">- Fatima, 15</div>
+          <div class="text-sm text-gray-400">Safe Chat Community</div>
+        </div>
+        
+        <!-- Story 3 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-book text-white text-xl"></i>
+          </div>
+          <p class="text-gray-300 mb-4 italic">"Sharing my story helped me heal and inspired other girls to speak up. We are stronger together."</p>
+          <div class="font-bold">- Sarah, 16</div>
+          <div class="text-sm text-gray-400">Story Sharing Platform</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-16 px-6 bg-gradient-to-b from-dark to-black">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+      </div>
+      
+      <div class="space-y-4">
+        <!-- FAQ Item 1 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <button class="faq-question w-full text-left flex justify-between items-center">
+            <span class="font-bold text-lg">How will my donation be used?</span>
+            <i class="fas fa-chevron-down text-primary"></i>
+          </button>
+          <div class="faq-answer mt-4 text-gray-300 hidden">
+            Your donation directly funds our programs: 70% goes to educational materials and internet access, 20% to program development, and 10% to operational costs. We provide transparent financial reports to all donors.
+          </div>
+        </div>
+        
+        <!-- FAQ Item 2 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <button class="faq-question w-full text-left flex justify-between items-center">
+            <span class="font-bold text-lg">Is my donation tax-deductible?</span>
+            <i class="fas fa-chevron-down text-primary"></i>
+          </button>
+          <div class="faq-answer mt-4 text-gray-300 hidden">
+            Yes, GirlsSpace Mahama is a registered nonprofit organization. All donations are tax-deductible to the extent allowed by law. You will receive a receipt for your donation via email.
+          </div>
+        </div>
+        
+        <!-- FAQ Item 3 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <button class="faq-question w-full text-left flex justify-between items-center">
+            <span class="font-bold text-lg">Can I cancel or modify my monthly donation?</span>
+            <i class="fas fa-chevron-down text-primary"></i>
+          </button>
+          <div class="faq-answer mt-4 text-gray-300 hidden">
+            Absolutely! You can modify or cancel your monthly donation at any time by contacting our support team or through your donor portal. Changes take effect at the start of the next billing cycle.
+          </div>
+        </div>
+        
+        <!-- FAQ Item 4 -->
+        <div class="donation-card p-6 rounded-2xl">
+          <button class="faq-question w-full text-left flex justify-between items-center">
+            <span class="font-bold text-lg">How do I get updates about the impact of my donation?</span>
+            <i class="fas fa-chevron-down text-primary"></i>
+          </button>
+          <div class="faq-answer mt-4 text-gray-300 hidden">
+            All donors receive quarterly impact reports via email. Monthly supporters get exclusive monthly updates, photos, and stories directly from the girls in our programs.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-6 bg-gradient-to-r from-primary/20 via-custom-purple/20 to-primary/20">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
+      <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+        Join thousands of supporters who are helping build brighter futures for girls in Mahama refugee camp.
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <button class="px-8 py-4 bg-white text-primary rounded-xl font-bold text-lg hover:bg-gray-100 transition-all transform hover:-translate-y-1">
+          Donate Now
+          <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+        <button class="px-8 py-4 border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all">
+          Learn More About Our Work
+        </button>
+      </div>
+      <p class="text-gray-400 text-sm mt-8">
+        <i class="fas fa-shield-alt mr-2"></i> Secure donation • 100% SSL encrypted • Privacy protected
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer (Same as your main page) -->
+  <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
+            <p class="font-semibold text-[rgb(255,135,219)] text-base">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+          </p>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Quick Links</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="./chat.html" class="hover:text-[rgb(219,120,228)] transition-colors">Join Chat</a></li>
+            <li><a href="./stories.html" class="hover:text-[rgb(219,120,228)] transition-colors">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-[rgb(219,120,228)] transition-colors">Programs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4">Get Help</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
+        <div>
+          <p>© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium">Empowering girls, always.</span></p>
+        </div>
+        <div class="text-left md:text-right">
+          <p class="mb-1">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p>Supported by UNHCR, Save The Children, Alight</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Donation amount selection
+      const donationAmounts = document.querySelectorAll('.donation-amount');
+      const customAmountInput = document.getElementById('custom-amount');
+      
+      donationAmounts.forEach(amount => {
+        amount.addEventListener('click', function() {
+          // Remove selected class from all amounts
+          donationAmounts.forEach(a => a.classList.remove('selected'));
+          
+          // Add selected class to clicked amount
+          this.classList.add('selected');
+          
+          // Set custom amount input value
+          const selectedAmount = this.getAttribute('data-amount');
+          customAmountInput.value = selectedAmount;
+        });
+      });
+      
+      // Custom amount input clears selection
+      customAmountInput.addEventListener('input', function() {
+        donationAmounts.forEach(a => a.classList.remove('selected'));
+      });
+      
+      // Payment method selection
+      const paymentMethods = document.querySelectorAll('.payment-method');
+      paymentMethods.forEach(method => {
+        method.addEventListener('click', function() {
+          paymentMethods.forEach(m => m.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+      });
+      
+      // FAQ toggle functionality
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+          const answer = this.nextElementSibling;
+          const icon = this.querySelector('i');
+          
+          // Toggle answer visibility
+          answer.classList.toggle('hidden');
+          
+          // Rotate icon
+          icon.classList.toggle('fa-chevron-down');
+          icon.classList.toggle('fa-chevron-up');
+        });
+      });
+      
+      // Donate button functionality
+      const donateButton = document.getElementById('donate-now');
+      donateButton.addEventListener('click', function() {
+        const amount = customAmountInput.value || '0';
+        
+        if (parseFloat(amount) <= 0) {
+          alert('Please select or enter a donation amount');
+          return;
+        }
+        
+        // Show loading state
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+        this.disabled = true;
+        
+        // Simulate payment processing
+        setTimeout(() => {
+          // In a real app, this would connect to a payment gateway
+          alert(`Thank you for your donation of $${amount}! You will be redirected to the payment gateway.`);
+          
+          // Reset button
+          this.innerHTML = originalText;
+          this.disabled = false;
+        }, 1500);
+      });
+      
+      // Animate progress bar on scroll
+      function animateProgressBar() {
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+          progressBar.style.width = '72.4%';
+        }
+      }
+      
+      // Trigger animation when page loads
+      setTimeout(animateProgressBar, 500);
+      
+      // Mobile menu functionality (same as your main page)
+      const hamburger = document.getElementById('hamburger');
+      if (hamburger) {
+        hamburger.addEventListener('click', function() {
+          this.classList.toggle('active');
+          // Add your mobile menu toggle logic here
+        });
+      }
+    });
+  </script>
+</body>
+</html>

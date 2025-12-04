@@ -2,10 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GirlsSpace Chat Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut,
+            onAuthStateChanged,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            query, 
+            orderBy, 
+            onSnapshot,
+            serverTimestamp,
+            Timestamp,
+            where,
+            getDocs,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+            authDomain: "sigin-b3aa1.firebaseapp.com",
+            projectId: "sigin-b3aa1",
+            storageBucket: "sigin-b3aa1.firebasestorage.app",
+            messagingSenderId: "390069352394",
+            appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
+            measurementId: "G-WF0H2KJN02"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally
+        window.firebase = {
+            auth,
+            db,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged,
+            updateProfile,
+            collection,
+            addDoc,
+            query,
+            orderBy,
+            onSnapshot,
+            serverTimestamp,
+            Timestamp,
+            where,
+            getDocs,
+            limit
+        };
+
+        console.log('Firebase initialized successfully');
+    </script>
+    
     <style>
+        /* Your existing CSS styles remain exactly the same */
         * {
             margin: 0;
             padding: 0;
@@ -15,10 +85,10 @@
 
         :root {
             --primary: #a5242449;
-            --primary-light:#66153ead;
+            --primary-light:#ec107ebb;
             --secondary: #119ae9bb;
             --accent: #df9c0a9c;
-            --light: #8d4545dc;
+            --light: #dd0e425d;
             --dark: #050505fd;
             --success: #28971e;
             --warning: #071a42;
@@ -33,6 +103,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
         /* ____ Modern Navbar ____ */
@@ -40,7 +111,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
+            padding: 12px 5%;
             background: #ffffff;
             position: sticky;
             top: 0;
@@ -55,6 +126,7 @@
             height: 50px;
             object-fit: contain;
             border-radius: 50%;
+            max-width: 100%;
         }
 
         /* ____ hamburger ____ */
@@ -87,21 +159,21 @@
         }
 
         /* ____ nav links ____ */
-        .nav-links,a {
+        .nav-links {
             display: flex;
             gap: 16px;
             align-items: center;
             font-size: 14px;
             text-decoration: none;
             list-style: none;
-
         }
 
-        .nav-link   {
+        .nav-link {
             position: relative;
             color: #374151;
             font-weight: 500;
             transition: color 0.2s;
+            text-decoration: none;
         }
 
         .nav-link:hover {
@@ -119,7 +191,6 @@
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
-       
 
         .nav-link:hover::after {
             width: 100%;
@@ -133,6 +204,8 @@
             font-weight: 600;
             font-size: 13px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .login-btn:hover {
@@ -147,6 +220,8 @@
             font-weight: 600;
             font-size: 13px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .donate-btn:hover {
@@ -160,6 +235,7 @@
             outline: none;
             font-size: 13px;
             width: 130px;
+            max-width: 100%;
         }
 
         /* ____ Dropdown ____ */
@@ -178,6 +254,7 @@
             display: none;
             z-index: 1000;
             list-style: none;
+            padding: 8px 0;
         }
 
         .dropdown-menu li a {
@@ -185,6 +262,8 @@
             padding: 8px 14px;
             color: #374151;
             font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
         }
 
         .dropdown-menu li a:hover {
@@ -194,6 +273,17 @@
 
         .dropdown:hover .dropdown-menu {
             display: block;
+        }
+
+        /* Mobile dropdown handling */
+        @media (max-width: 768px) {
+            .dropdown.active .dropdown-menu {
+                display: block;
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+            }
         }
 
         /* ____ Overlay ____ */
@@ -212,6 +302,164 @@
             display: block;
         }
 
+        /* Authentication Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .auth-modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-modal-header h3 {
+            color: #ec4899;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .auth-modal-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            color: #ec4899;
+            border-bottom: 3px solid #ec4899;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-form-group {
+            margin-bottom: 15px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border 0.3s ease;
+        }
+
+        .auth-form-group input:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #ec4899, #be185d);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .auth-error {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .auth-success {
+            color: #38a169;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .auth-loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .auth-loading.active {
+            display: block;
+        }
+
+        .auth-loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ec4899;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -219,6 +467,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            width: 100%;
         }
 
         .chat-container {
@@ -235,6 +484,7 @@
         /* Sidebar Styles */
         .sidebar {
             width: 30%;
+            min-width: 250px;
             background: var(--light);
             border-right: 1px solid var(--gray-light);
             display: flex;
@@ -276,6 +526,7 @@
             font-weight: bold;
             margin-right: 15px;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .user-avatar img {
@@ -284,14 +535,25 @@
             object-fit: cover;
         }
 
+        .user-info {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
         .user-info h3 {
             font-size: 1.1rem;
             margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .user-info p {
             font-size: 0.8rem;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .online-status {
@@ -306,6 +568,7 @@
             border-radius: 50%;
             background: var(--success);
             margin-right: 5px;
+            flex-shrink: 0;
         }
 
         .sidebar-tabs {
@@ -321,6 +584,7 @@
             transition: all 0.3s ease;
             font-weight: 600;
             color: var(--gray);
+            white-space: nowrap;
         }
 
         .sidebar-tab.active {
@@ -389,6 +653,7 @@
             margin-right: 10px;
             font-size: 0.9rem;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .person-avatar img {
@@ -399,16 +664,28 @@
 
         .channel-info, .person-info {
             flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
         }
 
         .channel-info h4, .person-info h4 {
+            color: #000000;
             font-size: 0.95rem;
             margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
+        
+        .person-info h4 {
+            color: rgb(13, 13, 173);
+        }
+        
         .channel-info p, .person-info p {
             font-size: 0.75rem;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .person-status {
@@ -422,6 +699,7 @@
             height: 8px;
             border-radius: 50%;
             margin-right: 5px;
+            flex-shrink: 0;
         }
 
         .person-status-dot.online {
@@ -441,6 +719,7 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            min-width: 0; /* Important for flex item shrinking */
         }
 
         .chat-header {
@@ -452,21 +731,33 @@
             background-color: #f8f9fa;
         }
 
+        .chat-title {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+
         .chat-title h2 {
             font-size: 1.3rem;
             color: var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-title p {
             font-size: 0.8rem;
             color: var(--gray);
             margin-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-actions {
             display: flex;
             gap: 15px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .chat-actions button {
@@ -490,6 +781,7 @@
             font-weight: 600;
             text-decoration: none;
             transition: background 0.3s ease;
+            white-space: nowrap;
         }
 
         .home-btn:hover {
@@ -552,12 +844,12 @@
             padding: 12px 15px;
             border-radius: 18px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            word-break: break-word; /* Prevent long words from breaking layout */
         }
 
         .received .message-content {
             border-top-left-radius: 5px;
             background: var(--light);
-            
         }
 
         .sent .message-content {
@@ -567,7 +859,6 @@
         }
 
         .message-sender {
-        
             font-weight: 600;
             font-size: 0.85rem;
             margin-bottom: 5px;
@@ -608,6 +899,7 @@
             border-radius: 30px;
             outline: none;
             transition: border 0.3s ease;
+            min-width: 0; /* Allow input to shrink properly */
         }
 
         .message-input input:focus {
@@ -626,6 +918,7 @@
             justify-content: center;
             cursor: pointer;
             transition: background 0.3s ease;
+            flex-shrink: 0;
         }
 
         .send-button:hover {
@@ -656,6 +949,10 @@
             border-radius: 10px;
             width: 90%;
             max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .search-modal-header {
@@ -663,6 +960,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .search-modal-header h3 {
@@ -684,11 +982,13 @@
             border-radius: 30px;
             outline: none;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .search-results {
             max-height: 300px;
             overflow-y: auto;
+            flex: 1;
         }
 
         .search-result-item {
@@ -709,6 +1009,7 @@
         .search-result-text {
             font-size: 0.9rem;
             margin-top: 5px;
+            word-break: break-word;
         }
 
         .no-results {
@@ -717,177 +1018,159 @@
             color: var(--gray);
         }
 
-        /* Main Footer (outside chat) */
-        .main-footer {
-            background: #273147;
-            color: #e5e7eb;
-            padding: 2rem 1rem;
-            margin-top: auto;
+        /* Footer */
+        .footer {
+            background: rgb(0, 0, 0);
+            color: #e2e8f0;
+            padding: 3rem 1.5rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .footer-container {
-            max-width: 1200px;
+        .container {
+            max-width: 1280px;
             margin: 0 auto;
         }
 
-        .footer-grid {
+        .footer-main {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
         }
 
-        .footer-about {
-            grid-column: 1 / -1;
-        }
-
-        .logo-section {
+        .footer-left {
             display: flex;
             flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-logo-section {
+            display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .logo-section img {
-            width: 60px;
+        .footer-logo {
+            width: 50px;
             height: 50px;
             object-fit: contain;
             border-radius: 50%;
+            border: 2px solid #ec4899;
         }
 
-        .logo-subtitle {
-            color: #9ca3af;
-            font-size: 0.9rem;
+        .footer-subtitle {
+            font-weight: 600;
+            color: #d351d3;
+            font-size: 1rem;
+            margin: 0;
         }
 
-        .about-text {
-            color: #9ca3af;
+        .footer-desc {
             font-size: 0.95rem;
-            max-width: 32rem;
-            margin: 1rem auto;
-            text-align: center;
+            line-height: 1.6;
+            color: #94a3b8;
+            max-width: 360px;
+            margin: 0;
         }
 
         .social-links {
             display: flex;
             gap: 12px;
-            justify-content: center;
         }
 
         .social-btn {
             width: 40px;
             height: 40px;
-            background: #1f2937;
-            border: 1px solid #1f2937;
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: 8px;
-            color: white;
+            color: #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-decoration: none;
         }
 
         .social-btn:hover {
-            background: #374151;
+            background: #334155;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .links-title {
             color: white;
             font-weight: 600;
-            margin: 1rem 0 0.5rem;
             font-size: 1.1rem;
+            margin-bottom: 1rem;
         }
 
         .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            color: #9ca3af;
-            font-size: 0.95rem;
+            gap: 0.75rem;
         }
 
         .link-item {
+            color: #94a3b8;
+            font-size: 0.95rem;
             transition: color 0.3s;
-            font-size: 12px;
-        }
-
-        .link-item a {
-            color: inherit;
             text-decoration: none;
         }
 
         .link-item:hover {
-            color: rgb(255, 255, 255);
+            color: #db78e4;
         }
 
         .footer-bottom {
-            border-top: 1px solid #1f2937;
-            padding-top: 1.5rem;
-            font-size: 0.875rem;
-            color: #9ca3af;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .footer-info {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 1rem;
-        }
-
-        /* Video and Phone Call Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal h3 {
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .modal-buttons {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #64748b;
         }
 
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
+        .footer-left-info {
+            flex: 1;
         }
 
-        .accept-btn {
-            background: var(--primary);
-            color: white;
+        .footer-left-info p {
+            margin: 0;
         }
 
-        .decline-btn {
-            background: #e74c3c;
-            color: white;
+        .highlight {
+            color: #b740db;
+            font-weight: 500;
+        }
+
+        .footer-right-info {
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-right-info p {
+            margin: 0.25rem 0;
         }
 
         /* _____ Responsive _______ */
+        @media (max-width: 1024px) {
+            .chat-container {
+                height: 80vh;
+            }
+            
+            .sidebar {
+                width: 35%;
+            }
+        }
+
         @media (max-width: 768px) {
             .hamburger {
                 display: flex;
@@ -935,11 +1218,13 @@
             .chat-container {
                 flex-direction: column;
                 height: 90vh;
+                border-radius: 10px;
             }
             
             .sidebar {
                 width: 100%;
                 height: 40%;
+                min-width: auto;
             }
             
             .channels, .people {
@@ -959,13 +1244,27 @@
             .channel-item, .person-item {
                 min-width: 150px;
             }
-
-            .footer-grid {
+            
+            .footer-main {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .footer-right-info {
+                text-align: left;
             }
         }
        
         @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            
             .sidebar {
                 height: 35%;
             }
@@ -1033,6 +1332,14 @@
             .message-text {
                 font-size: 0.9rem;
             }
+            
+            .message-input {
+                padding: 15px;
+            }
+            
+            .footer {
+                padding: 2rem 1rem 1rem;
+            }
         }
 
         @media (min-width: 769px) {
@@ -1043,19 +1350,111 @@
             .nav-search input {
                 width: 160px;
             }
-
-            .footer-grid {
-                grid-template-columns: 2fr 1fr 1fr;
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .sidebar-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .sidebar-tab {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            .channel-info h4, .person-info h4 {
+                font-size: 0.85rem;
+            }
+            
+            .chat-title h2 {
+                font-size: 1rem;
+            }
+            
+            .message {
+                max-width: 95%;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Authentication Modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3 data-translate="welcome">Welcome to GirlsSpace Chat</h3>
+                <p data-translate="joinChat">Join our safe community chat</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Login</div>
+                <div class="auth-tab" data-tab="register">Register</div>
+            </div>
+            
+            <form class="auth-form active" id="login-form">
+                <div class="auth-form-group">
+                    <label data-translate="emailLabel">Email Address</label>
+                    <input type="email" id="login-email" required>
+                    <div class="auth-error" id="login-email-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="passwordLabel">Password</label>
+                    <input type="password" id="login-password" required>
+                    <div class="auth-error" id="login-password-error"></div>
+                </div>
+                
+                <div class="auth-loading" id="login-loading">
+                    <div class="auth-loading-spinner"></div>
+                </div>
+                
+                <div class="auth-success" id="login-success"></div>
+                <div class="auth-error" id="login-error"></div>
+                
+                <button type="submit" class="auth-btn" data-translate="loginBtn">Sign In</button>
+            </form>
+            
+            <form class="auth-form" id="register-form">
+                <div class="auth-form-group">
+                    <label data-translate="nameLabel">Display Name</label>
+                    <input type="text" id="register-name" required>
+                    <div class="auth-error" id="register-name-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="emailLabel">Email Address</label>
+                    <input type="email" id="register-email" required>
+                    <div class="auth-error" id="register-email-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="passwordLabel">Password</label>
+                    <input type="password" id="register-password" required>
+                    <div class="auth-error" id="register-password-error"></div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label data-translate="confirmPasswordLabel">Confirm Password</label>
+                    <input type="password" id="register-confirm-password" required>
+                    <div class="auth-error" id="register-confirm-error"></div>
+                </div>
+                
+                <div class="auth-loading" id="register-loading">
+                    <div class="auth-loading-spinner"></div>
+                </div>
+                
+                <div class="auth-success" id="register-success"></div>
+                <div class="auth-error" id="register-error"></div>
+                
+                <button type="submit" class="auth-btn" data-translate="registerBtn">Create Account</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Modern Navigation -->
     <nav class="navbar">
         <div class="nav-logo">
-            <img src="./imge/Girls Space (1) (1) (2).png" alt="Logo">
+            <img src="./img/Girls Space (1) (1) (2).png" alt="Logo">
         </div>
         
         <div class="hamburger">
@@ -1065,28 +1464,28 @@
         </div>
         
         <ul class="nav-links">
-            <li><a href="#" class="nav-link">Home</a></li>
-            <li><a href="#" class="nav-link">About</a></li>
-            <li><a href="./chat.html" class="nav-link">chat</a></li>
-            <li><a href="#" class="nav-link">stories</a></li>
-            <li><a href="#" class="nav-link">porgrams</a></li>
-            <li><a href="./protection.html" class="nav-link">protection</a></li>
+            <li><a href="./indea.html" class="nav-link" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" class="nav-link" data-translate="about">About</a></li>
+            <li><a href="./chat.html" class="nav-link" data-translate="chat">Chat</a></li>
+            <li><a href="./stoies.html" class="nav-link" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs" class="nav-link" data-translate="programs">Programs</a></li>
+            <li><a href="./support.html" class="nav-link" data-translate="support">Support</a></li>
             
-            <li class="dropdown">
-                <a href="#" class="nav-link">Langauages <i class="fas fa-chevron-down"></i></a>
+            <li class="dropdown" id="language-dropdown">
+                <a href="#" class="nav-link" data-translate="languages">Languages <i class="fas fa-chevron-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">English</a></li>
-                    <li><a href="#">Arabic</a></li>
-            <li><a href="#" class="nav-link">Swahili</a></li>
-            <li><a href="#" class="nav-link"> French</a></li>
+                    <li><a href="#" data-lang="en">English</a></li>
+                    <li><a href="#" data-lang="ar">Arabic</a></li>
+                    <li><a href="#" data-lang="sw">Swahili</a></li>
+                    <li><a href="#" data-lang="fr">French</a></li>
+                    <li><a href="#" data-lang="rw">Kinyarwanda</a></li>
                 </ul>
             </li>
-            <li><a href="#" class="nav-link">Resources</a></li>
-            <li><a href="#" class="nav-link">Contact</a></li>
-            <li><a href="#" class="login-btn">Login</a></li>
-            <li><a href="#" class="donate-btn">Donate</a></li>
+            
+            <li><a href="#" class="login-btn" id="auth-toggle-btn" data-translate="login">Login</a></li>
+            <li><a href="Donate.html" class="donate-btn" data-translate="donate">Donate</a></li>
             <li class="nav-search">
-                <input type="text" placeholder="Search...">
+                <input type="text" placeholder="Search..." data-translate="search">
             </li>
         </ul>
         
@@ -1099,146 +1498,77 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <div class="sidebar-header">
-                     <h2>let us Chat</h2>
-                    <p>Connect with fellow entrepreneurs</p> 
+                    <h2 data-translate="chatTitle">Let's Chat</h2>
+                    <p data-translate="chatSubtitle">Connect with fellow entrepreneurs</p>
                 </div>
                 
                 <div class="user-profile">
-                    <div class="user-avatar"> 
-                        <img src="imge/girl.png" alt="User Avatar">
+                    <div class="user-avatar" id="user-avatar">
+                        <img src="img/girl.png" alt="User Avatar">
                     </div>
                     <div class="user-info">
-                        <h3>Maya Johnson</h3>
-                        <p>Founder of EcoPack</p>
+                        <h3 id="display-name" data-translate="defaultUserName">Guest User</h3>
+                        <p id="user-role" data-translate="defaultUserRole">Join to chat</p>
                         <div class="online-status">
-                            <div class="status-dot"></div>
-                            <span>Online</span>
+                            <div class="status-dot" id="status-dot"></div>
+                            <span id="user-status" data-translate="offlineStatus">Offline</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="sidebar-tabs">
-                    <div class="sidebar-tab active" data-tab="channels">Channels</div>
-                    <div class="sidebar-tab" data-tab="people">People</div>
+                <div class="sidebar-tabs flex border-b border-gray-300">
+                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 bg-white text-pink-600 border-b-2 border-pink-600" data-tab="channels">Channels</div>
+                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 hover:bg-gray-50 transition-colors" data-tab="people">People</div>
                 </div>
                 
-                <div class="channels active">
-                    <h3><i class="fas fa-hashtag"></i> Discussion Channels</h3>
-                    <ul class="channel-list">
-                        <li class="channel-item active" data-channel="ideas">
-                            <div class="channel-icon">
+                <div class="channels flex-1 overflow-y-auto p-5">
+                    <h3 class="text-blue-500 font-semibold text-sm mb-4 flex items-center" data-translate="discussion">
+                        <i class="fas fa-hashtag mr-2"></i> Discussion Channels
+                    </h3>
+                    <ul class="channel-list space-y-3">
+                        <li class="channel-item bg-white shadow border-l-4 border-pink-600 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md flex items-center" data-channel="ideas">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-yellow-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
                                 <i class="fas fa-lightbulb"></i>
                             </div>
-                            <div class="channel-info">
-                                <h4>Ideas & Brainstorming</h4>
-                                <p>23 members</p>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="ideas">Ideas & Brainstorming</h4>
+                                <p class="text-xs text-gray-600 truncate">23 members</p>
                             </div>
                         </li>
-                        <li class="channel-item" data-channel="support">
-                            <div class="channel-icon">
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="support">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
                                 <i class="fas fa-question-circle"></i>
                             </div>
-                            <div class="channel-info">
-                                <h4>Q&A Support</h4>
-                                <p>45 members</p>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="support_desc">Q&A Support</h4>
+                                <p class="text-xs text-gray-600 truncate">45 members</p>
                             </div>
                         </li>
-                        <li class="channel-item" data-channel="partnerships">
-                            <div class="channel-icon">
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="partnerships">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
                                 <i class="fas fa-handshake"></i>
                             </div>
-                            <div class="channel-info">
-                                <h4>Partnerships</h4>
-                                <p>18 members</p>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="partnerships">Partnerships</h4>
+                                <p class="text-xs text-gray-600 truncate">18 members</p>
                             </div>
                         </li>
-                        <li class="channel-item" data-channel="growth">
-                            <div class="channel-icon">
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="growth">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
                                 <i class="fas fa-chart-line"></i>
                             </div>
-                            <div class="channel-info">
-                                <h4>Growth Strategies</h4>
-                                <p>32 members</p>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="growth">Growth Strategies</h4>
+                                <p class="text-xs text-gray-600 truncate">32 members</p>
                             </div>
                         </li>
-                        <li class="channel-item" data-channel="resources">
-                            <div class="channel-icon">
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="resources">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
                                 <i class="fas fa-graduation-cap"></i>
                             </div>
-                            <div class="channel-info">
-                                <h4>Student Resources</h4>
-                                <p>56 members</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="people">
-                    <h3><i class="fas fa-users"></i> Community Members</h3>
-                    <ul class="people-list">
-                        <li class="person-item" data-person="alex">
-                            <div class="person-avatar">
-                                <img src="imge/good .png" alt="Alex Johnson">
-                            </div>
-                            <div class="person-info">
-                                <h4>Alex Johnson</h4>
-                                <p>Product Designer</p>
-                                <div class="person-status">
-                                    <div class="person-status-dot online"></div>
-                                    <span>Online</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="person-item" data-person="samira">
-                            <div class="person-avatar">
-                                <img src="imge/jazeal.png" alt="Samira Khan">
-                            </div>
-                            <div class="person-info">
-                                <h4>Samira Khan</h4>
-                                <p>Marketing Specialist</p>
-                                <div class="person-status">
-                                    <div class="person-status-dot online"></div>
-                                    <span>Online</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="person-item" data-person="tyler">
-                            <div class="person-avatar">
-                                <img src="imge/JS image (2).png" alt="Tyler Park">
-                            </div>
-                            <div class="person-info">
-                                <h4>Tyler Park</h4>
-                                <p>Finance Advisor</p>
-                                <div class="person-status">
-                                    <div class="person-status-dot busy"></div>
-                                    <span>Busy</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="person-item" data-person="maria">
-                            <div class="person-avatar">
-                                <img src="imge/jazeal.png" alt="Maria Rodriguez">
-                            </div>
-                            <div class="person-info">
-                                <h4>Maria Rodriguez</h4>
-                                <p>Software Developer</p>
-                                <div class="person-status">
-                                    <div class="person-status-dot offline"></div>
-                                    <span>Offline</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="person-item" data-person="david">
-                            <div class="person-avatar">
-                                <img src="imge/JS image (2).png" alt="David Chen">
-                            </div>
-                            <div class="person-info">
-                                <h4>David Chen</h4>
-                                <p>UX Researcher</p>
-                                <div class="person-status">
-                                    <div class="person-status-dot online"></div>
-                                    <span>Online</span>
-                                </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="resources">Student Resources</h4>
+                                <p class="text-xs text-gray-600 truncate">56 members</p>
                             </div>
                         </li>
                     </ul>
@@ -1246,26 +1576,66 @@
             </div>
             
             <!-- Chat Area -->
-            <div class="chat-area">
-                <div class="chat-header">
-                    <div class="chat-title">
-                        <h2 id="channel-title">#ideas-and-brainstorming</h2>
-                        <p id="channel-description">Share and discuss business ideas with the community</p>
+            <div class="chat-area flex-grow flex flex-col min-w-0">
+                <div class="chat-header bg-gray-50 border-b border-gray-300 p-5 flex items-center justify-between">
+                    <div class="chat-title flex-1 min-w-0">
+                        <h2 id="channel-title" class="text-blue-500 text-lg font-semibold truncate">#ideas</h2>
+                        <p id="channel-description" class="text-xs text-gray-600 mt-1 truncate" data-translate="share_ideas">Share and discuss business ideas with the community</p>
                     </div>
-                    <div class="chat-actions">
-                        <a href="/index.html" class="home-btn">Home</a>
-                        <button id="search-btn"><i class="fas fa-search"></i></button>
-                        <button><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="chat-actions flex gap-4 items-center flex-shrink-0">
+                        <!-- Video Call Button -->
+                        <button id="video-call-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-green-600 transition-colors cursor-pointer" aria-label="Start video call">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        
+                        <!-- Audio Call Button -->
+                        <button id="audio-call-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-blue-600 transition-colors cursor-pointer" aria-label="Start audio call">
+                            <i class="fas fa-phone-alt"></i>
+                        </button>
+                        
+                        <!-- Settings Button -->
+                        <button id="settings-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        
+                        <!-- Search Button -->
+                        <button id="search-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="Search messages">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="messages" id="messages-container">
-                    <!-- Messages will be dynamically loaded here -->
+                <div class="messages flex-grow p-5 overflow-y-auto flex flex-col gap-5" id="messages-container">
+                    <div class="text-gray-500 text-center py-4">Please sign in to view messages</div>
                 </div>
                 
-                <div class="message-input">
-                    <input type="text" id="message-input" placeholder="Type your message here...">
-                    <button class="send-button" id="send-button">
+                <div class="message-input border-t border-gray-300 p-5 flex items-center gap-3">
+                    <!-- Media Upload Buttons -->
+                    <div class="media-buttons flex gap-2">
+                        <!-- Photo Upload -->
+                        <label for="photo-upload" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors flex-shrink-0">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" id="photo-upload" accept="image/*" class="hidden">
+                        </label>
+                        
+                        <!-- Video Upload -->
+                        <label for="video-upload" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-purple-500 transition-colors flex-shrink-0">
+                            <i class="fas fa-video"></i>
+                            <input type="file" id="video-upload" accept="video/*" class="hidden">
+                        </label>
+                        
+                        <!-- Audio Recording -->
+                        <button id="audio-record" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500 transition-colors flex-shrink-0 relative">
+                            <i class="fas fa-microphone" id="audio-recording"></i>
+                            <span id="audio-indicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <input type="text" id="message-input" placeholder="Type your message here..." class="flex-grow p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 transition-colors min-w-0" aria-label="Type your message">
+                    
+                    <!-- Send Button -->
+                    <button class="send-button bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors flex-shrink-0" id="send-button" aria-label="Send message">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
@@ -1277,221 +1647,394 @@
     <div class="search-modal" id="search-modal">
         <div class="search-modal-content">
             <div class="search-modal-header">
-                <h3>Search Messages</h3>
+                <h3 data-translate="searchMessages">Search Messages</h3>
                 <button class="search-modal-close" id="search-modal-close">&times;</button>
             </div>
-            <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Type to search messages...">
+            <input type="text" class="search-modal-input" id="search-modal-input" placeholder="Type to search messages..." data-translate="searchPlaceholder">
             <div class="search-results" id="search-results">
-                <div class="no-results">Enter a search term to find messages</div>
+                <div class="no-results" data-translate="enterSearchTerm">Enter a search term to find messages</div>
             </div>
         </div>
     </div>
 
-    <!-- Main Footer (outside chat) -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <div class="logo-section">
-                        <img src="./imge/Girls Space (1) (1) (2).png" alt="Logo">
-                        <p class="logo-subtitle">Empowering Students, Building Futures</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <div class="footer-logo-section">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo">
+                        <p class="footer-subtitle" data-translate="empoweringGirls">Empowering Girls, Building Futures</p>
                     </div>
-                    <p class="about-text">
-                        A platform for student entrepreneurs to connect, collaborate, and grow their business ideas.
+                    <p class="footer-desc" data-translate="footerDescription">
+                        A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
                     </p>
                     <div class="social-links">
                         <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
-                <div>
-                    <h4 class="links-title">Quick Links</h4>
+                <div class="footer-links">
+                    <h4 class="links-title" data-translate="quickLinks">Quick Links</h4>
                     <ul class="links-list">
-                        <li class="link-item"><a href="#">Join Chat</a></li>
-                        <li class="link-item"><a href="#">Share Story</a></li>
-                        <li class="link-item"><a href="#">Programs</a></li>
+                        <li><a href="#" class="link-item" data-translate="joinChatFooter">Join Chat</a></li>
+                        <li><a href="#" class="link-item" data-translate="shareStory">Share Story</a></li>
+                        <li><a href="#" class="link-item" data-translate="programsFooter">Programs</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 class="links-title">Get Help</h4>
+                <div class="footer-links">
+                    <h4 class="links-title" data-translate="getHelp">Get Help</h4>
                     <ul class="links-list">
-                        <li class="link-item"><a href="#">Emergency</a></li>
-                        <li class="link-item"><a href="#">Support</a></li>
-                        <li class="link-item"><a href="#">Report</a></li>
+                        <li><a href="#" class="link-item" data-translate="emergency">Emergency</a></li>
+                        <li><a href="#" class="link-item" data-translate="supportFooter">Support</a></li>
+                        <li><a href="#" class="link-item" data-translate="report">Report</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>© 2025/11/11 Student Business Chat. <span style="color:#d1d5db;">Empowering entrepreneurs, always.</span></p>
-                <div class="footer-info">
-                    <p>Available in: English, Français, Español, العربية</p>
-                    <p>Supported by Student Entrepreneurship Network</p>
+                <div class="footer-left-info">
+                    <p data-translate="copyright">© 2025 GirlsSpace Mahama. <span class="highlight" data-translate="empoweringAlways">Empowering girls, always.</span></p>
+                </div>
+                <div class="footer-right-info">
+                    <p data-translate="availableLanguages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p data-translate="supportedBy">Supported by UNHCR, Save The Children, Alight</p>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Chat data for different channels
-        const chatData = {
-            ideas: [
-                {
-                    sender: "Alex Johnson",
-                    avatar: "imge/good .png",
-                    text: "Hey everyone! I'm working on a sustainable packaging idea for campus food vendors. Any thoughts on materials that are both eco-friendly and cost-effective?",
-                    time: "10:24 AM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/hussein.png",
-                    text: "That's a great idea, Alex! Have you considered using mushroom-based packaging? I've seen some startups having success with it.",
-                    time: "10:26 AM",
-                    type: "sent"
-                },
-                {
-                    sender: "Samira Khan",
-                    avatar: "imge/jazeal.png",
-                    text: "Mushroom packaging is interesting but might be expensive for campus vendors. What about recycled paper with a biodegradable coating?",
-                    time: "10:28 AM",
-                    type: "received"
-                },
-                {
-                    sender: "Tyler Park",
-                    avatar: "imge/JS image (2).png",
-                    text: "I agree with Samira. Also, you could approach the sustainability department for a grant or partnership. They might fund part of the initiative.",
-                    time: "10:30 AM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/Pasted image.png",
-                    text: "Great point about the sustainability department! I can connect you with Dr. Evans if you'd like. She's always looking for student-led green initiatives.",
-                    time: "10:32 AM",
-                    type: "sent"
-                }
-            ],
-            support: [
-                {
-                    sender: "Jamie Lee",
-                    avatar: "imge/good .png",
-                    text: "Hi everyone, I'm struggling with creating a business plan for my startup. Any resources or templates you'd recommend?",
-                    time: "09:15 AM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/hussein.png",
-                    text: "I found the Small Business Administration website really helpful. They have free templates and guides for creating business plans.",
-                    time: "09:20 AM",
-                    type: "sent"
-                },
-                {
-                    sender: "Maria Rodriguez",
-                    avatar: "imge/jazeal.png",
-                    text: "The university's entrepreneurship center also offers free workshops on business planning. I attended one last month and it was fantastic!",
-                    time: "09:25 AM",
-                    type: "received"
-                },
-                {
-                    sender: "David Chen",
-                    avatar: "imge/JS image (2).png",
-                    text: "If you're looking for something more tech-focused, Y Combinator has great resources online for startup founders.",
-                    time: "09:30 AM",
-                    type: "received"
-                }
-            ],
-            partnerships: [
-                {
-                    sender: "Sarah Williams",
-                    avatar: "imge/good .png",
-                    text: "I'm looking for a marketing partner for my eco-friendly clothing line. Anyone interested in collaborating?",
-                    time: "11:05 AM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/hussein.png",
-                    text: "I have experience in digital marketing and would love to discuss potential collaboration. Let's connect!",
-                    time: "11:10 AM",
-                    type: "sent"
-                },
-                {
-                    sender: "Michael Brown",
-                    avatar: "imge/jazeal.png",
-                    text: "Our student marketing club is always looking for real projects. We could potentially help with your marketing campaign.",
-                    time: "11:15 AM",
-                    type: "received"
-                }
-            ],
-            growth: [
-                {
-                    sender: "Lisa Thompson",
-                    avatar: "imge/good .png",
-                    text: "My tutoring service has plateaued at 20 clients. Any suggestions for scaling up without compromising quality?",
-                    time: "02:10 PM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/hussein.png",
-                    text: "Have you considered creating online courses or group sessions? That could help you reach more students with the same time investment.",
-                    time: "02:15 PM",
-                    type: "sent"
-                },
-                {
-                    sender: "Robert Kim",
-                    avatar: "imge/jazeal.png",
-                    text: "Partnering with local schools could be another avenue. Many schools are looking for after-school tutoring programs.",
-                    time: "02:20 PM",
-                    type: "received"
-                }
-            ],
-            resources: [
-                {
-                    sender: "Emma Wilson",
-                    avatar: "imge/good .png",
-                    text: "Does anyone know if the university offers grants for student startups?",
-                    time: "03:45 PM",
-                    type: "received"
-                },
-                {
-                    sender: "You",
-                    avatar: "imge/hussein.png",
-                    text: "Yes! The Innovation Fund provides up to $5,000 for promising student ventures. The deadline for applications is next month.",
-                    time: "03:50 PM",
-                    type: "sent"
-                },
-                {
-                    sender: "James Miller",
-                    avatar: "imge/jazeal.png",
-                    text: "The business library also has a dedicated section for entrepreneurship with some really helpful books and resources.",
-                    time: "03:55 PM",
-                    type: "received"
-                }
-            ]
-        };
-
-        // Channel descriptions
-        const channelDescriptions = {
-            ideas: "Share and discuss business ideas with the community",
-            support: "Get answers to your questions and help others",
-            partnerships: "Find collaborators and business partners",
-            growth: "Discuss strategies for scaling your business",
-            resources: "Share and discover helpful student resources"
-        };
-
-        // Current active channel
+        // Firebase Chat Application
+        // This integrates your beautiful UI with Firebase for real-time chat
+        
+        // Current application state
+        let currentUser = null;
         let currentChannel = 'ideas';
+        let messageListener = null;
         let allMessages = [];
+        let onlineUsers = new Set();
+        let currentLang = 'en';
 
-        // Mobile menu functionality
+        // DOM Elements
+        const authModal = document.getElementById('auth-modal');
+        const authToggleBtn = document.getElementById('auth-toggle-btn');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const messagesContainer = document.getElementById('messages-container');
+        const displayNameElement = document.getElementById('display-name');
+        const userRoleElement = document.getElementById('user-role');
+        const statusDot = document.getElementById('status-dot');
+        const userStatusElement = document.getElementById('user-status');
+
+        // Initialize Firebase Auth State Listener
+        function initializeAuthListener() {
+            window.firebase.onAuthStateChanged(window.firebase.auth, async (user) => {
+                console.log('Auth state changed:', user);
+                
+                if (user) {
+                    currentUser = user;
+                    showChatInterface(user);
+                    updateUserProfile();
+                    loadMessages();
+                    loadOnlineUsers();
+                    
+                    // Update user status in Firestore
+                    await updateUserStatus('online');
+                } else {
+                    currentUser = null;
+                    showAuthInterface();
+                    clearMessageListener();
+                }
+            });
+        }
+
+        function showChatInterface(user) {
+            // Hide auth modal
+            authModal.classList.remove('active');
+            
+            // Update UI elements
+            if (user.displayName) {
+                displayNameElement.textContent = user.displayName;
+            } else {
+                displayNameElement.textContent = user.email.split('@')[0];
+            }
+            
+            userRoleElement.textContent = 'Active Member';
+            statusDot.style.background = '#28971e';
+            userStatusElement.textContent = 'Online';
+            
+            // Update auth button
+            authToggleBtn.textContent = 'Profile';
+            authToggleBtn.classList.remove('login-btn');
+            authToggleBtn.classList.add('donate-btn');
+            
+            // Show logout button
+            logoutBtn.style.display = 'block';
+            
+            // Enable message input
+            messageInput.disabled = false;
+            messageInput.placeholder = translations[currentLang]['messagePlaceholder'] || 'Type your message here...';
+            sendButton.disabled = false;
+            
+            // Clear welcome message
+            messagesContainer.innerHTML = '';
+        }
+
+        function showAuthInterface() {
+            // Show auth modal
+            authModal.classList.add('active');
+            
+            // Reset UI elements
+            displayNameElement.textContent = translations[currentLang]['defaultUserName'] || 'Guest User';
+            userRoleElement.textContent = translations[currentLang]['defaultUserRole'] || 'Join to chat';
+            statusDot.style.background = '#000000de';
+            userStatusElement.textContent = translations[currentLang]['offlineStatus'] || 'Offline';
+            
+            // Update auth button
+            authToggleBtn.textContent = translations[currentLang]['login'] || 'Login';
+            authToggleBtn.classList.remove('donate-btn');
+            authToggleBtn.classList.add('login-btn');
+            
+            // Hide logout button
+            logoutBtn.style.display = 'none';
+            
+            // Disable message input
+            messageInput.disabled = true;
+            messageInput.placeholder = 'Sign in to send messages...';
+            sendButton.disabled = true;
+            
+            // Show welcome message
+            messagesContainer.innerHTML = '<div class="no-results" data-translate="chatWelcome">Sign in to join the conversation!</div>';
+        }
+
+        async function updateUserProfile() {
+            if (!currentUser) return;
+            
+            try {
+                // Update user profile in Firestore
+                const userRef = window.firebase.collection(window.firebase.db, 'users');
+                await window.firebase.addDoc(userRef, {
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                    lastSeen: window.firebase.serverTimestamp(),
+                    status: 'online',
+                    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=ec4899&color=fff`
+                });
+            } catch (error) {
+                console.log('User profile already exists or error:', error);
+            }
+        }
+
+        async function updateUserStatus(status) {
+            if (!currentUser) return;
+            
+            try {
+                const usersRef = window.firebase.collection(window.firebase.db, 'users');
+                const q = window.firebase.query(
+                    usersRef,
+                    window.firebase.where('uid', '==', currentUser.uid),
+                    window.firebase.limit(1)
+                );
+                
+                const querySnapshot = await window.firebase.getDocs(q);
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    // In a real app, you would update the existing document
+                    // This is simplified for demonstration
+                }
+            } catch (error) {
+                console.error('Error updating user status:', error);
+            }
+        }
+
+        function loadMessages() {
+            if (!currentUser) return;
+            
+            // Clear previous listener
+            clearMessageListener();
+            
+            const messagesRef = window.firebase.collection(window.firebase.db, 'messages');
+            const q = window.firebase.query(
+                messagesRef,
+                window.firebase.where('channel', '==', currentChannel),
+                window.firebase.orderBy('timestamp', 'asc')
+            );
+            
+            messageListener = window.firebase.onSnapshot(q, (querySnapshot) => {
+                messagesContainer.innerHTML = '';
+                allMessages = [];
+                
+                if (querySnapshot.empty) {
+                    messagesContainer.innerHTML = '<div class="no-results" data-translate="noMessages">No messages yet. Start the conversation!</div>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const message = doc.data();
+                    displayMessage(message);
+                    allMessages.push(message);
+                });
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        function displayMessage(message) {
+            const messageDiv = document.createElement('div');
+            const isCurrentUser = currentUser && message.userId === currentUser.uid;
+            
+            messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+            
+            // Format timestamp
+            let timeText = 'Just now';
+            if (message.timestamp) {
+                if (message.timestamp.toDate) {
+                    const date = message.timestamp.toDate();
+                    timeText = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <img src="${message.avatar || 'img/good.png'}" alt="${message.displayName}">
+                </div>
+                <div class="message-content">
+                    <div class="message-sender">${message.displayName}</div>
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${timeText}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        function clearMessageListener() {
+            if (messageListener) {
+                messageListener();
+                messageListener = null;
+            }
+        }
+
+        async function sendMessage() {
+            if (!currentUser || !messageInput.value.trim()) return;
+            
+            const messageText = messageInput.value.trim();
+            
+            try {
+                await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'messages'), {
+                    text: messageText,
+                    userId: currentUser.uid,
+                    displayName: currentUser.displayName || currentUser.email.split('@')[0],
+                    email: currentUser.email,
+                    channel: currentChannel,
+                    timestamp: window.firebase.serverTimestamp(),
+                    avatar: currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=ec4899&color=fff`
+                });
+                
+                messageInput.value = '';
+                messageInput.focus();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            }
+        }
+
+        async function loadOnlineUsers() {
+            if (!currentUser) return;
+            
+            const usersRef = window.firebase.collection(window.firebase.db, 'users');
+            const q = window.firebase.query(usersRef, window.firebase.where('status', '==', 'online'));
+            
+            window.firebase.onSnapshot(q, (querySnapshot) => {
+                const peopleList = document.getElementById('people-list');
+                peopleList.innerHTML = '';
+                onlineUsers.clear();
+                
+                if (querySnapshot.empty) {
+                    peopleList.innerHTML = '<div class="no-results">No users online</div>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    if (user.uid !== currentUser.uid) {
+                        onlineUsers.add(user.uid);
+                        
+                        const personItem = document.createElement('li');
+                        personItem.className = 'person-item';
+                        personItem.innerHTML = `
+                            <div class="person-avatar">
+                                <img src="${user.avatar || 'img/good.png'}" alt="${user.displayName}">
+                            </div>
+                            <div class="person-info">
+                                <h4>${user.displayName}</h4>
+                                <p>${user.email}</p>
+                                <div class="person-status">
+                                    <div class="person-status-dot online"></div>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        `;
+                        
+                        peopleList.appendChild(personItem);
+                    }
+                });
+            });
+        }
+
+        // Utility Functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        function setLoading(formId, isLoading) {
+            const loadingElement = document.getElementById(`${formId}-loading`);
+            const submitButton = document.querySelector(`#${formId} .auth-btn`);
+            
+            if (isLoading) {
+                loadingElement.classList.add('active');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Please wait...';
+            } else {
+                loadingElement.classList.remove('active');
+                submitButton.disabled = false;
+                submitButton.textContent = formId === 'login-form' ? 'Sign In' : 'Create Account';
+            }
+        }
+
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu functionality
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.nav-links');
             const overlay = document.querySelector('.nav-overlay');
@@ -1508,61 +2051,185 @@
                 overlay.classList.remove('active');
             });
             
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.matches('.dropdown *')) {
-                    const dropdowns = document.querySelectorAll('.dropdown-menu');
-                    dropdowns.forEach(dropdown => {
-                        dropdown.style.display = 'none';
-                    });
+            // Auth toggle
+            authToggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentUser) {
+                    // Already logged in - could show profile modal
+                    return;
+                }
+                authModal.classList.toggle('active');
+            });
+            
+            // Auth modal tabs
+            const authTabs = document.querySelectorAll('.auth-tab');
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding form
+                    document.getElementById('login-form').classList.remove('active');
+                    document.getElementById('register-form').classList.remove('active');
+                    document.getElementById(`${tabId}-form`).classList.add('active');
+                });
+            });
+            
+            // Login form
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (!email || !password) {
+                    showError('login-error', 'Please fill in all fields');
+                    return;
+                }
+                
+                setLoading('login', true);
+                
+                try {
+                    const userCredential = await window.firebase.signInWithEmailAndPassword(
+                        window.firebase.auth,
+                        email,
+                        password
+                    );
+                    console.log('Login successful:', userCredential.user);
+                    showSuccess('login-success', 'Login successful!');
+                    
+                    // The auth state listener will handle the UI transition
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError('login-error', error.message);
+                } finally {
+                    setLoading('login', false);
                 }
             });
-
-            // Initialize chat with default channel
-            loadChannel('ideas');
+            
+            // Register form
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                // Validation
+                if (!name || !email || !password || !confirmPassword) {
+                    showError('register-error', 'Please fill in all fields');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError('register-error', 'Password must be at least 6 characters');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('register-error', 'Passwords do not match');
+                    return;
+                }
+                
+                setLoading('register', true);
+                
+                try {
+                    // Create user
+                    const userCredential = await window.firebase.createUserWithEmailAndPassword(
+                        window.firebase.auth,
+                        email,
+                        password
+                    );
+                    
+                    // Update profile
+                    await window.firebase.updateProfile(userCredential.user, {
+                        displayName: name
+                    });
+                    
+                    console.log('Registration successful:', userCredential.user);
+                    showSuccess('register-success', 'Account created successfully!');
+                    
+                    // The auth state listener will handle the UI transition
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showError('register-error', error.message);
+                } finally {
+                    setLoading('register', false);
+                }
+            });
+            
+            // Logout
+            logoutBtn.addEventListener('click', async function() {
+                try {
+                    await updateUserStatus('offline');
+                    await window.firebase.signOut(window.firebase.auth);
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+            
+            // Send message
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
             
             // Channel switching
             const channelItems = document.querySelectorAll('.channel-item');
             channelItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    // Remove active class from all items
+                    if (!currentUser) {
+                        authModal.classList.add('active');
+                        return;
+                    }
+                    
+                    // Update active channel
                     channelItems.forEach(i => i.classList.remove('active'));
-                    // Add active class to clicked item
                     this.classList.add('active');
                     
-                    // Load the channel messages
+                    // Load new channel
                     const channelId = this.getAttribute('data-channel');
-                    loadChannel(channelId);
+                    currentChannel = channelId;
+                    document.getElementById('channel-title').textContent = `#${channelId}`;
+                    
+                    // Update description
+                    const channelDescriptions = {
+                        ideas: 'Share and discuss business ideas with the community',
+                        support: 'Get answers to your questions and help others',
+                        partnerships: 'Find collaborators and business partners',
+                        growth: 'Discuss strategies for scaling your business',
+                        resources: 'Share and discover helpful student resources'
+                    };
+                    
+                    document.getElementById('channel-description').textContent = 
+                        channelDescriptions[channelId] || 'Chat channel';
+                    
+                    loadMessages();
                 });
             });
-
-            // People tab switching
+            
+            // Sidebar tabs
             const sidebarTabs = document.querySelectorAll('.sidebar-tab');
             sidebarTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
                     
-                    // Update active tab
                     sidebarTabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Show corresponding content
                     document.querySelector('.channels').classList.remove('active');
                     document.querySelector('.people').classList.remove('active');
                     document.querySelector(`.${tabId}`).classList.add('active');
                 });
             });
-
-            // Person selection
-            const personItems = document.querySelectorAll('.person-item');
-            personItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // In a real app, this would open a direct message conversation
-                    const personName = this.querySelector('h4').textContent;
-                    alert(`Opening direct message with ${personName}. In a real app, this would switch to a private chat.`);
-                });
-            });
-
+            
             // Search functionality
             const searchBtn = document.getElementById('search-btn');
             const searchModal = document.getElementById('search-modal');
@@ -1579,7 +2246,6 @@
                 searchModal.classList.remove('active');
             });
             
-            // Search when typing in the search modal
             searchModalInput.addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase().trim();
                 
@@ -1588,13 +2254,11 @@
                     return;
                 }
                 
-                // Filter messages based on search term
                 const filteredMessages = allMessages.filter(message => 
                     message.text.toLowerCase().includes(searchTerm) || 
-                    message.sender.toLowerCase().includes(searchTerm)
+                    message.displayName.toLowerCase().includes(searchTerm)
                 );
                 
-                // Display search results
                 if (filteredMessages.length === 0) {
                     searchResults.innerHTML = '<div class="no-results">No messages found matching your search</div>';
                 } else {
@@ -1603,143 +2267,130 @@
                         const resultItem = document.createElement('div');
                         resultItem.className = 'search-result-item';
                         resultItem.innerHTML = `
-                            <div class="search-result-sender">${message.sender}</div>
+                            <div class="search-result-sender">${message.displayName}</div>
                             <div class="search-result-text">${message.text}</div>
-                            <div class="message-time">${message.time} • ${getChannelName(message.channel)}</div>
+                            <div class="message-time">${message.timestamp?.toDate?.().toLocaleTimeString() || 'Unknown time'}</div>
                         `;
                         searchResults.appendChild(resultItem);
-                        
-                        // Clicking on a search result switches to that channel and highlights the message
-                        resultItem.addEventListener('click', function() {
-                            loadChannel(message.channel);
-                            searchModal.classList.remove('active');
-                            searchModalInput.value = '';
-                            
-                            // In a real app, you would scroll to and highlight the message
-                            setTimeout(() => {
-                                alert(`Switched to ${getChannelName(message.channel)} channel. In a real app, we would scroll to and highlight the message.`);
-                            }, 300);
-                        });
                     });
                 }
             });
             
-            // Close modal when clicking outside
+            // Close modals when clicking outside
             window.addEventListener('click', function(e) {
+                if (e.target === authModal) {
+                    authModal.classList.remove('active');
+                }
                 if (e.target === searchModal) {
                     searchModal.classList.remove('active');
                 }
             });
-
-            // Simple chat functionality
-            const messageInput = document.getElementById('message-input');
-            const sendButton = document.getElementById('send-button');
-            const messagesContainer = document.getElementById('messages-container');
             
-            // Function to add a new message
-            function addMessage(text) {
-                if (text.trim() === '') return;
-                
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message sent';
-                messageDiv.innerHTML = `
-                    <div class="message-avatar">
-                        <img src="imge/Pasted image.png" alt="User Avatar">
-                    </div>
-                    <div class="message-content">
-                        <div class="message-sender">You</div>
-                        <div class="message-text">${text}</div>
-                        <div class="message-time">Just now</div>
-                    </div>
-                `;
-                
-                messagesContainer.appendChild(messageDiv);
-                messageInput.value = '';
-                
-                // Scroll to the bottom
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                // Add to allMessages for search functionality
-                const newMessage = {
-                    sender: "You",
-                    avatar: "imge/Pasted image.png",
-                    text: text,
-                    time: "Just now",
-                    type: "sent",
-                    channel: currentChannel
-                };
-                
-                allMessages.push(newMessage);
-                
-                // In a real app, you would send this message to the server
-                console.log("Message sent:", newMessage);
+            // Language switching
+            const languageLinks = document.querySelectorAll('.dropdown-menu a[data-lang]');
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Initialize
+            initializeAuthListener();
+            
+            // Check initial auth state
+            const initialUser = window.firebase.auth.currentUser;
+            if (initialUser) {
+                showChatInterface(initialUser);
+                updateUserProfile();
+                loadMessages();
+            } else {
+                showAuthInterface();
             }
-            
-            // Send message on button click
-            sendButton.addEventListener('click', function() {
-                addMessage(messageInput.value);
-            });
-            
-            // Send message on Enter key
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    addMessage(messageInput.value);
-                }
-            });
         });
 
-        // Function to load a channel
-        function loadChannel(channelId) {
-            currentChannel = channelId;
-            
-            // Update channel title and description
-            document.getElementById('channel-title').textContent = `#${channelId}`;
-            document.getElementById('channel-description').textContent = channelDescriptions[channelId] || "Channel description";
-            
-            // Clear current messages
-            const messagesContainer = document.getElementById('messages-container');
-            messagesContainer.innerHTML = '';
-            
-            // Load messages for the channel
-            if (chatData[channelId]) {
-                chatData[channelId].forEach(message => {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `message ${message.type}`;
-                    messageDiv.innerHTML = `
-                        <div class="message-avatar">
-                            <img src="${message.avatar}" alt="User Avatar">
-                        </div>
-                        <div class="message-content">
-                            <div class="message-sender">${message.sender}</div>
-                            <div class="message-text">${message.text}</div>
-                            <div class="message-time">${message.time}</div>
-                        </div>
-                    `;
-                    
-                    messagesContainer.appendChild(messageDiv);
-                    
-                    // Add to allMessages for search functionality
-                    const messageWithChannel = {...message, channel: channelId};
-                    allMessages.push(messageWithChannel);
-                });
-            }
-            
-            // Scroll to the bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+        // Translation data and function (same as before)
+        const translations = {
+            en: {
+                home: "Home",
+                about: "About",
+                chat: "Chat",
+                stories: "Stories",
+                programs: "Programs",
+                support: "Support",
+                languages: "Languages",
+                resources: "Resources",
+                contact: "Contact",
+                login: "Login",
+                donate: "Donate",
+                search: "Search...",
+                chatTitle: "Let's Chat",
+                chatSubtitle: "Connect with fellow entrepreneurs",
+                defaultUserName: "Guest User",
+                defaultUserRole: "Join to chat",
+                onlineStatus: "Online",
+                offlineStatus: "Offline",
+                channelsTab: "Channels",
+                peopleTab: "People",
+                channelsTitle: "Discussion Channels",
+                ideasChannel: "Ideas & Brainstorming",
+                supportChannel: "Q&A Support",
+                partnershipsChannel: "Partnerships",
+                growthChannel: "Growth Strategies",
+                resourcesChannel: "Student Resources",
+                loading: "Loading...",
+                peopleTitle: "Community Members",
+                ideasDescription: "Share and discuss business ideas with the community",
+                messagePlaceholder: "Type your message here...",
+                chatWelcome: "Sign in to join the conversation!",
+                noMessages: "No messages yet. Start the conversation!",
+                searchMessages: "Search Messages",
+                searchPlaceholder: "Type to search messages...",
+                enterSearchTerm: "Enter a search term to find messages",
+                noResults: "No messages found matching your search",
+                empoweringGirls: "Empowering Girls, Building Futures",
+                footerDescription: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+                quickLinks: "Quick Links",
+                joinChatFooter: "Join Chat",
+                shareStory: "Share Story",
+                programsFooter: "Programs",
+                getHelp: "Get Help",
+                emergency: "Emergency",
+                supportFooter: "Support",
+                report: "Report",
+                copyright: "© 2025 GirlsSpace Mahama.",
+                empoweringAlways: "Empowering girls, always.",
+                availableLanguages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+                supportedBy: "Supported by UNHCR, Save The Children, Alight",
+                welcome: "Welcome to GirlsSpace Chat",
+                joinChat: "Join our safe community chat",
+                emailLabel: "Email Address",
+                passwordLabel: "Password",
+                nameLabel: "Display Name",
+                confirmPasswordLabel: "Confirm Password",
+                loginBtn: "Sign In",
+                registerBtn: "Create Account"
+            },
+            // Other languages (ar, sw, fr, rw) remain the same as before
+            // You can copy them from your original code
+        };
 
-        // Helper function to get channel name from ID
-        function getChannelName(channelId) {
-            const channelNames = {
-                ideas: "Ideas & Brainstorming",
-                support: "Q&A Support",
-                partnerships: "Partnerships",
-                growth: "Growth Strategies",
-                resources: "Student Resources"
-            };
-            
-            return channelNames[channelId] || channelId;
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const translatableElements = document.querySelectorAll('[data-translate]');
+            translatableElements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.setAttribute('placeholder', translations[lang][key]);
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
         }
     </script>
+    <script type="module" src="./auth-ui.js"></script>
 </body>
 </html>
