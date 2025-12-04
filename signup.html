@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | GirlsSpace Mahama</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c23cb6',
+            accent: '#ec4899',
+            dark: '#374151',
+            light: '#f9f7fd',
+            success: '#0e5ae7',
+            purple: {
+              800: '#5d1a9e',
+            }
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 50%;
+      background: linear-gradient(135deg, #ec4899 0%, #c23cb6 100%);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .rtl {
+      direction: rtl;
+    }
+    .ltr {
+      direction: ltr;
+    }
+  </style>
+</head>
+
+<body class="bg-light text-gray-800 font-sans ltr">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="sticky top-0 z-50 bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 flex-wrap gap-3">
+
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <img src="img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-14 h-12 object-contain rounded-full">
+        </div>
+
+        <!-- Hamburger (Mobile) -->
+        <div class="sm:hidden flex items-center">
+          <button id="mobile-menu-button" class="text-dark focus:outline-none" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="nav-links">
+            <span class="block w-7 h-0.5 bg-dark mb-1 transition-all"></span>
+            <span class="block w-7 h-0.5 bg-dark mb-1 transition-all"></span>
+            <span class="block w-7 h-0.5 bg-dark transition-all"></span>
+          </button>
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <div class="hidden sm:flex sm:items-center sm:space-x-4 text-sm">
+          <a href="./index.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.home">Home</a>
+          <a href="./AboutUs.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.about">About</a>
+          <a href="./chat.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.chat">Chat</a>
+          <a href="./stories.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.stories">Stories</a>
+          <a href="./Learning_Programs.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.programs">Programs</a>
+          <a href="./protection.html" class="nav-link text-dark hover:text-accent font-medium relative" data-translate="nav.protection">Protection</a>
+
+          <!-- Language Dropdown -->
+          <div class="relative group" id="language-dropdown">
+            <button class="text-dark hover:text-accent font-medium flex items-center gap-1" id="current-language">
+              <span>English</span> <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+            <div class="absolute top-full left-0 mt-2 w-36 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50" id="lang-menu">
+              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary language-option" data-lang="en">English</a>
+              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary language-option" data-lang="ar">العربية</a>
+              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary language-option" data-lang="sw">Kiswahili</a>
+              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary language-option" data-lang="fr">Français</a>
+              <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-purple-50 hover:text-primary language-option" data-lang="rw">Kinyarwanda</a>
+            </div>
+          </div>
+
+          <a href="./login.html" class="px-3 py-1.5 border-2 border-primary text-primary rounded-full text-xs font-semibold hover:bg-purple-50" data-translate="nav.login">Log In</a>
+          <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-accent to-primary text-white rounded-full text-xs font-semibold hover:shadow-lg hover:shadow-primary/50 transition-shadow" data-translate="nav.donate">Donate</a>
+        </div>
+
+        <!-- Search -->
+        <div class="hidden sm:block">
+          <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm w-32 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" data-translate="nav.search">
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="sm:hidden hidden bg-white border-t" id="nav-links">
+      <div class="px-4 pt-2 pb-3 space-y-1">
+        <a href="index.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.home">Home</a>
+        <a href="AboutUs.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.about">About</a>
+        <a href="chat.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.chat">Chat</a>
+        <a href="stories.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.stories">Stories</a>
+        <a href="Learning_Programs.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.programs">Programs</a>
+        <a href="protection.html" class="block py-2 text-dark font-medium border-b" data-translate="nav.protection">Protection</a>
+        
+        <div class="py-2 border-b">
+          <div class="flex justify-between items-center">
+            <span data-translate="nav.language">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">العربية</option>
+              <option value="sw">Kiswahili</option>
+              <option value="fr">Français</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="login.html" class="block py-2 text-primary font-semibold border-b" data-translate="nav.login">Log In</a>
+        <a href="donate.html" class="block py-2 text-white bg-gradient-to-r from-accent to-primary rounded-lg text-center font-semibold" data-translate="nav.donate">Donate</a>
+        <input type="text" placeholder="Search..." class="w-full mt-3 px-3 py-2 border rounded-lg text-sm" data-translate="nav.search">
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay -->
+  <div class="fixed inset-0 bg-black/50 z-40 hidden" id="nav-overlay"></div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="max-w-7xl mx-auto px-4 py-12">
+    <div class="space-y-8">
+
+      <!-- Sign Up Form -->
+      <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto">
+        <h1 class="text-3xl font-bold text-purple-800 text-center mb-6" data-translate="signup.title">Create Account</h1>
+        <form id="signupForm" class="space-y-5">
+          <div>
+            <label for="fullName" class="block text-sm font-medium text-dark mb-2" data-translate="signup.fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition">
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-dark mb-2" data-translate="signup.email">Email Address</label>
+            <input type="email" id="email" placeholder="you@example.com" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition">
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-dark mb-2" data-translate="signup.password">Password</label>
+            <input type="password" id="password" placeholder="Create a strong password" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition">
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition" data-translate="signup.button">
+              Sign Up
+            </button>
+            
+            <button type="button" onclick="window.location.href='login.html'"
+                    class="px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition" data-translate="signup.haveAccount">
+              Already have account?
+            </button>
+
+            <div class="text-center mt-2">
+              <a href="admin-signup.html" class="text-sm text-purple-700 hover:text-purple-900 font-medium" data-translate="signup.admin">
+                <i class="fas fa-shield-alt mr-2"></i>Are you an administrator?
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-black text-gray-300 py-12 mt-16">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+
+        <!-- Left -->
+        <div class="space-y-4 text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start gap-3">
+            <img src="img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-12 h-12 object-contain rounded-full border-2 border-accent">
+            <p class="text-pink-400 font-semibold" data-translate="footer.tagline">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="text-sm text-gray-400 max-w-xs mx-auto md:mx-0" data-translate="footer.description">
+            A safe digital haven for girls in Mahama refugee camp, Rwanda.
+          </p>
+          <div class="flex justify-center md:justify-start gap-3">
+            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Links 1 -->
+        <div class="text-center md:text-left">
+          <h4 class="text-white font-semibold mb-4" data-translate="footer.quickLinks">Quick Links</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="./chat.html" class="hover:text-pink-400 transition" data-translate="footer.joinChat">Join Chat</a></li>
+            <li><a href="./stories.html" class="hover:text-pink-400 transition" data-translate="footer.shareStory">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-pink-400 transition" data-translate="footer.programs">Programs</a></li>
+          </ul>
+        </div>
+
+        <!-- Links 2 -->
+        <div class="text-center md:text-left">
+          <h4 class="text-white font-semibold mb-4" data-translate="footer.getHelp">Get Help</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-pink-400 transition" data-translate="footer.support">Support</a></li>
+            <li><a href="#" class="hover:text-pink-400 transition" data-translate="footer.report">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+        <p data-translate="footer.copyright">© 2025 GirlsSpace Mahama. <span class="text-purple-500 font-medium">Empowering girls, always.</span></p>
+        <div class="text-center md:text-right">
+          <p data-translate="footer.languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-translate="footer.supporters">Supported by UNHCR, Save The Children, Alight</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Language data
+    const translations = {
+      en: {
+        "nav.home": "Home",
+        "nav.about": "About",
+        "nav.chat": "Chat",
+        "nav.stories": "Stories",
+        "nav.protection": "Protection",
+        "nav.programs": "Programs",
+        "nav.language": "Language",
+        "nav.login": "Log In",
+        "nav.donate": "Donate",
+        "nav.search": "Search...",
+        "signup.title": "Create Account",
+        "signup.fullName": "Full Name",
+        "signup.email": "Email Address",
+        "signup.password": "Password",
+        "signup.button": "Sign Up",
+        "signup.haveAccount": "Already have account?",
+        "signup.admin": "Are you an administrator?",
+        "footer.tagline": "Empowering Girls, Building Futures",
+        "footer.description": "A safe digital haven for girls in Mahama refugee camp, Rwanda.",
+        "footer.quickLinks": "Quick Links",
+        "footer.joinChat": "Join Chat",
+        "footer.shareStory": "Share Story",
+        "footer.programs": "Programs",
+        "footer.getHelp": "Get Help",
+        "footer.support": "Support",
+        "footer.report": "Report",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-purple-500 font-medium'>Empowering girls, always.</span>",
+        "footer.languages": "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+        "footer.supporters": "Supported by UNHCR, Save The Children, Alight"
+      },
+      ar: {
+        "nav.home": "الرئيسية",
+        "nav.about": "من نحن",
+        "nav.chat": "الدردشة",
+        "nav.stories": "القصص",
+        "nav.protection": "الحماية",
+        "nav.programs": "البرامج",
+        "nav.language": "اللغة",
+        "nav.login": "تسجيل الدخول",
+        "nav.donate": "تبرع",
+        "nav.search": "بحث...",
+        "signup.title": "إنشاء حساب",
+        "signup.fullName": "الاسم الكامل",
+        "signup.email": "البريد الإلكتروني",
+        "signup.password": "كلمة المرور",
+        "signup.button": "إنشاء حساب",
+        "signup.haveAccount": "هل لديك حساب بالفعل؟",
+        "signup.admin": "هل أنت مسؤول؟",
+        "footer.tagline": "تمكين الفتيات، بناء المستقبل",
+        "footer.description": "ملاذ رقمي آمن للفتيات في مخيم مهاجمة للاجئين، رواندا.",
+        "footer.quickLinks": "روابط سريعة",
+        "footer.joinChat": "انضم للدردشة",
+        "footer.shareStory": "شارك قصة",
+        "footer.programs": "البرامج",
+        "footer.getHelp": "احصل على المساعدة",
+        "footer.support": "الدعم",
+        "footer.report": "الإبلاغ",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-purple-500 font-medium'>تمكين الفتيات، دائمًا.</span>",
+        "footer.languages": "متاح بـ: العربية، الإنجليزية، الفرنسية، السواحيلية، الكينيارواندية",
+        "footer.supporters": "بدعم من: UNHCR، Save The Children، Alight"
+      },
+      sw: {
+        "nav.home": "Nyumbani",
+        "nav.about": "Kuhusu Sisi",
+        "nav.chat": "Gumzo",
+        "nav.stories": "Hadithi",
+        "nav.protection": "Ulinzi",
+        "nav.programs": "Mipango",
+        "nav.language": "Lugha",
+        "nav.login": "Ingia",
+        "nav.donate": "Changia",
+        "nav.search": "Tafuta...",
+        "signup.title": "Tengeneza Akaunti",
+        "signup.fullName": "Jina Kamili",
+        "signup.email": "Anwani ya Barua Pepe",
+        "signup.password": "Nywila",
+        "signup.button": "Jisajili",
+        "signup.haveAccount": "Tayari una akaunti?",
+        "signup.admin": "Je, wewe ni msimamizi?",
+        "footer.tagline": "Kuwawezesha Wasichana, Kujenga Mustakabali",
+        "footer.description": "Kimbilio la salama la kidijitali kwa wasichana katika kambi ya wakimbizi ya Mahama, Rwanda.",
+        "footer.quickLinks": "Viungo Vya Haraka",
+        "footer.joinChat": "Jiunge na Gumzo",
+        "footer.shareStory": "Shiriki Hadithi",
+        "footer.programs": "Mipango",
+        "footer.getHelp": "Pata Msaada",
+        "footer.support": "Msaada",
+        "footer.report": "Ripoti",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-purple-500 font-medium'>Kuwawezesha wasichana, kila wakati.</span>",
+        "footer.languages": "Inapatikana katika: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+        "footer.supporters": "Inasaidiwa na: UNHCR, Save The Children, Alight"
+      },
+      fr: {
+        "nav.home": "Accueil",
+        "nav.about": "À propos",
+        "nav.chat": "Chat",
+        "nav.stories": "Histoires",
+        "nav.protection": "Protection",
+        "nav.programs": "Programmes",
+        "nav.language": "Langue",
+        "nav.login": "Connexion",
+        "nav.donate": "Faire un don",
+        "nav.search": "Rechercher...",
+        "signup.title": "Créer un compte",
+        "signup.fullName": "Nom complet",
+        "signup.email": "Adresse e-mail",
+        "signup.password": "Mot de passe",
+        "signup.button": "S'inscrire",
+        "signup.haveAccount": "Vous avez déjà un compte?",
+        "signup.admin": "Êtes-vous administrateur?",
+        "footer.tagline": "Autonomiser les Filles, Bâtir l'Avenir",
+        "footer.description": "Un havre numérique sûr pour les filles du camp de réfugiés de Mahama, Rwanda.",
+        "footer.quickLinks": "Liens Rapides",
+        "footer.joinChat": "Rejoindre le Chat",
+        "footer.shareStory": "Partager une Histoire",
+        "footer.programs": "Programmes",
+        "footer.getHelp": "Obtenir de l'Aide",
+        "footer.support": "Soutien",
+        "footer.report": "Signaler",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-purple-500 font-medium'>Autonomiser les filles, toujours.</span>",
+        "footer.languages": "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
+        "footer.supporters": "Soutenu par : HCR, Save The Children, Alight"
+      },
+      rw: {
+        "nav.home": "Ahabanza",
+        "nav.about": "Abo turi",
+        "nav.chat": "Kuganira",
+        "nav.stories": "Inkuru",
+        "nav.protection": "Umutekano",
+        "nav.programs": "Porogaramu",
+        "nav.language": "Ururimi",
+        "nav.login": "Injira",
+        "nav.donate": "Tanga",
+        "nav.search": "Shaka...",
+        "signup.title": "Kora Konti",
+        "signup.fullName": "Amazina yose",
+        "signup.email": "Aderesi ya imeri",
+        "signup.password": "Ijambobanga",
+        "signup.button": "Iyandike",
+        "signup.haveAccount": "Urafite konti?",
+        "signup.admin": "Ni umuyobozi?",
+        "footer.tagline": "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        "footer.description": "Ubuturo butekanye bwa digitale kuri abakobwa bo mu rugo rw'abimukanyi rwa Mahama, u Rwanda.",
+        "footer.quickLinks": "Amahuza Yihuse",
+        "footer.joinChat": "Injira mu kuganira",
+        "footer.shareStory": "Sangiza inkuru",
+        "footer.programs": "Porogaramu",
+        "footer.getHelp": "Kwakira ubufasha",
+        "footer.support": "Gushigikira",
+        "footer.report": "Raporo",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-purple-500 font-medium'>Guharanira abakobwa, buri gihe.</span>",
+        "footer.languages": "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        "footer.supporters": "Bishigikijwe na: UNHCR, Save The Children, Alight"
+      }
+    };
+
+    // Language management functions
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updateDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[data-translate]');
+      
+      elements.forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.placeholder = translations[lang][key];
+          } else {
+            element.innerHTML = translations[lang][key];
+          }
+        }
+      });
+    }
+
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'العربية',
+        'sw': 'Kiswahili',
+        'fr': 'Français',
+        'rw': 'Kinyarwanda'
+      };
+      
+      // Update desktop language button
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.querySelector('span').textContent = languageNames[lang];
+      }
+      
+      // Update mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.value = lang;
+      }
+    }
+
+    function updateDirection(lang) {
+      // Set direction based on language
+      const isRTL = ['ar'].includes(lang);
+      document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+      
+      // Update body classes for direction
+      document.body.classList.remove('rtl', 'ltr');
+      document.body.classList.add(isRTL ? 'rtl' : 'ltr');
+    }
+
+    // Initialize language on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updateDirection(currentLang);
+      
+      // Add event listeners for language options
+      const languageOptions = document.querySelectorAll('.language-option');
+      languageOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+          e.preventDefault();
+          const lang = this.getAttribute('data-lang');
+          setCurrentLanguage(lang);
+        });
+      });
+      
+      // Add event listener for mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.addEventListener('change', function() {
+          setCurrentLanguage(this.value);
+        });
+      }
+    });
+
+    // Mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+
+    function toggleMenu() {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      
+      if (isOpen) {
+        mobileMenu.classList.add('hidden');
+        overlay.classList.add('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'false');
+      } else {
+        mobileMenu.classList.remove('hidden');
+        overlay.classList.remove('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    mobileMenuButton.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
+
+  <script type="module">
+    import { setupSignUp } from './firebase.js';
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Sign up page loaded');
+      setupSignUp();
+    });
+  </script>
+  <script type="module">
+    import { setupSignUp } from './firebase.js';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Sign up page loaded, initializing sign up...');
+      setupSignUp();
+    });
+  </script>
+</body>
+</html>

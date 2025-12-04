@@ -9,6 +9,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#ec4899',
+            'primary-dark': '#be185d',
+            accent: '#fbbf24',
+            dark: '#0f0f14',
+            'custom-purple': '#c23cb6',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body { 
       font-family: 'Poppins', sans-serif; 
@@ -22,8 +42,8 @@
       display: none;
     }
     .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     /* تأثيرات النافبار */
@@ -41,10 +61,9 @@
     .nav-link:hover::after { width: 100%; }
 
     /* Mobile Menu & Overlay */
-    #mobileMenu { transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.77, 0, 0.18, 1); }
-    #mobileMenu.active { transform: translateX(0); }
-    #overlay { opacity: 0; visibility: hidden; transition: all 0.4s ease; }
-    #overlay.active { opacity: 1; visibility: visible; }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
 
     /* Program Cards Animation */
     .program-card { transition: all 0.4s ease; }
@@ -57,41 +76,46 @@
     }
   </style>
 </head>
-<body class="text-gray-800 pt-[88px]">   <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+<body class="text-gray-800 font-poppins overflow-x-hidden">
+
+  <!-- Navigation Bar - Fixed -->
+  <nav class="flex items-center justify-between px-5 py-3 bg-white fixed top-0 left-0 right-0 z-50 shadow-md md:px-10">
     <div class="w-[60px] h-[50px]">
       <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
     <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
-      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors">Home</a>
-      <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors">About</a>
-      <a href="#" class="nav-link hover:text-primary relative transition-colors">Chat</a>
-      <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors">Stories</a>
-      <a href="#" class="nav-link hover:text-primary relative transition-colors">Protection</a>
-      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors">Programs</a>
+      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="home">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="about">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="chat">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="stories">Stories</a>
+      <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="protection">Protection</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors" data-i18n="programs">Programs</a>
       
       <div class="relative group">
-        <button class="flex items-center hover:text-primary transition-colors py-2">
-          Languages <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        <button class="flex items-center hover:text-primary transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
         </button>
         <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
-          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">English</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Arabic</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">Swahili</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700">French</a></li>
+          <li><button onclick="changeLanguage('en')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">English</button></li>
+          <li><button onclick="changeLanguage('ar')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Arabic</button></li>
+          <li><button onclick="changeLanguage('sw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Swahili</button></li>
+          <li><button onclick="changeLanguage('fr')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">French</button></li>
+          <li><button onclick="changeLanguage('rw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Kinyarwanda</button></li>
         </ul>
       </div>
-         <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors">Log In</a>
-      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple">Donate</a>
-    
+      
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-i18n="login">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
     </div>
 
     <div class="hidden lg:flex items-center gap-4">
       <div class="relative">
-        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]" data-i18n-placeholder="search">
       </div>
-   </div>
+    </div>
 
+    <!-- Hamburger Button - Updated -->
     <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
       <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
       <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
@@ -99,165 +123,519 @@
     </button>
   </nav>
 
-
-  <div class="sticky top-[88px] z-40 bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-5 md:px-8">
-      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-3 whitespace-nowrap mask-image-linear-gradient">
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
+  <!-- Mobile Menu - Updated -->
+  <div id="mobile-menu" class="fixed top-0 left-[-100%] w-full h-full bg-white z-40 transition-all duration-300 lg:hidden overflow-y-auto no-scrollbar">
+    <div class="pt-20 px-6 pb-10">
+      <div class="flex flex-col gap-6 text-gray-700 font-medium">
+        <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="home">Home</a>
+        <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="about">About</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="chat">Chat</a>
+        <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="stories">Stories</a>
+        <a href="./protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="protection">Protection</a>
+        <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-i18n="programs">Programs</a>
         
-        <span class="text-sm font-bold text-gray-400 uppercase tracking-wider mr-2">Filter:</span>
-
-        <button class="px-5 py-1.5 rounded-full bg-pink-600 text-white text-sm font-medium shadow-md shadow-pink-200 transition-transform hover:scale-105">
-          All Programs
-        </button>
-
-        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
-          <i class="fas fa-shield-alt mr-1"></i> GBV
-        </button>
-
-        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
-          <i class="fas fa-language mr-1"></i> Languages
-        </button>
-
-        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
-          <i class="fas fa-tools mr-1"></i> Vocational
-        </button>
-
-        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
-          <i class="fas fa-heart mr-1"></i> Life Skills
-        </button>
-
-        <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors">
-          <i class="fas fa-briefcase mr-1"></i> Entrepreneurship
-        </button>
+        <div class="py-2 border-b border-gray-100">
+          <div class="flex justify-between items-center">
+            <span data-i18n="languages">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">Arabic</option>
+              <option value="sw">Swahili</option>
+              <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-i18n="login">Log In</a>
+        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
       </div>
     </div>
   </div>
 
+  <!-- Main Content - Added padding top to account for fixed navbar -->
+  <div class="pt-[88px]">
+    <!-- Filter Bar with Translations -->
+    <div class="sticky top-[88px] z-40 bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-5 md:px-8">
+        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-3 whitespace-nowrap">
+          
+          <span class="text-sm font-bold text-gray-400 uppercase tracking-wider mr-2" data-i18n="filter">Filter:</span>
 
-  <div id="mobileMenu" class="fixed inset-0 z-50 lg:hidden">
-    <div class="bg-white w-72 h-full shadow-2xl p-6 flex flex-col">
-      <div class="flex justify-between items-center mb-8">
-        <span class="font-bold text-xl text-pink-600">Menu</span>
-        <button onclick="closeMenu()" class="text-2xl text-gray-500 hover:text-pink-600"><i class="fas fa-times"></i></button>
+          <button class="px-5 py-1.5 rounded-full bg-pink-600 text-white text-sm font-medium shadow-md shadow-pink-200 transition-transform hover:scale-105" data-i18n="all_programs">
+            All Programs
+          </button>
+
+          <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors" data-i18n="gbv_filter">
+            <i class="fas fa-shield-alt mr-1"></i> GBV
+          </button>
+
+          <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors" data-i18n="languages_filter">
+            <i class="fas fa-language mr-1"></i> Languages
+          </button>
+
+          <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors" data-i18n="vocational_filter">
+            <i class="fas fa-tools mr-1"></i> Vocational
+          </button>
+
+          <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors" data-i18n="life_skills_filter">
+            <i class="fas fa-heart mr-1"></i> Life Skills
+          </button>
+
+          <button class="px-5 py-1.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-medium hover:border-pink-400 hover:text-pink-600 transition-colors" data-i18n="entrepreneurship_filter">
+            <i class="fas fa-briefcase mr-1"></i> Entrepreneurship
+          </button>
+        </div>
       </div>
+    </div>
+
+    <main class="min-h-screen">
       
-      <ul class="space-y-4 flex-1 overflow-y-auto">
-        <li><a href="./index.html" class="block text-gray-700 font-medium hover:text-pink-600">Home</a></li>
-        <li><a href="./AboutUs.html" class="block text-gray-700 font-medium hover:text-pink-600">About</a></li>
-        <li><a href="chat.html" class="block text-gray-700 font-medium hover:text-pink-600">Chat</a></li>
-        <li><a href="./stories.html" class="block text-gray-700 font-medium hover:text-pink-600">Stories</a></li>
-        <li><a href="./Learning_Programs.html" class="block text-pink-600 font-bold bg-pink-50 px-3 py-2 rounded-lg">Programs</a></li>
-        
-        <li class="pt-4 border-t border-gray-100">
-          <p class="text-xs text-gray-400 uppercase mb-2">Account</p>
-          <a href="./login.html" class="block w-full text-center py-2.5 border border-pink-600 text-pink-600 rounded-lg font-semibold mb-3">Log In</a>
-          <a href="./Donate.html" class="block w-full text-center py-2.5 bg-pink-600 text-white rounded-lg font-semibold shadow-lg">Donate</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div id="overlay" class="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm" onclick="closeMenu()"></div>
+      <header class="text-center py-16 px-6">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900 tracking-tight" data-i18n="explore_programs">
+          Explore <span class="gradient-text-pink">Programs</span>
+        </h1>
+        <p class="text-lg text-gray-500 max-w-2xl mx-auto" data-i18n="programs_description">
+          Choose a path to empower your future. All courses are free and certified.
+        </p>
+      </header>
 
+      <div class="container max-w-6xl mx-auto px-6 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-  <main class="min-h-screen">
-    
-    <header class="text-center py-16 px-6">
-      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900 tracking-tight">
-        Explore <span class="gradient-text-pink">Programs</span>
-      </h1>
-      <p class="text-lg text-gray-500 max-w-2xl mx-auto">
-        Choose a path to empower your future. All courses are free and certified.
-      </p>
-    </header>
-
-    <div class="container max-w-6xl mx-auto px-6 pb-24">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-
-        <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-purple-100 flex flex-col h-full">
-          <div class="h-60 relative overflow-hidden group">
-            <img src="./img/GBV2.jpg" alt="GBV Prevention" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
-              <i class="fas fa-clock mr-1"></i> 4 Weeks
+          <!-- Program Card 1 - GBV -->
+          <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-purple-100 flex flex-col h-full">
+            <div class="h-60 relative overflow-hidden group">
+              <img src="./img/GBV2.jpg" alt="GBV Prevention" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-i18n-alt="gbv_image_alt">
+              <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
+                <i class="fas fa-clock mr-1"></i> <span data-i18n="weeks_4">4 Weeks</span>
+              </div>
+              <div class="absolute top-4 right-4 bg-pink-100 text-pink-700 px-4 py-1 rounded-full text-xs font-bold" data-i18n="most_popular">
+                Most Popular
+              </div>
             </div>
-            <div class="absolute top-4 right-4 bg-pink-100 text-pink-700 px-4 py-1 rounded-full text-xs font-bold">
-              Most Popular
+            <div class="p-8 flex-1 flex flex-col">
+              <h2 class="text-2xl font-bold mb-3 text-gray-800" data-i18n="gbv_title">Prevention of GBV</h2>
+              <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed" data-i18n="gbv_description">
+                Comprehensive training on identifying, preventing, and responding to Gender-Based Violence in your community.
+              </p>
+              <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
+                <span class="flex items-center"><i class="fas fa-video text-pink-500 mr-2"></i> <span data-i18n="lessons_12">12 Lessons</span></span>
+                <span class="flex items-center"><i class="fas fa-certificate text-pink-500 mr-2"></i> <span data-i18n="certified">Certified</span></span>
+              </div>
+              <a href="./GBV.html" class="w-full py-3.5 bg-pink-100 text-base rounded-xl font-bold text-center hover:bg-pink-600  transition-colors shadow-lg" data-i18n="start_learning">
+                Start Learning
+              </a>
             </div>
           </div>
-          <div class="p-8 flex-1 flex flex-col">
-            <h2 class="text-2xl font-bold mb-3 text-gray-800">Prevention of GBV</h2>
-            <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed">
-              Comprehensive training on identifying, preventing, and responding to Gender-Based Violence in your community.
-            </p>
-            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
-              <span class="flex items-center"><i class="fas fa-video text-pink-500 mr-2"></i> 12 Lessons</span>
-              <span class="flex items-center"><i class="fas fa-certificate text-pink-500 mr-2"></i> Certified</span>
+
+          <!-- Program Card 2 - English -->
+          <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-pink-100 flex flex-col h-full">
+            <div class="h-60 relative overflow-hidden group">
+              <img src="./img/English.jpg" alt="English Learning" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-i18n-alt="english_image_alt">
+               <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
+                <i class="fas fa-clock mr-1"></i> <span data-i18n="weeks_8">8 Weeks</span>
+              </div>
+              <div class="absolute top-4 right-4 bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-xs font-bold" data-i18n="new">
+                New
+              </div>
             </div>
-            <a href="./gbv-course.html" class="w-full py-3.5 bg-gray-900 text-white rounded-xl font-bold text-center hover:bg-pink-600 transition-colors shadow-lg">
-              Start Learning
-            </a>
+            <div class="p-8 flex-1 flex flex-col">
+              <h2 class="text-2xl font-bold mb-3 text-gray-800" data-i18n="english_title">English for Beginners</h2>
+              <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed" data-i18n="english_description">
+                Start your journey to fluency. Learn basic grammar, vocabulary, and daily conversation skills.
+              </p>
+              <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
+                <span class="flex items-center"><i class="fas fa-layer-group text-purple-500 mr-2"></i> <span data-i18n="lessons_20">20 Lessons</span></span>
+                <span class="flex items-center"><i class="fas fa-star text-purple-500 mr-2"></i> <span data-i18n="beginner">Beginner</span></span>
+              </div>
+              <a href="./English_course.html" class="w-full py-3.5 bg-white border-2 border-gray-200 text-gray-800 rounded-xl font-bold text-center hover:border-pink-500 hover:text-pink-600 transition-colors" data-i18n="view_curriculum">
+                View Curriculum
+              </a>
+            </div>
           </div>
+
         </div>
-
-        <div class="program-card bg-white rounded-3xl shadow-xl overflow-hidden border border-pink-100 flex flex-col h-full">
-          <div class="h-60 relative overflow-hidden group">
-            <img src="./img/English.jpg" alt="English Learning" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-             <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-gray-800 shadow-sm">
-              <i class="fas fa-clock mr-1"></i> 8 Weeks
-            </div>
-            <div class="absolute top-4 right-4 bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-xs font-bold">
-              New
-            </div>
-          </div>
-          <div class="p-8 flex-1 flex flex-col">
-            <h2 class="text-2xl font-bold mb-3 text-gray-800">English for Beginners</h2>
-            <p class="text-gray-500 text-sm mb-6 flex-1 leading-relaxed">
-              Start your journey to fluency. Learn basic grammar, vocabulary, and daily conversation skills.
-            </p>
-            <div class="flex items-center gap-4 mb-6 text-sm text-gray-600">
-              <span class="flex items-center"><i class="fas fa-layer-group text-purple-500 mr-2"></i> 20 Lessons</span>
-              <span class="flex items-center"><i class="fas fa-star text-purple-500 mr-2"></i> Beginner</span>
-            </div>
-            <a href="./English_course.html" class="w-full py-3.5 bg-white border-2 border-gray-200 text-gray-800 rounded-xl font-bold text-center hover:border-purple-500 hover:text-purple-600 transition-colors">
-              View Curriculum
-            </a>
-          </div>
-        </div>
-
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 
-  <footer class="bg-gray-900 text-gray-300 py-12 px-6">
-    <div class="max-w-7xl mx-auto text-center md:text-left">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-3">
-          <img src="./img/Girls Space (1) (1).png" class="w-10 h-10 rounded-full">
-          <span class="font-bold text-white text-lg">GirlsSpace</span>
+  <!-- Footer with Translations -->
+  <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
+            <p class="font-semibold text-[rgb(255,135,219)] text-base" data-i18n="footer_subtitle">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6" data-i18n="footer_description">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+          </p>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-youtube"></i></a>
+          </div>
         </div>
-        <p class="text-sm text-gray-500">© 2025 GirlsSpace Mahama. All rights reserved.</p>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4" data-i18n="quick_links">Quick Links</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="./chat.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="join_chat">Join Chat</a></li>
+            <li><a href="./stories.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="share_story">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="programs">Programs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4" data-i18n="get_help">Get Help</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="emergency">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="support">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-i18n="report">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
+        <div>
+          <p data-i18n="copyright">© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium" data-i18n="empowering_girls">Empowering girls, always.</span></p>
+        </div>
+        <div class="text-left md:text-right">
+          <p class="mb-1" data-i18n="available_languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-i18n="supported_by">Supported by UNHCR, Save The Children, Alight</p>
+        </div>
       </div>
     </div>
   </footer>
 
   <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const overlay = document.getElementById('overlay');
+    // Complete translations object
+    const translations = {
+      en: {
+        // Navigation
+        home: "Home", about: "About", chat: "Chat", stories: "Stories", programs: "Programs", 
+        protection: "Protection", languages: "Languages", login: "Log In", donate: "Donate",
+        search: "Search...",
+        
+        // Filter Bar
+        filter: "Filter:", all_programs: "All Programs", gbv_filter: "GBV", 
+        languages_filter: "Languages", vocational_filter: "Vocational", 
+        life_skills_filter: "Life Skills", entrepreneurship_filter: "Entrepreneurship",
+        
+        // Main Content
+        explore_programs: "Explore Programs", programs_description: "Choose a path to empower your future. All courses are free and certified.",
+        
+        // Program Cards
+        weeks_4: "4 Weeks", weeks_8: "8 Weeks", most_popular: "Most Popular", new: "New",
+        lessons_12: "12 Lessons", lessons_20: "20 Lessons", certified: "Certified", beginner: "Beginner",
+        start_learning: "Start Learning", view_curriculum: "View Curriculum",
+        
+        // GBV Program
+        gbv_title: "Prevention of GBV",
+        gbv_description: "Comprehensive training on identifying, preventing, and responding to Gender-Based Violence in your community.",
+        gbv_image_alt: "GBV Prevention Training",
+        
+        // English Program
+        english_title: "English for Beginners",
+        english_description: "Start your journey to fluency. Learn basic grammar, vocabulary, and daily conversation skills.",
+        english_image_alt: "English Learning Course",
+        
+        // Footer
+        footer_subtitle: "Empowering Girls, Building Futures",
+        footer_description: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+        quick_links: "Quick Links", join_chat: "Join Chat", share_story: "Share Story",
+        get_help: "Get Help", emergency: "Emergency", support: "Support", report: "Report",
+        copyright: "© 2025 GirlsSpace Mahama.", empowering_girls: "Empowering girls, always.",
+        available_languages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+        supported_by: "Supported by UNHCR, Save The Children, Alight"
+      },
+      ar: {
+        // Navigation
+        home: "الرئيسية", about: "عن الموقع", chat: "دردشة", stories: "قصص", programs: "البرامج", 
+        protection: "حماية", languages: "اللغات", login: "دخول", donate: "تبرع",
+        search: "بحث...",
+        
+        // Filter Bar
+        filter: "تصفية:", all_programs: "كل البرامج", gbv_filter: "العنف القائم على النوع", 
+        languages_filter: "اللغات", vocational_filter: "المهني", 
+        life_skills_filter: "المهارات الحياتية", entrepreneurship_filter: "ريادة الأعمال",
+        
+        // Main Content
+        explore_programs: "استكشف البرامج", programs_description: "اختر مسارًا لتمكين مستقبلك. جميع الدورات مجانية ومعتمدة.",
+        
+        // Program Cards
+        weeks_4: "4 أسابيع", weeks_8: "8 أسابيع", most_popular: "الأكثر شيوعاً", new: "جديد",
+        lessons_12: "12 درس", lessons_20: "20 درس", certified: "معتمد", beginner: "مبتدئ",
+        start_learning: "ابدأ التعلم", view_curriculum: "عرض المنهج",
+        
+        // GBV Program
+        gbv_title: "الوقاية من العنف القائم على النوع",
+        gbv_description: "تدريب شامل حول تحديد ومنع والاستجابة للعنف القائم على النوع الاجتماعي في مجتمعك.",
+        gbv_image_alt: "تدريب الوقاية من العنف القائم على النوع",
+        
+        // English Program
+        english_title: "الإنجليزية للمبتدئين",
+        english_description: "ابدأ رحلتك نحو الطلاقة. تعلم القواعد الأساسية والمفردات ومهارات المحادثة اليومية.",
+        english_image_alt: "دورة تعلم الإنجليزية",
+        
+        // Footer
+        footer_subtitle: "تمكين الفتيات، بناء المستقبل",
+        footer_description: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم ماهاما للاجئين التواصل والتعلم والنمو.",
+        quick_links: "روابط سريعة", join_chat: "انضم للدردشة", share_story: "شارك قصة",
+        get_help: "احصل على المساعدة", emergency: "طوارئ", support: "دعم", report: "الإبلاغ",
+        copyright: "© 2025 GirlsSpace Mahama.", empowering_girls: "تمكين الفتيات، دائماً.",
+        available_languages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+        supported_by: "بدعم من UNHCR، Save The Children، Alight"
+      },
+      fr: {
+        // Navigation
+        home: "Accueil", about: "À propos", chat: "Discuter", stories: "Histoires", programs: "Programmes", 
+        protection: "Protection", languages: "Langues", login: "Connexion", donate: "Donner",
+        search: "Rechercher...",
+        
+        // Filter Bar
+        filter: "Filtrer:", all_programs: "Tous les programmes", gbv_filter: "VBG", 
+        languages_filter: "Langues", vocational_filter: "Professionnel", 
+        life_skills_filter: "Compétences de vie", entrepreneurship_filter: "Entrepreneuriat",
+        
+        // Main Content
+        explore_programs: "Explorer les programmes", programs_description: "Choisissez une voie pour autonomiser votre avenir. Tous les cours sont gratuits et certifiés.",
+        
+        // Program Cards
+        weeks_4: "4 semaines", weeks_8: "8 semaines", most_popular: "Le plus populaire", new: "Nouveau",
+        lessons_12: "12 leçons", lessons_20: "20 leçons", certified: "Certifié", beginner: "Débutant",
+        start_learning: "Commencer à apprendre", view_curriculum: "Voir le programme",
+        
+        // GBV Program
+        gbv_title: "Prévention de la VBG",
+        gbv_description: "Formation complète sur l'identification, la prévention et la réponse à la violence basée sur le genre dans votre communauté.",
+        gbv_image_alt: "Formation à la prévention de la VBG",
+        
+        // English Program
+        english_title: "Anglais pour débutants",
+        english_description: "Commencez votre voyage vers la fluidité. Apprenez la grammaire de base, le vocabulaire et les compétences de conversation quotidienne.",
+        english_image_alt: "Cours d'apprentissage de l'anglais",
+        
+        // Footer
+        footer_subtitle: "Autonomiser les filles, construire l'avenir",
+        footer_description: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter.",
+        quick_links: "Liens rapides", join_chat: "Rejoindre le chat", share_story: "Partager une histoire",
+        get_help: "Obtenir de l'aide", emergency: "Urgence", support: "Soutien", report: "Signaler",
+        copyright: "© 2025 GirlsSpace Mahama.", empowering_girls: "Autonomiser les filles, toujours.",
+        available_languages: "Disponible en: Anglais, Français, Kiswahili, Kinyarwanda, Arabe",
+        supported_by: "Soutenu par UNHCR, Save The Children, Alight"
+      },
+      sw: {
+        // Navigation
+        home: "Nyumbani", about: "Kuhusu", chat: "Ongea", stories: "Hadithi", programs: "Mipango", 
+        protection: "Ulinzi", languages: "Lugha", login: "Ingia", donate: "Changia",
+        search: "Tafuta...",
+        
+        // Filter Bar
+        filter: "Chuja:", all_programs: "Mipango Yote", gbv_filter: "GBV", 
+        languages_filter: "Lugha", vocational_filter: "Kazi", 
+        life_skills_filter: "Stadi za Maisha", entrepreneurship_filter: "Ujasiriamali",
+        
+        // Main Content
+        explore_programs: "Gundua Mipango", programs_description: "Chagua njia ya kuwezesha mustakabali wako. Kozi zote ni za bure na zimetambuliwa.",
+        
+        // Program Cards
+        weeks_4: "Wiki 4", weeks_8: "Wiki 8", most_popular: "Maarufu Zaidi", new: "Mpya",
+        lessons_12: "Masomo 12", lessons_20: "Masomo 20", certified: "Imethibitishwa", beginner: "Mwanzo",
+        start_learning: "Anza Kujifunza", view_curriculum: "Tazamia Mtaala",
+        
+        // GBV Program
+        gbv_title: "Kuzuia GBV",
+        gbv_description: "Mafunzo kamili juu ya kutambua, kuzuia na kukabiliana na Unyanyasaji wa Kijinsia katika jamii yako.",
+        gbv_image_alt: "Mafunzo ya Kuzuia GBV",
+        
+        // English Program
+        english_title: "Kiingereza kwa Wanaoanza",
+        english_description: "Anza safari yako kuelewa lugha. Jifunze sarufi ya msingi, msamiati na ujuzi wa mazungumzo ya kila siku.",
+        english_image_alt: "Kozi ya Kujifunza Kiingereza",
+        
+        // Footer
+        footer_subtitle: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+        footer_description: "Mahali salama pa kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana.",
+        quick_links: "Viungo vya Haraka", join_chat: "Jiunge na Mazungumzo", share_story: "Shiriki Hadithi",
+        get_help: "Pata Msaada", emergency: "Dharura", support: "Msaada", report: "Ripoti",
+        copyright: "© 2025 GirlsSpace Mahama.", empowering_girls: "Kuwawezesha wasichana, daima.",
+        available_languages: "Inapatikana kwa: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+        supported_by: "Inasaidiwa na UNHCR, Save The Children, Alight"
+      },
+      rw: {
+        // Navigation
+        home: "Ahabanza", about: "Abo turi", chat: "Kuganira", stories: "Inkuru", programs: "Porogaramu", 
+        protection: "Umutekano", languages: "Indimi", login: "Injira", donate: "Tanga",
+        search: "Shakisha...",
+        
+        // Filter Bar
+        filter: "Akadogo:", all_programs: "Porogaramu Zose", gbv_filter: "GBV", 
+        languages_filter: "Indimi", vocational_filter: "Ubumenyi", 
+        life_skills_filter: "Ubuzima", entrepreneurship_filter: "Ubucuruzi",
+        
+        // Main Content
+        explore_programs: "Shakisha Porogaramu", programs_description: "Hitamo inzira yo guha imbaraga ejo hazaza. Amasomo yose ni amafaranga ya burundu kandi afite icyemezo.",
+        
+        // Program Cards
+        weeks_4: "Ibyumweru 4", weeks_8: "Ibyumweru 8", most_popular: "Birakomeye", new: "Gishya",
+        lessons_12: "Imyigishirize 12", lessons_20: "Imyigishirize 20", certified: "Cyemewe", beginner: "Ubutangiriro",
+        start_learning: "Tangira Kwiga", view_curriculum: "Reba Gahunda",
+        
+        // GBV Program
+        gbv_title: "Kwirinda GBV",
+        gbv_description: "Amasomo yuzuye ku birinda, kubona, no gukemura ibikorwa by'ubugome bushingiye ku gitsina mu muryango wawe.",
+        gbv_image_alt: "Amasomo yo Kwirinda GBV",
+        
+        // English Program
+        english_title: "Icyongereza ku Butangiriro",
+        english_description: "Tangira urugendo rwawe rwo kumenya ururimi. Jya ubona imiterere, amagambo, n'ubumenyi bwo kuvugisana buri munsi.",
+        english_image_alt: "Amasomo yo Kwiga Icyongereza",
+        
+        // Footer
+        footer_subtitle: "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        footer_description: "Ahantu hatekanye h'ikijyambere aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        quick_links: "Amahuza Yihuse", join_chat: "Injira mu Kuganira", share_story: "Sangiza Inkuru",
+        get_help: "Kwakira Ubufasha", emergency: "Ubutabazi", support: "Gushigikira", report: "Gutanga Raporo",
+        copyright: "© 2025 GirlsSpace Mahama.", empowering_girls: "Guharanira abakobwa, buri gihe.",
+        available_languages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        supported_by: "Bishigikijwe na: UNHCR, Save The Children, Alight"
+      }
+    };
+
+    // Mobile menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
 
     function toggleMenu() {
-      mobileMenu.classList.toggle('active');
-      overlay.classList.toggle('active');
-      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : 'auto';
+      hamburger.classList.toggle('active');
+      const isOpen = hamburger.classList.contains('active');
+      if (isOpen) {
+        mobileMenu.style.left = '0';
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      } else {
+        mobileMenu.style.left = '-100%';
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
     }
 
-    function closeMenu() {
-      mobileMenu.classList.remove('active');
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
+    // Language management functions
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
     }
 
-    menuBtn.addEventListener('click', toggleMenu);
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updatePageDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      console.log('Applying translations for:', lang);
+      
+      // Update all elements with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+      
+      // Update placeholder texts
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+      
+      // Update alt texts
+      document.querySelectorAll('[data-i18n-alt]').forEach(element => {
+        const key = element.getAttribute('data-i18n-alt');
+        if (translations[lang] && translations[lang][key]) {
+          element.alt = translations[lang][key];
+        }
+      });
+    }
+
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'Arabic',
+        'sw': 'Swahili',
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
+      };
+      
+      // Update desktop language button
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.textContent = languageNames[lang];
+      }
+      
+      // Update mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.value = lang;
+      }
+    }
+
+    function updatePageDirection(lang) {
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+    }
+
+    function changeLanguage(lang) {
+      console.log('Changing language to:', lang);
+      setCurrentLanguage(lang);
+      // Close mobile menu after language change
+      if (mobileMenu.style.left === '0px') {
+        toggleMenu();
+      }
+    }
+
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      console.log('Initializing with language:', currentLang);
+      
+      // Apply translations
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updatePageDirection(currentLang);
+      
+      // Add event listeners
+      hamburger.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+      
+      // Mobile language selector event
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.addEventListener('change', function() {
+          changeLanguage(this.value);
+        });
+      }
+
+      // Add click events to desktop language buttons
+      document.querySelectorAll('#language-button + ul button').forEach(button => {
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          changeLanguage(lang);
+        });
+      });
+    });
   </script>
-
+<script type="module" src="./auth-ui.js"></script>
 </body>
 </html>

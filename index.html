@@ -32,6 +32,7 @@
             'spin-slow': 'spin 10s linear infinite',
             sparkle: 'sparkleAnim 2s infinite',
             pulse: 'pulse-glow 2s ease-in-out infinite',
+            fadeIn: 'fadeIn 0.5s ease-in-out',
           },
           keyframes: {
             float: {
@@ -46,6 +47,10 @@
             'pulse-glow': {
               '0%, 100%': { boxShadow: '0 10px 30px rgba(236,72,154,0.2)' },
               '50%': { boxShadow: '0 15px 40px rgba(236,72,154,0.4)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
             }
           }
         }
@@ -73,6 +78,21 @@
     .nav-link:hover::after {
       width: 100%;
     }
+    
+    /* Search results styling */
+    .search-result-item {
+      transition: all 0.3s ease;
+    }
+    .search-result-item:hover {
+      background-color: rgba(236, 72, 153, 0.1);
+      transform: translateX(5px);
+    }
+    #card{
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  
+}
   </style>
 </head>
 
@@ -80,16 +100,17 @@
 
   <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
     <div class="w-[60px] h-[50px]">
-      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https:via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
     <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
       <a href="./index.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.home">Home</a>
       <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.about">About</a>
-      <a href="#" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.chat">Chat</a>
+      <a href="./chat.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.chat">Chat</a>
       <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.stories">Stories</a>
-      <a href="#" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.protection">Protection</a>
       <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.programs">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.protection">Protection</a>
+
       
       <div class="relative group">
         <button class="flex items-center hover:text-primary transition-colors py-2" id="language-button">
@@ -100,15 +121,23 @@
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="ar">Arabic</a></li>
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="sw">Swahili</a></li>
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="fr">French</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
         </ul>
       </div>
       <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-translate="nav.login">Log In</a>
-      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
+      <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
+    
+<a id="adminLink" href="admin-dashboard.html" class="hidden px-3 py-1.5 bg-purple-600 text-white rounded-full text-xs font-semibold hover:bg-purple-700">
+  <i class="fas fa-shield-alt mr-2"></i>Admin Panel
+</a>
     </div>
 
     <div class="hidden lg:flex items-center gap-4">
       <div class="relative">
-        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px]" data-translate="nav.search">
+        <input type="text" id="search-input" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px] transition-all duration-300" data-translate="nav.search">
+        <div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50 animate-fadeIn">
+          <!-- Search results will be populated here -->
+        </div>
       </div>
    </div>
 
@@ -119,6 +148,19 @@
     </button>
   </nav>
 
+  <!-- Mobile Search Bar -->
+  <div id="mobile-search-container" class="lg:hidden px-5 py-3 bg-white border-b border-gray-200 hidden">
+    <div class="relative">
+      <input type="text" id="mobile-search-input" placeholder="Search..." class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+      <button id="close-mobile-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="mobile-search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50">
+        <!-- Mobile search results will be populated here -->
+      </div>
+    </div>
+  </div>
+
   <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
   
   <!-- Mobile Menu -->
@@ -127,10 +169,16 @@
       <div class="flex flex-col gap-6 text-gray-700 font-medium">
         <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.home">Home</a>
         <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.about">About</a>
-        <a href="#" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.chat">Chat</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.chat">Chat</a>
         <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.stories">Stories</a>
-        <a href="#" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
         <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.programs">Programs</a>
+        <a href="./protection/protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
+        
+        <!-- Mobile Search Button -->
+        <button id="mobile-search-button" class="py-2 border-b border-gray-100 hover:text-primary transition-colors text-left flex items-center justify-between">
+          <span data-translate="nav.search">Search</span>
+          <i class="fas fa-search text-gray-400"></i>
+        </button>
         
         <div class="py-2 border-b border-gray-100">
           <div class="flex justify-between items-center">
@@ -140,18 +188,48 @@
               <option value="ar">Arabic</option>
               <option value="sw">Swahili</option>
               <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
             </select>
           </div>
         </div>
         
         <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-translate="nav.login">Log In</a>
-        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-translate="nav.donate">Donate</a>
+        <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-translate="nav.donate">Donate</a>
       </div>
     </div>
   </div>
 
+  <!-- Search Results Page (initially hidden) -->
+  <section id="search-results-page" class="min-h-screen bg-black py-16 px-6 hidden">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl lg:text-4xl font-bold" data-translate="search.results">Search Results</h2>
+        <button id="close-search-page" class="text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <div class="relative">
+          <input type="text" id="results-search-input" placeholder="Search..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+          <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      
+      <div id="search-results-content" class="space-y-4">
+        <!-- Search results will be displayed here -->
+      </div>
+      
+      <div id="no-results-message" class="text-center py-12 hidden">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2" data-translate="search.noResults">No results found</h3>
+        <p class="text-gray-500" data-translate="search.tryDifferent">Try different keywords or browse our categories</p>
+      </div>
+    </div>
+  </section>
+
   <section class="relative min-h-screen flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 py-20 mt-[-80px] bg-cover bg-center bg-no-repeat overflow-hidden" 
-           style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('./img/img-410-doc-3.webp');">
+           style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('/img/img-410-doc-3.webp');">
     
     <div class="z-10 text-center lg:text-left max-w-[550px] lg:ml-10">
       <h1 class="text-4xl lg:text-7xl font-black leading-tight mb-4" data-translate="hero.title">
@@ -161,10 +239,10 @@
         Connect, learn, and grow in a secure environment designed specifically for girls in Mahama refugee camp.
       </p>
       <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-        <a href="#" class="px-6 py-3 bg-white text-[#E91E63] rounded-full font-semibold text-base transition-transform hover:-translate-y-1 hover:bg-[#E91E63] hover:text-white shadow-lg" data-translate="hero.join">
+        <a href="./chat.html" class="px-6 py-3 bg-white text-[#E91E63] rounded-full font-semibold text-base transition-transform hover:-translate-y-1 hover:bg-[#E91E63] hover:text-white shadow-lg" data-translate="hero.join">
           Join Our Community
         </a>
-        <a href="#" class="px-6 py-3 bg-white/20 text-white border-2 border-white/30 rounded-full font-semibold text-base transition-colors hover:bg-white/30 hover:border-[#E91E63]" data-translate="hero.explore">
+        <a href="./Learning_Programs.html" class="px-6 py-3 bg-white/20 text-white border-2 border-white/30 rounded-full font-semibold text-base transition-colors hover:bg-white/30 hover:border-[#E91E63]" data-translate="hero.explore">
           Explore Programs
         </a>
       </div>
@@ -172,7 +250,7 @@
 
     <div class="relative z-10 mt-10 lg:mt-0 lg:mr-10">
       <div class="w-[250px] h-[250px] lg:w-[300px] lg:h-[300px] bg-white/10 rounded-full flex items-center justify-center border border-yellow-300/50 animate-float animate-pulse backdrop-blur-sm">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3/5 h-3/5 text-primary drop-shadow-[0_0_20px_rgba(236,72,153,0.6)] animate-spin-slow">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="https://nimated-icon/idol_18114097?term=girl&page=1&position=6&origin=search&related" class="w-3/5 h-3/5 text-primary drop-shadow-[0_0_20px_rgba(236,72,153,0.6)] animate-spin-slow">
           <circle cx="50" cy="35" r="18" stroke="currentColor" stroke-width="3"/>
           <path d="M25 65c0-15 10-25 25-25s25 10 25 25v15c0 5-10 10-25 10s-25-5-25-10z" fill="currentColor"/>
           <circle cx="42" cy="32" r="3" fill="#ec4899"/>
@@ -180,7 +258,7 @@
           <path d="M45 42c0-2 2-4 5-4s5 2 5 4" stroke="#fff" stroke-width="2" fill="none"/>
           <circle cx="20" cy="20" r="3" fill="#fbbf24"/>
           <circle cx="80" cy="25" r="2.5" fill="#a855f7"/>
-          <circle cx="35" cy="75" r="2" fill="#f472b6"/>
+          
         </svg>
         <div class="absolute top-1/4 right-1/4 w-1.5 h-1.5 bg-accent rounded-full animate-sparkle"></div>
         <div class="absolute bottom-1/3 left-1/4 w-1 h-1 bg-accent rounded-full animate-sparkle delay-500"></div>
@@ -189,28 +267,199 @@
     </div>
 
     <div class="absolute bottom-0 left-0 w-full pb-6 px-5 flex flex-wrap justify-center gap-6 lg:gap-16 z-10 bg-gradient-to-t from-black/80 to-transparent pt-10">
-      <div class="text-center">
-        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">1,200+</div>
-        <div class="text-sm text-white" data-translate="stats.girls">Active Girls</div>
-      </div>
-      <div class="text-center">
-        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">50+</div>
-        <div class="text-sm text-white" data-translate="stats.stories">Daily Stories</div>
-      </div>
-      <div class="text-center">
-        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">25</div>
-        <div class="text-sm text-white" data-translate="stats.programs">Programs</div>
-      </div>
-      <div class="text-center">
-        <div class="text-3xl lg:text-4xl font-extrabold text-yellow-400/80">24/7</div>
-        <div class="text-sm text-white" data-translate="stats.support">Support</div>
+      
       </div>
     </div>
 
-    <div class="absolute bottom-5 right-5 w-11 h-11 bg-[#E91E63] rounded-full flex items-center justify-center text-xl text-white shadow-[0_4px_15px_rgba(233,30,99,0.4)] cursor-pointer hover:scale-110 transition-transform z-20">i</div>
+    
+  </section>
+  <style> 
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card img {
+      transition: transform 0.3s ease;
+    }
+    .card:hover img {
+      transform: scale(1.05);
+    }
+    .hero-image {
+      background-image: url('/img/gettyimages-614012698-2048x2048.jpg'); /* Replace with your actual image path */
+      background-size: cover;
+      background-position: center;
+    }
+    .overlay {
+      background: rgba(255, 255, 255, 0.85);
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- Hero Section -->
+  <section class="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+    <!-- Text Block -->
+    <div class="flex items-center justify-center p-10 overlay">
+      <div class="max-w-xl">
+        <h1 class="text-4xl md:text-5xl font-bold text-pink-600 mb-6">Empowering Girls in Mahama Refugee Camps</h1>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          Welcome to <strong>girlsspace</strong>, an inspiring online platform based in Mahama, Rwanda, dedicated to supporting and empowering girls in refugee camps. We focus on providing accessible resources, educational tools, and a safe community where girls can connect, learn, and thrive.
+        </p>
+        <p class="text-lg text-gray-700 mt-4 leading-relaxed">
+          At girlsspace, we believe every girl deserves the opportunity to reach her full potential, regardless of her circumstances. Join us in making a difference and nurturing a brighter future for these resilient young women.
+        </p>
+      </div>
+    </div>
+    
+    <div class="hero-image"></div>
   </section>
 
-  <footer class="bg-dark text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+
+  <section class="max-w-7xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold text-center text-pink-600 mb-12">Our Key Initiatives</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      
+      <div class="card bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300">
+        <img src="/img/84770f_6d8f65290fd8480282082b66ac697efa~mv2_d_8688_5792_s_4_2.avif" alt="Empowerment Workshop" class="w-full h-56 object-cover"/>
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Empowerment Workshops</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Interactive workshops designed to build confidence, leadership, and communication skills among young girls.
+          </p>
+        </div>
+      </div>
+
+      <!-- Digital Skills Training -->
+      <div class="card bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300">
+        <img src="/img/gettyimages-2195087236-2048x2048.jpg" alt="Digital Skills Training" class="w-full h-56 object-cover"/>
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Digital Skills Training</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Providing essential computer and internet skills to prepare girls for future education and career opportunities.
+          </p>
+        </div>
+      </div>
+
+      <!-- Mental Health Support -->
+      <div class="card bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300">
+        <img src="/img/7ccb81_b4a039932ca6436793e2e87b115b0722~mv2_d_4961_3567_s_4_2.avif" alt="Mental Health Support" class="w-full h-56 object-cover"/>
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Mental Health Support</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Access to counseling and emotional support resources to promote well-being and resilience.
+          </p>
+        </div>
+      </div>
+
+  </section>
+  <!-- Join Section with Full Background -->
+<section class="relative min-h-[70vh] flex items-center justify-center text-white">
+  <!-- Background Image -->
+  <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/img/10JyDRdDcF4f9j3XGzj3YIcD9qgX2x5LJwWWcUYKvBqVUFRCg3xUs70eFN0wWv4F.jpeg');"></div>
+  <!-- Overlay Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-pink-800/40"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-3xl text-center px-6">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Empower Yourself, Share Your Story</h2>
+    <p class="text-lg md:text-xl leading-relaxed mb-6">
+      Join our vibrant community for girls in Mahama Refugee Camp. Explore courses, connect with peers, and share inspiring stories. Together, we uplift and empower.
+    </p>
+    <a href="/stories.html" class="inline-block px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-full transition">Join Now</a>
+  </div>
+</section>
+
+  <!-- Our Services Section -->
+  <section class="py-16 px-6 bg-gradient-to-b from-dark 900  to-slate-700">
+    
+    <!-- Floating decorative elements -->
+    <div class="absolute top-10 left-10 w-4 h-4 bg-accent rounded-full animate-sparkle opacity-70"></div>
+    <div class="absolute top-1/4 right-20 w-3 h-3 bg-primary rounded-full animate-sparkle delay-300 opacity-60"></div>
+    <div class="absolute bottom-1/3 left-1/4 w-2 h-2 bg-accent rounded-full animate-sparkle delay-700 opacity-50"></div>
+    <div class="absolute bottom-20 right-1/4 w-3 h-3 bg-primary rounded-full animate-sparkle delay-1000 opacity-60"></div>
+    
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-5xl font-black mb-4" data-translate="services.title">Our Services</h2>
+        <p class="text-lg text-gray-200 max-w-2xl mx-auto" data-translate="services.subtitle">
+          Comprehensive support and resources designed specifically for girls in Mahama refugee camp
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Safe Chat Rooms -->
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+          <div class="w-14 h-14 bg-gradient-to-r from-primary to-custom-purple rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-comments text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3" data-translate="services.chat.title">Safe Chat Rooms</h3>
+          <p class="text-gray-300 mb-4" data-translate="services.chat.description">
+            Safe and monitored spaces for chatting, sharing experiences, and building a supportive community.          </p>
+          <a href="./chat.html" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors">
+            <span data-translate="services.learnMore">Learn More</span>
+            <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>
+
+        <!-- Share Your Story -->
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+          <div class="w-14 h-14 bg-gradient-to-r from-accent to-orange-500 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-book-open text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3" data-translate="services.stories.title">Share Your Story</h3>
+          <p class="text-gray-300 mb-4" data-translate="services.stories.description">
+            A platform for sharing inspiring stories and life experiences in a safe and respectful way.          </p>
+          <a href="./stories.html" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors">
+            <span data-translate="services.learnMore">Learn More</span>
+            <i class="fas fa-arrow-right ml-2 text-pink-400"></i>
+          </a>
+        </div>
+
+        <!-- Learning Programs -->
+        <div id="card" class="bg-gradient-to-b from-black 50 rounded-xl p-6 border border-slate-700 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+          <div class="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
+            <i class="fas fa-graduation-cap text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3" data-translate="services.programs.title">Learning Programs</h3>
+          <p class="text-gray-300 mb-4" data-translate="services.programs.description">
+             Integrated educational programs include:          </p>
+          <ul class="text-gray-300 text-sm space-y-1 mb-4">
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.gbv">منع  العنف القائم على النوع الاجتماعي  (GBV)  </span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.languages">تعلم اللغات</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.lifeSkills">مهارات الحياة</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.professional">المهارات المهنية</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.health">الصحة والرفاه</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-circle text-primary text-xs mr-2"></i>
+              <span data-translate="services.programs.entrepreneurship">ريادة الأعمال</span>
+            </li>
+          </ul>
+          <a href="./Learning_Programs.html" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors">
+            <span data-translate="services.learnMore">Learn More</span>
+            <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
         
@@ -233,9 +482,9 @@
         <div>
           <h4 class="text-white font-semibold text-lg mb-4" data-translate="footer.quickLinks">Quick Links</h4>
           <ul class="space-y-3 text-sm text-slate-400">
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.joinChat">Join Chat</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.shareStory">Share Story</a></li>
-            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.programs">Programs</a></li>
+            <li><a href="./chat.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.joinChat">Join Chat</a></li>
+            <li><a href="./stories.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.shareStory">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.programs">Programs</a></li>
           </ul>
         </div>
 
@@ -283,6 +532,30 @@
         "stats.stories": "Daily Stories",
         "stats.programs": "Programs",
         "stats.support": "Support",
+        "services.title": "Our Services",
+        "services.subtitle": "Comprehensive support and resources designed specifically for girls in Mahama refugee camp",
+        "services.chat.title": "Safe Chat Rooms",
+        "services.chat.description": "Safe and monitored spaces for chatting, sharing experiences, and building a supportive community.",
+        "services.stories.title": "Share Your Story",
+        "services.stories.description": "A platform for sharing inspiring stories and life experiences in a safe and respectful way.",
+        "services.programs.title": "Learning Programs",
+        "services.programs.description": "Comprehensive educational programs including:",
+        "services.programs.gbv": "Gender-Based Violence (GBV) Prevention",
+        "services.programs.languages": "Language Learning",
+        "services.programs.lifeSkills": "Life Skills",
+        "services.programs.professional": "Professional Skills",
+        "services.programs.health": "Health and Well-being",
+        "services.programs.entrepreneurship": "Entrepreneurship",
+        "services.support.title": "24/7 Support",
+        "services.support.description": "Continuous support for emergencies, psychological consultations, and immediate assistance.",
+        "services.emergency.title": "Emergency & Reporting",
+        "services.emergency.description": "Dedicated channels for reporting and seeking help with complete confidentiality.",
+        "services.multilingual.title": "Multilingual Access",
+        "services.multilingual.description": "The site is available in multiple languages: English, Français, Kiswahili, Kinyarwanda, العربية.",
+        "services.learnMore": "Learn More",
+        "search.results": "Search Results",
+        "search.noResults": "No results found",
+        "search.tryDifferent": "Try different keywords or browse our categories",
         "footer.tagline": "Empowering Girls, Building Futures",
         "footer.description": "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
         "footer.quickLinks": "Quick Links",
@@ -316,6 +589,30 @@
         "stats.stories": "قصص يومية",
         "stats.programs": "برامج",
         "stats.support": "دعم",
+        "services.title": "خدماتنا",
+        "services.subtitle": "دعم وموارد شاملة مصممة خصيصًا للفتيات في مخيم مهاجمة للاجئين",
+        "services.chat.title": "غرف الدردشة الآمنة",
+        "services.chat.description": "مساحات آمنة ومراقَبة للدردشة، مشاركة التجارب، وبناء مجتمع داعم.",
+        "services.stories.title": "شارك قصتك",
+        "services.stories.description": "منصة لمشاركة القصص الملهمة وتجارب الحياة بطريقة آمنة ومحترمة.",
+        "services.programs.title": "البرامج التعليمية",
+        "services.programs.description": "برامج تعليمية متكاملة تشمل:",
+        "services.programs.gbv": "منع العنف القائم على النوع الاجتماعي (GBV)",
+        "services.programs.languages": "تعلم اللغات",
+        "services.programs.lifeSkills": "مهارات الحياة",
+        "services.programs.professional": "المهارات المهنية",
+        "services.programs.health": "الصحة والرفاه",
+        "services.programs.entrepreneurship": "ريادة الأعمال",
+        "services.support.title": "دعم 24/7",
+        "services.support.description": "دعم متواصل للحالات الطارئة، الاستشارات النفسية، والمساعدة الفورية.",
+        "services.emergency.title": "الطوارئ والإبلاغ",
+        "services.emergency.description": "قنوات مخصصة للإبلاغ وطلب المساعدة بسرية تامة.",
+        "services.multilingual.title": "الوصول متعدد اللغات",
+        "services.multilingual.description": "الموقع متاح بعدة لغات: English, Français, Kiswahili, Kinyarwanda, العربية.",
+        "services.learnMore": "تعرف على المزيد",
+        "search.results": "نتائج البحث",
+        "search.noResults": "لم يتم العثور على نتائج",
+        "search.tryDifferent": "جرب كلمات بحث مختلفة أو تصفح الفئات",
         "footer.tagline": "تمكين الفتيات، بناء المستقبل",
         "footer.description": "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم مهاجمة للاجئين التواصل والتعلم والنمو والازدهار.",
         "footer.quickLinks": "روابط سريعة",
@@ -349,6 +646,27 @@
         "stats.stories": "Hadithi za Kila Siku",
         "stats.programs": "Mipango",
         "stats.support": "Msaada",
+        "services.title": "Huduma Zetu",
+        "services.subtitle": "Msaada na rasilimali kamili zilizoundwa mahsusi kwa wasichana katika kambi ya wakimbizi ya Mahama",
+        "services.chat.title": "Vyumba Vya Gumzo Salama",
+        "services.chat.description": "Nafasi salama na zilizosimamiwa za kugusana, kushiriki uzoefu, na kujenga jamii inayounga mkono.",
+        "services.stories.title": "Shiriki Hadithi Yako",
+        "services.stories.description": "Jukwaa la kushiriki hadithi zenye kusisimua na uzoefu wa maisha kwa njia salama na ya heshima.",
+        "services.programs.title": "Mipango ya Kujifunza",
+        "services.programs.description": "Mipango kamili ya kielimu inayojumuisha:",
+        "services.programs.gbv": "Kuzuia Ukatili wa Kijinsia (GBV)",
+        "services.programs.languages": "Kujifunza Lugha",
+        "services.programs.lifeSkills": "Ujuzi wa Maisha",
+        "services.programs.professional": "Ujuzi wa Kitaaluma",
+        "services.programs.health": "Afya na Ustawi",
+        "services.programs.entrepreneurship": "Ujasiriamali",
+        "services.support.title": "Msaada 24/7",
+        "services.support.description": "Msaada unaoendelea kwa dharura, mashauri ya kisaikolojia, na usaidizi wa haraka.",
+        "services.emergency.title": "Dharura na Kuripoti",
+        "services.emergency.description": "Njia maalum za kuripoti na kutafuta msaada kwa usiri kamili.",
+        "services.multilingual.title": "Ufikiaji wa Lugha Nyingi",
+        "services.multilingual.description": "Tovuti inapatikana kwa lugha nyingi: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu.",
+        "services.learnMore": "Jifunze Zaidi",
         "footer.tagline": "Kuwawezesha Wasichana, Kujenga Mustakabali",
         "footer.description": "Kimbilio la salama la kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana, kujifunza, kukua, na kustawi.",
         "footer.quickLinks": "Viungo Vya Haraka",
@@ -382,6 +700,27 @@
         "stats.stories": "Histoires Quotidiennes",
         "stats.programs": "Programmes",
         "stats.support": "Soutien",
+        "services.title": "Nos Services",
+        "services.subtitle": "Soutien et ressources complets conçus spécialement pour les filles du camp de réfugiés de Mahama",
+        "services.chat.title": "Salons de Discussion Sûrs",
+        "services.chat.description": "Espaces sûrs et surveillés pour discuter, partager des expériences et construire une communauté solidaire.",
+        "services.stories.title": "Partagez Votre Histoire",
+        "services.stories.description": "Une plateforme pour partager des histoires inspirantes et des expériences de vie de manière sûre et respectueuse.",
+        "services.programs.title": "Programmes d'Apprentissage",
+        "services.programs.description": "Programmes éducatifs complets incluant:",
+        "services.programs.gbv": "Prévention de la Violence Basée sur le Genre (VBG)",
+        "services.programs.languages": "Apprentissage des Langues",
+        "services.programs.lifeSkills": "Compétences de Vie",
+        "services.programs.professional": "Compétences Professionnelles",
+        "services.programs.health": "Santé et Bien-être",
+        "services.programs.entrepreneurship": "Entreprenariat",
+        "services.support.title": "Soutien 24/7",
+        "services.support.description": "Soutien continu pour les urgences, consultations psychologiques et assistance immédiate.",
+        "services.emergency.title": "Urgence & Signalement",
+        "services.emergency.description": "Canaux dédiés pour signaler et demander de l'aide en toute confidentialité.",
+        "services.multilingual.title": "Accès Multilingue",
+        "services.multilingual.description": "Le site est disponible en plusieurs langues: Anglais, Français, Swahili, Kinyarwanda, Arabe.",
+        "services.learnMore": "En Savoir Plus",
         "footer.tagline": "Autonomiser les Filles, Bâtir l'Avenir",
         "footer.description": "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter, apprendre, grandir et s'épanouir.",
         "footer.quickLinks": "Liens Rapides",
@@ -395,8 +734,230 @@
         "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-[rgb(183,64,219)] font-medium'>Autonomiser les filles, toujours.</span>",
         "footer.languages": "Disponible en : Anglais, Français, Swahili, Kinyarwanda, Arabe",
         "footer.supporters": "Soutenu par : HCR, Save The Children, Alight"
+      },
+      rw: {
+        "nav.home": "Ahabanza",
+        "nav.about": "Abo turi",
+        "nav.chat": "Kuganira",
+        "nav.stories": "Inkuru",
+        "nav.protection": "Umutekano",
+        "nav.programs": "Porogaramu",
+        "nav.language": "Ururimi",
+        "nav.login": "Injira",
+        "nav.donate": "Tanga",
+        "nav.search": "Shaka...",
+        "hero.title": "Umwanya Wawe W'ikijyambere <span class='text-accent'>Umutekanye</span>",
+        "hero.description": "Wihuze, wige, kandi ukure mu mwanya utekanye utegejwe abakobwa bo mu rugo rw'abimukanyi rwa Mahama.",
+        "hero.join": "Injira mu muryango wacu",
+        "hero.explore": "Shakisha porogaramu",
+        "stats.girls": "Abakobwa Bakuze",
+        "stats.stories": "Inkuru z'umunsi",
+        "stats.programs": "Porogaramu",
+        "stats.support": "Gushigikira",
+        "services.title": "Serivisi Zacu",
+        "services.subtitle": "Gushigikira no gutanga ibikoresho byuzuye byateguwe mu buryo bwihariye kuri abakobwa bo mu rugo rw'abimukanyi rwa Mahama",
+        "services.chat.title": "Ibyumba Byo Kuganira Bitekanye",
+        "services.chat.description": "Imiyanya itekanye kandi ishinzwe kuganira, gusangiza ibigeragezo, no kubaka umuryango ushyigikiye.",
+        "services.stories.title": "Sangiza Inkuru Yawe",
+        "services.stories.description": "Ikibuga cyo gusangiza inkuru zishimishije n'ibigeragezo by'ubuzima mu buryo butekanye n'ubwubahane.",
+        "services.programs.title": "Porogaramu Zo Kwiga",
+        "services.programs.description": "Porogaramu zuzuye z'uburezi zirimo:",
+        "services.programs.gbv": "Kurwanya Ubushotoranyi Bushingiye ku Gitsina (GBV)",
+        "services.programs.languages": "Kwiga Indimi",
+        "services.programs.lifeSkills": "Ubuhanga mu Buzima",
+        "services.programs.professional": "Ubuhanga mu Kazi",
+        "services.programs.health": "Ubuzima n'Ubwiza",
+        "services.programs.entrepreneurship": "Ubucuruzi",
+        "services.support.title": "Gushigikira 24/7",
+        "services.support.description": "Gushigikira birakomeje kuri byihutirwa, inama z'ubwenge, n'ubufasha bwa buryo.",
+        "services.emergency.title": "Ubutabazi no Gutegeka",
+        "services.emergency.description": "Uburyo bwihariye bwo gutanga raporo no gushaka ubufasha mu buryo bwihishe.",
+        "services.multilingual.title": "Kugera mu Ndimi Nyinshi",
+        "services.multilingual.description": "Urubuga ruboneka mu ndimi nyinshi: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu.",
+        "services.learnMore": "Menya Birenzeho",
+        "footer.tagline": "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        "footer.description": "Ubuturo butekanye bwa digitale aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        "footer.quickLinks": "Amahuza Yihuse",
+        "footer.joinChat": "Injira mu kuganira",
+        "footer.shareStory": "Sangiza inkuru",
+        "footer.programs": "Porogaramu",
+        "footer.getHelp": "Kwakira ubufasha",
+        "footer.emergency": "Ubutabazi",
+        "footer.support": "Gushigikira",
+        "footer.report": "Raporo",
+        "footer.copyright": "© 2025 GirlsSpace Mahama. <span class='text-[rgb(183,64,219)] font-medium'>Guharanira abakobwa, buri gihe.</span>",
+        "footer.languages": "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        "footer.supporters": "Bishigikijwe na: UNHCR, Save The Children, Alight"
       }
     };
+
+    // Sample search data - in a real application, this would come from a database or API
+    const searchData = [
+      {
+        id: 1,
+        title: "Safe Chat Rooms",
+        description: "Join our monitored chat rooms to connect with other girls in a safe environment",
+        category: "Chat",
+        url: "./chat.html",
+        tags: ["chat", "community", "safe space"]
+      },
+      {
+        id: 2,
+        title: "Share Your Story",
+        description: "Inspire others by sharing your personal journey and experiences",
+        category: "Stories",
+        url: "./stories.html",
+        tags: ["stories", "inspiration", "personal"]
+      },
+      {
+        id: 3,
+        title: "Learning Programs",
+        description: "Educational programs covering languages, life skills, and professional development",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["education", "learning", "skills"]
+      },
+      {
+        id: 4,
+        title: "24/7 Support",
+        description: "Get help anytime with our round-the-clock support services",
+        category: "Support",
+        url: "./protection.html",
+        tags: ["support", "help", "emergency"]
+      },
+      {
+        id: 5,
+        title: "Emergency Reporting",
+        description: "Confidential channels to report emergencies and get immediate assistance",
+        category: "Protection",
+        url: "./protection.html",
+        tags: ["emergency", "report", "safety"]
+      },
+      {
+        id: 6,
+        title: "Language Learning",
+        description: "Improve your language skills with our interactive courses",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["languages", "learning", "courses"]
+      },
+      {
+        id: 7,
+        title: "Life Skills",
+        description: "Develop essential life skills for personal growth and independence",
+        category: "Programs",
+        url: "./Learning_Programs.html",
+        tags: ["skills", "development", "personal growth"]
+      },
+      {
+        id: 8,
+        title: "GBV Prevention",
+        description: "Learn about gender-based violence prevention and protection",
+        category: "Protection",
+        url: "./protection.html",
+        tags: ["gbv", "prevention", "safety"]
+      }
+    ];
+
+    // Search functionality
+    function performSearch(query) {
+      if (!query || query.trim() === '') {
+        return [];
+      }
+      
+      const searchTerms = query.toLowerCase().trim().split(/\s+/);
+      
+      return searchData.filter(item => {
+        const searchText = (
+          item.title.toLowerCase() + ' ' +
+          item.description.toLowerCase() + ' ' +
+          item.category.toLowerCase() + ' ' +
+          item.tags.join(' ')
+        ).toLowerCase();
+        
+        return searchTerms.some(term => searchText.includes(term));
+      });
+    }
+
+    function displaySearchResults(results, container) {
+      container.innerHTML = '';
+      
+      if (results.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 text-gray-500 text-center">
+            <i class="fas fa-search mb-2"></i>
+            <p>No results found</p>
+          </div>
+        `;
+        container.classList.remove('hidden');
+        return;
+      }
+      
+      results.forEach(result => {
+        const resultElement = document.createElement('a');
+        resultElement.href = result.url;
+        resultElement.className = 'block p-3 border-b border-gray-100 hover:bg-gray-50 transition-colors search-result-item';
+        resultElement.innerHTML = `
+          <div class="font-medium text-gray-800">${result.title}</div>
+          <div class="text-sm text-gray-600 mt-1">${result.description}</div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-primary font-medium">${result.category}</span>
+            <i class="fas fa-arrow-right text-xs text-gray-400"></i>
+          </div>
+        `;
+        container.appendChild(resultElement);
+      });
+      
+      container.classList.remove('hidden');
+    }
+
+    function showSearchResultsPage(query) {
+      const results = performSearch(query);
+      const resultsPage = document.getElementById('search-results-page');
+      const resultsContent = document.getElementById('search-results-content');
+      const noResultsMessage = document.getElementById('no-results-message');
+      
+      resultsContent.innerHTML = '';
+      
+      if (results.length === 0) {
+        noResultsMessage.classList.remove('hidden');
+        resultsContent.classList.add('hidden');
+      } else {
+        noResultsMessage.classList.add('hidden');
+        resultsContent.classList.remove('hidden');
+        
+        results.forEach(result => {
+          const resultElement = document.createElement('a');
+          resultElement.href = result.url;
+          resultElement.className = 'block p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors search-result-item';
+          resultElement.innerHTML = `
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-lg text-white">${result.title}</h3>
+                <p class="text-gray-300 mt-1">${result.description}</p>
+                <div class="flex flex-wrap gap-2 mt-3">
+                  ${result.tags.map(tag => `<span class="px-2 py-1 bg-primary/20 text-primary rounded text-xs">${tag}</span>`).join('')}
+                </div>
+              </div>
+              <span class="text-xs text-accent font-medium bg-accent/20 px-2 py-1 rounded">${result.category}</span>
+            </div>
+          `;
+          resultsContent.appendChild(resultElement);
+        });
+      }
+      
+      // Hide other sections and show results page
+      document.querySelector('section:not(#search-results-page)').style.display = 'none';
+      document.querySelector('footer').style.display = 'none';
+      resultsPage.classList.remove('hidden');
+    }
+
+    function hideSearchResultsPage() {
+      const resultsPage = document.getElementById('search-results-page');
+      resultsPage.classList.add('hidden');
+      document.querySelector('section:not(#search-results-page)').style.display = 'block';
+      document.querySelector('footer').style.display = 'block';
+    }
 
     // Language management functions
     function getCurrentLanguage() {
@@ -429,7 +990,8 @@
         'en': 'English',
         'ar': 'Arabic',
         'sw': 'Swahili',
-        'fr': 'French'
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
       };
       
       // Update desktop language button
@@ -468,6 +1030,114 @@
           setCurrentLanguage(this.value);
         });
       }
+
+      // Search functionality initialization
+      const searchInput = document.getElementById('search-input');
+      const searchResults = document.getElementById('search-results');
+      const mobileSearchInput = document.getElementById('mobile-search-input');
+      const mobileSearchResults = document.getElementById('mobile-search-results');
+      const mobileSearchButton = document.getElementById('mobile-search-button');
+      const mobileSearchContainer = document.getElementById('mobile-search-container');
+      const closeMobileSearch = document.getElementById('close-mobile-search');
+      const resultsSearchInput = document.getElementById('results-search-input');
+      const closeSearchPage = document.getElementById('close-search-page');
+
+      // Desktop search
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, searchResults);
+          } else {
+            searchResults.classList.add('hidden');
+          }
+        });
+
+        searchInput.addEventListener('focus', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, searchResults);
+          }
+        });
+
+        // Hide results when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.add('hidden');
+          }
+        });
+
+        // Handle Enter key to show full results page
+        searchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+              this.value = '';
+              searchResults.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // Mobile search
+      if (mobileSearchButton) {
+        mobileSearchButton.addEventListener('click', function() {
+          mobileSearchContainer.classList.remove('hidden');
+          mobileSearchInput.focus();
+        });
+      }
+
+      if (closeMobileSearch) {
+        closeMobileSearch.addEventListener('click', function() {
+          mobileSearchContainer.classList.add('hidden');
+          mobileSearchResults.classList.add('hidden');
+        });
+      }
+
+      if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', function() {
+          const query = this.value;
+          if (query.length > 2) {
+            const results = performSearch(query);
+            displaySearchResults(results, mobileSearchResults);
+          } else {
+            mobileSearchResults.classList.add('hidden');
+          }
+        });
+
+        mobileSearchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+              this.value = '';
+              mobileSearchResults.classList.add('hidden');
+              mobileSearchContainer.classList.add('hidden');
+              toggleMenu(); // Close mobile menu
+            }
+          }
+        });
+      }
+
+      // Results page search
+      if (resultsSearchInput) {
+        resultsSearchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+              showSearchResultsPage(query);
+            }
+          }
+        });
+      }
+
+      // Close search page
+      if (closeSearchPage) {
+        closeSearchPage.addEventListener('click', hideSearchResultsPage);
+      }
     });
 
     // Mobile menu functionality
@@ -478,7 +1148,6 @@
     function toggleMenu() {
       hamburger.classList.toggle('active');
       const isOpen = hamburger.classList.contains('active');
-      
       if (isOpen) {
         mobileMenu.style.left = '0';
         overlay.classList.remove('hidden');
@@ -487,9 +1156,61 @@
         overlay.classList.add('hidden');
       }
     }
-
     hamburger.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
   </script>
+  <script type="module">
+  import { checkAuthState, setupLogout } from './firebaseauth.js';
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuthState();
+    setupLogout();
+  });
+</script>
+ <script type="module" src="firebase.js"></script>
+ <script type="module" src="./auth-ui.js"></script>
+ <!-- Add this at the VERY END of your index.html, just before </body> -->
+<script type="module">
+  import { initAuth, setupLogout } from './firebaseauth.js';
+  
+  // Add a small delay to ensure DOM is fully loaded
+  setTimeout(() => {
+    console.log('🚀 Initializing authentication on index.html');
+    initAuth();
+    setupLogout();
+  }, 100);
+</script>
+// Add this script to index.html
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check localStorage for user
+    const userData = localStorage.getItem('girlspaceUser');
+    
+    if (userData) {
+        // User is logged in
+        const loginButtons = document.querySelectorAll('a[href="./login.html"]');
+        loginButtons.forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-user-circle mr-2"></i> My Profile';
+            btn.href = './profile.html';
+            btn.classList.remove('border-2', 'border-primary', 'text-primary');
+            btn.classList.add('bg-primary', 'text-white', 'px-4', 'py-2', 'rounded-full');
+        });
+        
+        // Add logout button if not exists
+        // if (!document.getElementById('logoutBtn')) {
+        //     const logoutBtn = document.createElement('button');
+        //     logoutBtn.id = 'logoutBtn';
+        //     logoutBtn.className = 'ml-2 px-3 py-1 bg-red-500 text-white rounded text-sm';
+        //     logoutBtn.textContent = 'Logout';
+        //     logoutBtn.onclick = () => {
+        //         localStorage.removeItem('girlspaceUser');
+        //         window.location.reload();
+        //     };
+            
+        //     const nav = document.querySelector('.hidden.lg\\:flex.items-center.gap-6');
+        //     if (nav) nav.appendChild(logoutBtn);
+        // }
+    }
+});
+</script>
 </body>
 </html>

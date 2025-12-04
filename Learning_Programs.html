@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learning Programs — GirlsSpace</title>
-
-  <!-- Tailwind CSS CDN -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GirlsSpace Mahama</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,6 +17,7 @@
             'primary-pink': '#f472b6',
             'muted': '#6b7280',
             'dark-bg': '#0f172a',
+            'custom-purple': '#c23cb6',
           },
           borderRadius: {
             'card': '16px',
@@ -24,228 +25,224 @@
           },
           fontFamily: {
             sans: ['Poppins', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
           },
         },
       },
     }
   </script>
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-   
-    .gradient-btn {
-      background: linear-gradient(90deg, #ff5f8d, #c23cb6);
-    }
-    .gradient-btn:hover {
-      box-shadow: 0 1px 10px 3px #c23cb6;
-    }
-    .nav-link{
-      font-size: 16px;
-    }
+    .gradient-btn { background: linear-gradient(90deg, #ff5f8d, #c23cb6); }
+    .gradient-btn:hover { box-shadow: 0 1px 10px 3px #c23cb6; }
+    
+    .nav-link { font-size: 16px; }
     .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      bottom: 4px;
-      left: 50%;
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 4px; left: 50%;
       background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      transition: all 0.3s ease;
-      transform: translateX(-50%);
+      transition: all 0.3s ease; transform: translateX(-50%);
     }
-    .nav-link:hover::after {
-      width: 100%;
-    }
+    .nav-link:hover::after { width: 100%; }
+
     .card-hover:hover {
-      background: #e6d7ec;
-      border-radius: 20px;
+      background: #e6d7ec; border-radius: 20px;
       transform: perspective(800px) rotateX(6deg) scale(0.9) translate(-10px, -20px);
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), inset 0 -4px 8px rgba(0, 38, 255, 0.06);
     }
-    .hamburger span {
-      transition: all 0.3s ease;
-    }
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
+
+    /* Custom Scrollbar for mobile menu */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
     }
   </style>
 </head>
+<body class="font-poppins bg-black text-white overflow-x-hidden">
 
-<body class="font-sans bg-black text-white">
-
-  <!-- ========================================
-       Navbar
-  ======================================== -->
-
-  <nav class="navbar sticky top-0 z-50 bg-white shadow-md flex flex-wrap items-center justify-between px-5 py-3 md:px-10 gap-3">
-    <div class="nav-logo">
-      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="GirlsSpace Logo" class="w-12 h-12 md:w-14 md:h-14 rounded-full object-contain">
+  <!-- Navigation Bar -->
+  <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
     </div>
 
-    <div class="hamburger flex flex-col gap-1 cursor-pointer md:hidden z-50" onclick="toggleMenu()">
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-      <span class="w-7 h-0.5 bg-gray-700 rounded"></span>
-    </div>
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="home">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="about">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="chat">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="stories">Stories</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="programs">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary-pink relative transition-colors" data-i18n="protection">Protection</a>
 
-    <ul class="nav-links fixed top-0 left-[-100%] w-72 h-screen bg-white flex flex-col pt-16 gap-5 transition-all duration-300 ease-in-out md:static md:flex-row md:w-auto md:h-auto md:p-0 md:items-center md:gap-4 lg:gap-6 z-40 md:z-auto shadow-2xl md:shadow-none">
-      <li><a href="./index.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">Home</a></li>
-      <li><a href="./AboutUs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">About</a></li>
-      <li><a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">Chat</a></li>
-      <li><a href="./stories.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">Stories</a></li>
-      <li><a href="./Learning_Programs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">Programs</a></li>
-      <li><a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 relative text-sm">Protection</a></li>
-
-      <li class="relative group">
-        <a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 flex items-center gap-1">Languages <i class="fa-solid fa-chevron-down text-xs"></i></a>
-        <ul class="dropdown-menu absolute top-full left-0 bg-white shadow-lg rounded-xl min-w-32 hidden group-hover:block z-50 border border-gray-100">
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600">English</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600">Arabic</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600">Swahili</a></li>
-          <li><a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-purple-600">French</a></li>
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary-pink transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        </button>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><button onclick="changeLanguage('en')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">English</button></li>
+          <li><button onclick="changeLanguage('ar')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Arabic</button></li>
+          <li><button onclick="changeLanguage('sw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Swahili</button></li>
+          <li><button onclick="changeLanguage('fr')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">French</button></li>
+          <li><button onclick="changeLanguage('rw')" class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-custom-purple text-left">Kinyarwanda</button></li>
         </ul>
-      </li>
-
-      <li class="mt-4 md:mt-0"><a href="./login.html" class="px-3 py-1.5 border-2 border-pink-500 text-pink-500 rounded-full text-sm font-semibold hover:bg-pink-50 transition text-sm">Log In</a></li>
-      <li><a href="#" class="px-4 py-2 gradient-btn text-white rounded-full text-sm font-semibold transition hover:opacity-90 text-sm">Donate</a></li>
-    </ul>
-
-    <div class="nav-search hidden sm:block">
-      <input type="text" placeholder="Search..." class="px-3 py-1.5 rounded-lg border border-gray-300 text-sm w-32 md:w-40 focus:outline-none focus:border-pink-500">
+      </div>
+      
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-i18n="login">Log In</a>
+      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
     </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary-pink w-[140px]" data-i18n-placeholder="search">
+      </div>
+    </div>
+
+    <!-- Hamburger Button -->
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
   </nav>
 
-  <!-- Overlay -->
-  <div class="nav-overlay fixed inset-0 bg-black/50 hidden z-30" onclick="closeMenu()"></div>
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed top-0 left-[-100%] w-full h-full bg-white z-40 transition-all duration-300 lg:hidden overflow-y-auto no-scrollbar">
+    <div class="pt-20 px-6 pb-10">
+      <div class="flex flex-col gap-6 text-gray-700 font-medium">
+        <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="home">Home</a>
+        <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="about">About</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="chat">Chat</a>
+        <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="stories">Stories</a>
+        <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="programs">Programs</a>
+        <a href="./protection.html" class="py-2 border-b border-gray-100 hover:text-primary-pink transition-colors" data-i18n="protection">Protection</a>
+        
+        <div class="py-2 border-b border-gray-100">
+          <div class="flex justify-between items-center">
+            <span data-i18n="languages">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">Arabic</option>
+              <option value="sw">Swahili</option>
+              <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-i18n="login">Log In</a>
+        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
+      </div>
+    </div>
+  </div>
 
-  <!-- ========================================
-       Programs Section
-  ======================================== -->
   <div class="wrap min-h-screen bg-gradient-to-b from-black/50 to-black/70 bg-cover bg-center mt-12 px-5 py-8 md:px-10" style="background-image: url('./img/pexels-merlin-11167638.jpg');">
     <header class="text-center mb-10 text-pink-100">
-      <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">Learning Programs</h1>
-      <p class="text-muted text-sm md:text-base max-w-2xl mx-auto leading-relaxed">Comprehensive training programs designed to empower, educate, and protect. Build skills, gain knowledge, and prepare for a brighter future.</p>
+      <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight" data-i18n="prog_title">Learning Programs</h1>
+      <p class="text-muted text-sm md:text-base max-w-2xl mx-auto leading-relaxed" data-i18n="prog_desc">Comprehensive training programs designed to empower, educate, and protect. Build skills, gain knowledge, and prepare for a brighter future.</p>
     </header>
-
     <!-- Row 1 -->
     <section class="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <!-- Card 1 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-red-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="gbv-title">
-        <img src="./img/GBV-removebg-preview.png" alt="GBV Icon" class=" rounded-xl shadow-md mb-3">
-        <h3 id="gbv-title" class="text-xl font-bold text-pink-500 mb-2">GBV Prevention &amp; Response</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Essential training on gender-based violence prevention, recognition, and response. Learn your rights and how to stay safe.</p>
+        <img src="./img/GBV-removebg-preview.png" alt="GBV Icon" class=" rounded-xl shadow-md mb-3" data-i18n-alt="gbv_icon_alt">
+        <h3 id="gbv-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="gbv_title">GBV Prevention &amp; Response</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="gbv_desc">Essential training on gender-based violence prevention, recognition, and response. Learn your rights and how to stay safe.</p>
         <ul class="features space-y-2 mb-4">
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Understanding GBV types</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Safety planning</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Reporting procedures</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Support resources</li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="gbv_feature1">Understanding GBV types</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="gbv_feature2">Safety planning</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="gbv_feature3">Reporting procedures</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="gbv_feature4">Support resources</span></li>
         </ul>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Start Training</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="start_training">Start Training</a></button>
       </article>
-
       <!-- Card 2 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-blue-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="lang-title">
-        <img src="./img/languges-removebg-preview.png" alt="Language Icon" class=" rounded-xl shadow-md mb-3">
-        <h3 id="lang-title" class="text-xl font-bold text-pink-500 mb-2">Language Learning</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Master new languages to expand opportunities and connect with more people. Interactive lessons with native speakers.</p>
+        <img src="./img/languges-removebg-preview.png" alt="Language Icon" class=" rounded-xl shadow-md mb-3" data-i18n-alt="lang_icon_alt">
+        <h3 id="lang-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="lang_title">Language Learning</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="lang_desc">Master new languages to expand opportunities and connect with more people. Interactive lessons with native speakers.</p>
         <div class="langs flex flex-wrap gap-2 mb-4">
-          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=xapj7ZzAUZKI&format=png&color=000000" alt="" class="w-5 h-5"> English</span>
-          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=tKTNmFIOAIAt&format=png&color=000000" alt="" class="w-5 h-5"> Swahili</span>
-          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=15497&format=png&color=000000" alt="" class="w-5 h-5"> French</span>
-          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=mtAkNA30WLik&format=png&color=000000" alt="" class="w-5 h-5"> Kinyarwanda</span>
-          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=zt8Jf7JdIs3A&format=png&color=000000" alt="" class="w-5 h-5"> Arabic</span>
+          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=xapj7ZzAUZKI&format=png&color=000000" alt="English" class="w-5 h-5"> <span data-i18n="english">English</span></span>
+          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=tKTNmFIOAIAt&format=png&color=000000" alt="Swahili" class="w-5 h-5"> <span data-i18n="swahili">Swahili</span></span>
+          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=15497&format=png&color=000000" alt="French" class="w-5 h-5"> <span data-i18n="french">French</span></span>
+          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=mtAkNA30WLik&format=png&color=000000" alt="Kinyarwanda" class="w-5 h-5"> <span data-i18n="kinyarwanda">Kinyarwanda</span></span>
+          <span class="lang-pill flex items-center gap-2 px-2 py-1 bg-blue-50 rounded-lg text-xs text-blue-800 shadow-inner"><img src="https://img.icons8.com/?size=100&id=zt8Jf7JdIs3A&format=png&color=000000" alt="Arabic" class="w-5 h-5"> <span data-i18n="arabic">Arabic</span></span>
         </div>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Choose Language</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="choose_language">Choose Language</a></button>
       </article>
-
       <!-- Card 3 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-green-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="life-title">
-        <img src="./img/skills2-removebg-preview.png" alt="Life Skills Icon" class=" rounded-xl shadow-md mb-3">
-        <h3 id="life-title" class="text-xl font-bold text-pink-500 mb-2">Life Skills Training</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Essential skills for personal development, leadership, and future success. Build confidence and prepare for opportunities.</p>
+        <img src="./img/skills2-removebg-preview.png" alt="Life Skills Icon" class=" rounded-xl shadow-md mb-3" data-i18n-alt="life_skills_icon_alt">
+        <h3 id="life-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="life_skills_title">Life Skills Training</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="life_skills_desc">Essential skills for personal development, leadership, and future success. Build confidence and prepare for opportunities.</p>
         <ul class="features space-y-2 mb-4">
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Communication skills</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Leadership development</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Financial literacy</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Digital literacy</li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="life_skills_feature1">Communication skills</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="life_skills_feature2">Leadership development</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="life_skills_feature3">Financial literacy</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="life_skills_feature4">Digital literacy</span></li>
         </ul>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Start Learning</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="start_learning">Start Learning</a></button>
       </article>
     </section>
-
     <!-- Row 2 -->
     <section class="cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Card 4 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-red-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="voc-title">
-        <img src="./img/vanctional.png" alt="Vocational Skills" class=" rounded-xl shadow-md mb-3">
-        <h3 id="voc-title" class="text-xl font-bold text-pink-500 mb-2">Vocational Skills</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Learn practical skills that can lead to income-generating opportunities. Hands-on training with experienced instructors.</p>
+        <img src="./img/vanctional.png" alt="Vocational Skills" class=" rounded-xl shadow-md mb-3" data-i18n-alt="vocational_icon_alt">
+        <h3 id="voc-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="vocational_title">Vocational Skills</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="vocational_desc">Learn practical skills that can lead to income-generating opportunities. Hands-on training with experienced instructors.</p>
         <ul class="features space-y-2 mb-4">
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Tailoring & sewing</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Hairdressing & beauty</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Crafts & jewelry making</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Computer basics</li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="vocational_feature1">Tailoring & sewing</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="vocational_feature2">Hairdressing & beauty</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="vocational_feature3">Crafts & jewelry making</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="vocational_feature4">Computer basics</span></li>
         </ul>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Explore Skills</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="explore_skills">Explore Skills</a></button>
       </article>
-
       <!-- Card 5 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-blue-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="health-title">
-        <img src="./img/images__1_-removebg-preview.png" alt="Health & Wellness" class=" rounded-xl shadow-md mb-3">
-        <h3 id="health-title" class="text-xl font-bold text-pink-500 mb-2">Health & Wellness</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Comprehensive health education covering physical, mental, and reproductive health. Age-appropriate and culturally sensitive content.</p>
+        <img src="./img/images__1_-removebg-preview.png" alt="Health & Wellness" class=" rounded-xl shadow-md mb-3" data-i18n-alt="health_icon_alt">
+        <h3 id="health-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="health_title">Health & Wellness</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="health_desc">Comprehensive health education covering physical, mental, and reproductive health. Age-appropriate and culturally sensitive content.</p>
         <ul class="features space-y-2 mb-4">
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Reproductive health</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Mental health awareness</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Nutrition & hygiene</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> First aid basics</li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="health_feature1">Reproductive health</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="health_feature2">Mental health awareness</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="health_feature3">Nutrition & hygiene</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="health_feature4">First aid basics</span></li>
         </ul>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Learn More</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="learn_more">Learn More</a></button>
       </article>
-
       <!-- Card 6 -->
       <article class="card card-hover bg-white rounded-card p-6 border border-green-500/10 flex flex-col min-h-96 shadow-lg transition-all duration-500" aria-labelledby="ent-title">
-        <img src="./img/images-removebg-preview.png" alt="Entrepreneurship" class=" rounded-xl shadow-md mb-3">
-        <h3 id="ent-title" class="text-xl font-bold text-pink-500 mb-2">Entrepreneurship</h3>
-        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed">Learn to start and manage your own business. From idea development to financial planning and marketing strategies.</p>
+        <img src="./img/images-removebg-preview.png" alt="Entrepreneurship" class=" rounded-xl shadow-md mb-3" data-i18n-alt="entrepreneurship_icon_alt">
+        <h3 id="ent-title" class="text-xl font-bold text-pink-500 mb-2" data-i18n="entrepreneurship_title">Entrepreneurship</h3>
+        <p class="desc text-muted text-sm mb-4 flex-grow leading-relaxed" data-i18n="entrepreneurship_desc">Learn to start and manage your own business. From idea development to financial planning and marketing strategies.</p>
         <ul class="features space-y-2 mb-4">
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Business planning</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Marketing & sales</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Financial management</li>
-          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> Access to funding</li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="entrepreneurship_feature1">Business planning</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="entrepreneurship_feature2">Marketing & sales</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="entrepreneurship_feature3">Financial management</span></li>
+          <li class="flex items-start gap-2 text-sm text-green-700"><span class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span> <span data-i18n="entrepreneurship_feature4">Access to funding</span></li>
         </ul>
         <div class="spacer flex-1"></div>
-        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800">Start Journey</a></button>
+        <button class="btn gradient-btn text-white font-semibold py-3 rounded-btn mt-auto hover:-translate-y-1 transition"><a href="./courses.html" class="text-white hover:text-purple-800" data-i18n="start_journey">Start Journey</a></button>
       </article>
     </section>
   </div>
-
-  <!-- ========================================
-       Footer
-  ======================================== -->
+  <!--Footer-->
   <footer class="footer bg-gray-950 text-gray-300 py-12 font-sans">
     <div class="container max-w-7xl mx-auto px-5">
       <div class="footer-main grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <div class="footer-left">
           <div class="footer-logo-section flex items-center gap-3 mb-3 flex-col text-center md:flex-row md:text-left">
             <img src="./img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="footer-logo w-12 h-12 rounded-full border-2 border-primary-pink">
-            <p class="footer-subtitle font-bold text-primary-pink">Empowering Girls, Building Futures</p>
+            <p class="footer-subtitle font-bold text-primary-pink" data-i18n="footer_subtitle">Empowering Girls, Building Futures</p>
           </div>
-          <p class="footer-desc text-sm text-gray-400 max-w-xs">A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.</p>
+          <p class="footer-desc text-sm text-gray-400 max-w-xs" data-i18n="footer_desc">A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.</p>
           <div class="social-links flex gap-3 mt-4 justify-center md:justify-start">
             <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
             <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-white transition"><i class="fab fa-twitter"></i></a>
@@ -255,49 +252,557 @@
         </div>
 
         <div class="footer-links">
-          <h4 class="links-title text-white font-bold mb-4">Quick Links</h4>
+          <h4 class="links-title text-white font-bold mb-4" data-i18n="quick_links">Quick Links</h4>
           <ul class="links-list space-y-2">
-            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition">Join Chat</a></li>
-            <li><a href="./stories.html" class="link-item text-gray-400 hover:text-primary-pink transition">Share Story</a></li>
-            <li><a href="./Learning_Programs.html" class="link-item text-gray-400 hover:text-primary-pink transition">Programs</a></li>
+            <li><a href="./chat.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="join_chat">Join Chat</a></li>
+            <li><a href="./stories.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="share_story">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="programs">Programs</a></li>
           </ul>
         </div>
 
         <div class="footer-links">
-          <h4 class="links-title text-white font-bold mb-4">Get Help</h4>
+          <h4 class="links-title text-white font-bold mb-4" data-i18n="get_help">Get Help</h4>
           <ul class="links-list space-y-2">
-            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition">Emergency</a></li>
-            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition">Support</a></li>
-            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition">Report</a></li>
+            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="emergency">Emergency</a></li>
+            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="support">Support</a></li>
+            <li><a href="#" class="link-item text-gray-400 hover:text-primary-pink transition" data-i18n="report">Report</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
         <div class="footer-left-info">
-          <p>© 2025 GirlsSpace Mahama. <span class="highlight text-primary-pink font-medium">Empowering girls, always.</span></p>
+          <p data-i18n="copyright">© 2025 GirlsSpace Mahama. <span class="highlight text-primary-pink font-medium" data-i18n="empowering_girls">Empowering girls, always.</span></p>
         </div>
         <div class="footer-right-info text-center md:text-right mt-2 md:mt-0">
-          <p>Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
-          <p>Supported by UNHCR, Save The Children, Alight</p>
+          <p data-i18n="available_languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-i18n="supported_by">Supported by UNHCR, Save The Children, Alight</p>
         </div>
       </div>
     </div>
   </footer>
-
-  <!-- JavaScript for Mobile Menu -->
   <script>
-    function toggleMenu() {
-      document.querySelector('.nav-links').classList.toggle('left-0');
-      document.querySelector('.hamburger').classList.toggle('active');
-      document.querySelector('.nav-overlay').classList.toggle('hidden');
-    }
-    function closeMenu() {
-      document.querySelector('.nav-links').classList.remove('left-0');
-      document.querySelector('.hamburger').classList.remove('active');
-      document.querySelector('.nav-overlay').classList.add('hidden');
-    }
-  </script>
+    // Complete translations object with all languages
+    const translations = {
+      en: {
+        // Navigation
+        home: "Home", about: "About", chat: "Chat", stories: "Stories", programs: "Programs", 
+        protection: "Protection", languages: "Languages", login: "Log In", donate: "Donate",
+        search: "Search...",      
+        // Main content
+        prog_title: "Learning Programs",
+        prog_desc: "Comprehensive training programs designed to empower, educate, and protect. Build skills, gain knowledge, and prepare for a brighter future.",      
+        // Card 1 - GBV
+        gbv_title: "GBV Prevention & Response",
+        gbv_desc: "Essential training on gender-based violence prevention, recognition, and response. Learn your rights and how to stay safe.",
+        gbv_feature1: "Understanding GBV types",
+        gbv_feature2: "Safety planning",
+        gbv_feature3: "Reporting procedures",
+        gbv_feature4: "Support resources",
+        start_training: "Start Training",
+        gbv_icon_alt: "GBV Icon",       
+        // Card 2 - Language
+        lang_title: "Language Learning",
+        lang_desc: "Master new languages to expand opportunities and connect with more people. Interactive lessons with native speakers.",
+        english: "English",
+        swahili: "Swahili",
+        french: "French",
+        kinyarwanda: "Kinyarwanda",
+        arabic: "Arabic",
+        choose_language: "Choose Language",
+        lang_icon_alt: "Language Icon",      
+        // Card 3 - Life Skills
+        life_skills_title: "Life Skills Training",
+        life_skills_desc: "Essential skills for personal development, leadership, and future success. Build confidence and prepare for opportunities.",
+        life_skills_feature1: "Communication skills",
+        life_skills_feature2: "Leadership development",
+        life_skills_feature3: "Financial literacy",
+        life_skills_feature4: "Digital literacy",
+        start_learning: "Start Learning",
+        life_skills_icon_alt: "Life Skills Icon",      
+        // Card 4 - Vocational
+        vocational_title: "Vocational Skills",
+        vocational_desc: "Learn practical skills that can lead to income-generating opportunities. Hands-on training with experienced instructors.",
+        vocational_feature1: "Tailoring & sewing",
+        vocational_feature2: "Hairdressing & beauty",
+        vocational_feature3: "Crafts & jewelry making",
+        vocational_feature4: "Computer basics",
+        explore_skills: "Explore Skills",
+        vocational_icon_alt: "Vocational Skills",     
+        // Card 5 - Health
+        health_title: "Health & Wellness",
+        health_desc: "Comprehensive health education covering physical, mental, and reproductive health. Age-appropriate and culturally sensitive content.",
+        health_feature1: "Reproductive health",
+        health_feature2: "Mental health awareness",
+        health_feature3: "Nutrition & hygiene",
+        health_feature4: "First aid basics",
+        learn_more: "Learn More",
+        health_icon_alt: "Health & Wellness",    
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "Entrepreneurship",
+        entrepreneurship_desc: "Learn to start and manage your own business. From idea development to financial planning and marketing strategies.",
+        entrepreneurship_feature1: "Business planning",
+        entrepreneurship_feature2: "Marketing & sales",
+        entrepreneurship_feature3: "Financial management",
+        entrepreneurship_feature4: "Access to funding",
+        start_journey: "Start Journey",
+        entrepreneurship_icon_alt: "Entrepreneurship",      
+        // Footer
+        footer_subtitle: "Empowering Girls, Building Futures",
+        footer_desc: "A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.",
+        quick_links: "Quick Links",
+        join_chat: "Join Chat",
+        share_story: "Share Story",
+        get_help: "Get Help",
+        emergency: "Emergency",
+        support: "Support",
+        report: "Report",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Empowering girls, always.",
+        available_languages: "Available in: English, Français, Kiswahili, Kinyarwanda, Arabic",
+        supported_by: "Supported by UNHCR, Save The Children, Alight"
+      },
+      ar: {
+        // Navigation
+        home: "الرئيسية", about: "عن الموقع", chat: "دردشة", stories: "قصص", programs: "البرامج", 
+        protection: "حماية", languages: "اللغات", login: "دخول", donate: "تبرع",
+        search: "بحث...",
+        
+        // Main content
+        prog_title: "برامج التعلم",
+        prog_desc: "برامج تدريبية شاملة مصممة لتمكين وتثقيف وحماية الفتيات.",     
+        // Card 1 - GBV
+        gbv_title: "الوقاية من العنف القائم على النوع",
+        gbv_desc: "تدريب أساسي حول الوقاية من العنف القائم على النوع الاجتماعي والتعرف عليه والاستجابة له.",
+        gbv_feature1: "فهم أنواع العنف القائم على النوع",
+        gbv_feature2: "تخطيط السلامة",
+        gbv_feature3: "إجراءات الإبلاغ",
+        gbv_feature4: "موارد الدعم",
+        start_training: "ابدأ التدريب",
+        gbv_icon_alt: "رمز العنف القائم على النوع",   
+        // Card 2 - Language
+        lang_title: "تعلم اللغات",
+        lang_desc: "أتقن لغات جديدة لتوسيع الفرص والتواصل مع المزيد من الأشخاص.",
+        english: "الإنجليزية",
+        swahili: "السواحيلية",
+        french: "الفرنسية",
+        kinyarwanda: "الكينيارواندا",
+        arabic: "العربية",
+        choose_language: "اختر اللغة",
+        lang_icon_alt: "رمز اللغة",     
+        // Card 3 - Life Skills
+        life_skills_title: "تدريب المهارات الحياتية",
+        life_skills_desc: "مهارات أساسية للتطوير الشخصي والقيادة والنجاح المستقبلي.",
+        life_skills_feature1: "مهارات التواصل",
+        life_skills_feature2: "تطوير القيادة",
+        life_skills_feature3: "المعرفة المالية",
+        life_skills_feature4: "المعرفة الرقمية",
+        start_learning: "ابدأ التعلم",
+        life_skills_icon_alt: "رمز المهارات الحياتية",     
+        // Card 4 - Vocational
+        vocational_title: "المهارات المهنية",
+        vocational_desc: "تعلم مهارات عملية يمكن أن تؤدي إلى فرص مدرة للدخل.",
+        vocational_feature1: "الخياطة والحياكة",
+        vocational_feature2: "تصفيف الشعر والتجميل",
+        vocational_feature3: "الحرف اليدوية وصنع المجوهرات",
+        vocational_feature4: "أساسيات الكمبيوتر",
+        explore_skills: "استكشف المهارات",
+        vocational_icon_alt: "المهارات المهنية",     
+        // Card 5 - Health
+        health_title: "الصحة والعافية",
+        health_desc: "تعليم صحي شامل يغطي الصحة الجسدية والعقلية والإنجابية.",
+        health_feature1: "الصحة الإنجابية",
+        health_feature2: "الوعي بالصحة العقلية",
+        health_feature3: "التغذية والنظافة",
+        health_feature4: "أساسيات الإسعافات الأولية",
+        learn_more: "تعلم المزيد",
+        health_icon_alt: "الصحة والعافية",
+        
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "ريادة الأعمال",
+        entrepreneurship_desc: "تعلم كيفية بدء وإدارة عملك الخاص.",
+        entrepreneurship_feature1: "تخطيط الأعمال",
+        entrepreneurship_feature2: "التسويق والمبيعات",
+        entrepreneurship_feature3: "الإدارة المالية",
+        entrepreneurship_feature4: "الوصول إلى التمويل",
+        start_journey: "ابدأ الرحلة",
+        entrepreneurship_icon_alt: "ريادة الأعمال",
+        // Footer
+        footer_subtitle: "تمكين الفتيات، بناء المستقبل",
+        footer_desc: "ملاذ رقمي آمن حيث يمكن للفتيات في مخيم ماهاما للاجئين التواصل والتعلم والنمو.",
+        quick_links: "روابط سريعة",
+        join_chat: "انضم للدردشة",
+        share_story: "شارك قصة",
+        get_help: "احصل على المساعدة",
+        emergency: "طوارئ",
+        support: "دعم",
+        report: "الإبلاغ",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "تمكين الفتيات، دائماً.",
+        available_languages: "متوفر بـ: الإنجليزية، الفرنسية، السواحيلية، الكينيارواندا، العربية",
+        supported_by: "بدعم من UNHCR، Save The Children، Alight"
+      },
+      fr: {
+        // Navigation
+        home: "Accueil", about: "À propos", chat: "Discuter", stories: "Histoires", programs: "Programmes", 
+        protection: "Protection", languages: "Langues", login: "Connexion", donate: "Donner",
+        search: "Rechercher...",      
+        // Main content
+        prog_title: "Programmes d'apprentissage",
+        prog_desc: "Des programmes de formation complets conçus pour autonomiser, éduquer et protéger.",      
+        // Card 1 - GBV
+        gbv_title: "Prévention et réponse à la VBG",
+        gbv_desc: "Formation essentielle sur la prévention, la reconnaissance et la réponse à la violence basée sur le genre.",
+        gbv_feature1: "Comprendre les types de VBG",
+        gbv_feature2: "Planification de la sécurité",
+        gbv_feature3: "Procédures de signalement",
+        gbv_feature4: "Ressources de soutien",
+        start_training: "Commencer la formation",
+        gbv_icon_alt: "Icône VBG",      
+        // Card 2 - Language
+        lang_title: "Apprentissage des langues",
+        lang_desc: "Maîtrisez de nouvelles langues pour élargir vos opportunités.",
+        english: "Anglais",
+        swahili: "Swahili",
+        french: "Français",
+        kinyarwanda: "Kinyarwanda",
+        arabic: "Arabe",
+        choose_language: "Choisir la langue",
+        lang_icon_alt: "Icône de langue",   
+        // Card 3 - Life Skills
+        life_skills_title: "Compétences de vie",
+        life_skills_desc: "Compétences essentielles pour le développement personnel et le leadership.",
+        life_skills_feature1: "Compétences en communication",
+        life_skills_feature2: "Développement du leadership",
+        life_skills_feature3: "Éducation financière",
+        life_skills_feature4: "Compétences numériques",
+        start_learning: "Commencer à apprendre",
+        life_skills_icon_alt: "Icône des compétences de vie",
+        
+        // Card 4 - Vocational
+        vocational_title: "Compétences professionnelles",
+        vocational_desc: "Apprenez des compétences pratiques qui peuvent mener à des opportunités génératrices de revenus.",
+        vocational_feature1: "Couture et confection",
+        vocational_feature2: "Coiffure et beauté",
+        vocational_feature3: "Artisanat et fabrication de bijoux",
+        vocational_feature4: "Bases de l'informatique",
+        explore_skills: "Explorer les compétences",
+        vocational_icon_alt: "Compétences professionnelles",    
+        // Card 5 - Health
+        health_title: "Santé et bien-être",
+        health_desc: "Éducation sanitaire complète couvrant la santé physique, mentale et reproductive.",
+        health_feature1: "Santé reproductive",
+        health_feature2: "Sensibilisation à la santé mentale",
+        health_feature3: "Nutrition et hygiène",
+        health_feature4: "Bases des premiers secours",
+        learn_more: "En savoir plus",
+        health_icon_alt: "Santé et bien-être",      
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "Entrepreneuriat",
+        entrepreneurship_desc: "Apprenez à créer et gérer votre propre entreprise.",
+        entrepreneurship_feature1: "Planification d'entreprise",
+        entrepreneurship_feature2: "Marketing et ventes",
+        entrepreneurship_feature3: "Gestion financière",
+        entrepreneurship_feature4: "Accès au financement",
+        start_journey: "Commencer le voyage",
+        entrepreneurship_icon_alt: "Entrepreneuriat",      
+        // Footer
+        footer_subtitle: "Autonomiser les filles, construire l'avenir",
+        footer_desc: "Un havre numérique sûr où les filles du camp de réfugiés de Mahama peuvent se connecter.",
+        quick_links: "Liens rapides",
+        join_chat: "Rejoindre le chat",
+        share_story: "Partager une histoire",
+        get_help: "Obtenir de l'aide",
+        emergency: "Urgence",
+        support: "Soutien",
+        report: "Signaler",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Autonomiser les filles, toujours.",
+        available_languages: "Disponible en: Anglais, Français, Kiswahili, Kinyarwanda, Arabe",
+        supported_by: "Soutenu par UNHCR, Save The Children, Alight"
+      },
+      sw: {
+        // Navigation
+        home: "Nyumbani", about: "Kuhusu", chat: "Ongea", stories: "Hadithi", programs: "Mipango", 
+        protection: "Ulinzi", languages: "Lugha", login: "Ingia", donate: "Changia",
+        search: "Tafuta...",      
+        // Main content
+        prog_title: "Mipango ya Kujifunza",
+        prog_desc: "Mipango kamili ya mafunzo iliyoundwa kuwezesha, kuelimisha, na kulinda.",       
+        // Card 1 - GBV
+        gbv_title: "Kuzuia na Kukabiliana na GBV",
+        gbv_desc: "Mafunzo muhimu juu ya kuzuia unyanyasaji wa kijinsia.",
+        gbv_feature1: "Kuelewa aina za GBV",
+        gbv_feature2: "Kupanga usalama",
+        gbv_feature3: "Mchakato wa kuripoti",
+        gbv_feature4: "Rasilimali za msaada",
+        start_training: "Anza Mafunzo",
+        gbv_icon_alt: "Aikoni ya GBV",       
+        // Card 2 - Language
+        lang_title: "Kujifunza Lugha",
+        lang_desc: "Jifunze lugha mpya ili kupanua fursa na kuungana na watu zaidi.",
+        english: "Kiingereza",
+        swahili: "Kiswahili",
+        french: "Kifaransa",
+        kinyarwanda: "Kinyarwanda",
+        arabic: "Kiarabu",
+        choose_language: "Chagua Lugha",
+        lang_icon_alt: "Aikoni ya Lugha",      
+        // Card 3 - Life Skills
+        life_skills_title: "Mafunzo ya Stadi za Maisha",
+        life_skills_desc: "Stadi muhimu kwa maendeleo ya kibinafsi na uongozi.",
+        life_skills_feature1: "Stadi za mawasiliano",
+        life_skills_feature2: "Maendeleo ya uongozi",
+        life_skills_feature3: "Ujuzi wa kifedha",
+        life_skills_feature4: "Ujuzi wa kidijitali",
+        start_learning: "Anza Kujifunza",
+        life_skills_icon_alt: "Aikoni ya Stadi za Maisha",       
+        // Card 4 - Vocational
+        vocational_title: "Stadi za Kazi",
+        vocational_desc: "Jifunze stadi za vitendo ambazo zinaweza kusababisha fursa za kujipatia kipato.",
+        vocational_feature1: "Kushona na ushonaji",
+        vocational_feature2: "Kinyozi na urembo",
+        vocational_feature3: "Ufundi na utengenezaji wa vito",
+        vocational_feature4: "Misingi ya kompyuta",
+        explore_skills: "Gundua Stadi",
+        vocational_icon_alt: "Stadi za Kazi",       
+        // Card 5 - Health
+        health_title: "Afya na Ustawi",
+        health_desc: "Elimu kamili ya afya inayojumuisha afya ya kimwili, ya akili na ya uzazi.",
+        health_feature1: "Afya ya uzazi",
+        health_feature2: "Ufahamu wa afya ya akili",
+        health_feature3: "Lishe na usafi",
+        health_feature4: "Misingi ya huduma ya kwanza",
+        learn_more: "Jifunze Zaidi",
+        health_icon_alt: "Afya na Ustawi",       
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "Ujasiriamali",
+        entrepreneurship_desc: "Jifunze jinsi ya kuanza na kusimamia biashara yako mwenyewe.",
+        entrepreneurship_feature1: "Kupanga biashara",
+        entrepreneurship_feature2: "Uuzaji na mauzo",
+        entrepreneurship_feature3: "Usimamizi wa kifedha",
+        entrepreneurship_feature4: "Upatikanaji wa fedha",
+        start_journey: "Anza Safari",
+        entrepreneurship_icon_alt: "Ujasiriamali",     
+        // Footer
+        footer_subtitle: "Kuwawezesha Wasichana, Kujenga Mustakabali",
+        footer_desc: "Mahali salama pa kidijitali ambapo wasichana katika kambi ya wakimbizi ya Mahama wanaweza kuungana.",
+        quick_links: "Viungo vya Haraka",
+        join_chat: "Jiunge na Mazungumzo",
+        share_story: "Shiriki Hadithi",
+        get_help: "Pata Msaada",
+        emergency: "Dharura",
+        support: "Msaada",
+        report: "Ripoti",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Kuwawezesha wasichana, daima.",
+        available_languages: "Inapatikana kwa: Kiingereza, Kifaransa, Kiswahili, Kinyarwanda, Kiarabu",
+        supported_by: "Inasaidiwa na UNHCR, Save The Children, Alight"
+      },
+      rw: {
+        // Navigation
+        home: "Ahabanza", about: "Abo turi", chat: "Kuganira", stories: "Inkuru", programs: "Porogaramu", 
+        protection: "Umutekano", languages: "Indimi", login: "Injira", donate: "Tanga",
+        search: "Shakisha...",      
+        // Main content
+        prog_title: "Porogaramu zo Kwiga",
+        prog_desc: "Porogaramu zuzuye zo kwigisha ziteguriwe guha imbaraga, kwigisha, no kurinda. Fasha ubwenge, menya ubumenyi, kandi witegure ejo hazaza ryiza.",      
+        // Card 1 - GBV
+        gbv_title: "Kwirinda no Gukemura GBV",
+        gbv_desc: "Amasomo ngenderwaho ku birinda ubukobwe, kubona, no gukemura ibikorwa by'ubugome bushingiye ku gitsina. Menya uburenganzira bwawe n'uburyo wo kwitonda.",
+        gbv_feature1: "Gusobanukirwa ubwoko bw'ibikorwa by'ubugome bushingiye ku gitsina",
+        gbv_feature2: "Gutegeka umutekano",
+        gbv_feature3: "Uburyo bwo gutanga raporo",
+        gbv_feature4: "Ibikoresho byo gufasha",
+        start_training: "Tangira Amasomo",
+        gbv_icon_alt: "Ishusho ya GBV",       
+        // Card 2 - Language
+        lang_title: "Kwiga Indimi",
+        lang_desc: "Menya indimi nshya kugirango wanduze amahirwe no guhuza n'abantu benshi. Amasomo yihariye hamwe n'abavugabwabyo.",
+        english: "Icyongereza",
+        swahili: "Igiswahili",
+        french: "Igifaransa",
+        kinyarwanda: "Ikinyarwanda",
+        arabic: "Icyarabu",
+        choose_language: "Hitamo Ururimi",
+        lang_icon_alt: "Ishusho y'Ururimi",      
+        // Card 3 - Life Skills
+        life_skills_title: "Amasomo y'Ubuzima",
+        life_skills_desc: "Ubumenyi ngenderwaho bw'ubwenge, ubuhatsi, n'ubwigenge. Fasha ubwenge, witegure amahirwe.",
+        life_skills_feature1: "Ubumenyi bwo kuvugisana",
+        life_skills_feature2: "Gukura ubuhatsi",
+        life_skills_feature3: "Ubumenyi bw'imari",
+        life_skills_feature4: "Ubumenyi bwa digitale",
+        start_learning: "Tangira Kwiga",
+        life_skills_icon_alt: "Ishusho y'Ubuzima",      
+        // Card 4 - Vocational
+        vocational_title: "Ubumenyi bw'Umwuga",
+        vocational_desc: "Jya ubona ubumenyi bushobora kuguza amafaranga. Amasomo yihariye hamwe n'abigishwa bafite ubwenge.",
+        vocational_feature1: "Gutera umwenda no kudoda",
+        vocational_feature2: "Kogosha no guteka",
+        vocational_feature3: "Ubukorikori no gukora imitako",
+        vocational_feature4: "Amasomo y'ibanze ya mudasobwa",
+        explore_skills: "Shakisha Ubumenyi",
+        vocational_icon_alt: "Ubumenyi bw'Umwuga",     
+        // Card 5 - Health
+        health_title: "Ubuzima n'Imibereho",
+        health_desc: "Amasomo yuzuye y'ubuzima aboneka ku buzima bw'umubiri, ubwenge, n'ubuzima bw'imyororokere. Amakuru ahuje imyaka n'umuco.",
+        health_feature1: "Ubuzima bw'imyororokere",
+        health_feature2: "Kumenya ubuzima bw'ubwenge",
+        health_feature3: "Ibiribwa n'isuku",
+        health_feature4: "Amasomo y'ibanze yo gufasha abarwayi",
+        learn_more: "Menya Birenze",
+        health_icon_alt: "Ubuzima n'Imibereho",    
+        // Card 6 - Entrepreneurship
+        entrepreneurship_title: "Ubucuruzi",
+        entrepreneurship_desc: "Jya ubona uburyo bwo gutangiza no gucunga ubucuruzi bwawe. Kuva mu gutegura ingingo kugeza mu gucunga imari n'uburyo bwo kwegura.",
+        entrepreneurship_feature1: "Gutegura ubucuruzi",
+        entrepreneurship_feature2: "Kwegura no kugurisha",
+        entrepreneurship_feature3: "Gucunga imari",
+        entrepreneurship_feature4: "Kubona amafaranga",
+        start_journey: "Tangira Urugendo",
+        entrepreneurship_icon_alt: "Ubucuruzi",      
+        // Footer
+        footer_subtitle: "Guharanira abakobwa, Kubaka Ejo Hazaza",
+        footer_desc: "Ahantu hatekanye h'ikijyambere aho abakobwa bo mu rugo rw'abimukanyi rwa Mahama bashobora kwihuza, kwiga, gukura, no kongera ubuzima.",
+        quick_links: "Amahuza Yihuse",
+        join_chat: "Injira mu Kuganira",
+        share_story: "Sangiza Inkuru",
+        get_help: "Kwakira Ubufasha",
+        emergency: "Ubutabazi",
+        support: "Gushigikira",
+        report: "Gutanga Raporo",
+        copyright: "© 2025 GirlsSpace Mahama.",
+        empowering_girls: "Guharanira abakobwa, buri gihe.",
+        available_languages: "Biboneka mu: Icyongereza, Igifaransa, Igiswahili, Ikinyarwanda, Icyarabu",
+        supported_by: "Bishigikijwe na: UNHCR, Save The Children, Alight"
+      }
+    };
 
+    // Mobile menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const overlay = document.getElementById('mobile-menu-overlay');
+
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      const isOpen = hamburger.classList.contains('active');
+      if (isOpen) {
+        mobileMenu.style.left = '0';
+        overlay.classList.remove('hidden');
+      } else {
+        mobileMenu.style.left = '-100%';
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // Language management functions
+    function getCurrentLanguage() {
+      return localStorage.getItem('selectedLanguage') || 'en';
+    }
+
+    function setCurrentLanguage(lang) {
+      localStorage.setItem('selectedLanguage', lang);
+      applyTranslations(lang);
+      updateLanguageSelector(lang);
+      updatePageDirection(lang);
+    }
+
+    function applyTranslations(lang) {
+      console.log('Applying translations for:', lang);
+      
+      // Update all elements with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+      
+      // Update placeholder texts
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+      
+      // Update alt texts
+      document.querySelectorAll('[data-i18n-alt]').forEach(element => {
+        const key = element.getAttribute('data-i18n-alt');
+        if (translations[lang] && translations[lang][key]) {
+          element.alt = translations[lang][key];
+        }
+      });
+    }
+
+    function updateLanguageSelector(lang) {
+      const languageNames = {
+        'en': 'English',
+        'ar': 'Arabic',
+        'sw': 'Swahili',
+        'fr': 'French',
+        'rw': 'Kinyarwanda'
+      };
+      
+      // Update desktop language button
+      const currentLanguageElement = document.getElementById('current-language');
+      if (currentLanguageElement) {
+        currentLanguageElement.textContent = languageNames[lang];
+      }
+      
+      // Update mobile language selector
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.value = lang;
+      }
+    }
+
+    function updatePageDirection(lang) {
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+    }
+
+    function changeLanguage(lang) {
+      console.log('Changing language to:', lang);
+      setCurrentLanguage(lang);
+      // Close mobile menu after language change
+      if (mobileMenu.style.left === '0px') {
+        toggleMenu();
+      }
+    }
+
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      console.log('Initializing with language:', currentLang);
+      
+      // Apply translations
+      applyTranslations(currentLang);
+      updateLanguageSelector(currentLang);
+      updatePageDirection(currentLang);
+      
+      // Add event listeners
+      hamburger.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+      
+      // Mobile language selector event
+      const mobileLanguageSelector = document.getElementById('mobile-language-selector');
+      if (mobileLanguageSelector) {
+        mobileLanguageSelector.addEventListener('change', function() {
+          changeLanguage(this.value);
+        });
+      }
+
+      // Add click events to desktop language buttons
+      document.querySelectorAll('#language-button + ul button').forEach(button => {
+        button.addEventListener('click', function() {
+          const lang = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          changeLanguage(lang);
+        });
+      });
+    });
+  </script>
+  <script type="module" src="./auth-ui.js"></script>
 </body>
 </html>

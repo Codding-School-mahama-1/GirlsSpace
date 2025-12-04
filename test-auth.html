@@ -1,0 +1,24 @@
+<!-- test-auth.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Auth</title>
+    <script type="module">
+        import { checkAuthState } from './firebaseauth.js';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🧪 Testing authentication...');
+            const user = await checkAuthState();
+            console.log('Test result:', user ? '✅ LOGGED IN' : '❌ NOT LOGGED IN');
+            console.log('User data:', user);
+            console.log('LocalStorage:', localStorage.getItem('girlspaceUser'));
+        });
+    </script>
+</head>
+<body>
+    <h1>Auth Test Page</h1>
+    <p>Check the browser console for authentication status.</p>
+</body>
+</html>
