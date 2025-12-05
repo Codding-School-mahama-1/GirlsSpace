@@ -7,9 +7,9 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  
+ 
   <script src="https://cdn.tailwindcss.com"></script>
-  
+ 
   <script>
     tailwind.config = {
       theme: {
@@ -44,38 +44,38 @@
     .profile-section {
       background: linear-gradient(135deg, #1a1a1a 0%, #2d1b69 100%);
     }
-    
+   
     .progress-ring {
       transform: rotate(-90deg);
     }
-    
+   
     .progress-ring-circle {
       transition: stroke-dashoffset 0.5s ease;
     }
-    
+   
     .badge {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
+   
     .achievement-card {
       transition: all 0.3s ease;
     }
-    
+   
     .achievement-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
     }
-    
+   
     .tab-button.active {
       border-bottom: 3px solid #ec4899;
       color: #ec4899;
       font-weight: 600;
     }
-    
+   
     .story-card {
       transition: all 0.3s ease;
     }
-    
+   
     .story-card:hover {
       transform: translateY(-3px);
     }
@@ -98,7 +98,7 @@
       <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors">Programs</a>
       <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors">Protection</a>
       <a href="./profile.html" class="nav-link hover:text-primary relative transition-colors text-primary font-semibold">My Profile</a>
-      
+     
       <div class="relative group">
         <button class="flex items-center hover:text-primary transition-colors py-2" id="language-button">
           <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
@@ -111,11 +111,11 @@
           <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
         </ul>
       </div>
-      
+     
       <button id="logoutBtn" class="px-4 py-1.5 border-[1.5px] border-red-500 text-red-500 rounded-full text-sm font-semibold hover:bg-red-50 transition-colors hidden">
         <i class="fas fa-sign-out-alt mr-2"></i>Log Out
       </button>
-      
+     
       <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple">Donate</a>
     </div>
 
@@ -138,11 +138,11 @@
         <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors">Programs</a>
         <a href="./Protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors">Protection</a>
         <a href="./profile.html" class="py-2 border-b border-gray-100 text-primary font-semibold transition-colors">My Profile</a>
-        
+       
         <button id="mobileLogoutBtn" class="py-2 border-b border-gray-100 text-red-500 text-left hidden">
           <i class="fas fa-sign-out-alt mr-2"></i>Log Out
         </button>
-        
+       
         <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all text-center">Donate</a>
       </div>
     </div>
@@ -163,29 +163,29 @@
               <i class="fas fa-camera"></i>
             </button>
           </div>
-          
+         
           <!-- Profile Info -->
           <div class="flex-1 text-center lg:text-left">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
               <div>
-                <h1 id="userName" class="text-3xl lg:text-4xl font-bold mb-2">Sarah M.</h1>
+                <h1 id="userName" class="text-3xl lg:text-4xl font-bold mb-2">Loading...</h1>
                 <p class="text-gray-300 mb-2">Mahama Refugee Camp</p>
                 <div class="flex items-center justify-center lg:justify-start gap-3 mb-4">
                   <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">Member since 2024</span>
                   <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium">Level 3 Explorer</span>
                 </div>
               </div>
-              
+             
               <button id="editProfileBtn" class="px-5 py-2.5 border border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300">
                 <i class="fas fa-edit mr-2"></i>Edit Profile
               </button>
             </div>
-            
+           
             <!-- Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div class="bg-white/5 rounded-xl p-4 text-center">
-                <div class="text-2xl font-bold text-primary">24</div>
-                <div class="text-sm text-gray-300">Stories Shared</div>
+                <div class="text-2xl font-bold text-primary">0</div>
+                <div class="text-sm text-gray-300"data-translate="profile.stories">Stories Shared</div>
               </div>
               <div class="bg-white/5 rounded-xl p-4 text-center">
                 <div class="text-2xl font-bold text-accent">156</div>
@@ -200,7 +200,7 @@
                 <div class="text-sm text-gray-300">Badges Earned</div>
               </div>
             </div>
-            
+           
             <!-- Bio -->
             <p id="userBio" class="text-gray-300 max-w-2xl">
               Passionate about education and women empowerment. I love sharing stories and learning new skills through GirlsSpace programs.
@@ -235,7 +235,7 @@
 
     <!-- Tab Content -->
     <div class="max-w-6xl mx-auto px-6">
-      
+     
       <!-- Overview Tab -->
       <div id="overview-tab" class="tab-content animate-fadeIn">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -257,7 +257,7 @@
                   </div>
                   <span class="text-sm text-gray-400">2 hours ago</span>
                 </div>
-                
+               
                 <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
                   <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
                     <i class="fas fa-graduation-cap text-green-400"></i>
@@ -268,7 +268,7 @@
                   </div>
                   <span class="text-sm text-gray-400">Yesterday</span>
                 </div>
-                
+               
                 <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
                   <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
                     <i class="fas fa-comments text-accent"></i>
@@ -281,7 +281,7 @@
                 </div>
               </div>
             </div>
-            
+           
             <!-- My Stories Preview -->
             <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
               <div class="flex justify-between items-center mb-6">
@@ -299,7 +299,7 @@
                     <span class="text-xs text-primary">Published</span>
                   </div>
                 </div>
-                
+               
                 <div class="story-card bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all">
                   <h3 class="font-bold mb-2">Learning Journey</h3>
                   <p class="text-sm text-gray-400 mb-3">My progress in language classes...</p>
@@ -311,7 +311,7 @@
               </div>
             </div>
           </div>
-          
+         
           <!-- Right Column -->
           <div class="space-y-8">
             <!-- Progress Summary -->
@@ -319,7 +319,7 @@
               <h2 class="text-2xl font-bold mb-6 flex items-center">
                 <i class="fas fa-chart-line text-primary mr-3"></i>Learning Progress
               </h2>
-              
+             
               <div class="space-y-6">
                 <!-- English Progress -->
                 <div>
@@ -331,7 +331,7 @@
                     <div class="h-full bg-primary rounded-full" style="width: 75%"></div>
                   </div>
                 </div>
-                
+               
                 <!-- Life Skills Progress -->
                 <div>
                   <div class="flex justify-between mb-2">
@@ -342,7 +342,7 @@
                     <div class="h-full bg-green-500 rounded-full" style="width: 90%"></div>
                   </div>
                 </div>
-                
+               
                 <!-- GBV Prevention Progress -->
                 <div>
                   <div class="flex justify-between mb-2">
@@ -353,7 +353,7 @@
                     <div class="h-full bg-purple-500 rounded-full" style="width: 60%"></div>
                   </div>
                 </div>
-                
+               
                 <!-- Digital Skills Progress -->
                 <div>
                   <div class="flex justify-between mb-2">
@@ -365,18 +365,18 @@
                   </div>
                 </div>
               </div>
-              
+             
               <a href="./Learning_Programs.html" class="mt-6 block text-center px-4 py-3 bg-primary/20 text-primary rounded-xl font-medium hover:bg-primary/30 transition-colors">
                 <i class="fas fa-play-circle mr-2"></i>Continue Learning
               </a>
             </div>
-            
+           
             <!-- Quick Actions -->
             <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
               <h2 class="text-2xl font-bold mb-6 flex items-center">
                 <i class="fas fa-bolt text-accent mr-3"></i>Quick Actions
               </h2>
-              
+             
               <div class="space-y-3">
                 <a href="./chat.html" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
                   <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
@@ -384,21 +384,21 @@
                   </div>
                   <span>Join a Chat Room</span>
                 </a>
-                
+               
                 <a href="./stories.html" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
                   <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
                     <i class="fas fa-pen text-green-400"></i>
                   </div>
                   <span>Write a Story</span>
                 </a>
-                
+               
                 <a href="./Learning_Programs.html" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
                   <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <i class="fas fa-graduation-cap text-purple-400"></i>
                   </div>
                   <span>Start New Program</span>
                 </a>
-                
+               
                 <a href="./protection.html" class="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-all">
                   <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
                     <i class="fas fa-shield-alt text-red-400"></i>
@@ -410,7 +410,7 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- My Stories Tab -->
       <div id="stories-tab" class="tab-content hidden animate-fadeIn">
         <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
@@ -420,23 +420,23 @@
               <i class="fas fa-plus mr-2"></i>Write New Story
             </a>
           </div>
-          
+         
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Story Cards will be dynamically loaded here -->
           </div>
-          
+         
           <div class="text-center py-8">
             <p class="text-gray-400">You haven't written any stories yet.</p>
             <a href="./stories.html?action=create" class="inline-block mt-4 text-primary hover:text-primary-dark">Start your first story →</a>
           </div>
         </div>
       </div>
-      
+     
       <!-- Progress Tab -->
       <div id="progress-tab" class="tab-content hidden animate-fadeIn">
         <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
           <h2 class="text-2xl font-bold mb-8">Learning Progress</h2>
-          
+         
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Program Progress -->
             <div>
@@ -460,7 +460,7 @@
                     <div class="h-full bg-primary rounded-full" style="width: 75%"></div>
                   </div>
                 </div>
-                
+               
                 <!-- Program Item -->
                 <div class="p-4 bg-white/5 rounded-xl">
                   <div class="flex items-center justify-between mb-3">
@@ -481,7 +481,7 @@
                 </div>
               </div>
             </div>
-            
+           
             <!-- Stats Chart -->
             <div>
               <h3 class="text-xl font-bold mb-6">Learning Statistics</h3>
@@ -503,7 +503,7 @@
                   <div class="text-sm text-gray-300">Average Score</div>
                 </div>
               </div>
-              
+             
               <div class="mt-8">
                 <h4 class="font-bold mb-4">Weekly Activity</h4>
                 <div class="flex items-end justify-between h-32">
@@ -541,12 +541,12 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- Achievements Tab -->
       <div id="achievements-tab" class="tab-content hidden animate-fadeIn">
         <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
           <h2 class="text-2xl font-bold mb-8">My Achievements</h2>
-          
+         
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Badge 1 -->
             <div class="achievement-card bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-2xl p-6 text-center border border-purple-500/30">
@@ -557,7 +557,7 @@
               <p class="text-sm text-gray-300 mb-3">Shared your first story</p>
               <span class="text-xs text-accent font-medium">Earned: Jan 15, 2024</span>
             </div>
-            
+           
             <!-- Badge 2 -->
             <div class="achievement-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-2xl p-6 text-center border border-green-500/30">
               <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
@@ -567,7 +567,7 @@
               <p class="text-sm text-gray-300 mb-3">Completed 5 programs</p>
               <span class="text-xs text-accent font-medium">Earned: Feb 3, 2024</span>
             </div>
-            
+           
             <!-- Badge 3 -->
             <div class="achievement-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-2xl p-6 text-center border border-blue-500/30">
               <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
@@ -577,7 +577,7 @@
               <p class="text-sm text-gray-300 mb-3">100+ chat messages</p>
               <span class="text-xs text-accent font-medium">Earned: Mar 10, 2024</span>
             </div>
-            
+           
             <!-- Badge 4 -->
             <div class="achievement-card bg-gradient-to-br from-yellow-900/30 to-orange-900/30 rounded-2xl p-6 text-center border border-yellow-500/30">
               <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
@@ -588,7 +588,7 @@
               <span class="text-xs text-accent font-medium">Earned: Apr 22, 2024</span>
             </div>
           </div>
-          
+         
           <div class="bg-white/5 rounded-xl p-6">
             <h3 class="text-xl font-bold mb-4">Next Goals</h3>
             <div class="space-y-4">
@@ -604,7 +604,7 @@
                 </div>
                 <span class="text-primary font-bold">25%</span>
               </div>
-              
+             
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
@@ -621,35 +621,35 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- Settings Tab -->
       <div id="settings-tab" class="tab-content hidden animate-fadeIn">
         <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
           <h2 class="text-2xl font-bold mb-8">Account Settings</h2>
-          
+         
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Profile Settings -->
             <div class="lg:col-span-2">
               <h3 class="text-xl font-bold mb-6">Profile Information</h3>
-              
+             
               <form id="profileForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label class="block text-sm font-medium mb-2">First Name</label>
                     <input type="text" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors" value="Sarah">
                   </div>
-                  
+                 
                   <div>
                     <label class="block text-sm font-medium mb-2">Last Name</label>
                     <input type="text" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors" value="M.">
                   </div>
                 </div>
-                
+               
                 <div>
                   <label class="block text-sm font-medium mb-2">Email</label>
                   <input type="email" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors" value="sarah@example.com">
                 </div>
-                
+               
                 <div>
                   <label class="block text-sm font-medium mb-2">Location</label>
                   <select class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors">
@@ -658,12 +658,12 @@
                     <option>Other</option>
                   </select>
                 </div>
-                
+               
                 <div>
                   <label class="block text-sm font-medium mb-2">Bio</label>
                   <textarea class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors resize-none h-32">Passionate about education and women empowerment. I love sharing stories and learning new skills through GirlsSpace programs.</textarea>
                 </div>
-                
+               
                 <div>
                   <label class="block text-sm font-medium mb-2">Preferred Language</label>
                   <select class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors">
@@ -674,7 +674,7 @@
                     <option value="ar">Arabic</option>
                   </select>
                 </div>
-                
+               
                 <div class="flex gap-4 pt-4">
                   <button type="submit" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-dark transition-colors">
                     Save Changes
@@ -685,11 +685,11 @@
                 </div>
               </form>
             </div>
-            
+           
             <!-- Account Management -->
             <div>
               <h3 class="text-xl font-bold mb-6">Account Management</h3>
-              
+             
               <div class="space-y-4">
                 <div class="p-4 bg-white/5 rounded-xl">
                   <h4 class="font-bold mb-2">Privacy Settings</h4>
@@ -708,7 +708,7 @@
                     </label>
                   </div>
                 </div>
-                
+               
                 <div class="p-4 bg-white/5 rounded-xl">
                   <h4 class="font-bold mb-2">Notification Preferences</h4>
                   <div class="space-y-3">
@@ -726,7 +726,7 @@
                     </label>
                   </div>
                 </div>
-                
+               
                 <div class="space-y-3 pt-4">
                   <button class="w-full px-4 py-3 border border-gray-600 text-gray-300 rounded-xl font-medium hover:bg-white/5 transition-colors">
                     Change Password
@@ -754,7 +754,7 @@
           </button>
         </div>
       </div>
-      
+     
       <div class="p-6">
         <form id="editProfileForm" class="space-y-6">
           <div class="text-center">
@@ -768,24 +768,24 @@
               </label>
             </div>
           </div>
-          
+         
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="block text-sm font-medium mb-2">First Name</label>
               <input type="text" id="editFirstName" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors">
             </div>
-            
+           
             <div>
               <label class="block text-sm font-medium mb-2">Last Name</label>
               <input type="text" id="editLastName" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors">
             </div>
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium mb-2">Bio</label>
             <textarea id="editBio" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors resize-none h-32"></textarea>
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium mb-2">Location</label>
             <select id="editLocation" class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none transition-colors">
@@ -794,7 +794,7 @@
               <option value="other">Other</option>
             </select>
           </div>
-          
+         
           <div class="flex gap-4 pt-4">
             <button type="submit" class="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-dark transition-colors flex-1">
               Save Changes
@@ -820,7 +820,7 @@
   <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-        
+       
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center gap-3 mb-4">
             <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
@@ -874,15 +874,15 @@
     document.addEventListener('DOMContentLoaded', function() {
       const tabButtons = document.querySelectorAll('.tab-button');
       const tabContents = document.querySelectorAll('.tab-content');
-      
+     
       tabButtons.forEach(button => {
         button.addEventListener('click', function() {
           const tabId = this.getAttribute('data-tab');
-          
+         
           // Update active button
           tabButtons.forEach(btn => btn.classList.remove('active'));
           this.classList.add('active');
-          
+         
           // Show active tab content
           tabContents.forEach(content => {
             content.classList.add('hidden');
@@ -892,12 +892,12 @@
           });
         });
       });
-      
+     
       // Mobile Menu Toggle
       const hamburger = document.getElementById('hamburger');
       const mobileMenu = document.getElementById('mobile-menu');
       const overlay = document.getElementById('mobile-menu-overlay');
-      
+     
       function toggleMenu() {
         hamburger.classList.toggle('active');
         const isOpen = hamburger.classList.contains('active');
@@ -909,10 +909,10 @@
           overlay.classList.add('hidden');
         }
       }
-      
+     
       if (hamburger) hamburger.addEventListener('click', toggleMenu);
       if (overlay) overlay.addEventListener('click', toggleMenu);
-      
+     
       // Edit Profile Modal
       const editProfileBtn = document.getElementById('editProfileBtn');
       const editProfileModal = document.getElementById('editProfileModal');
@@ -921,19 +921,19 @@
       const editProfileForm = document.getElementById('editProfileForm');
       const successToast = document.getElementById('successToast');
       const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-      
+     
       // Edit Picture Button
       const editPictureBtn = document.getElementById('editPictureBtn');
       const imageUpload = document.getElementById('imageUpload');
       const profileImage = document.getElementById('profileImage');
       const modalProfileImage = document.getElementById('modalProfileImage');
-      
+     
       if (editPictureBtn) {
         editPictureBtn.addEventListener('click', function() {
           imageUpload.click();
         });
       }
-      
+     
       if (imageUpload) {
         imageUpload.addEventListener('change', function(e) {
           const file = e.target.files[0];
@@ -947,62 +947,62 @@
           }
         });
       }
-      
+     
       if (editProfileBtn) {
         editProfileBtn.addEventListener('click', function() {
           // Populate modal with current data
           const userName = document.getElementById('userName').textContent;
           const userBio = document.getElementById('userBio').textContent;
-          
+         
           const nameParts = userName.split(' ');
           document.getElementById('editFirstName').value = nameParts[0] || '';
           document.getElementById('editLastName').value = nameParts.slice(1).join(' ') || '';
           document.getElementById('editBio').value = userBio;
-          
+         
           editProfileModal.classList.remove('hidden');
         });
       }
-      
+     
       if (closeEditModal) {
         closeEditModal.addEventListener('click', function() {
           editProfileModal.classList.add('hidden');
         });
       }
-      
+     
       if (cancelEdit) {
         cancelEdit.addEventListener('click', function() {
           editProfileModal.classList.add('hidden');
         });
       }
-      
+     
       if (editProfileForm) {
         editProfileForm.addEventListener('submit', function(e) {
           e.preventDefault();
-          
+         
           // Get form values
           const firstName = document.getElementById('editFirstName').value;
           const lastName = document.getElementById('editLastName').value;
           const bio = document.getElementById('editBio').value;
           const location = document.getElementById('editLocation').value;
-          
+         
           // Update profile display
-          document.getElementById('userName').textContent = `${firstName} ${lastName}`;
+          document.getElementById('userName').textContent = `\( {firstName} \){lastName}`;
           document.getElementById('userBio').textContent = bio;
-          
+         
           // Show success message
           successToast.style.transform = 'translateX(0)';
           setTimeout(() => {
             successToast.style.transform = 'translateX(100%)';
           }, 3000);
-          
+         
           // Close modal
           editProfileModal.classList.add('hidden');
-          
+         
           // In a real app, you would save to backend here
           console.log('Profile updated:', { firstName, lastName, bio, location });
         });
       }
-      
+     
       if (deleteAccountBtn) {
         deleteAccountBtn.addEventListener('click', function() {
           if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
@@ -1013,28 +1013,28 @@
           }
         });
       }
-      
+     
       // Settings form submission
       const profileForm = document.getElementById('profileForm');
       if (profileForm) {
         profileForm.addEventListener('submit', function(e) {
           e.preventDefault();
-          
+         
           // Show success message
           successToast.style.transform = 'translateX(0)';
           setTimeout(() => {
             successToast.style.transform = 'translateX(100%)';
           }, 3000);
-          
+         
           console.log('Settings saved');
         });
       }
-      
+     
       // Load user data from localStorage or backend
       function loadUserData() {
         // In a real app, you would fetch from your backend
         // For now, we'll use localStorage or default data
-        
+       
         const userData = JSON.parse(localStorage.getItem('girlspaceUser')) || {
           firstName: 'Sarah',
           lastName: 'M.',
@@ -1042,31 +1042,31 @@
           location: 'Mahama Refugee Camp',
           image: 'https://via.placeholder.com/160'
         };
-        
+       
         // Update UI
-        document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
+        document.getElementById('userName').textContent = `\( {userData.firstName} \){userData.lastName}`;
         document.getElementById('userBio').textContent = userData.bio;
         document.getElementById('profileImage').src = userData.image;
         document.getElementById('modalProfileImage').src = userData.image;
       }
-      
+     
       loadUserData();
-      
+     
       // Logout functionality
       const logoutBtn = document.getElementById('logoutBtn');
       const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-      
+     
       function logout() {
         localStorage.removeItem('girlspaceUser');
         // In a real app, you would also clear authentication tokens
         window.location.href = './index.html';
       }
-      
+     
       if (logoutBtn) {
         logoutBtn.addEventListener('click', logout);
         logoutBtn.classList.remove('hidden');
       }
-      
+     
       if (mobileLogoutBtn) {
         mobileLogoutBtn.addEventListener('click', logout);
         mobileLogoutBtn.classList.remove('hidden');
@@ -1076,14 +1076,14 @@
   <!-- Add this to your profile.html after your existing scripts -->
 <script type="module">
   import { checkAuthState, setupLogout } from './firebaseauth.js';
-  
+ 
   document.addEventListener('DOMContentLoaded', () => {
     // Check if user is logged in
     checkAuthState();
-    
+   
     // Setup logout functionality
     setupLogout();
-    
+   
     // Redirect to login if not authenticated
     const user = JSON.parse(localStorage.getItem('girlspaceUser'));
     if (!user) {
@@ -1102,76 +1102,76 @@
 <!-- Add this to profile.html, before </body> -->
 <script type="module">
   import { getCurrentUserProfile, updateUserProfile } from './user-profile-service.js';
-  
+ 
   document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Loading user profile...');
-    
+   
     try {
       // Get user profile from Firebase
       const userProfile = await getCurrentUserProfile();
-      
+     
       if (!userProfile) {
         console.log('❌ No profile found, redirecting to login');
         window.location.href = './login.html';
         return;
       }
-      
+     
       console.log('✅ Profile loaded:', userProfile);
-      
+     
       // Update the UI with profile data
       updateProfileUI(userProfile);
-      
+     
       // Setup form submission for profile updates
       setupProfileUpdateForm(userProfile);
-      
+     
       // Load additional user data
       loadUserStatistics(userProfile.uid);
       loadUserStories(userProfile.uid);
       loadUserProgress(userProfile.uid);
-      
+     
     } catch (error) {
       console.error('❌ Error loading profile:', error);
       showError('Failed to load profile. Please try again.');
     }
   });
-  
+ 
   // Function to update UI with profile data
   function updateProfileUI(profile) {
     // Update basic info
     document.getElementById('userName').textContent = profile.fullName || profile.email;
     document.getElementById('userBio').textContent = profile.bio || 'Welcome to GirlsSpace!';
-    
+   
     // Update profile picture
     const profileImage = document.getElementById('profileImage');
     const modalProfileImage = document.getElementById('modalProfileImage');
-    
+   
     if (profile.photoURL) {
       profileImage.src = profile.photoURL;
       if (modalProfileImage) modalProfileImage.src = profile.photoURL;
     }
-    
+   
     // Update location
     const locationElement = document.querySelector('[data-location]');
     if (locationElement) {
       locationElement.textContent = profile.location || 'Mahama Refugee Camp';
     }
-    
+   
     // Update member since date
     const memberSinceElement = document.querySelector('[data-member-since]');
     if (memberSinceElement && profile.createdAt) {
       const date = new Date(profile.createdAt);
       memberSinceElement.textContent = `Member since ${date.getFullYear()}`;
     }
-    
+   
     // Update settings form
     updateSettingsForm(profile);
   }
-  
+ 
   // Function to update settings form
   function updateSettingsForm(profile) {
     const form = document.getElementById('profileForm');
     if (!form) return;
-    
+   
     // Pre-fill form fields
     const firstNameInput = form.querySelector('[name="firstName"]');
     const lastNameInput = form.querySelector('[name="lastName"]');
@@ -1179,45 +1179,45 @@
     const bioTextarea = form.querySelector('[name="bio"]');
     const locationSelect = form.querySelector('[name="location"]');
     const languageSelect = form.querySelector('[name="preferredLanguage"]');
-    
+   
     if (firstNameInput) firstNameInput.value = profile.firstName || '';
     if (lastNameInput) lastNameInput.value = profile.lastName || '';
     if (emailInput) emailInput.value = profile.email || '';
     if (bioTextarea) bioTextarea.value = profile.bio || '';
     if (locationSelect) locationSelect.value = profile.location || 'mahama';
     if (languageSelect) languageSelect.value = profile.preferredLanguage || 'en';
-    
+   
     // Handle form submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+     
       try {
         const updatedData = {
           firstName: firstNameInput.value,
           lastName: lastNameInput.value,
-          fullName: `${firstNameInput.value} ${lastNameInput.value}`.trim(),
+          fullName: `\( {firstNameInput.value} \){lastNameInput.value}`.trim(),
           bio: bioTextarea.value,
           location: locationSelect.value,
           preferredLanguage: languageSelect.value,
           updatedAt: new Date().toISOString()
         };
-        
+       
         console.log('📝 Updating profile with:', updatedData);
-        
+       
         const updatedProfile = await updateUserProfile(updatedData);
-        
+       
         // Update UI
         updateProfileUI(updatedProfile);
-        
+       
         showSuccessMessage('Profile updated successfully!');
-        
+       
       } catch (error) {
         console.error('Error updating profile:', error);
         showError('Failed to update profile. Please try again.');
       }
     });
   }
-  
+ 
   // Function to load user statistics
   async function loadUserStatistics(userId) {
     try {
@@ -1229,38 +1229,38 @@
         programsCompleted: 8,
         badgesEarned: 5
       };
-      
+     
       // Update UI with statistics
       document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl').textContent = stats.storiesCount;
       document.querySelector('.bg-white\\/5:nth-child(2) .text-2xl').textContent = stats.chatMessagesCount;
       document.querySelector('.bg-white\\/5:nth-child(3) .text-2xl').textContent = stats.programsCompleted;
       document.querySelector('.bg-white\\/5:nth-child(4) .text-2xl').textContent = stats.badgesEarned;
-      
+     
     } catch (error) {
       console.error('Error loading statistics:', error);
     }
   }
-  
+ 
   // Function to load user stories
   async function loadUserStories(userId) {
     try {
       // You would query your stories collection here
       // const stories = await getUserStories(userId);
-      
+     
       // For now, we'll use placeholder
       console.log('Loading stories for user:', userId);
-      
+     
     } catch (error) {
       console.error('Error loading stories:', error);
     }
   }
-  
+ 
   // Function to load user progress
   async function loadUserProgress(userId) {
     try {
       // You would query your userProgress collection here
       // const progress = await getUserProgress(userId);
-      
+     
       // For now, we'll use placeholder data
       const progress = {
         englishLanguage: 75,
@@ -1268,15 +1268,15 @@
         gbvPrevention: 60,
         digitalSkills: 45
       };
-      
+     
       // Update progress bars
       updateProgressBars(progress);
-      
+     
     } catch (error) {
       console.error('Error loading progress:', error);
     }
   }
-  
+ 
   // Function to update progress bars
   function updateProgressBars(progress) {
     Object.keys(progress).forEach(key => {
@@ -1287,7 +1287,7 @@
       }
     });
   }
-  
+ 
   // Utility functions
   function showSuccessMessage(message) {
     const toast = document.getElementById('successToast');
@@ -1299,9 +1299,446 @@
       }, 3000);
     }
   }
-  
+ 
   function showError(message) {
     alert(message); // You can replace this with a better error display
+  }
+</script>
+<!-- ربط عدد القصص في الداشبورد مع Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // العنصر اللي فيه عدد القصص في الداشبورد
+  const storiesCountElement = document.querySelector('.bg-white\\/5 .text-2xl.text-primary');
+
+  // لما يتغير حالة اللوجن
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // جلب عدد القصص الخاصة بالمستخدمة في الوقت الفعلي
+      const q = query(
+        collection(db, "stories"),
+        where("authorId", "==", user.uid)
+        // لو عايزة تشملي القصص المعلقة (pending) كمان:
+        // where("authorId", "==", user.uid)
+      );
+
+      // Real-time listener → كل ما تتضاف أو تتمسح قصة → يتحدث الرقم فورًا
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const count = snapshot.size; // عدد الوثائق = عدد القصص
+
+        if (storiesCountElement) {
+          storiesCountElement.textContent = count;
+         
+          // اختياري: لو مفيش قصص → نكتب "0"
+          if (count === 0) {
+            storiesCountElement.textContent = "0";
+          }
+        }
+
+        console.log(`عدد قصص المستخدمة: ${count}`);
+      });
+
+      // تنظيف الـ listener لما يطلع من الصفحة (مهم جدًا)
+      window.addEventListener('beforeunload', () => unsubscribe());
+
+    } else {
+      // لو مش مسجلة دخول → 0 قصة
+      if (storiesCountElement) {
+        storiesCountElement.textContent = "0";
+      }
+    }
+  });
+</script>
+<!-- 2. إظهار آخر قصة في Recent Activity -->
+<script type="module">
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const auth = getAuth();
+  const db = getFirestore();
+  const recentList = document.querySelector('#overview-tab .space-y-4');
+
+  function getTimeAgo(date) {
+    const diff = Date.now() - date.getTime();
+    const m = Math.floor(diff / 60000);
+    const h = Math.floor(m / 60);
+    if (m < 60) return `${m}m ago`;
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h/24)}d ago`;
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user || !recentList) return;
+
+    const q = query(
+      collection(db, "stories"),
+      where("authorId", "==", user.uid),
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+
+    onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === "added") {
+          const s = change.doc.data();
+          const item = document.createElement('div');
+          item.className = 'flex items-center gap-4 p-4 bg-white/5 rounded-xl';
+          item.innerHTML = `
+            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <i class="fas fa-pen text-primary"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">Posted a new story</p>
+              <p class="text-sm text-gray-400">"${s.title}"</p>
+            </div>
+            <span class="text-sm text-gray-400">${getTimeAgo(s.createdAt.toDate())}</span>
+          `;
+          recentList.insertBefore(item, recentList.firstChild);
+        }
+      });
+    });
+  });
+</script>
+<!-- حذف القصص من الداشبورد + عرض القصص الخاصة بالمستخدمة -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    onSnapshot,
+    doc,
+    deleteDoc
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // العناصر في الداشبورد
+  const storiesCountElement = document.querySelector('.bg-white\\/5 .text-2xl.text-primary');
+  const myStoriesContainer = document.getElementById('my-stories-container') ||
+    document.querySelector('#stories-tab .grid') ||
+    document.querySelector('#overview-tab .story-card')?.parentElement;
+
+  // إنشاء قسم "My Stories" في تبويب Overview لو مش موجود
+  let container = document.getElementById('my-stories-list');
+  if (!container) {
+    // نضيفه تحت Recent Activity أو في تبويب Stories
+    const overviewTab = document.getElementById('overview-tab');
+    if (overviewTab) {
+      const existingSection = overviewTab.querySelector('.bg-gradient-to-br');
+      const newSection = document.createElement('div');
+      newSection.className = 'bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800';
+      newSection.innerHTML = `
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          My Stories
+          <span class="ml-auto text-primary text-lg font-normal" id="my-stories-count">0</span>
+        </h2>
+        <div id="my-stories-list" class="space-y-4"></div>
+        <div id="no-my-stories" class="text-center py-8 text-gray-400 hidden">
+          You haven't shared any stories yet.
+          <a href="./stories.html" class="text-primary block mt-2">Write your first story →</a>
+        </div>
+      `;
+      // نضيفه بعد Recent Activity
+      const recentActivitySection.after(newSection);
+    }
+  }
+
+  const recentActivitySection = document.querySelector('.bg-gradient-to-br.from-gray-900');
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      if (storiesCountElement) storiesCountElement.textContent = "0";
+      return;
+    }
+
+    const userId = user.uid;
+
+    // 1. تحديث عدد القصص
+    const storiesQuery = query(
+      collection(db, "stories"),
+      where("authorId", "==", userId)
+    );
+
+    const unsubscribeCount = onSnapshot(storiesQuery, (snapshot) => {
+      const count = snapshot.size;
+      if (storiesCountElement) {
+        storiesCountElement.textContent = count;
+      }
+      document.getElementById('my-stories-count')?.textContent = count;
+    });
+
+    // 2. عرض قصص المستخدمة مع زر حذف
+    const unsubscribeStories = onSnapshot(storiesQuery, (snapshot) => {
+      const list = document.getElementById('my-stories-list');
+      const noStoriesMsg = document.getElementById('no-my-stories');
+
+      if (!list) return;
+
+      list.innerHTML = '';
+
+      if (snapshot.empty) {
+        noStoriesMsg?.classList.remove('hidden');
+        return;
+      }
+
+      noStoriesMsg?.classList.add('hidden');
+
+      snapshot.forEach((docSnap) => {
+        const story = docSnap.data();
+        const storyId = docSnap.id;
+
+        const storyCard = document.createElement('div');
+        storyCard.className = 'bg-white/5 rounded-xl p-4 flex justify-between items-start hover:bg-white/10 transition-all';
+
+        const statusBadge = story.status === 'pending'
+          ? '<span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Pending</span>'
+          : '<span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Published</span>';
+
+        storyCard.innerHTML = `
+          <div class="flex-1">
+            <h4 class="font-semibold text-lg">${escapeHtml(story.title || 'Untitled')}</h4>
+            <p class="text-sm text-gray-400 mt-1">
+              \( {new Date(story.createdAt?.toDate()).toLocaleDateString()} • \){story.category || 'General'}
+            </p>
+            <p class="text-gray-300 mt-2 line-clamp-2">
+              ${escapeHtml(story.story_content?.substring(0, 100) || '')}...
+            </p>
+            <div class="mt-3">${statusBadge}</div>
+          </div>
+          <button onclick="deleteUserStory('${storyId}', this)"
+                  class="ml-4 px-4 py-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/40 transition-colors text-sm font-medium">
+            Delete
+          </button>
+        `;
+
+        list.appendChild(storyCard);
+      });
+    });
+
+    // دالة الحذف (متاحة عالميًا)
+    window.deleteUserStory = async (storyId, buttonElement) => {
+      if (!confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
+        return;
+      }
+
+      try {
+        buttonElement.disabled = true;
+        buttonElement.textContent = "Deleting...";
+
+        await deleteDoc(doc(db, "stories", storyId));
+
+        // الـ UI هيتحدث تلقائيًا بسبب onSnapshot
+        showSuccessToast("Story deleted successfully");
+
+      } catch (error) {
+        console.error("Error deleting story:", error);
+        alert("Failed to delete story. Please try again.");
+        buttonElement.disabled = false;
+        buttonElement.textContent = "Delete";
+      }
+    };
+
+    function showSuccessToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-20 right-4 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 transform translate-x-full transition-transform';
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+
+      setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+      setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => document.body.removeChild(toast), 400);
+      }, 3000);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  });
+</script>
+
+<!-- ربط الاسم + الصورة + البيو + المكان مع Firebase (تحديث + عرض) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+  import {
+    getStorage, ref, uploadBytes, getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  const userNameEl = document.getElementById('userName');
+  const userBioEl = document.getElementById('userBio');
+  const profileImageEl = document.getElementById('profileImage');
+  const modalImageEl = document.getElementById('modalProfileImage');
+
+  // تحميل بيانات المستخدم من Firebase
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      {
+      window.location.href = "./login.html";
+      return;
+    }
+
+    const userRef = doc(db, "users", user.uid);
+
+    // نجيب البيانات في الوقت الفعلي
+    onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        userNameEl.textContent = data.displayName || user.email.split('@')[0];
+        userBioEl.textContent = data.bio || "Welcome to GirlsSpace!";
+        if (data.photoURL) {
+          profileImageEl.src = data.photoURL;
+          modalImageEl.src = data.photoURL;
+        }
+      } else {
+        // لو أول مرة → نعمل بروفايل افتراضي
+        setDoc(userRef, {
+          displayName: user.displayName || user.email.split('@')[0],
+          photoURL: user.photoURL || "https://via.placeholder.com/160",
+          bio: "مرحبًا! أنا عضوة جديدة في GirlsSpace",
+          location: "Mahama Refugee Camp",
+          createdAt: serverTimestamp()
+        });
+      }
+    });
+  });
+
+  // تعديل الصورة
+  document.getElementById('editPictureBtn')?.addEventListener('click', () => {
+    document.getElementById('imageUpload').click();
+  });
+
+  document.getElementById('imageUpload')?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file || !auth.currentUser) return;
+
+    const user = auth.currentUser;
+    const storageRef = ref(storage, `profilePictures/${user.uid}`);
+
+    try {
+      // رفع الصورة
+      await uploadBytes(storageRef, file);
+      const photoURL = await getDownloadURL(storageRef);
+
+      // حفظ الرابط في Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        photoURL: photoURL,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      // تحديث الصورة فورًا
+      profileImageEl.src = photoURL;
+      modalImageEl.src = photoURL;
+
+      showToast("تم تحديث الصورة بنجاح!");
+    } catch (error) {
+      showToast("فشل رفع الصورة", "error");
+    }
+  });
+
+  // تعديل الاسم والبيو من المودال
+  document.getElementById('editProfileForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const firstName = document.getElementById('editFirstName').value.trim();
+    const lastName = document.getElementById('editLastName').value.trim();
+    const bio = document.getElementById('editBio').value.trim();
+
+    if (!firstName) return alert("الاسم مطلوب");
+
+    try {
+      await setDoc(doc(db, "users", user.uid), {
+        displayName: `\( {firstName} \){lastName}`.trim(),
+        bio: bio || "لا يوجد وصف",
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      // تحديث الواجهة فورًا
+      userNameEl.textContent = `\( {firstName} \){lastName}`;
+      userBioEl.textContent = bio || "لا يوجد وصف";
+
+      document.getElementById('editProfileModal').classList.add('hidden');
+      showToast("تم حفظ التغييرات بنجاح!");
+    } catch (error) {
+      showToast("خطأ في الحفظ", "error");
+    }
+  });
+
+  // فتح المودال وملء الحقول
+  document.getElementById('editProfileBtn')?.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const docSnap = await getDoc(doc(db, "users", user.uid));
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const nameParts = (data.displayName || "").split(" ");
+      document.getElementById('editFirstName').value = nameParts[0] || "";
+      document.getElementById('editLastName').value = nameParts.slice(1).join(" ") || "";
+      document.getElementById('editBio').value = data.bio || "";
+    }
+    document.getElementById('editProfileModal').classList.remove('hidden');
+  });
+
+  function showToast(msg, type = 'success') {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-xl text-white font-bold shadow-lg ${type==='success'?'bg-green-600':'bg-red-600'}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
   }
 </script>
 </body>
