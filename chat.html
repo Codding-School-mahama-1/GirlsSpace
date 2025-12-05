@@ -1,1243 +1,2273 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Let's Chat | Connect with fellow entrepreneurs</title>
- <!-- Tailwind CSS -->
- <script src="https://cdn.tailwindcss.com"></script>
- <!-- Firebase SDKs -->
- <script type="module">
- import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
- import {
- getAuth,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- signOut,
- onAuthStateChanged
- } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
- import {
- getFirestore,
- collection,
- addDoc,
- query,
- orderBy,
- onSnapshot,
- serverTimestamp,
- limit
- } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
- // Your Firebase configuration
- const firebaseConfig = {
- apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
- authDomain: "sigin-b3aa1.firebaseapp.com",
- projectId: "sigin-b3aa1",
- storageBucket: "sigin-b3aa1.firebasestorage.app",
- messagingSenderId: "390069352394",
- appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
- measurementId: "G-WF0H2KJN02"
- };
-
- // Initialize Firebase
- const app = initializeApp(firebaseConfig);
- const auth = getAuth(app);
- const db = getFirestore(app);
-
- // Make Firebase available globally
- window.firebase = {
- auth,
- db,
- collection,
- addDoc,
- query,
- orderBy,
- onSnapshot,
- serverTimestamp,
- limit,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- signOut,
- onAuthStateChanged
- };
- </script>
-</head>
-
-<body class="bg-gray-50 font-sans">
- <div class="flex h-screen">
- <!-- Left Sidebar -->
- <div class="w-64 bg-gradient-to-b from-[#ef71f3] to-[#380712] text-white flex flex-col">
- <!-- Logo and Title -->
- <div class="p-6 border-b border-gray-800">
- <h1 class="text-xl font-bold">Let's Chat</h1>
- <p class="text-gray-400 text-sm mt-1">Connect with fellow entrepreneurs</p>
- </div>
-
- <!-- User Status -->
- <div class="p-6 border-b border-gray-800">
- <div class="flex items-center space-x-3">
- <div class="relative">
- <div class="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center text-white font-semibold text-sm">G</div>
- <div class="w-2 h-2 bg-black rounded-full absolute bottom-0 right-0 border-2 border-white"></div>
- </div>
- <div>
- <p class="font-medium">Guest User</p>
- <p class="text-gray-400 text-sm">Join to chat</p>
- <p class="text-gray-500 text-xs">Offline</p>
- </div>
- </div>
- </div>
-
- <!-- Channels List -->
- <div class="p-6 flex-grow">
- <h3 class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-4">Channels</h3>
- <div class="space-y-2">
- <div class="p-2 bg-[rgba(241,99,229,0.1)] border-l-3 border-[#e95151] rounded-l hover:bg-[rgba(58,3,75,0.05)] transition-all duration-200">
- <div class="flex items-center">
- <span class="text-gray-400 mr-2">#</span>
- <span>People</span>
- </div>
- </div>
- </div>
-
- <h3 class="text-gray-400 text-xs font-semibold uppercase tracking-wider mt-6 mb-4">Discussion Channels
- </h3>
- <div class="space-y-3">
- <div class="p-3 hover:bg-[rgba(58,3,75,0.05)] rounded-lg transition-all duration-200">
- <div class="flex items-center justify-between">
- <div class="flex items-center">
- <span class="text-gray-400 mr-2">#</span>
- <span>Ideas & Brainstorming</span>
- </div>
- <span class="text-gray-500 text-xs">Loading...</span>
- </div>
- </div>
- <div class="p-3 hover:bg-[rgba(58,3,75,0.05)] rounded-lg transition-all duration-200">
- <div class="flex items-center justify-between">
- <div class="flex items-center">
- <span class="text-gray-400 mr-2">#</span>
- <span>Q&A Support</span>
- </div>
- <span class="text-gray-500 text-xs">Loading...</span>
- </div>
- </div>
- <div class="p-3 hover:bg-[rgba(58,3,75,0.05)] rounded-lg transition-all duration-200">
- <div class="flex items-center justify-between">
- <div class="flex items-center">
- <span class="text-gray-400 mr-2">#</span>
- <span>Partnerships</span>
- </div>
- <span class="text-gray-500 text-xs">Loading...</span>
- </div>
- </div>
- </div>
- </div>
-
- <!-- Auth Status -->
- <div id="authStatusSidebar" class="p-6 border-t border-gray-800 hidden">
- <div class="text-center">
- <p class="text-sm text-gray-300"></p>
- </div>
- </div>
- </div>
-
- <!-- Main Chat Area -->
- <div class="flex-1 flex flex-col">
- <!-- Chat Header -->
- <div class="bg-white border-b border-gray-200 p-4">
- <div class="flex items-center justify-between">
- <div class="flex items-center space-x-4">
- <div class="flex items-center">
- <span class="text-2xl mr-2">💬</span>
- <h2 class="text-lg font-semibold">Ideas & Brainstorming</h2>
- </div>
- <span class="text-gray-500 text-sm">Share and discuss business ideas</span>
- </div>
- <div id="userInfo" class="hidden">
- <div class="flex items-center space-x-3">
- <div class="relative">
- <div class="w-9 h-9 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-semibold" id="userInitial">U</div>
- <div class="w-2 h-2 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-[rgb(94,230,101)]" id="userStatusIndicator"></div>
- </div>
- <div>
- <p class="font-medium text-sm" id="userEmail">user@example.com</p>
- <button id="signOutBtn" class="text-xs text-red-500 hover:text-red-700">Sign
- Out</button>
- </div>
- </div>
- </div>
- </div>
- </div>
-
- <!-- Messages Container -->
- <div id="messagesContainer" class="flex-grow p-6 overflow-y-auto bg-gray-50 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
- <div id="noMessages" class="text-center py-12">
- <div class="max-w-md mx-auto">
- <div class="text-5xl mb-4">💡</div>
- <h3 class="text-xl font-semibold text-gray-700 mb-2">Welcome to Ideas & Brainstorming!</h3>
- <p class="text-gray-500 mb-6">Share your business ideas, get feedback, and collaborate with
- fellow entrepreneurs.</p>
- <div id="authPrompt" class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
- <p class="text-gray-700 mb-4">Sign in to join the conversation!</p>
- <div class="space-y-4">
- <input type="email" id="loginEmail" placeholder="Email address"
- class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
- <input type="password" id="loginPassword" placeholder="Password"
- class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
- <div class="flex space-x-3">
- <button id="signInBtn"
- class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
- Sign In
- </button>
- <button id="showRegisterBtn"
- class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
- Register
- </button>
- </div>
- <p class="text-xs text-gray-500 text-center">By signing in, you agree to our community
- guidelines</p>
- </div>
- </div>
-
- <!-- Register Form (Hidden) -->
- <div id="registerForm"
- class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mt-4 hidden">
- <p class="text-gray-700 mb-4">Create your account</p>
- <div class="space-y-4">
- <input type="email" id="registerEmail" placeholder="Email address"
- class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
- <input type="password" id="registerPassword" placeholder="Password (min. 6 characters)"
- class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
- <input type="password" id="confirmPassword" placeholder="Confirm password"
- class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
- <div class="flex space-x-3">
- <button id="registerBtn"
- class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
- Create Account
- </button>
- <button id="showLoginBtn"
- class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-200">
- Back to Login
- </button>
- </div>
- </div>
- </div>
-
- <!-- Status Messages -->
- <div id="authStatus" class="mt-4 p-4 rounded-lg hidden"></div>
- </div>
- </div>
- <!-- Messages will be inserted here -->
- </div>
-
- <!-- Message Input -->
- <div class="bg-white border-t border-gray-200 p-4">
- <div id="messageInputContainer" class="max-w-3xl mx-auto">
- <div class="flex items-center space-x-3">
- <div class="flex-grow relative">
- <input type="text" id="messageInput"
- class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-24"
- placeholder="Sign in to send messages..." disabled>
- <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
- <span class="text-gray-400 text-sm">Press Enter to send</span>
- </div>
- </div>
- <button id="sendMessageBtn"
- class="bg-pink-600 hover:bg-pink-400 text-white font-medium py-3 px-6 rounded-lg transition duration-200 flex items-center"
- disabled>
- <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
- fill="currentColor">
- <path fill-rule="evenodd"
- d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
- clip-rule="evenodd" />
- </svg>
- Send
- </button>
- </div>
- </div>
- </div>
- </div>
- </div>
-
- <!-- JavaScript for the chat application -->
- <script>
- // DOM Elements
- const messagesContainer = document.getElementById('messagesContainer');
- const noMessages = document.getElementById('noMessages');
- const authPrompt = document.getElementById('authPrompt');
- const messageInput = document.getElementById('messageInput');
- const sendMessageBtn = document.getElementById('sendMessageBtn');
- const messageInputContainer = document.getElementById('messageInputContainer');
- const userInfo = document.getElementById('userInfo');
- const userEmail = document.getElementById('userEmail');
- const userInitial = document.getElementById('userInitial');
- const userStatusIndicator = document.getElementById('userStatusIndicator');
- const signOutBtn = document.getElementById('signOutBtn');
- const authStatusSidebar = document.getElementById('authStatusSidebar');
-
- // Auth form elements
- const loginEmail = document.getElementById('loginEmail');
- const loginPassword = document.getElementById('loginPassword');
- const registerEmail = document.getElementById('registerEmail');
- const registerPassword = document.getElementById('registerPassword');
- const confirmPassword = document.getElementById('confirmPassword');
- const signInBtn = document.getElementById('signInBtn');
- const registerBtn = document.getElementById('registerBtn');
- const showRegisterBtn = document.getElementById('showRegisterBtn');
- const showLoginBtn = document.getElementById('showLoginBtn');
- const registerForm = document.getElementById('registerForm');
- const authStatus = document.getElementById('authStatus');
-
- // Firestore references
- let messagesCollection;
- let unsubscribeMessages;
- let currentUser = null;
-
- // Initialize the app when Firebase is loaded
- document.addEventListener('DOMContentLoaded', () => {
- // Check if Firebase is loaded
- if (!window.firebase) {
- showAuthStatus('Firebase initialization failed. Please check your configuration.', 'error');
- return;
- }
-
- // Set up Firebase auth state observer
- window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
- if (user) {
- // User is signed in
- currentUser = user;
- showChatInterface(user);
- loadMessages();
- } else {
- // User is signed out
- showAuthInterface();
- }
- });
-
- // Set up event listeners
- setupEventListeners();
- });
-
- function setupEventListeners() {
- // Auth form toggling
- showRegisterBtn.addEventListener('click', (e) => {
- e.preventDefault();
- authPrompt.classList.add('hidden');
- registerForm.classList.remove('hidden');
- clearAuthStatus();
- });
-
- showLoginBtn.addEventListener('click', (e) => {
- e.preventDefault();
- registerForm.classList.add('hidden');
- authPrompt.classList.remove('hidden');
- clearAuthStatus();
- });
-
- // Sign in
- signInBtn.addEventListener('click', signIn);
- loginEmail.addEventListener('keypress', (e) => {
- if (e.key === 'Enter') signIn();
- });
- loginPassword.addEventListener('keypress', (e) => {
- if (e.key === 'Enter') signIn();
- });
-
- // Register
- registerBtn.addEventListener('click', register);
- registerEmail.addEventListener('keypress', (e) => {
- if (e.key === 'Enter') register();
- });
- registerPassword.addEventListener('keypress', (e) => {
- if (e.key === 'Enter') register();
- });
- confirmPassword.addEventListener('keypress', (e) => {
- if (e.key === 'Enter') register();
- });
-
- // Sign out
- signOutBtn.addEventListener('click', signOutUser);
-
- // Chat functionality
- sendMessageBtn.addEventListener('click', sendMessage);
- messageInput.addEventListener('keypress', (e) => {
- if (e.key === 'Enter' && !e.shiftKey) {
- e.preventDefault();
- sendMessage();
- }
- });
- }
-
- function signIn() {
- const email = loginEmail.value;
- const password = loginPassword.value;
-
- if (!email || !password) {
- showAuthStatus('Please enter both email and password.', 'error');
- return;
- }
-
- showAuthStatus('Signing in...', 'loading');
-
- window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password)
- .then((userCredential) => {
- // Signed in successfully
- clearAuthForm();
- showAuthStatus('Welcome back!', 'success');
- })
- .catch((error) => {
- const errorMessage = getFirebaseErrorMessage(error.code);
- showAuthStatus(errorMessage, 'error');
- });
- }
-
- function register() {
- const email = registerEmail.value;
- const password = registerPassword.value;
- const confirm = confirmPassword.value;
-
- if (!email || !password || !confirm) {
- showAuthStatus('Please fill in all fields.', 'error');
- return;
- }
-
- if (password.length < 6) {
- showAuthStatus('Password must be at least 6 characters long.', 'error');
- return;
- }
-
- if (password !== confirm) {
- showAuthStatus('Passwords do not match.', 'error');
- return;
- }
-
- showAuthStatus('Creating your account...', 'loading');
-
- window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password)
- .then((userCredential) => {
- // Account created successfully
- clearAuthForm();
- showAuthStatus('Account created successfully!', 'success');
- })
- .catch((error) => {
- const errorMessage = getFirebaseErrorMessage(error.code);
- showAuthStatus(errorMessage, 'error');
- });
- }
-
- function signOutUser() {
- // Unsubscribe from Firestore updates
- if (unsubscribeMessages) {
- unsubscribeMessages();
- }
-
- window.firebase.signOut(window.firebase.auth)
- .then(() => {
- // Sign-out successful
- showAuthStatus('You have been signed out.', 'info');
- })
- .catch((error) => {
- showAuthStatus('Error signing out. Please try again.', 'error');
- });
- }
-
- function showAuthInterface() {
- // Show auth interface
- noMessages.classList.remove('hidden');
- authPrompt.classList.remove('hidden');
- registerForm.classList.add('hidden');
- userInfo.classList.add('hidden');
-
- // Disable message input
- messageInput.disabled = true;
- messageInput.placeholder = "Sign in to send messages...";
- sendMessageBtn.disabled = true;
-
- // Clear messages
- const existingMessages = messagesContainer.querySelectorAll('.message');
- existingMessages.forEach(msg => msg.remove());
-
- // Show sidebar status
- authStatusSidebar.classList.remove('hidden');
- const statusText = authStatusSidebar.querySelector('p');
- statusText.textContent = "Sign in to join the conversation";
- statusText.className = "text-sm text-gray-300";
- }
-
- function showChatInterface(user) {
- // Hide auth interface
- noMessages.classList.add('hidden');
- authPrompt.classList.add('hidden');
- registerForm.classList.add('hidden');
- userInfo.classList.remove('hidden');
-
- // Update user info
- const email = user.email;
- const initial = email.charAt(0).toUpperCase();
-
- userEmail.textContent = email;
- userInitial.textContent = initial;
- userInitial.className = "w-9 h-9 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-semibold";
- userStatusIndicator.className = "w-2 h-2 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-[rgb(94,230,101)]";
-
- // Enable message input
- messageInput.disabled = false;
- messageInput.placeholder = "Message #ideas-and-brainstorming";
- sendMessageBtn.disabled = false;
- messageInput.focus();
-
- // Update sidebar status
- authStatusSidebar.classList.remove('hidden');
- const statusText = authStatusSidebar.querySelector('p');
- statusText.textContent = `Connected as ${email}`;
- statusText.className = "text-sm text-green-400";
-
- // Set up Firestore collection reference
- messagesCollection = window.firebase.collection(window.firebase.db, 'messages');
- }
-
- function loadMessages() {
- // Clear existing messages
- const existingMessages = messagesContainer.querySelectorAll('.message');
- existingMessages.forEach(msg => msg.remove());
-
- // Create a query to get messages ordered by timestamp
- const messagesQuery = window.firebase.query(
- messagesCollection,
- window.firebase.orderBy('timestamp', 'asc'),
- window.firebase.limit(100)
- );
-
- // Listen for real-time updates
- unsubscribeMessages = window.firebase.onSnapshot(messagesQuery, (snapshot) => {
- // Clear existing messages
- const existingMessages = messagesContainer.querySelectorAll('.message');
- existingMessages.forEach(msg => msg.remove());
-
- // Process messages
- snapshot.forEach((doc) => {
- const message = doc.data();
- message.id = doc.id;
- displayMessage(message);
- });
-
- // Scroll to the latest message
- setTimeout(() => {
- messagesContainer.scrollTop = messagesContainer.scrollHeight;
- }, 100);
- }, (error) => {
- console.error('Error loading messages:', error);
- showChatStatus('Error loading messages. Please refresh the page.', 'error');
- });
- }
-
- function displayMessage(message) {
- const messageDiv = document.createElement('div');
- messageDiv.className = 'message animate-fadeIn mb-4';
-
- // Check if this message is from the current user
- const isCurrentUser = currentUser && message.userId === currentUser.uid;
-
- // Format the timestamp
- let timestamp = 'Just now';
- if (message.timestamp) {
- const date = message.timestamp.toDate ? message.timestamp.toDate() : new Date(message.timestamp);
- timestamp = date.toLocaleTimeString([], {
- hour: '2-digit',
- minute: '2-digit'
- });
- }
-
- // Create message HTML
- messageDiv.innerHTML = `
- <div class="flex ${isCurrentUser ? 'justify-end' : 'justify-start'}">
- ${!isCurrentUser ? `
- <div class="flex-shrink-0 mr-3">
- <div class="relative">
- <div class="w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center text-sm font-semibold">
- ${message.userInitial || 'U'}
- </div>
- <div class="w-2 h-2 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-[rgb(94,230,101)]"></div>
- </div>
- </div>
- ` : ''}
- 
- <div class="flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}">
- <div class="flex items-center mb-1">
- ${!isCurrentUser ? `
- <span class="font-medium text-sm text-gray-700 mr-2">${message.userEmail || 'User'}</span>
- ` : ''}
- <span class="text-xs text-gray-500">${timestamp}</span>
- </div>
- 
- <div class="max-w-[80%] rounded-[18px] px-4 py-3 ${isCurrentUser ? 'bg-[#db38fc] text-white ml-auto rounded-br-[4px]' : 'bg-[#d7c1eb] text-[#281e29] mr-auto rounded-bl-[4px]'}">
- ${escapeHtml(message.text)}
- </div>
- </div>
- 
- ${isCurrentUser ? `
- <div class="flex-shrink-0 ml-3">
- <div class="relative">
- <div class="w-9 h-9 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-semibold">
- ${message.userInitial || 'U'}
- </div>
- <div class="w-2 h-2 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-[rgb(94,230,101)]"></div>
- </div>
- </div>
- ` : ''}
- </div>
- `;
-
- messagesContainer.appendChild(messageDiv);
- }
-
- function sendMessage() {
- const text = messageInput.value.trim();
-
- if (!text || !currentUser) return;
-
- // Show sending indicator
- const originalText = sendMessageBtn.innerHTML;
- sendMessageBtn.innerHTML = `
- <svg class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
- <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
- <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
- </svg>
- Sending...
- `;
- sendMessageBtn.disabled = true;
-
- // Create message object
- const message = {
- text: text,
- userId: currentUser.uid,
- userEmail: currentUser.email,
- userInitial: currentUser.email.charAt(0).toUpperCase(),
- timestamp: window.firebase.serverTimestamp()
- };
-
- // Add message to Firestore
- window.firebase.addDoc(messagesCollection, message)
- .then((docRef) => {
- // Clear input field
- messageInput.value = '';
- messageInput.focus();
-
- // Restore send button
- sendMessageBtn.innerHTML = originalText;
- sendMessageBtn.disabled = false;
- })
- .catch((error) => {
- console.error('Error sending message:', error);
- showChatStatus('Failed to send message. Please try again.', 'error');
-
- // Restore send button
- sendMessageBtn.innerHTML = originalText;
- sendMessageBtn.disabled = false;
- });
- }
-
- function showAuthStatus(message, type) {
- authStatus.textContent = message;
- authStatus.classList.remove('hidden');
-
- // Set color based on type
- authStatus.className = 'mt-4 p-4 rounded-lg';
- if (type === 'success') {
- authStatus.classList.add('bg-green-100', 'text-green-800', 'border', 'border-green-200');
- } else if (type === 'error') {
- authStatus.classList.add('bg-red-100', 'text-red-800', 'border', 'border-red-200');
- } else if (type === 'loading') {
- authStatus.classList.add('bg-blue-100', 'text-blue-800', 'border', 'border-blue-200');
- } else {
- authStatus.classList.add('bg-gray-100', 'text-gray-800', 'border', 'border-gray-200');
- }
-
- // Auto-hide success messages after 3 seconds
- if (type === 'success') {
- setTimeout(() => {
- authStatus.classList.add('hidden');
- }, 3000);
- }
- }
-
- function showChatStatus(message, type) {
- // Create a temporary status message
- const statusDiv = document.createElement('div');
- statusDiv.className = 'text-center py-2 animate-fadeIn';
-
- if (type === 'error') {
- statusDiv.classList.add('text-red-600', 'bg-red-50', 'rounded-lg');
- } else {
- statusDiv.classList.add('text-blue-600', 'bg-blue-50', 'rounded-lg');
- }
-
- statusDiv.textContent = message;
- messagesContainer.appendChild(statusDiv);
-
- // Auto-hide after 3 seconds
- setTimeout(() => {
- statusDiv.remove();
- }, 3000);
- }
-
- function clearAuthStatus() {
- authStatus.classList.add('hidden');
- }
-
- function clearAuthForm() {
- loginEmail.value = '';
- loginPassword.value = '';
- registerEmail.value = '';
- registerPassword.value = '';
- confirmPassword.value = '';
- }
-
- function getFirebaseErrorMessage(errorCode) {
- switch (errorCode) {
- case 'auth/invalid-email':
- return 'Invalid email address.';
- case 'auth/user-disabled':
- return 'This account has been disabled.';
- case 'auth/user-not-found':
- return 'No account found with this email.';
- case 'auth/wrong-password':
- return 'Incorrect password.';
- case 'auth/email-already-in-use':
- return 'This email is already registered.';
- case 'auth/weak-password':
- return 'Password is too weak.';
- case 'auth/operation-not-allowed':
- return 'Email/password accounts are not enabled.';
- case 'auth/too-many-requests':
- return 'Too many failed attempts. Please try again later.';
- default:
- return 'An error occurred. Please try again.';
- }
- }
-
-<<<<<<< HEAD
- function escapeHtml(text) {
- const div = document.createElement('div');
- div.textContent = text;
- return div.innerHTML;
- }
- </script>
-
- <!-- Custom animations for Tailwind -->
- <style>
- @keyframes fadeIn {
- from {
- opacity: 0;
- transform: translateY(10px);
- }
- to {
- opacity: 1;
- transform: translateY(0);
- }
- }
- .animate-fadeIn {
- animation: fadeIn 0.3s ease-in;
- }
- </style>
-=======
-        // Function to change language
-        function changeLanguage(lang) {
-            currentLang = lang;
-            
-            // Update all elements with data-translate attribute
-            const translatableElements = document.querySelectorAll('[data-translate]');
-            translatableElements.forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang] && translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                    
-                    // Update placeholder for search input
-                    if (element.tagName === 'INPUT' && element.getAttribute('placeholder')) {
-                        element.setAttribute('placeholder', translations[lang][key]);
-                    }
-                }
-            });
-            
-            // Update the language dropdown text
-            const languageLink = document.querySelector('#language-dropdown > a');
-            if (languageLink && translations[lang] && translations[lang]['languages']) {
-                languageLink.textContent = translations[lang]['languages'];
-            }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat Room - Girls Space</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-    </script>
-     <!-- Import Firebase and Chat Service -->
-    <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { chatService } from './firebase-chat-service.js';
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        .message { animation: fadeIn 0.3s ease; }
+        body { background: radial-gradient(circle, #be185d, #e9ecef 95%); transition: background 0.5s ease; }
+        .messages { background-image: url(./imge/hp1.png); background-size: cover; background-position: center; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+        
+        /* Audio recording styles */
+        .audio-recording { animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Theme colors */
+        .theme-pink { --primary-color: #ec4899; --secondary-color: #f472b6; }
+        .theme-blue { --primary-color: #3b82f6; --secondary-color: #60a5fa; }
+        .theme-purple { --primary-color: #8b5cf6; --secondary-color: #a78bfa; }
+        .theme-green { --primary-color: #10b981; --secondary-color: #34d399; }
+        
+        /* Video call styles */
+        .video-call-active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .video-call-container { backdrop-filter: blur(10px); }
+        
+        /* Language translation styles */
+        .translation-active { border: 2px solid #3b82f6 !important; }
+        
+        /* Custom Auth Modal Styles */
+        .auth-modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 0.5rem;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #6b7280;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            color: #ec4899;
+            background-color: #fdf2f8;
+            box-shadow: 0 2px 4px rgba(236, 72, 153, 0.2);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .forgot-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        
+        .success-message {
+            color: #10b981;
+            background-color: #d1fae5;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        .password-input {
+            position: relative;
+        }
+        
+        .form-input {
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-button {
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .divider {
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .login-modal {
+            padding: 1rem;
+            align-items: flex-start;
+            padding-top: 5vh;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden theme-pink">
+    <!-- Login Modal -->
+    <div class="login-modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-[2000] hidden" id="login-modal">
+        <!-- Content will be dynamically generated by AuthModalManager -->
+    </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-[2001] flex items-center justify-center">
+        <div class="settings-content bg-white p-6 rounded-2xl w-[90%] max-w-[400px] shadow-2xl">
+            <div class="settings-header flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800">Settings</h3>
+                <button id="settings-close" class="text-2xl text-gray-600 hover:text-gray-800">&times;</button>
+            </div>
+            
+            <div class="settings-body">
+                <div class="theme-section mb-6">
+                    <h4 class="font-semibold text-gray-700 mb-3">Theme Color</h4>
+                    <div class="theme-colors flex gap-3">
+                        <button class="theme-option w-10 h-10 bg-pink-500 rounded-full hover:opacity-90 border-2 border-blue-500" data-theme="theme-pink"></button>
+                        <button class="theme-option w-10 h-10 bg-blue-500 rounded-full hover:opacity-90" data-theme="theme-blue"></button>
+                        <button class="theme-option w-10 h-10 bg-purple-500 rounded-full hover:opacity-90" data-theme="theme-purple"></button>
+                        <button class="theme-option w-10 h-10 bg-green-500 rounded-full hover:opacity-90" data-theme="theme-green"></button>
+                    </div>
+                </div>
+                
+                <div class="signout-section">
+                    <button id="signout-btn" class="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Call Modal -->
+    <div id="video-call-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[2002] flex items-center justify-center p-4">
+        <div class="video-call-container bg-gray-900 rounded-2xl w-full max-w-4xl h-[80vh] overflow-hidden flex flex-col">
+            <div class="video-header bg-gray-800 p-4 flex justify-between items-center">
+                <h3 class="text-white font-semibold">Video Call</h3>
+                <button id="end-call-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    <i class="fas fa-phone-slash mr-2"></i> End Call
+                </button>
+            </div>
+            <div class="video-content flex-grow flex">
+                <div class="remote-video flex-grow bg-black">
+                    <video id="remote-video" autoplay class="w-full h-full object-cover"></video>
+                </div>
+                <div class="local-video absolute bottom-4 right-4 w-48 h-32 bg-black rounded-lg shadow-lg overflow-hidden">
+                    <video id="local-video" autoplay muted class="w-full h-full object-cover"></video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Call Modal -->
+    <div id="audio-call-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-[2002] flex items-center justify-center">
+        <div class="audio-call-container bg-gray-800 rounded-2xl p-8 max-w-md text-center">
+            <div class="audio-icon text-white text-6xl mb-6">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3 class="text-white text-2xl font-semibold mb-2">Audio Call</h3>
+            <p class="text-gray-300 mb-6">Connected to user</p>
+            <div class="call-controls">
+                <button id="end-audio-call-btn" class="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700">
+                    <i class="fas fa-phone-slash text-xl"></i>
+                </button>
+            </div>
+            <audio id="local-audio" autoplay muted></audio>
+            <audio id="remote-audio" autoplay></audio>
+        </div>
+    </div>
+
+    <!-- Modern Navigation -->
+    <nav class="navbar sticky top-0 z-[1000] bg-white shadow-md px-4 py-3 md:px-10 flex flex-wrap items-center justify-between">
+        <div class="nav-logo">
+            <img src="./img/Girls Space (1) (1) (2).png" alt="Logo" class="w-16 h-12 object-contain rounded-full max-w-full" onerror="handleImageError(this)">
+        </div>
+        
+        <div class="hamburger flex flex-col gap-1 cursor-pointer z-[1001] md:hidden">
+            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
+            <span class="w-7 h-1 bg-gray-700 rounded transition-opacity"></span>
+            <span class="w-7 h-1 bg-gray-700 rounded transition-transform"></span>
+        </div>
+        
+        <ul class="nav-links fixed top-0 left-[-100%] w-72 h-full bg-white flex flex-col gap-5 p-6 pt-20 shadow-xl transition-transform md:static md:w-auto md:h-auto md:flex-row md:items-center md:gap-4 md:p-0 md:shadow-none md:translate-x-0">
+            <li><a href="./index.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="home">Home</a></li>
+            <li><a href="./AboutUs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="about">About</a></li>
+            <li><a href="./chat.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="chat">Chat</a></li>
+            <li><a href="./stoies.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="stories">Stories</a></li>
+            <li><a href="./learning_programs.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="programs">Programs</a></li>
+            <li><a href="./protection.html" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full" data-translate="support">Support</a></li>
+            
+            <li class="dropdown relative">
+                <a href="#" class="nav-link text-gray-700 font-medium hover:text-pink-500 transition-colors relative after:absolute after:bottom-[-4px] after:left-1/2 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-pink-500 after:to-pink-700 after:transition-all after:-translate-x-1/2 hover:after:w-full">Languages <i class="fas fa-chevron-down"></i></a>
+                <ul class="dropdown-menu absolute top-full left-0 bg-white shadow-xl rounded-lg min-w-[130px] p-2 z-[1000] hidden">
+                    <li><a href="#" class="language-option translation-active block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="en">English</a></li>
+                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="ar">العربية</a></li>
+                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="sw">Kiswahili</a></li>
+                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="fr">Français</a></li>
+                    <li><a href="#" class="language-option block px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 rounded transition-colors" data-lang="rw">Kinyarwanda</a></li>
+                </ul>
+            </li>
+            
+            <!-- Fixed: Login button as separate element -->
+            <li>
+                <button id="nav-login-btn" class="login-btn px-4 py-2 border border-pink-500 text-pink-500 font-semibold rounded-full hover:bg-pink-50 transition-colors" data-translate="login">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login 
+                </button>
+            </li> 
+            
+            
+            <li>
+                <a href="./Donate.html" class="donate-btn px-5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-full hover:shadow-lg transition-shadow" data-translate="donate">
+                    <i class="fas fa-heart mr-2"></i> Donate
+                </a>
+            </li>
+             <!-- Fixed: Search button before Donate -->
+            <li>
+                <button id="nav-search-btn" class="donate-btn px-5 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-full hover:shadow-lg transition-shadow flex items-center" data-translate="search">
+                    <i class="fas fa-search mr-2"></i> Search
+                </button>
+            </li>
+            
+
+
+        </ul>
+
+        <div class="nav-overlay fixed inset-0 bg-black bg-opacity-50 hidden z-[999] md:hidden"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content flex-grow flex items-center justify-center p-5">
+        <div class="chat-container w-full max-w-7xl h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+            <!-- Sidebar -->
+            <div class="sidebar w-full md:w-1/3 lg:w-1/4 bg-pink-100 border-r border-gray-300 flex flex-col">
+                <div class="sidebar-header bg-pink-600 text-white text-center p-5">
+                    <h2 class="text-xl font-bold mb-1" data-translate="lets_chat">Let's Chat</h2>
+                    <p class="text-sm opacity-80" data-translate="connect">Connect with fellow entrepreneurs</p>
+                </div>
+                
+                <div class="user-profile flex items-center p-4 border-b border-gray-300">
+                    <div class="user-avatar w-12 h-12 rounded-full flex items-center justify-center text-white mr-4 overflow-hidden flex-shrink-0">
+                        <img src="img/girl.png" alt="User Avatar" class="w-full h-full object-cover" onerror="handleImageError(this)">
+                    </div>
+                    <div class="user-info flex-1 min-w-0">
+                        <h3 class="font-semibold text-sm truncate" id="user-name">Guest User</h3>
+                        <p class="text-xs text-gray-600 truncate" id="user-email" data-translate="sign_in">Sign in to chat</p>
+                        <div class="online-status flex items-center mt-1">
+                            <div class="status-dot w-2 h-2 rounded-full bg-gray-500 mr-1" id="status-dot"></div>
+                            <span class="text-xs" id="status-text" data-translate="offline">Offline</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-tabs flex border-b border-gray-300">
+                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 bg-white text-pink-600 border-b-2 border-pink-600" data-tab="channels">Channels</div>
+                    <div class="sidebar-tab flex-1 text-center py-3 cursor-pointer font-semibold text-gray-600 hover:bg-gray-50 transition-colors" data-tab="people">People</div>
+                </div>
+                
+                <div class="channels flex-1 overflow-y-auto p-5">
+                    <h3 class="text-blue-500 font-semibold text-sm mb-4 flex items-center" data-translate="discussion">
+                        <i class="fas fa-hashtag mr-2"></i> Discussion Channels
+                    </h3>
+                    <ul class="channel-list space-y-3">
+                        <li class="channel-item bg-white shadow border-l-4 border-pink-600 rounded-lg p-3 cursor-pointer transition-all hover:shadow-md flex items-center" data-channel="ideas">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-yellow-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="ideas">Ideas & Brainstorming</h4>
+                                <p class="text-xs text-gray-600 truncate">23 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="support">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="support_desc">Q&A Support</h4>
+                                <p class="text-xs text-gray-600 truncate">45 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="partnerships">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="partnerships">Partnerships</h4>
+                                <p class="text-xs text-gray-600 truncate">18 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="growth">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="growth">Growth Strategies</h4>
+                                <p class="text-xs text-gray-600 truncate">32 members</p>
+                            </div>
+                        </li>
+                        <li class="channel-item rounded-lg p-3 cursor-pointer transition-all hover:bg-white hover:shadow-md flex items-center" data-channel="resources">
+                            <div class="channel-icon w-9 h-9 rounded-full bg-red-500 text-white flex items-center justify-center text-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="channel-info flex-1 min-w-0">
+                                <h4 class="font-semibold text-sm text-black truncate" data-translate="resources">Student Resources</h4>
+                                <p class="text-xs text-gray-600 truncate">56 members</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Chat Area -->
+            <div class="chat-area flex-grow flex flex-col min-w-0">
+                <div class="chat-header bg-gray-50 border-b border-gray-300 p-5 flex items-center justify-between">
+                    <div class="chat-title flex-1 min-w-0">
+                        <h2 id="channel-title" class="text-blue-500 text-lg font-semibold truncate">#ideas</h2>
+                        <p id="channel-description" class="text-xs text-gray-600 mt-1 truncate" data-translate="share_ideas">Share and discuss business ideas with the community</p>
+                    </div>
+                    <div class="chat-actions flex gap-4 items-center flex-shrink-0">
+                        <!-- Video Call Button -->
+                        <button id="video-call-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-green-600 transition-colors cursor-pointer" aria-label="Start video call">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        
+                        <!-- Audio Call Button -->
+                        <button id="audio-call-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-blue-600 transition-colors cursor-pointer" aria-label="Start audio call">
+                            <i class="fas fa-phone-alt"></i>
+                        </button>
+                        
+                        <!-- Settings Button -->
+                        <button id="settings-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        
+                        <!-- Search Button -->
+                        <button id="search-btn" class="bg-transparent border-none text-gray-600 text-xl hover:text-pink-600 transition-colors cursor-pointer" aria-label="Search messages">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="messages flex-grow p-5 overflow-y-auto flex flex-col gap-5" id="messages-container">
+                    <div class="text-center py-8">
+                        <div class="text-pink-600 text-xl font-semibold mb-2" data-translate="welcome">Welcome to Girls Chat</div>
+                        <p class="text-gray-600 mb-4">Please sign in to join the conversation</p>
+                        <button id="chat-login-btn" class="px-6 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition-colors">
+                            Sign In to Continue
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="message-input border-t border-gray-300 p-5 flex items-center gap-3">
+                    <!-- Media Upload Buttons -->
+                    <div class="media-buttons flex gap-2">
+                        <!-- Photo Upload -->
+                        <label for="photo-upload" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors flex-shrink-0">
+                            <i class="fas fa-camera"></i>
+                            <input type="file" id="photo-upload" accept="image/*" class="hidden">
+                        </label>
+                        
+                        <!-- Video Upload -->
+                        <label for="video-upload" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-purple-500 transition-colors flex-shrink-0">
+                            <i class="fas fa-video"></i>
+                            <input type="file" id="video-upload" accept="video/*" class="hidden">
+                        </label>
+                        
+                        <!-- Audio Recording -->
+                        <button id="audio-record" class="media-button bg-gray-600 text-white w-10 h-10 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500 transition-colors flex-shrink-0 relative">
+                            <i class="fas fa-microphone" id="audio-recording"></i>
+                            <span id="audio-indicator" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <input type="text" id="message-input" placeholder="Type your message here..." class="flex-grow p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 transition-colors min-w-0" aria-label="Type your message" disabled>
+                    
+                    <!-- Send Button -->
+                    <button class="send-button bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-500 transition-colors flex-shrink-0" id="send-button" aria-label="Send message" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal hidden fixed inset-0 bg-black bg-opacity-80 z-[2000] items-center justify-center" id="search-modal">
+        <div class="search-modal-content bg-white p-5 rounded-lg w-[90%] max-w-[500px] max-h-[80vh] overflow-hidden flex flex-col">
+            <div class="search-modal-header flex justify-between items-center mb-4">
+                <h3 class="text-pink-600 font-semibold text-lg">Search Messages</h3>
+                <button class="search-modal-close bg-transparent border-none text-2xl text-gray-600 cursor-pointer hover:text-pink-600" id="search-modal-close" aria-label="Close search">&times;</button>
+            </div>
+            <input type="text" class="search-modal-input w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500 mb-4" id="search-modal-input" placeholder="Type to search messages..." aria-label="Search messages">
+            <div class="search-results max-h-[300px] overflow-y-auto no-scrollbar" id="search-results">
+                <div class="text-gray-500 text-center py-4">Enter a search term to find messages</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-black text-gray-300 py-12 px-6">
+        <div class="container max-w-7xl mx-auto">
+            <div class="footer-main grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
+                <div class="footer-left flex flex-col gap-4">
+                    <div class="footer-logo-section flex items-center gap-3">
+                        <img src="./img/Girls Space (1) (1) (2).png" alt="GirlsSpace Logo" class="footer-logo w-12 h-12 object-contain rounded-full border-2 border-pink-500" onerror="handleImageError(this)">
+                        <p class="footer-subtitle font-semibold text-pink-400 text-base">Empowering Girls, Building Futures</p>
+                    </div>
+                    <p class="footer-desc text-sm text-gray-400 max-w-[360px]">
+                        A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+                    </p>
+                    <div class="social-links flex gap-3">
+                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-btn w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg flex items-center justify-center text-gray-300 hover:bg-gray-700 hover:text-white transition-all duration-300" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title text-white font-semibold text-lg mb-4">Quick Links</h4>
+                    <ul class="links-list space-y-3">
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Join Chat</a></li>
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Share Story</a></li>
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Programs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4 class="links-title text-white font-semibold text-lg mb-4">Get Help</h4>
+                    <ul class="links-list space-y-3">
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Emergency</a></li>
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Support</a></li>
+                        <li><a href="#" class="link-item text-gray-400 hover:text-pink-400 transition-colors text-sm">Report</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div class="footer-left-info flex flex-col gap-2">
+                    <p class="text-sm">© 2025 GirlsSpace Mahama. <span class="text-pink-400 font-medium">Empowering girls, always.</span></p>
+                    <p class="text-xs text-gray-400">Firebase Chat Application - Connected to chat-room-5c3e5</p>
+                </div>
+                <div class="footer-right-info text-left md:text-right">
+                    <p class="text-sm">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+                    <p class="text-sm mt-1">Supported by UNHCR, Save The Children, Alight</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword,
+            signInWithPopup,
+            GoogleAuthProvider,
+            signOut,
+            onAuthStateChanged,
+            sendPasswordResetEmail,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            serverTimestamp,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Your Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC5_OQUVnBC1BE_0C4At39xSR0pHBp-wws",
+            authDomain: "chat-room-5c3e5.firebaseapp.com",
+            projectId: "chat-room-5c3e5",
+            storageBucket: "chat-room-5c3e5.firebasestorage.app",
+            messagingSenderId: "637694009856",
+            appId: "1:637694009856:web:8de78eda815ac24d3daee5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        console.log("🔥 Firebase initialized with project: chat-room-5c3e5");
+
+        // Global variables
         let currentUser = null;
-        let currentRoomId = null;
-        let selectedMessageId = null;
+        let currentChannel = 'ideas';
+        let unsubscribeMessages = null;
+        let currentLang = 'en';
+        let currentTheme = 'theme-pink';
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        // Complete translations including French and Kinyarwanda
+        let translations = {
+            'en': {
+                'login': 'Login',
+                'logout': 'Logout',
+                'donate': 'Donate',
+                'home': 'Home',
+                'about': 'About',
+                'chat': 'Chat',
+                'stories': 'Stories',
+                'programs': 'Programs',
+                'support': 'Support',
+                'welcome': 'Welcome to Girls Chat',
+                'type_message': 'Type your message here...',
+                'search': 'Search',
+                'sign_in': 'Sign in to chat',
+                'online': 'Online',
+                'offline': 'Offline',
+                'send': 'Send Message',
+                'ideas': 'Ideas & Brainstorming',
+                'support_desc': 'Q&A Support',
+                'partnerships': 'Partnerships',
+                'growth': 'Growth Strategies',
+                'resources': 'Student Resources',
+                'discussion': 'Discussion Channels',
+                'lets_chat': 'Let\'s Chat',
+                'connect': 'Connect with fellow entrepreneurs',
+                'share_ideas': 'Share and discuss business ideas with the community',
+                'get_answers': 'Get answers to your questions and help others',
+                'find_partners': 'Find collaborators and business partners',
+                'discuss_strategies': 'Discuss strategies for scaling your business',
+                'discover_resources': 'Share and discover helpful student resources',
+                'sign_in_tab': 'Sign In',
+                'create_account_tab': 'Create Account',
+                'forgot_password_tab': 'Forgot Password',
+                'name': 'Full Name',
+                'email': 'Email Address',
+                'password': 'Password',
+                'confirm_password': 'Confirm Password',
+                'forgot_password': 'Forgot Password?',
+                'reset_password': 'Reset Password',
+                'back_to_login': 'Back to Sign In',
+                'password_reset_sent': 'Password reset email sent! Check your inbox.',
+                'account_created': 'Account created successfully!',
+                'password_min_length': 'Password must be at least 6 characters',
+                'passwords_not_match': 'Passwords do not match',
+                'enter_valid_email': 'Please enter a valid email',
+                'fill_all_fields': 'Please fill in all fields'
+            },
+            'ar': {
+                'login': 'تسجيل الدخول',
+                'logout': 'تسجيل الخروج',
+                'donate': 'تبرع',
+                'home': 'الرئيسية',
+                'about': 'عنا',
+                'chat': 'الدردشة',
+                'stories': 'القصص',
+                'programs': 'البرامج',
+                'support': 'الدعم',
+                'welcome': 'مرحبًا بك في دردشة الفتيات',
+                'type_message': 'اكتب رسالتك هنا...',
+                'search': 'بحث',
+                'sign_in': 'سجل الدخول للدردشة',
+                'online': 'متصل',
+                'offline': 'غير متصل',
+                'send': 'إرسال الرسالة',
+                'ideas': 'الأفكار والعصف الذهني',
+                'support_desc': 'الدعم والاستفسارات',
+                'partnerships': 'الشراكات',
+                'growth': 'استراتيجيات النمو',
+                'resources': 'موارد الطلاب',
+                'discussion': 'قنوات المناقشة',
+                'lets_chat': 'لنتحدث',
+                'connect': 'تواصل مع رائدات الأعمال الأخريات',
+                'share_ideas': 'شارك وناقش أفكار العمل مع المجتمع',
+                'get_answers': 'احصل على إجابات لأسئلتك وساعد الآخرين',
+                'find_partners': 'ابحث عن متعاونين وشركاء عمل',
+                'discuss_strategies': 'ناقش استراتيجيات توسيع عملك',
+                'discover_resources': 'شارك وابحث عن موارد مفيدة للطلاب',
+                'sign_in_tab': 'تسجيل الدخول',
+                'create_account_tab': 'إنشاء حساب',
+                'forgot_password_tab': 'نسيت كلمة المرور',
+                'name': 'الاسم الكامل',
+                'email': 'البريد الإلكتروني',
+                'password': 'كلمة المرور',
+                'confirm_password': 'تأكيد كلمة المرور',
+                'forgot_password': 'نسيت كلمة المرور؟',
+                'reset_password': 'إعادة تعيين كلمة المرور',
+                'back_to_login': 'العودة لتسجيل الدخول',
+                'password_reset_sent': 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني',
+                'account_created': 'تم إنشاء الحساب بنجاح!',
+                'password_min_length': 'يجب أن تكون كلمة المرور 6 أحرف على الأقل',
+                'passwords_not_match': 'كلمات المرور غير متطابقة',
+                'enter_valid_email': 'الرجاء إدخال بريد إلكتروني صالح',
+                'fill_all_fields': 'الرجاء ملء جميع الحقول'
+            },
+            'sw': {
+                'login': 'Ingia',
+                'logout': 'Toka',
+                'donate': 'Changia',
+                'home': 'Nyumbani',
+                'about': 'Kuhusu',
+                'chat': 'Mazungumzo',
+                'stories': 'Hadithi',
+                'programs': 'Mipango',
+                'support': 'Usaidizi',
+                'welcome': 'Karibu kwenye Mazungumzo ya Wasichana',
+                'type_message': 'Andika ujumbe wako hapa...',
+                'search': 'Tafuta',
+                'sign_in': 'Ingia kuzungumza',
+                'online': 'Mtandaoni',
+                'offline': 'Nje ya mtandao',
+                'send': 'Tuma Ujumbe',
+                'ideas': 'Mawazo na Uundaji wa Mawazo',
+                'support_desc': 'Maswali na Majibu',
+                'partnerships': 'Ushirikiano',
+                'growth': 'Mikakati ya Ukuaji',
+                'resources': 'Rasilimali za Wanafunzi',
+                'discussion': 'Vituo vya Majadiliano',
+                'lets_chat': 'Tuzungumze',
+                'connect': 'Wasiliana na wajasiriamali wenza',
+                'share_ideas': 'Shiriki na zungumza mawazo ya biashara na jamii',
+                'get_answers': 'Pata majibu ya maswali yako na usaidie wengine',
+                'find_partners': 'Tafuta washirika na wafanyabiashara',
+                'discuss_strategies': 'Zungumza mikakati ya kuongeza ukubwa wa biashara yako',
+                'discover_resources': 'Shiriki na gundua rasilimali muhimu kwa wanafunzi',
+                'sign_in_tab': 'Ingia',
+                'create_account_tab': 'Unda Akaunti',
+                'forgot_password_tab': 'Umesahau Nenosiri',
+                'name': 'Jina Kamili',
+                'email': 'Barua Pepe',
+                'password': 'Nenosiri',
+                'confirm_password': 'Thibitisha Nenosiri',
+                'forgot_password': 'Umesahau nenosiri?',
+                'reset_password': 'Weka Upya Nenosiri',
+                'back_to_login': 'Rudi Kwenye Kuingia',
+                'password_reset_sent': 'Barua pepe ya kuweka upya nenosiri imetumwa! Angalia kikasha chako.',
+                'account_created': 'Akaunti imeundwa kwa mafanikio!',
+                'password_min_length': 'Nenosiri lazima liwe na herufi 6 angalau',
+                'passwords_not_match': 'Nenosiri halifanani',
+                'enter_valid_email': 'Tafadhali ingiza barua pepe sahihi',
+                'fill_all_fields': 'Tafadhali jaza sehemu zote'
+            },
+            'fr': {
+                'login': 'Connexion',
+                'logout': 'Déconnexion',
+                'donate': 'Faire un don',
+                'home': 'Accueil',
+                'about': 'À propos',
+                'chat': 'Chat',
+                'stories': 'Histoires',
+                'programs': 'Programmes',
+                'support': 'Soutien',
+                'welcome': 'Bienvenue dans le Chat des Filles',
+                'type_message': 'Tapez votre message ici...',
+                'search': 'Rechercher',
+                'sign_in': 'Connectez-vous pour chatter',
+                'online': 'En ligne',
+                'offline': 'Hors ligne',
+                'send': 'Envoyer le message',
+                'ideas': 'Idées & Brainstorming',
+                'support_desc': 'Support Q&A',
+                'partnerships': 'Partenariats',
+                'growth': 'Stratégies de croissance',
+                'resources': 'Ressources pour étudiants',
+                'discussion': 'Canaux de discussion',
+                'lets_chat': 'Discutons',
+                'connect': 'Connectez-vous avec d\'autres entrepreneures',
+                'share_ideas': 'Partagez et discutez des idées d\'entreprise avec la communauté',
+                'get_answers': 'Obtenez des réponses à vos questions et aidez les autres',
+                'find_partners': 'Trouvez des collaborateurs et partenaires commerciaux',
+                'discuss_strategies': 'Discutez des stratégies pour développer votre entreprise',
+                'discover_resources': 'Partagez et découvrez des ressources utiles pour les étudiants',
+                'sign_in_tab': 'Se connecter',
+                'create_account_tab': 'Créer un compte',
+                'forgot_password_tab': 'Mot de passe oublié',
+                'name': 'Nom complet',
+                'email': 'Adresse email',
+                'password': 'Mot de passe',
+                'confirm_password': 'Confirmer le mot de passe',
+                'forgot_password': 'Mot de passe oublié ?',
+                'reset_password': 'Réinitialiser le mot de passe',
+                'back_to_login': 'Retour à la connexion',
+                'password_reset_sent': 'Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.',
+                'account_created': 'Compte créé avec succès !',
+                'password_min_length': 'Le mot de passe doit comporter au moins 6 caractères',
+                'passwords_not_match': 'Les mots de passe ne correspondent pas',
+                'enter_valid_email': 'Veuillez saisir un email valide',
+                'fill_all_fields': 'Veuillez remplir tous les champs'
+            },
+            'rw': {
+                'login': 'Injira',
+                'logout': 'Sohoka',
+                'donate': 'Tanga',
+                'home': 'Ahabanza',
+                'about': 'Ibyerekeye',
+                'chat': 'Kuganira',
+                'stories': 'Inkuru',
+                'programs': 'Porogaramu',
+                'support': 'Gushigikira',
+                'welcome': 'Murakaza neza mu Kuganira kwa Abakobwa',
+                'type_message': 'Andika ubutumwa bwawe hano...',
+                'search': 'Shakisha',
+                'sign_in': 'Injira kuganira',
+                'online': 'Kuri interineti',
+                'offline': 'Nta interineti',
+                'send': 'Ohereza Ubutumwa',
+                'ideas': 'Ibitekerezo n\'Ibisubizo',
+                'support_desc': 'Ibibazo n\'Ibisubizo',
+                'partnerships': 'Ubusabane',
+                'growth': 'Uburyo Bwo Kongera',
+                'resources': 'Ibikoresho by\'Abanyeshuri',
+                'discussion': 'Inzira zo Kuganira',
+                'lets_chat': 'Reka Tuvugane',
+                'connect': 'Wunganire n\'abandi bashoramari',
+                'share_ideas': 'Sangiza kandi ujye uvuga ibitekerezo bya business muri sosiyete',
+                'get_answers': 'Shakira ibisubizo by\'ibibazo byawe kandi unafashe abandi',
+                'find_partners': 'Shaka abafatanyabikorwa n\'inshuti mu business',
+                'discuss_strategies': 'Vuga ku mabwiriza yo kongera ubunini bw\'ubucuruzi bwawe',
+                'discover_resources': 'Sangiza kandi ushakishe ibikoresho by\'ingenzi ku banyeshuri',
+                'sign_in_tab': 'Injira',
+                'create_account_tab': 'Kora Konti',
+                'forgot_password_tab': 'Wibagiwe ijambobanga',
+                'name': 'Amazina yuzuye',
+                'email': 'Aderesi ya Email',
+                'password': 'Ijambobanga',
+                'confirm_password': 'Emeza Ijambobanga',
+                'forgot_password': 'Wibagiwe ijambobanga?',
+                'reset_password': 'Ongera ushyiremo ijambobanga',
+                'back_to_login': 'Subira mu kwinjira',
+                'password_reset_sent': 'Email yo gusubiramo ijambobanga yoherejwe! Reba mu sanduku yawe ya email.',
+                'account_created': 'Konti yahanze neza!',
+                'password_min_length': 'Ijambobanga rigomba kugira inyuguti 6 byibuze',
+                'passwords_not_match': 'Ijambobanga ntibihuye',
+                'enter_valid_email': 'Nyamuneka shyiramo email nziza',
+                'fill_all_fields': 'Nyamuneka uzuze imirongo yose'
+            }
+        };
 
         // DOM Elements
-        const roomsContainer = document.getElementById('roomsContainer');
-        const chatContainer = document.getElementById('chatContainer');
-        const messagesContainer = document.getElementById('messagesContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendMessageBtn = document.getElementById('sendMessage');
-        const membersList = document.getElementById('membersList');
-        const membersCount = document.getElementById('membersCount');
-        const roomName = document.getElementById('roomName');
-        const mobileRoomName = document.getElementById('mobileRoomName');
-        const roomDescription = document.getElementById('roomDescription');
-        const typingIndicator = document.getElementById('typingIndicator');
-        const charCount = document.getElementById('charCount');
+        const messagesContainer = document.getElementById('messages-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const searchBtn = document.getElementById('search-btn');
+        const searchModal = document.getElementById('search-modal');
+        const searchModalInput = document.getElementById('search-modal-input');
+        const searchResults = document.getElementById('search-results');
+        const channelTitle = document.getElementById('channel-title');
+        const channelDescription = document.getElementById('channel-description');
+        const loginModal = document.getElementById('login-modal');
+        const userNameElement = document.getElementById('user-name');
+        const userEmailElement = document.getElementById('user-email');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
 
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', async () => {
-            await checkAuth();
-            await loadChatRooms();
-            setupEventListeners();
-        });
+        // Image error handler
+        function handleImageError(img) {
+            img.onerror = null;
+            img.src = 'https://ui-avatars.com/api/?name=User&background=ec4899&color=fff';
+        }
 
-        // Check authentication
-        async function checkAuth() {
-            return new Promise((resolve) => {
-                onAuthStateChanged(auth, async (user) => {
+        // Auth Modal Manager
+        class AuthModalManager {
+            constructor() {
+                this.currentTab = 'signin';
+                this.createAuthModal();
+                this.setupTabSwitching();
+            }
+            
+            createAuthModal() {
+                const loginModal = document.getElementById('login-modal');
+                if (loginModal) {
+                    loginModal.innerHTML = `
+                        <div class="auth-modal-content">
+                            <h2 class="text-pink-600 text-center text-xl font-bold mb-4">Welcome to Girls Chat</h2>
+                            
+                            <button id="google-login-btn" class="w-full py-2 bg-blue-600 text-white rounded-lg mb-3 flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors text-sm">
+                                <i class="fab fa-google"></i> Sign in with Google
+                            </button>
+                            
+                            <div class="divider relative my-4 text-center text-gray-600 text-sm">
+                                <span class="bg-white px-3 relative z-10">or</span>
+                                <div class="absolute top-1/2 left-0 right-0 h-px bg-gray-300 -translate-y-1/2 z-0"></div>
+                            </div>
+                            
+                            <div class="auth-tabs">
+                                <button class="auth-tab active" data-tab="signin">Sign In</button>
+                                <button class="auth-tab" data-tab="signup">Create Account</button>
+                                <button class="auth-tab" data-tab="forgot">Forgot Password</button>
+                            </div>
+                            
+                            <!-- Sign In Form -->
+                            <form id="signin-form" class="auth-form active">
+                                <div class="mb-3">
+                                    <input type="email" id="signin-email" placeholder="Email" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                </div>
+                                <div class="mb-3 password-input">
+                                    <input type="password" id="signin-password" placeholder="Password" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10 text-sm">
+                                    <button type="button" class="password-toggle" onclick="this.parentNode.querySelector('input').type = this.parentNode.querySelector('input').type === 'password' ? 'text' : 'password'">
+                                        <i class="far fa-eye text-sm"></i>
+                                    </button>
+                                </div>
+                                <button type="submit" id="signin-submit" class="w-full py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors font-medium mb-2 text-sm">Sign In</button>
+                                <div class="text-center">
+                                    <a class="forgot-link text-xs" onclick="this.closest('.auth-modal-content').querySelector('[data-tab=\"forgot\"]').click()">Forgot Password?</a>
+                                </div>
+                            </form>
+                            
+                            <!-- Sign Up Form -->
+                            <form id="signup-form" class="auth-form">
+                                <div class="mb-3">
+                                    <input type="text" id="signup-name" placeholder="Full Name" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="email" id="signup-email" placeholder="Email" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                </div>
+                                <div class="mb-3 password-input">
+                                    <input type="password" id="signup-password" placeholder="Password (min 6 characters)" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10 text-sm">
+                                    <button type="button" class="password-toggle" onclick="this.parentNode.querySelector('input').type = this.parentNode.querySelector('input').type === 'password' ? 'text' : 'password'">
+                                        <i class="far fa-eye text-sm"></i>
+                                    </button>
+                                </div>
+                                <div class="mb-3 password-input">
+                                    <input type="password" id="signup-confirm-password" placeholder="Confirm Password" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-10 text-sm">
+                                    <button type="button" class="password-toggle" onclick="this.parentNode.querySelector('input').type = this.parentNode.querySelector('input').type === 'password' ? 'text' : 'password'">
+                                        <i class="far fa-eye text-sm"></i>
+                                    </button>
+                                </div>
+                                <button type="submit" id="signup-submit" class="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm">Create Account</button>
+                            </form>
+                            
+                            <!-- Forgot Password Form -->
+                            <form id="forgot-form" class="auth-form">
+                                <div class="mb-3">
+                                    <input type="email" id="forgot-email" placeholder="Enter your email" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                </div>
+                                <button type="submit" id="forgot-submit" class="w-full py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium mb-2 text-sm">Reset Password</button>
+                                <div class="text-center">
+                                    <a class="forgot-link text-xs" onclick="this.closest('.auth-modal-content').querySelector('[data-tab=\"signin\"]').click()">Back to Sign In</a>
+                                </div>
+                            </form>
+                            
+                            <div id="auth-success" class="success-message"></div>
+                            <div id="auth-error" class="text-red-500 text-center mt-2 min-h-[20px] text-xs hidden"></div>
+                            
+                            <p class="text-xs text-gray-600 mt-4 text-center">
+                                By signing in, you agree to our Terms of Service and Privacy Policy
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+            
+            setupTabSwitching() {
+                // Tab switching
+                document.querySelectorAll('.auth-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const tabId = e.target.getAttribute('data-tab');
+                        this.switchTab(tabId);
+                    });
+                });
+                
+                // Form submissions
+                document.getElementById('signin-form')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSignIn();
+                });
+                
+                document.getElementById('signup-form')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleSignUp();
+                });
+                
+                document.getElementById('forgot-form')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleForgotPassword();
+                });
+                
+                // Google login
+                document.getElementById('google-login-btn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.handleGoogleLogin();
+                });
+            }
+            
+            switchTab(tabId) {
+                this.currentTab = tabId;
+                
+                // Update active tab
+                document.querySelectorAll('.auth-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.getAttribute('data-tab') === tabId);
+                });
+                
+                // Update active form
+                document.querySelectorAll('.auth-form').forEach(form => {
+                    form.classList.toggle('active', form.id === `${tabId}-form`);
+                });
+                
+                // Clear messages
+                this.clearMessages();
+            }
+            
+            clearMessages() {
+                const errorDiv = document.getElementById('auth-error');
+                const successDiv = document.getElementById('auth-success');
+                if (errorDiv) {
+                    errorDiv.classList.add('hidden');
+                    errorDiv.textContent = '';
+                }
+                if (successDiv) {
+                    successDiv.style.display = 'none';
+                    successDiv.textContent = '';
+                }
+            }
+            
+            showError(message) {
+                const errorDiv = document.getElementById('auth-error');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        errorDiv.textContent = '';
+                        errorDiv.classList.add('hidden');
+                    }, 5000);
+                }
+            }
+            
+            showSuccess(message) {
+                const successDiv = document.getElementById('auth-success');
+                if (successDiv) {
+                    successDiv.textContent = message;
+                    successDiv.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        successDiv.style.display = 'none';
+                        successDiv.textContent = '';
+                    }, 5000);
+                }
+            }
+            
+            async handleGoogleLogin() {
+                try {
+                    const btn = document.getElementById('google-login-btn');
+                    const originalText = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+                    
+                    await window.authManager.loginWithGoogle();
+                    
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                } catch (error) {
+                    const btn = document.getElementById('google-login-btn');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fab fa-google"></i> Sign in with Google';
+                    this.showError("Google login failed: " + error.message);
+                }
+            }
+            
+            async handleSignIn() {
+                const email = document.getElementById('signin-email')?.value.trim();
+                const password = document.getElementById('signin-password')?.value;
+                
+                if (!email || !password) {
+                    this.showError("Please fill in all fields");
+                    return;
+                }
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    this.showError("Please enter a valid email");
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    this.showError("Password must be at least 6 characters");
+                    return;
+                }
+                
+                try {
+                    const btn = document.getElementById('signin-submit');
+                    const originalText = btn.textContent;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+                    
+                    await window.authManager.loginWithEmail(email, password);
+                    
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    
+                } catch (error) {
+                    const btn = document.getElementById('signin-submit');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = "Sign In";
+                    }
+                }
+            }
+            
+            async handleSignUp() {
+                const name = document.getElementById('signup-name')?.value.trim();
+                const email = document.getElementById('signup-email')?.value.trim();
+                const password = document.getElementById('signup-password')?.value;
+                const confirmPassword = document.getElementById('signup-confirm-password')?.value;
+                
+                if (!name || !email || !password || !confirmPassword) {
+                    this.showError("Please fill in all fields");
+                    return;
+                }
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    this.showError("Please enter a valid email");
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    this.showError("Password must be at least 6 characters");
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    this.showError("Passwords do not match");
+                    return;
+                }
+                
+                try {
+                    const btn = document.getElementById('signup-submit');
+                    const originalText = btn.textContent;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+                    
+                    await window.authManager.signupWithEmail(email, password, name);
+                    this.showSuccess("Account created successfully!");
+                    
+                    // Switch to sign in tab after successful registration
+                    setTimeout(() => {
+                        this.switchTab('signin');
+                        document.getElementById('signin-email').value = email;
+                        document.getElementById('signin-password').value = '';
+                    }, 2000);
+                    
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    
+                } catch (error) {
+                    const btn = document.getElementById('signup-submit');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = "Create Account";
+                    }
+                }
+            }
+            
+            async handleForgotPassword() {
+                const email = document.getElementById('forgot-email')?.value.trim();
+                
+                if (!email) {
+                    this.showError("Please enter your email");
+                    return;
+                }
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    this.showError("Please enter a valid email");
+                    return;
+                }
+                
+                try {
+                    const btn = document.getElementById('forgot-submit');
+                    const originalText = btn.textContent;
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    
+                    await window.authManager.resetPassword(email);
+                    this.showSuccess("Password reset email sent! Check your inbox.");
+                    
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    
+                } catch (error) {
+                    const btn = document.getElementById('forgot-submit');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = "Reset Password";
+                    }
+                }
+            }
+        }
+
+        // Media Manager
+        class MediaManager {
+            constructor() {
+                this.setupMediaListeners();
+            }
+            
+            setupMediaListeners() {
+                // Photo upload
+                const photoUpload = document.getElementById('photo-upload');
+                if (photoUpload) {
+                    photoUpload.addEventListener('change', (e) => this.handlePhotoUpload(e));
+                }
+                
+                // Video upload
+                const videoUpload = document.getElementById('video-upload');
+                if (videoUpload) {
+                    videoUpload.addEventListener('change', (e) => this.handleVideoUpload(e));
+                }
+                
+                // Audio recording
+                const audioRecord = document.getElementById('audio-record');
+                if (audioRecord) {
+                    audioRecord.addEventListener('click', () => this.toggleAudioRecording());
+                }
+                
+                // Video call
+                const videoCallBtn = document.getElementById('video-call-btn');
+                if (videoCallBtn) {
+                    videoCallBtn.addEventListener('click', () => this.startVideoCall());
+                }
+                
+                // Audio call
+                const audioCallBtn = document.getElementById('audio-call-btn');
+                if (audioCallBtn) {
+                    audioCallBtn.addEventListener('click', () => this.startAudioCall());
+                }
+                
+                // End call buttons
+                const endCallBtn = document.getElementById('end-call-btn');
+                if (endCallBtn) {
+                    endCallBtn.addEventListener('click', () => this.endVideoCall());
+                }
+                
+                const endAudioCallBtn = document.getElementById('end-audio-call-btn');
+                if (endAudioCallBtn) {
+                    endAudioCallBtn.addEventListener('click', () => this.endAudioCall());
+                }
+            }
+            
+            handlePhotoUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (window.chatManager) {
+                        window.chatManager.sendMediaMessage({
+                            type: 'photo',
+                            url: e.target.result,
+                            caption: 'Shared a photo'
+                        });
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            handleVideoUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('video/')) {
+                    alert('Please select a video file');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (window.chatManager) {
+                        window.chatManager.sendMediaMessage({
+                            type: 'video',
+                            url: e.target.result,
+                            caption: 'Shared a video'
+                        });
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            async toggleAudioRecording() {
+                if (!isRecording) {
+                    await this.startAudioRecording();
+                } else {
+                    this.stopAudioRecording();
+                }
+            }
+            
+            async startAudioRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        if (window.chatManager) {
+                            window.chatManager.sendMediaMessage({
+                                type: 'audio',
+                                url: audioUrl,
+                                caption: 'Sent an audio message'
+                            });
+                        }
+                        
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    mediaRecorder.start();
+                    isRecording = true;
+                    
+                    const audioRecording = document.getElementById('audio-recording');
+                    const audioIndicator = document.getElementById('audio-indicator');
+                    if (audioRecording) {
+                        audioRecording.classList.add('audio-recording', 'bg-red-500');
+                        audioRecording.classList.remove('bg-gray-600');
+                    }
+                    if (audioIndicator) {
+                        audioIndicator.classList.remove('hidden');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error starting audio recording:', error);
+                    alert('Could not access microphone. Please check permissions.');
+                }
+            }
+            
+            stopAudioRecording() {
+                if (mediaRecorder && isRecording) {
+                    mediaRecorder.stop();
+                    isRecording = false;
+                    
+                    const audioRecording = document.getElementById('audio-recording');
+                    const audioIndicator = document.getElementById('audio-indicator');
+                    if (audioRecording) {
+                        audioRecording.classList.remove('audio-recording', 'bg-red-500');
+                        audioRecording.classList.add('bg-gray-600');
+                    }
+                    if (audioIndicator) {
+                        audioIndicator.classList.add('hidden');
+                    }
+                }
+            }
+            
+            async startVideoCall() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: true, 
+                        audio: true 
+                    });
+                    
+                    const localVideo = document.getElementById('local-video');
+                    const videoCallModal = document.getElementById('video-call-modal');
+                    
+                    if (localVideo) {
+                        localVideo.srcObject = stream;
+                    }
+                    
+                    if (videoCallModal) {
+                        videoCallModal.classList.remove('hidden');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error starting video call:', error);
+                    alert('Could not access camera/microphone. Please check permissions.');
+                }
+            }
+            
+            async startAudioCall() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    const localAudio = document.getElementById('local-audio');
+                    const audioCallModal = document.getElementById('audio-call-modal');
+                    
+                    if (localAudio) {
+                        localAudio.srcObject = stream;
+                    }
+                    
+                    if (audioCallModal) {
+                        audioCallModal.classList.remove('hidden');
+                    }
+                    
+                } catch (error) {
+                    console.error('Error starting audio call:', error);
+                    alert('Could not access microphone. Please check permissions.');
+                }
+            }
+            
+            endVideoCall() {
+                const localVideo = document.getElementById('local-video');
+                const videoCallModal = document.getElementById('video-call-modal');
+                
+                if (localVideo && localVideo.srcObject) {
+                    localVideo.srcObject.getTracks().forEach(track => track.stop());
+                }
+                if (videoCallModal) {
+                    videoCallModal.classList.add('hidden');
+                }
+            }
+            
+            endAudioCall() {
+                const localAudio = document.getElementById('local-audio');
+                const audioCallModal = document.getElementById('audio-call-modal');
+                
+                if (localAudio && localAudio.srcObject) {
+                    localAudio.srcObject.getTracks().forEach(track => track.stop());
+                }
+                if (audioCallModal) {
+                    audioCallModal.classList.add('hidden');
+                }
+            }
+        }
+
+        // Theme Manager
+        class ThemeManager {
+            constructor() {
+                this.currentTheme = localStorage.getItem('chat-theme') || 'theme-pink';
+                this.applyTheme(this.currentTheme);
+                this.setupThemeListeners();
+            }
+            
+            setupThemeListeners() {
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        const theme = e.target.getAttribute('data-theme');
+                        this.changeTheme(theme);
+                    });
+                });
+            }
+            
+            changeTheme(theme) {
+                this.currentTheme = theme;
+                localStorage.setItem('chat-theme', theme);
+                this.applyTheme(theme);
+                
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.classList.remove('border-2', 'border-blue-500');
+                    if (option.getAttribute('data-theme') === theme) {
+                        option.classList.add('border-2', 'border-blue-500');
+                    }
+                });
+            }
+            
+            applyTheme(theme) {
+                document.body.className = document.body.className.replace(/theme-\w+/g, '');
+                document.body.classList.add(theme);
+            }
+        }
+
+        // Translation Manager
+        class TranslationManager {
+            constructor() {
+                this.currentLang = localStorage.getItem('chat-language') || 'en';
+                this.applyTranslation(this.currentLang);
+                this.setupTranslationListeners();
+            }
+            
+            setupTranslationListeners() {
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const lang = option.getAttribute('data-lang');
+                        this.changeLanguage(lang);
+                        
+                        // Close dropdown
+                        const dropdown = option.closest('.dropdown-menu');
+                        if (dropdown) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+            
+            changeLanguage(lang) {
+                this.currentLang = lang;
+                localStorage.setItem('chat-language', lang);
+                this.applyTranslation(lang);
+                
+                // Update active class
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.classList.remove('translation-active');
+                    if (option.getAttribute('data-lang') === lang) {
+                        option.classList.add('translation-active');
+                    }
+                });
+            }
+            
+            applyTranslation(lang) {
+                const langData = translations[lang] || translations['en'];
+                
+                document.querySelectorAll('[data-translate]').forEach(element => {
+                    const key = element.getAttribute('data-translate');
+                    if (langData[key]) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.placeholder = langData[key];
+                        } else {
+                            element.textContent = langData[key];
+                        }
+                    }
+                });
+                
+                // Update UI elements that don't have data-translate
+                const navLoginBtn = document.getElementById('nav-login-btn');
+                if (navLoginBtn && currentUser) {
+                    navLoginBtn.innerHTML = `<i class="fas fa-sign-out-alt mr-2"></i> ${langData['logout']}`;
+                }
+                
+                if (window.chatManager) {
+                    window.chatManager.updateChannelDescriptions(langData);
+                }
+            }
+            
+            getTranslation(key) {
+                return translations[this.currentLang][key] || key;
+            }
+        }
+
+        // Authentication Manager
+        class AuthManager {
+            constructor() {
+                console.log("🔐 AuthManager initialized");
+                this.initAuth();
+            }
+
+            initAuth() {
+                onAuthStateChanged(auth, (user) => {
+                    console.log("Auth state changed:", user ? `Logged in as ${user.email}` : "Logged out");
                     if (user) {
                         currentUser = user;
-                        console.log('User authenticated:', user.uid);
-                        resolve(user);
+                        this.updateUIForLoggedInUser(user);
+                        if (window.chatManager) {
+                            window.chatManager.switchChannel(currentChannel);
+                        }
+                        // Hide login modal
+                        const loginModal = document.getElementById('login-modal');
+                        if (loginModal) {
+                            loginModal.classList.add('hidden');
+                        }
                     } else {
-                        // Redirect to login if not authenticated
-                        window.location.href = './login.html';
-                        resolve(null);
+                        currentUser = null;
+                        this.updateUIForLoggedOut();
                     }
+                }, (error) => {
+                    console.error("Auth error:", error);
                 });
-            });
-        }
+            }
 
-        // Load available chat rooms
-        async function loadChatRooms() {
-            try {
-                const rooms = await chatService.getChatRooms();
-                displayRooms(rooms);
-            } catch (error) {
-                console.error('Error loading rooms:', error);
-                showError('Failed to load chat rooms');
+            updateUIForLoggedInUser(user) {
+                // Update user info in sidebar
+                if (userNameElement) {
+                    userNameElement.textContent = user.displayName || user.email.split('@')[0];
+                }
+                if (userEmailElement) {
+                    userEmailElement.textContent = user.email;
+                }
+                if (statusDot) {
+                    statusDot.classList.remove('bg-gray-500');
+                    statusDot.classList.add('bg-green-500');
+                }
+                if (statusText) {
+                    statusText.textContent = window.translationManager.getTranslation('online');
+                }
+                
+                // Enable message input
+                if (messageInput) {
+                    messageInput.disabled = false;
+                    messageInput.placeholder = window.translationManager.getTranslation('type_message');
+                }
+                if (sendButton) {
+                    sendButton.disabled = false;
+                }
+                
+                // Update navigation login button to logout
+                const navLoginBtn = document.getElementById('nav-login-btn');
+                if (navLoginBtn) {
+                    navLoginBtn.innerHTML = `<i class="fas fa-sign-out-alt mr-2"></i> ${window.translationManager.getTranslation('logout')}`;
+                }
+                
+                // Hide the chat login button if it exists
+                const chatLoginBtn = document.getElementById('chat-login-btn');
+                if (chatLoginBtn) {
+                    chatLoginBtn.style.display = 'none';
+                }
+            }
+
+            updateUIForLoggedOut() {
+                // Reset user info in sidebar
+                if (userNameElement) {
+                    userNameElement.textContent = 'Guest User';
+                }
+                if (userEmailElement) {
+                    userEmailElement.textContent = window.translationManager.getTranslation('sign_in');
+                }
+                if (statusDot) {
+                    statusDot.classList.remove('bg-green-500');
+                    statusDot.classList.add('bg-gray-500');
+                }
+                if (statusText) {
+                    statusText.textContent = window.translationManager.getTranslation('offline');
+                }
+                
+                // Disable message input
+                if (messageInput) {
+                    messageInput.disabled = true;
+                    messageInput.placeholder = window.translationManager.getTranslation('sign_in');
+                }
+                if (sendButton) {
+                    sendButton.disabled = true;
+                }
+                
+                // Update navigation login button to login
+                const navLoginBtn = document.getElementById('nav-login-btn');
+                if (navLoginBtn) {
+                    navLoginBtn.innerHTML = `<i class="fas fa-sign-in-alt mr-2"></i> ${window.translationManager.getTranslation('login')}`;
+                }
+                
+                // Show the chat login button if it exists
+                const chatLoginBtn = document.getElementById('chat-login-btn');
+                if (chatLoginBtn) {
+                    chatLoginBtn.style.display = 'inline-block';
+                }
+            }
+
+            async loginWithGoogle() {
+                try {
+                    const provider = new GoogleAuthProvider();
+                    const result = await signInWithPopup(auth, provider);
+                    console.log("✅ Google login successful");
+                    return result.user;
+                } catch (error) {
+                    console.error("Google login error:", error);
+                    throw error;
+                }
+            }
+
+            async loginWithEmail(email, password) {
+                try {
+                    const result = await signInWithEmailAndPassword(auth, email, password);
+                    console.log("✅ Email login successful");
+                    return result.user;
+                } catch (error) {
+                    console.error("Email login error:", error.code);
+                    let errorMessage = "Login failed";
+                    switch(error.code) {
+                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
+                        case 'auth/user-not-found': errorMessage = "No account found with this email"; break;
+                        case 'auth/wrong-password': errorMessage = "Wrong password"; break;
+                        case 'auth/too-many-requests': errorMessage = "Too many attempts. Try again later"; break;
+                        default: errorMessage = "Login failed: " + error.message;
+                    }
+                    throw new Error(errorMessage);
+                }
+            }
+
+            async signupWithEmail(email, password, name) {
+                try {
+                    const result = await createUserWithEmailAndPassword(auth, email, password);
+                    console.log("✅ Account created successfully");
+                    
+                    if (name) {
+                        await updateProfile(result.user, {
+                            displayName: name
+                        });
+                    }
+                    
+                    try {
+                        await addDoc(collection(db, "users"), {
+                            uid: result.user.uid,
+                            email: result.user.email,
+                            displayName: name || result.user.email.split('@')[0],
+                            createdAt: serverTimestamp()
+                        });
+                    } catch (firestoreError) {
+                        console.warn("Note: User profile not saved to Firestore");
+                    }
+                    
+                    return result.user;
+                } catch (error) {
+                    console.error("Signup error:", error.code);
+                    let errorMessage = "Signup failed";
+                    switch(error.code) {
+                        case 'auth/email-already-in-use': errorMessage = "Email already in use"; break;
+                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
+                        case 'auth/weak-password': errorMessage = "Password too weak (min 6 chars)"; break;
+                        default: errorMessage = "Signup failed: " + error.message;
+                    }
+                    throw new Error(errorMessage);
+                }
+            }
+
+            async resetPassword(email) {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    console.log("✅ Password reset email sent");
+                    return true;
+                } catch (error) {
+                    console.error("Reset password error:", error.code);
+                    let errorMessage = "Failed to send reset email";
+                    switch(error.code) {
+                        case 'auth/invalid-email': errorMessage = "Invalid email"; break;
+                        case 'auth/user-not-found': errorMessage = "No account found with this email"; break;
+                        default: errorMessage = "Failed to send reset email: " + error.message;
+                    }
+                    throw new Error(errorMessage);
+                }
+            }
+
+            async logout() {
+                try {
+                    await signOut(auth);
+                    console.log("✅ Logout successful");
+                } catch (error) {
+                    console.error("Logout error:", error);
+                    alert("Logout failed: " + error.message);
+                }
             }
         }
 
-        // Display rooms in the UI
-        function displayRooms(rooms) {
-            const roomsGrid = roomsContainer.querySelector('.grid');
-            roomsGrid.innerHTML = '';
+        // Chat Manager
+        class ChatManager {
+            constructor() {
+                console.log("💬 ChatManager initialized");
+                this.setupEventListeners();
+            }
 
-            rooms.forEach(room => {
-                const roomCard = createRoomCard(room);
-                roomsGrid.appendChild(roomCard);
-            });
-        }
-
-        // Create room card element
-        function createRoomCard(room) {
-            const div = document.createElement('div');
-            div.className = 'chat-room bg-gray-800 rounded-xl p-4 cursor-pointer';
-            div.dataset.roomId = room.id;
-            
-            div.innerHTML = `
-                <div class="flex items-start justify-between mb-3">
-                    <div class="w-12 h-12 rounded-lg bg-pink-500 flex items-center justify-center">
-                        <i class="fas ${room.icon || 'fa-comments'} text-xl"></i>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded-full ${room.isPublic ? 'bg-green-500' : 'bg-blue-500'}">
-                        ${room.isPublic ? 'Public' : 'Private'}
-                    </span>
-                </div>
-                <h3 class="font-bold text-lg mb-2">${room.name}</h3>
-                <p class="text-gray-400 text-sm mb-3">${room.description || 'Join the conversation!'}</p>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-gray-500">
-                        <i class="fas fa-users mr-1"></i>
-                        ${room.memberCount || 0} members
-                    </span>
-                    <span class="text-pink-400">
-                        Join <i class="fas fa-arrow-right ml-1"></i>
-                    </span>
-                </div>
-            `;
-            
-            div.addEventListener('click', () => joinRoom(room.id));
-            return div;
-        }
-
-        // Join a chat room
-        async function joinRoom(roomId) {
-            try {
-                if (!currentUser) {
-                    throw new Error('User not authenticated');
+            setupEventListeners() {
+                // Send message
+                if (sendButton) {
+                    sendButton.addEventListener('click', () => this.sendMessage());
+                }
+                
+                if (messageInput) {
+                    messageInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.sendMessage();
+                        }
+                    });
                 }
 
-                // Join room
-                await chatService.joinChatRoom(
-                    roomId,
-                    currentUser.uid,
-                    currentUser.displayName || currentUser.email.split('@')[0]
-                );
+                // Channel switching
+                document.querySelectorAll('.channel-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        document.querySelectorAll('.channel-item').forEach(i => {
+                            i.classList.remove('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
+                        });
+                        item.classList.add('bg-white', 'shadow', 'border-l-4', 'border-pink-600');
+                        const channelId = item.getAttribute('data-channel');
+                        this.switchChannel(channelId);
+                    });
+                });
 
-                // Get room info
-                const roomInfo = await chatService.getRoomInfo(roomId);
-                
-                // Update UI
-                currentRoomId = roomId;
-                roomsContainer.classList.add('hidden');
-                chatContainer.classList.remove('hidden');
-                
-                roomName.textContent = roomInfo.name;
-                mobileRoomName.textContent = roomInfo.name;
-                roomDescription.textContent = roomInfo.description || 'No description available';
+                // Search functionality
+                if (searchBtn) {
+                    searchBtn.addEventListener('click', () => {
+                        if (!currentUser) {
+                            alert("Please sign in to search messages");
+                            return;
+                        }
+                        searchModal.classList.remove('hidden');
+                        setTimeout(() => {
+                            if (searchModalInput) searchModalInput.focus();
+                        }, 100);
+                    });
+                }
 
-                // Start listening to messages
-                chatService.listenToMessages(roomId, handleNewMessages);
-                
-                // Start listening to members
-                chatService.listenToRoomMembers(roomId, handleRoomMembers);
+                const searchModalClose = document.getElementById('search-modal-close');
+                if (searchModalClose) {
+                    searchModalClose.addEventListener('click', () => {
+                        searchModal.classList.add('hidden');
+                        if (searchModalInput) searchModalInput.value = '';
+                        if (searchResults) {
+                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
+                        }
+                    });
+                }
 
-                // Clear messages container
-                messagesContainer.innerHTML = '';
-
-                // Focus on message input
-                messageInput.focus();
-
-            } catch (error) {
-                console.error('Error joining room:', error);
-                showError('Failed to join chat room');
-            }
-        }
-
-        // Handle new messages
-        function handleNewMessages(messages) {
-            messagesContainer.innerHTML = '';
-            
-            if (messages.length === 0) {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'text-center text-gray-500 py-8';
-                emptyState.innerHTML = `
-                    <i class="fas fa-comments text-4xl mb-3"></i>
-                    <p>No messages yet. Start the conversation!</p>
-                `;
-                messagesContainer.appendChild(emptyState);
-                return;
+                if (searchModalInput) {
+                    searchModalInput.addEventListener('input', () => this.searchMessages());
+                }
             }
 
-            messages.forEach(message => {
-                const messageElement = createMessageElement(message);
-                messagesContainer.appendChild(messageElement);
-            });
+            async sendMessage() {
+                if (!currentUser) {
+                    alert("Please sign in to send messages");
+                    return;
+                }
 
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+                const messageText = messageInput.value.trim();
+                if (!messageText) return;
 
-        // Create message element
-        function createMessageElement(message) {
-            const isSelf = message.userId === currentUser.uid;
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `flex ${isSelf ? 'justify-end' : 'justify-start'}`;
-            messageDiv.dataset.messageId = message.id;
+                try {
+                    const message = {
+                        text: messageText,
+                        senderId: currentUser.uid,
+                        senderName: currentUser.displayName || currentUser.email.split('@')[0],
+                        senderAvatar: currentUser.photoURL || '',
+                        channel: currentChannel,
+                        timestamp: serverTimestamp(),
+                        readBy: []
+                    };
+
+                    console.log("📨 Sending message to Firestore...");
+                    
+                    await addDoc(collection(db, "messages"), message);
+                    
+                    messageInput.value = '';
+                    messageInput.focus();
+                    console.log("✅ Message sent successfully!");
+                    
+                } catch (error) {
+                    console.error("❌ Error sending message:", error);
+                    alert("Failed to send message. Check console for details.");
+                }
+            }
             
-            const time = message.timestamp?.toDate ? 
-                formatTime(message.timestamp.toDate()) : 
-                'Just now';
-            
-            const editedBadge = message.edited ? 
-                '<span class="text-xs text-gray-400 ml-2">(edited)</span>' : '';
+            async sendMediaMessage(media) {
+                if (!currentUser) {
+                    alert("Please sign in to send messages");
+                    return;
+                }
 
-            messageDiv.innerHTML = `
-                <div class="max-w-[80%] ${isSelf ? 'message-self' : 'message-other'} p-3">
-                    ${!isSelf ? 
-                        `<div class="font-bold text-sm mb-1">${message.userName}</div>` : 
-                        ''
+                try {
+                    const message = {
+                        type: media.type,
+                        mediaUrl: media.url,
+                        caption: media.caption,
+                        senderId: currentUser.uid,
+                        senderName: currentUser.displayName || currentUser.email.split('@')[0],
+                        senderAvatar: currentUser.photoURL || '',
+                        channel: currentChannel,
+                        timestamp: serverTimestamp(),
+                        readBy: []
+                    };
+
+                    console.log(`📨 Sending ${media.type} message to Firestore...`);
+                    
+                    await addDoc(collection(db, "messages"), message);
+                    
+                    console.log(`✅ ${media.type} sent successfully!`);
+                    
+                } catch (error) {
+                    console.error(`❌ Error sending ${media.type}:`, error);
+                    alert(`Failed to send ${media.type}. Check console for details.`);
+                }
+            }
+
+            switchChannel(channelId) {
+                console.log(`🔄 Switching to channel: #${channelId}`);
+                currentChannel = channelId;
+                
+                if (channelTitle) channelTitle.textContent = `#${channelId}`;
+                
+                const channelDescriptions = {
+                    ideas: window.translationManager.getTranslation('share_ideas'),
+                    support: window.translationManager.getTranslation('get_answers'),
+                    partnerships: window.translationManager.getTranslation('find_partners'),
+                    growth: window.translationManager.getTranslation('discuss_strategies'),
+                    resources: window.translationManager.getTranslation('discover_resources')
+                };
+                
+                if (channelDescription && channelDescriptions[channelId]) {
+                    channelDescription.textContent = channelDescriptions[channelId];
+                }
+                
+                this.loadMessages(channelId);
+            }
+            
+            updateChannelDescriptions(langData) {
+                const channelDescriptions = {
+                    ideas: langData['share_ideas'],
+                    support: langData['get_answers'],
+                    partnerships: langData['find_partners'],
+                    growth: langData['discuss_strategies'],
+                    resources: langData['discover_resources']
+                };
+                
+                if (channelDescription && channelDescriptions[currentChannel]) {
+                    channelDescription.textContent = channelDescriptions[currentChannel];
+                }
+            }
+
+            loadMessages(channelId) {
+                console.log(`📥 Loading messages for #${channelId}...`);
+                
+                if (messagesContainer) {
+                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">Loading messages...</div>';
+                }
+                
+                if (unsubscribeMessages) {
+                    unsubscribeMessages();
+                }
+                
+                // Only load messages if user is logged in
+                if (!currentUser) {
+                    if (messagesContainer) {
+                        messagesContainer.innerHTML = `
+                            <div class="text-center py-8">
+                                <div class="text-pink-600 text-xl font-semibold mb-2">${window.translationManager.getTranslation('welcome')}</div>
+                                <p class="text-gray-600 mb-4">Please sign in to view messages</p>
+                                <button id="chat-login-btn" class="px-6 py-2 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition-colors">
+                                    Sign In to Continue
+                                </button>
+                            </div>
+                        `;
+                        
+                        // Add event listener to the chat login button
+                        const chatLoginBtn = document.getElementById('chat-login-btn');
+                        if (chatLoginBtn) {
+                            chatLoginBtn.addEventListener('click', () => {
+                                const loginModal = document.getElementById('login-modal');
+                                if (loginModal) {
+                                    loginModal.classList.remove('hidden');
+                                }
+                            });
+                        }
                     }
-                    <div class="mb-1">${escapeHtml(message.text)}</div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs opacity-75">${time}${editedBadge}</span>
-                        ${isSelf ? 
-                            `<button class="message-menu-btn text-xs opacity-50 hover:opacity-100">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </button>` : 
-                            ''
+                    return;
+                }
+                
+                try {
+                    const messagesQuery = query(
+                        collection(db, "messages"),
+                        where("channel", "==", channelId),
+                        orderBy("timestamp", "asc")
+                    );
+                    
+                    unsubscribeMessages = onSnapshot(messagesQuery, 
+                        (snapshot) => {
+                            console.log(`📊 Received ${snapshot.size} messages`);
+                            
+                            if (messagesContainer) {
+                                messagesContainer.innerHTML = '';
+                                
+                                if (snapshot.empty) {
+                                    messagesContainer.innerHTML = '<div class="text-gray-500 text-center py-4">No messages yet. Be the first to say hi! 👋</div>';
+                                    return;
+                                }
+                                
+                                snapshot.forEach((doc) => {
+                                    const message = doc.data();
+                                    this.displayMessage(message);
+                                });
+                                
+                                setTimeout(() => {
+                                    if (messagesContainer) {
+                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                    }
+                                }, 100);
+                            }
+                        }, 
+                        (error) => {
+                            console.error("❌ Error loading messages:", error);
+                            
+                            if (error.code === 'failed-precondition') {
+                                console.error("⚠️ Firestore index required!");
+                                
+                                if (messagesContainer) {
+                                    messagesContainer.innerHTML = `
+                                        <div class="text-red-500 text-center py-4">
+                                            <p class="font-bold">Firestore Index Required</p>
+                                            <p class="text-sm mt-2">Check browser console for details.</p>
+                                        </div>`;
+                                }
+                            } else {
+                                if (messagesContainer) {
+                                    messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Failed to load messages</div>';
+                                }
+                            }
+                        }
+                    );
+                } catch (error) {
+                    console.error("❌ Error setting up listener:", error);
+                    if (messagesContainer) {
+                        messagesContainer.innerHTML = '<div class="text-red-500 text-center py-4">Error setting up chat</div>';
+                    }
+                }
+            }
+
+            displayMessage(message) {
+                if (!messagesContainer) return;
+                
+                const messageDiv = document.createElement('div');
+                const isCurrentUser = currentUser && message.senderId === currentUser.uid;
+                
+                messageDiv.className = `message flex max-w-[80%] mb-4 ${isCurrentUser ? 'self-end flex-row-reverse' : 'self-start'}`;
+                
+                let timeString = 'Just now';
+                if (message.timestamp && message.timestamp.toDate) {
+                    try {
+                        const date = message.timestamp.toDate();
+                        timeString = this.formatTime(date);
+                    } catch (error) {
+                        console.error("Error formatting time:", error);
+                    }
+                }
+                
+                const avatarImg = message.senderAvatar || '';
+                const displayName = message.senderName || 'Anonymous';
+                
+                let messageContent = '';
+                
+                if (message.type === 'photo') {
+                    messageContent = `
+                        <div class="mb-2">
+                            <img src="${message.mediaUrl}" alt="Photo" class="max-w-xs max-h-64 rounded-lg shadow-md">
+                        </div>
+                        <div class="message-text text-sm">${message.caption || ''}</div>
+                    `;
+                } else if (message.type === 'video') {
+                    messageContent = `
+                        <div class="mb-2">
+                            <video src="${message.mediaUrl}" controls class="max-w-xs max-h-64 rounded-lg shadow-md"></video>
+                        </div>
+                        <div class="message-text text-sm">${message.caption || ''}</div>
+                    `;
+                } else if (message.type === 'audio') {
+                    messageContent = `
+                        <div class="mb-2">
+                            <audio src="${message.mediaUrl}" controls class="w-full"></audio>
+                        </div>
+                        <div class="message-text text-sm">${message.caption || ''}</div>
+                    `;
+                } else {
+                    messageContent = `<div class="message-text text-sm">${message.text.replace(/\n/g, '<br>')}</div>`;
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar w-10 h-10 rounded-full flex items-center justify-center text-white mx-2 flex-shrink-0 overflow-hidden ${isCurrentUser ? 'bg-yellow-600' : 'bg-pink-300'}">
+                        ${avatarImg ? 
+                            `<img src="${avatarImg}" alt="${displayName}" class="w-full h-full object-cover" onerror="handleImageError(this)">` :
+                            `<span class="text-lg font-semibold">${displayName.charAt(0).toUpperCase()}</span>`
                         }
                     </div>
-                </div>
-            `;
+                    <div class="message-content px-4 py-3 rounded-2xl shadow-sm ${isCurrentUser ? 'bg-pink-300 text-white rounded-tr-none' : 'bg-pink-100 rounded-tl-none'}">
+                        <div class="message-sender font-semibold text-sm mb-1 ${isCurrentUser ? 'text-gray-100' : 'text-pink-600'}">${displayName}</div>
+                        ${messageContent}
+                        <div class="message-time text-xs opacity-70 mt-1 text-right">${timeString}</div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+            }
+
+            async searchMessages() {
+                const searchTerm = searchModalInput.value.trim().toLowerCase();
+                
+                if (!searchTerm) {
+                    if (searchResults) {
+                        searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
+                    }
+                    return;
+                }
+                
+                try {
+                    const messagesQuery = query(
+                        collection(db, "messages"),
+                        orderBy("timestamp", "desc")
+                    );
+                    
+                    const snapshot = await getDocs(messagesQuery);
+                    if (searchResults) {
+                        searchResults.innerHTML = '';
+                    }
+                    
+                    let foundMessages = [];
+                    
+                    snapshot.forEach((doc) => {
+                        const message = doc.data();
+                        if (message.text && message.text.toLowerCase().includes(searchTerm) || 
+                            message.senderName && message.senderName.toLowerCase().includes(searchTerm)) {
+                            foundMessages.push({...message, id: doc.id});
+                        }
+                    });
+                    
+                    if (foundMessages.length === 0) {
+                        if (searchResults) {
+                            searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">No messages found</div>';
+                        }
+                        return;
+                    }
+                    
+                    foundMessages.forEach((message) => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item px-3 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors';
+                        resultItem.innerHTML = `
+                            <div class="search-result-sender font-bold text-pink-600">${message.senderName || 'Anonymous'}</div>
+                            <div class="search-result-text text-sm mt-1">${message.text || ''}</div>
+                            <div class="message-time text-xs text-gray-500 mt-1">${this.formatTime(message.timestamp?.toDate())} • #${message.channel || 'unknown'}</div>
+                        `;
+                        
+                        resultItem.addEventListener('click', () => {
+                            if (message.channel) {
+                                this.switchChannel(message.channel);
+                            }
+                            searchModal.classList.add('hidden');
+                            if (searchModalInput) searchModalInput.value = '';
+                            if (searchResults) searchResults.innerHTML = '<div class="text-gray-500 text-center py-4">Enter a search term</div>';
+                        });
+                        
+                        if (searchResults) {
+                            searchResults.appendChild(resultItem);
+                        }
+                    });
+                } catch (error) {
+                    console.error("Search error:", error);
+                    if (searchResults) {
+                        searchResults.innerHTML = '<div class="text-red-500 text-center py-4">Search failed</div>';
+                    }
+                }
+            }
+
+            formatTime(date) {
+                if (!date) return 'Just now';
+                
+                try {
+                    const now = new Date();
+                    const diffMs = now - date;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    
+                    if (diffMins < 1) return 'Just now';
+                    if (diffMins < 60) return `${diffMins}m ago`;
+                    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
+                    
+                    return date.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                } catch (error) {
+                    return 'Just now';
+                }
+            }
+        }
+
+        // Settings Manager
+        class SettingsManager {
+            constructor() {
+                this.setupSettingsListeners();
+            }
             
-            if (isSelf) {
-                const menuBtn = messageDiv.querySelector('.message-menu-btn');
-                menuBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showMessageContextMenu(e, message.id, message.text);
+            setupSettingsListeners() {
+                const settingsBtn = document.getElementById('settings-btn');
+                const settingsClose = document.getElementById('settings-close');
+                const signoutBtn = document.getElementById('signout-btn');
+                
+                if (settingsBtn) {
+                    settingsBtn.addEventListener('click', () => {
+                        const settingsModal = document.getElementById('settings-modal');
+                        if (settingsModal) {
+                            settingsModal.classList.remove('hidden');
+                        }
+                    });
+                }
+                
+                if (settingsClose) {
+                    settingsClose.addEventListener('click', () => {
+                        const settingsModal = document.getElementById('settings-modal');
+                        if (settingsModal) {
+                            settingsModal.classList.add('hidden');
+                        }
+                    });
+                }
+                
+                if (signoutBtn) {
+                    signoutBtn.addEventListener('click', () => {
+                        if (window.authManager) {
+                            window.authManager.logout();
+                            const settingsModal = document.getElementById('settings-modal');
+                            if (settingsModal) {
+                                settingsModal.classList.add('hidden');
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("🚀 DOM loaded, initializing Girls Chat...");
+            
+            // Initialize managers
+            window.translationManager = new TranslationManager();
+            window.themeManager = new ThemeManager();
+            window.authModalManager = new AuthModalManager();
+            window.authManager = new AuthManager();
+            window.chatManager = new ChatManager();
+            window.mediaManager = new MediaManager();
+            window.settingsManager = new SettingsManager();
+
+            // Setup navigation toggle for mobile
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            const navOverlay = document.querySelector('.nav-overlay');
+            
+            if (hamburger && navLinks && navOverlay) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navLinks.style.left = navLinks.style.left === '0px' ? '-100%' : '0px';
+                    navOverlay.classList.toggle('hidden');
+                });
+                
+                navOverlay.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.style.left = '-100%';
+                    navOverlay.classList.add('hidden');
                 });
             }
             
-            return messageDiv;
-        }
-
-        // Handle room members
-        function handleRoomMembers(members) {
-            membersList.innerHTML = '';
-            membersCount.textContent = members.length;
-            
-            members.forEach(member => {
-                const memberElement = document.createElement('div');
-                memberElement.className = 'flex items-center space-x-3 p-2 hover:bg-gray-700 rounded-lg';
-                memberElement.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <div class="font-medium">${member.userName}</div>
-                        <div class="text-xs text-gray-400">Active now</div>
-                    </div>
-                `;
-                membersList.appendChild(memberElement);
-            });
-        }
-
-        // Send message
-        async function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text || !currentRoomId || !currentUser) return;
-
-            try {
-                await chatService.sendMessage(
-                    currentRoomId,
-                    currentUser.uid,
-                    currentUser.displayName || currentUser.email.split('@')[0],
-                    text
-                );
-
-                // Clear input
-                messageInput.value = '';
-                updateCharCount();
+            // Setup dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                const link = dropdown.querySelector('.nav-link');
+                const menu = dropdown.querySelector('.dropdown-menu');
                 
-            } catch (error) {
-                console.error('Error sending message:', error);
-                showError('Failed to send message');
-            }
-        }
-
-        // Leave room
-        async function leaveRoom() {
-            if (!currentRoomId || !currentUser) return;
-
-            try {
-                await chatService.leaveChatRoom(currentRoomId, currentUser.uid);
-                
-                // Cleanup
-                chatService.cleanup();
-                currentRoomId = null;
-                
-                // Update UI
-                chatContainer.classList.add('hidden');
-                roomsContainer.classList.remove('hidden');
-                
-                // Reload rooms
-                await loadChatRooms();
-                
-            } catch (error) {
-                console.error('Error leaving room:', error);
-                showError('Failed to leave chat room');
-            }
-        }
-
-        // Show message context menu
-        function showMessageContextMenu(event, messageId, messageText) {
-            selectedMessageId = messageId;
-            
-            const menu = document.getElementById('messageContextMenu');
-            menu.style.left = `${event.clientX}px`;
-            menu.style.top = `${event.clientY}px`;
-            menu.classList.remove('hidden');
-            
-            // Setup edit/delete buttons
-            document.getElementById('editMessageBtn').onclick = () => {
-                menu.classList.add('hidden');
-                openEditMessageModal(messageText);
-            };
-            
-            document.getElementById('deleteMessageBtn').onclick = () => {
-                menu.classList.add('hidden');
-                deleteMessage();
-            };
-            
-            // Close menu when clicking elsewhere
-            setTimeout(() => {
-                document.addEventListener('click', closeContextMenu);
-            }, 100);
-        }
-
-        // Close context menu
-        function closeContextMenu() {
-            const menu = document.getElementById('messageContextMenu');
-            menu.classList.add('hidden');
-            document.removeEventListener('click', closeContextMenu);
-        }
-
-        // Open edit message modal
-        function openEditMessageModal(text) {
-            const modal = document.getElementById('editMessageModal');
-            const textarea = document.getElementById('editMessageText');
-            
-            textarea.value = text;
-            updateEditCharCount(text);
-            
-            modal.classList.remove('hidden');
-            
-            // Setup event listeners for modal
-            document.getElementById('cancelEdit').onclick = () => {
-                modal.classList.add('hidden');
-            };
-            
-            document.getElementById('saveEdit').onclick = saveEditedMessage;
-        }
-
-        // Save edited message
-        async function saveEditedMessage() {
-            const newText = document.getElementById('editMessageText').value.trim();
-            if (!newText || !selectedMessageId || !currentRoomId) return;
-
-            try {
-                await chatService.editMessage(currentRoomId, selectedMessageId, newText);
-                
-                const modal = document.getElementById('editMessageModal');
-                modal.classList.add('hidden');
-                
-                showSuccess('Message updated');
-                
-            } catch (error) {
-                console.error('Error editing message:', error);
-                showError('Failed to edit message');
-            }
-        }
-
-        // Delete message
-        async function deleteMessage() {
-            if (!selectedMessageId || !currentRoomId) return;
-
-            if (confirm('Are you sure you want to delete this message?')) {
-                try {
-                    await chatService.deleteMessage(currentRoomId, selectedMessageId);
-                    showSuccess('Message deleted');
-                } catch (error) {
-                    console.error('Error deleting message:', error);
-                    showError('Failed to delete message');
+                if (link && menu) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        menu.classList.toggle('hidden');
+                    });
+                    
+                    document.addEventListener('click', (e) => {
+                        if (!dropdown.contains(e.target)) {
+                            menu.classList.add('hidden');
+                        }
+                    });
                 }
-            }
-        }
+            });
 
-        // Setup event listeners
-        function setupEventListeners() {
-            // Send message on button click
-            sendMessageBtn.addEventListener('click', sendMessage);
-            
-            // Send message on Enter key (but allow Shift+Enter for new line)
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+            // Setup navigation login button (navbar)
+            const navLoginBtn = document.getElementById('nav-login-btn');
+            if (navLoginBtn) {
+                navLoginBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // Character count
-            messageInput.addEventListener('input', updateCharCount);
-            
-            // Leave room
-            document.getElementById('leaveRoom').addEventListener('click', leaveRoom);
-            
-            // Back to rooms
-            document.getElementById('backToRooms').addEventListener('click', leaveRoom);
-            document.getElementById('mobileBackToRooms').addEventListener('click', leaveRoom);
-            
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', async () => {
-                if (currentRoomId) {
-                    await leaveRoom();
-                }
-                await signOut(auth);
-                window.location.href = './login.html';
-            });
-            
-            // Close context menu on escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeContextMenu();
-                    const modal = document.getElementById('editMessageModal');
-                    modal.classList.add('hidden');
-                }
-            });
-            
-            // Close modal on outside click
-            document.getElementById('editMessageModal').addEventListener('click', (e) => {
-                if (e.target.id === 'editMessageModal') {
-                    e.target.classList.add('hidden');
-                }
-            });
-        }
-
-        // Utility functions
-        function updateCharCount() {
-            const length = messageInput.value.length;
-            charCount.textContent = `${length}/500`;
-            
-            if (length > 450) {
-                charCount.classList.add('text-yellow-400');
-            } else {
-                charCount.classList.remove('text-yellow-400');
+                    e.stopPropagation();
+                    
+                    if (currentUser) {
+                        window.authManager.logout();
+                    } else {
+                        const loginModal = document.getElementById('login-modal');
+                        if (loginModal) {
+                            loginModal.classList.remove('hidden');
+                        }
+                    }
+                });
             }
-        }
 
-        function updateEditCharCount(text) {
-            const length = text.length;
-            const charCountElement = document.querySelector('#editMessageModal .text-xs');
-            if (charCountElement) {
-                charCountElement.textContent = `${length}/500`;
+            // Setup navigation search button
+            const navSearchBtn = document.getElementById('nav-search-btn');
+            if (navSearchBtn) {
+                navSearchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Show the search modal
+                    const searchModal = document.getElementById('search-modal');
+                    if (searchModal) {
+                        searchModal.classList.remove('hidden');
+                        searchModal.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => {
+                            const searchInput = document.getElementById('search-modal-input');
+                            if (searchInput) searchInput.focus();
+                        }, 300);
+                    }
+                });
             }
-        }
 
-        function formatTime(date) {
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function showError(message) {
-            // Create error toast
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            toast.textContent = message;
-            document.body.appendChild(toast);
+            // Set initial active channel
+            const initialChannel = document.querySelector('.channel-item[data-channel="ideas"]');
+            if (initialChannel) {
+                initialChannel.click();
+            }
             
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        function showSuccess(message) {
-            // Create success toast
-            const toast = document.createElement('div');
-            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
-            toast.textContent = message;
-            document.body.appendChild(toast);
+            // Setup chat login button (in the chat area)
+            const chatLoginBtn = document.getElementById('chat-login-btn');
+            if (chatLoginBtn) {
+                chatLoginBtn.addEventListener('click', () => {
+                    const loginModal = document.getElementById('login-modal');
+                    if (loginModal) {
+                        loginModal.classList.remove('hidden');
+                    }
+                });
+            }
             
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
+            console.log("✅ Girls Chat initialization complete!");
+        });
+
+        // Make functions available globally
+        window.handleImageError = handleImageError;
     </script>
-    <script type="module" src="./auth-ui.js"></script>
->>>>>>> main
 </body>
-
 </html>
