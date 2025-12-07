@@ -79,6 +79,77 @@
     .story-card:hover {
       transform: translateY(-3px);
     }
+    /* Story Management Styles */
+.story-action-btn {
+  transition: all 0.2s ease;
+}
+
+.story-action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.story-card-grid {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.story-card-grid:hover {
+  border-color: rgba(236, 72, 153, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.story-table tr {
+  transition: background-color 0.2s ease;
+}
+
+.story-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  opacity: 0.9;
+}
+
+.editor-toolbar-btn {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.editor-toolbar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .story-table {
+    display: block;
+    overflow-x: auto;
+  }
+ 
+  .story-table th,
+  .story-table td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
   </style>
 </head>
 
@@ -411,27 +482,87 @@
         </div>
       </div>
      
-      <!-- My Stories Tab -->
-      <div id="stories-tab" class="tab-content hidden animate-fadeIn">
-        <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
-          <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-bold">My Stories</h2>
-            <a href="./stories.html?action=create" class="px-5 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-primary-dark transition-all">
-              <i class="fas fa-plus mr-2"></i>Write New Story
-            </a>
-          </div>
-         
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Story Cards will be dynamically loaded here -->
-          </div>
-         
-          <div class="text-center py-8">
-            <p class="text-gray-400">You haven't written any stories yet.</p>
-            <a href="./stories.html?action=create" class="inline-block mt-4 text-primary hover:text-primary-dark">Start your first story →</a>
-          </div>
-        </div>
+<!-- My Stories Tab - التبويب الجديد كامل ومفعّل -->
+<div id="stories-tab" class="tab-content hidden">
+
+  <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
+
+    <!-- Header مع زر إضافة قصة -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div>
+        <h2 class="text-2xl font-bold flex items-center">
+          <i class="fas fa-book-open text-primary mr-3"></i>My Stories
+        </h2>
+        <p class="text-gray-400 mt-2">Manage all your stories in one place</p>
       </div>
-     
+      <div class="flex gap-3">
+        <button id="add-story-btn" class="px-5 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-primary-dark transition-all flex items-center gap-2">
+          <i class="fas fa-plus"></i> Add New Story
+        </button>
+        <button id="refresh-stories-btn" class="px-4 py-2.5 border border-gray-600 text-gray-300 rounded-full font-medium hover:bg-white/5 transition-all flex items-center gap-2">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards - مع تحديث فوري من Firebase -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <!-- Total Stories -->
+  <div class="bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm rounded-2xl p-6 border border-primary/30 shadow-lg">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-gray-300 text-sm font-medium">Total Stories</p>
+        <p id="total-stories-count" class="text-4xl font-bold text-primary mt-2">0</p>
+      </div>
+      <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center">
+        <i class="fas fa-book-open text-primary text-2xl"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Published Stories -->
+  <div class="bg-gradient-to-br from-green-600/20 to-emerald-600/10 backdrop-blur-sm rounded-2xl p-6 border border-green-500/30 shadow-lg">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-gray-300 text-sm font-medium">Published</p>
+        <p id="published-stories-count" class="text-4xl font-bold text-green-400 mt-2">0</p>
+      </div>
+      <div class="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center">
+        <i class="fas fa-check-circle text-green-400 text-2xl"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Stories -->
+  <div class="bg-gradient-to-br from-yellow-600/20 to-amber-600/10 backdrop-blur-sm rounded-2xl p-6 border border-yellow-500/30 shadow-lg">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-gray-300 text-sm font-medium">Pending Review</p>
+        <p id="pending-stories-count" class="text-4xl font-bold text-yellow-400 mt-2">0</p>
+      </div>
+      <div class="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center">
+        <i class="fas fa-clock text-yellow-400 text-2xl"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Grid View -->
+    <div class="mt-12">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold">Grid View</h3>
+        <button id="toggle-view-btn" class="px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-white/5 transition-all text-sm">
+          <i class="fas fa-th-large mr-2"></i>Switch to Table View
+        </button>
+      </div>
+      <div id="stories-grid-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- البطاقات تتحمل هنا تلقائيًا -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
       <!-- Progress Tab -->
       <div id="progress-tab" class="tab-content hidden animate-fadeIn">
         <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
@@ -1074,362 +1205,828 @@
     });
   </script>
   <!-- Add this to your profile.html after your existing scripts -->
+<!-- استبدل الجزء التالي في profile.html -->
+
 <script type="module">
-  import { checkAuthState, setupLogout } from './firebaseauth.js';
- 
-  document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is logged in
-    checkAuthState();
-   
-    // Setup logout functionality
-    setupLogout();
-   
-    // Redirect to login if not authenticated
-    const user = JSON.parse(localStorage.getItem('girlspaceUser'));
-    if (!user) {
-      window.location.href = './login.html';
-    } else {
-      // Load user data from localStorage
-      document.getElementById('userName').textContent = user.displayName || 'User';
-      document.getElementById('userBio').textContent = user.bio || 'Welcome to GirlsSpace!';
-      if (user.photoURL) {
-        document.getElementById('profileImage').src = user.photoURL;
-        document.getElementById('modalProfileImage').src = user.photoURL;
-      }
-    }
-  });
-</script>
-<!-- Add this to profile.html, before </body> -->
-<script type="module">
-  import { getCurrentUserProfile, updateUserProfile } from './user-profile-service.js';
- 
-  document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Loading user profile...');
-   
-    try {
-      // Get user profile from Firebase
-      const userProfile = await getCurrentUserProfile();
-     
-      if (!userProfile) {
-        console.log('❌ No profile found, redirecting to login');
-        window.location.href = './login.html';
-        return;
-      }
-     
-      console.log('✅ Profile loaded:', userProfile);
-     
-      // Update the UI with profile data
-      updateProfileUI(userProfile);
-     
-      // Setup form submission for profile updates
-      setupProfileUpdateForm(userProfile);
-     
-      // Load additional user data
-      loadUserStatistics(userProfile.uid);
-      loadUserStories(userProfile.uid);
-      loadUserProgress(userProfile.uid);
-     
-    } catch (error) {
-      console.error('❌ Error loading profile:', error);
-      showError('Failed to load profile. Please try again.');
-    }
-  });
- 
-  // Function to update UI with profile data
-  function updateProfileUI(profile) {
-    // Update basic info
-    document.getElementById('userName').textContent = profile.fullName || profile.email;
-    document.getElementById('userBio').textContent = profile.bio || 'Welcome to GirlsSpace!';
-   
-    // Update profile picture
-    const profileImage = document.getElementById('profileImage');
-    const modalProfileImage = document.getElementById('modalProfileImage');
-   
-    if (profile.photoURL) {
-      profileImage.src = profile.photoURL;
-      if (modalProfileImage) modalProfileImage.src = profile.photoURL;
-    }
-   
-    // Update location
-    const locationElement = document.querySelector('[data-location]');
-    if (locationElement) {
-      locationElement.textContent = profile.location || 'Mahama Refugee Camp';
-    }
-   
-    // Update member since date
-    const memberSinceElement = document.querySelector('[data-member-since]');
-    if (memberSinceElement && profile.createdAt) {
-      const date = new Date(profile.createdAt);
-      memberSinceElement.textContent = `Member since ${date.getFullYear()}`;
-    }
-   
-    // Update settings form
-    updateSettingsForm(profile);
-  }
- 
-  // Function to update settings form
-  function updateSettingsForm(profile) {
-    const form = document.getElementById('profileForm');
-    if (!form) return;
-   
-    // Pre-fill form fields
-    const firstNameInput = form.querySelector('[name="firstName"]');
-    const lastNameInput = form.querySelector('[name="lastName"]');
-    const emailInput = form.querySelector('[name="email"]');
-    const bioTextarea = form.querySelector('[name="bio"]');
-    const locationSelect = form.querySelector('[name="location"]');
-    const languageSelect = form.querySelector('[name="preferredLanguage"]');
-   
-    if (firstNameInput) firstNameInput.value = profile.firstName || '';
-    if (lastNameInput) lastNameInput.value = profile.lastName || '';
-    if (emailInput) emailInput.value = profile.email || '';
-    if (bioTextarea) bioTextarea.value = profile.bio || '';
-    if (locationSelect) locationSelect.value = profile.location || 'mahama';
-    if (languageSelect) languageSelect.value = profile.preferredLanguage || 'en';
-   
-    // Handle form submission
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-     
-      try {
-        const updatedData = {
-          firstName: firstNameInput.value,
-          lastName: lastNameInput.value,
-          fullName: `\( {firstNameInput.value} \){lastNameInput.value}`.trim(),
-          bio: bioTextarea.value,
-          location: locationSelect.value,
-          preferredLanguage: languageSelect.value,
-          updatedAt: new Date().toISOString()
-        };
-       
-        console.log('📝 Updating profile with:', updatedData);
-       
-        const updatedProfile = await updateUserProfile(updatedData);
-       
-        // Update UI
-        updateProfileUI(updatedProfile);
-       
-        showSuccessMessage('Profile updated successfully!');
-       
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        showError('Failed to update profile. Please try again.');
-      }
-    });
-  }
- 
-  // Function to load user statistics
-  async function loadUserStatistics(userId) {
-    try {
-      // This would call your Firebase function to get statistics
-      // For now, we'll use placeholder data
-      const stats = {
-        storiesCount: 24,
-        chatMessagesCount: 156,
-        programsCompleted: 8,
-        badgesEarned: 5
-      };
-     
-      // Update UI with statistics
-      document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl').textContent = stats.storiesCount;
-      document.querySelector('.bg-white\\/5:nth-child(2) .text-2xl').textContent = stats.chatMessagesCount;
-      document.querySelector('.bg-white\\/5:nth-child(3) .text-2xl').textContent = stats.programsCompleted;
-      document.querySelector('.bg-white\\/5:nth-child(4) .text-2xl').textContent = stats.badgesEarned;
-     
-    } catch (error) {
-      console.error('Error loading statistics:', error);
-    }
-  }
- 
-  // Function to load user stories
-  async function loadUserStories(userId) {
-    try {
-      // You would query your stories collection here
-      // const stories = await getUserStories(userId);
-     
-      // For now, we'll use placeholder
-      console.log('Loading stories for user:', userId);
-     
-    } catch (error) {
-      console.error('Error loading stories:', error);
-    }
-  }
- 
-  // Function to load user progress
-  async function loadUserProgress(userId) {
-    try {
-      // You would query your userProgress collection here
-      // const progress = await getUserProgress(userId);
-     
-      // For now, we'll use placeholder data
-      const progress = {
-        englishLanguage: 75,
-        lifeSkills: 90,
-        gbvPrevention: 60,
-        digitalSkills: 45
-      };
-     
-      // Update progress bars
-      updateProgressBars(progress);
-     
-    } catch (error) {
-      console.error('Error loading progress:', error);
-    }
-  }
- 
-  // Function to update progress bars
-  function updateProgressBars(progress) {
-    Object.keys(progress).forEach(key => {
-      const progressBar = document.querySelector(`[data-progress="${key}"]`);
-      if (progressBar) {
-        progressBar.style.width = `${progress[key]}%`;
-        progressBar.nextElementSibling.textContent = `${progress[key]}%`;
-      }
-    });
-  }
- 
-  // Utility functions
-  function showSuccessMessage(message) {
-    const toast = document.getElementById('successToast');
-    if (toast) {
-      toast.querySelector('span').textContent = message;
-      toast.style.transform = 'translateX(0)';
-      setTimeout(() => {
-        toast.style.transform = 'translateX(100%)';
-      }, 3000);
-    }
-  }
- 
-  function showError(message) {
-    alert(message); // You can replace this with a better error display
-  }
-</script>
-<!-- ربط عدد القصص في الداشبورد مع Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-  import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
-    authDomain: "sigin-b3aa1.firebaseapp.com",
-    projectId: "sigin-b3aa1",
-    storageBucket: "sigin-b3aa1.firebasestorage.app",
-    messagingSenderId: "390069352394",
-    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // العنصر اللي فيه عدد القصص في الداشبورد
-  const storiesCountElement = document.querySelector('.bg-white\\/5 .text-2xl.text-primary');
-
-  // لما يتغير حالة اللوجن
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // جلب عدد القصص الخاصة بالمستخدمة في الوقت الفعلي
-      const q = query(
-        collection(db, "stories"),
-        where("authorId", "==", user.uid)
-        // لو عايزة تشملي القصص المعلقة (pending) كمان:
-        // where("authorId", "==", user.uid)
-      );
-
-      // Real-time listener → كل ما تتضاف أو تتمسح قصة → يتحدث الرقم فورًا
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const count = snapshot.size; // عدد الوثائق = عدد القصص
-
-        if (storiesCountElement) {
-          storiesCountElement.textContent = count;
-         
-          // اختياري: لو مفيش قصص → نكتب "0"
-          if (count === 0) {
-            storiesCountElement.textContent = "0";
-          }
-        }
-
-        console.log(`عدد قصص المستخدمة: ${count}`);
-      });
-
-      // تنظيف الـ listener لما يطلع من الصفحة (مهم جدًا)
-      window.addEventListener('beforeunload', () => unsubscribe());
-
-    } else {
-      // لو مش مسجلة دخول → 0 قصة
-      if (storiesCountElement) {
-        storiesCountElement.textContent = "0";
-      }
-    }
-  });
-</script>
-<!-- 2. إظهار آخر قصة في Recent Activity -->
-<script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-  import { getFirestore, collection, query, where, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-
-  const auth = getAuth();
-  const db = getFirestore();
-  const recentList = document.querySelector('#overview-tab .space-y-4');
-
-  function getTimeAgo(date) {
-    const diff = Date.now() - date.getTime();
-    const m = Math.floor(diff / 60000);
-    const h = Math.floor(m / 60);
-    if (m < 60) return `${m}m ago`;
-    if (h < 24) return `${h}h ago`;
-    return `${Math.floor(h/24)}d ago`;
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    if (!user || !recentList) return;
-
-    const q = query(
-      collection(db, "stories"),
-      where("authorId", "==", user.uid),
-      orderBy("createdAt", "desc"),
-      limit(1)
-    );
-
-    onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach(change => {
-        if (change.type === "added") {
-          const s = change.doc.data();
-          const item = document.createElement('div');
-          item.className = 'flex items-center gap-4 p-4 bg-white/5 rounded-xl';
-          item.innerHTML = `
-            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-              <i class="fas fa-pen text-primary"></i>
-            </div>
-            <div class="flex-1">
-              <p class="font-medium">Posted a new story</p>
-              <p class="text-sm text-gray-400">"${s.title}"</p>
-            </div>
-            <span class="text-sm text-gray-400">${getTimeAgo(s.createdAt.toDate())}</span>
-          `;
-          recentList.insertBefore(item, recentList.firstChild);
-        }
-      });
-    });
-  });
-</script>
-<!-- حذف القصص من الداشبورد + عرض القصص الخاصة بالمستخدمة -->
-<script type="module">
+  // Firebase setup
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
   import {
     getAuth,
-    onAuthStateChanged
+    onAuthStateChanged,
+    signOut
   } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
   import {
     getFirestore,
     collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
     query,
     where,
     onSnapshot,
-    doc,
-    deleteDoc
+    orderBy,
+    limit,
+    serverTimestamp,
+    increment
   } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+  import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  console.log("Firebase initialized for profile page");
+
+  // متغيرات العناصر
+  const storiesCountElement = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
+  const recentActivitySection = document.querySelector('#overview-tab .space-y-4');
+  const userNameEl = document.getElementById('userName');
+  const userBioEl = document.getElementById('userBio');
+  const profileImageEl = document.getElementById('profileImage');
+  const modalImageEl = document.getElementById('modalProfileImage');
+
+  // 1. نظام مراقبة حالة المصادقة
+  onAuthStateChanged(auth, async (user) => {
+    console.log("Auth state changed:", user ? `User: ${user.email}` : "No user");
+   
+    if (!user) {
+      // إذا لم يكن مسجلاً دخول، توجيه إلى صفحة تسجيل الدخول
+      console.log("No user found, redirecting to login");
+      window.location.href = "./login.html";
+      return;
+    }
+
+    // 2. تحميل بيانات الملف الشخصي
+    await loadUserProfile(user.uid);
+   
+    // 3. إعداد تحديث عدد القصص في الوقت الفعلي
+    setupRealTimeStoryCount(user.uid);
+   
+    // 4. إعداد تحديث النشاط الحديث
+    setupRecentActivity(user.uid);
+   
+    // 5. إعداد تحديث القصص الشخصية
+    setupMyStories(user.uid);
+   
+    // 6. إعداد إحصائيات المستخدم
+    setupUserStats(user.uid);
+   
+    // 7. إعداد استماع لتحديثات من صفحة القصص
+    setupStoryUpdatesListener();
+   
+    // 8. تحميل بيانات الملف الشخصي في المودال
+    loadProfileModalData(user.uid);
+   
+    // 9. إعداد أزرار تسجيل الخروج
+    setupLogoutButtons();
+  });
+
+  // ================== دالة تحميل الملف الشخصي ==================
+  async function loadUserProfile(userId) {
+    try {
+      console.log("Loading user profile for:", userId);
+     
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+     
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        console.log("User data loaded:", userData);
+       
+        // تحديث الاسم
+        if (userNameEl) {
+          userNameEl.textContent = userData.displayName ||
+                                  userData.fullName ||
+                                  "GirlsSpace Member";
+        }
+       
+        // تحديث البيو
+        if (userBioEl) {
+          userBioEl.textContent = userData.bio ||
+                                 "Passionate about education and women empowerment.";
+        }
+       
+        // تحديث الصورة
+        if (profileImageEl && userData.photoURL) {
+          profileImageEl.src = userData.photoURL;
+        }
+        if (modalImageEl && userData.photoURL) {
+          modalImageEl.src = userData.photoURL;
+        }
+       
+        // تحديث التاريخ
+        const memberSince = document.querySelector('.px-3.py-1.bg-primary\\/20');
+        if (memberSince && userData.createdAt) {
+          const date = userData.createdAt.toDate
+            ? userData.createdAt.toDate().getFullYear()
+            : new Date().getFullYear();
+          memberSince.textContent = `Member since ${date}`;
+        }
+      } else {
+        console.log("No user profile found, creating default...");
+        // إنشاء ملف شخصي افتراضي
+        await createDefaultProfile(userId);
+      }
+    } catch (error) {
+      console.error("Error loading user profile:", error);
+      showToast("Failed to load profile data", "error");
+    }
+  }
+
+  // ================== إنشاء ملف شخصي افتراضي ==================
+  async function createDefaultProfile(userId) {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+     
+      const defaultProfile = {
+        displayName: user.displayName || user.email.split('@')[0] || "New Member",
+        email: user.email,
+        photoURL: user.photoURL || "https://via.placeholder.com/160",
+        bio: "Passionate about education and women empowerment. I love sharing stories and learning new skills through GirlsSpace programs.",
+        location: "Mahama Refugee Camp",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+     
+      await setDoc(doc(db, "users", userId), defaultProfile);
+      console.log("Default profile created");
+     
+      // تحديث الواجهة
+      if (userNameEl) userNameEl.textContent = defaultProfile.displayName;
+      if (userBioEl) userBioEl.textContent = defaultProfile.bio;
+      if (profileImageEl) profileImageEl.src = defaultProfile.photoURL;
+      if (modalImageEl) modalImageEl.src = defaultProfile.photoURL;
+     
+    } catch (error) {
+      console.error("Error creating default profile:", error);
+    }
+  }
+
+  // ================== تحديث عدد القصص في الوقت الفعلي ==================
+  function setupRealTimeStoryCount(userId) {
+    console.log("Setting up real-time story count for:", userId);
+   
+    const storiesQuery = query(
+      collection(db, "stories"),
+      where("authorId", "==", userId)
+    );
+   
+    const unsubscribe = onSnapshot(storiesQuery, (snapshot) => {
+      const count = snapshot.size;
+      console.log("Real-time story count:", count);
+     
+      if (storiesCountElement) {
+        storiesCountElement.textContent = count;
+       
+        // تأثير عند التغيير
+        storiesCountElement.classList.add('animate-pulse');
+        setTimeout(() => {
+          storiesCountElement.classList.remove('animate-pulse');
+        }, 500);
+       
+        // تخزين في localStorage
+        localStorage.setItem('current_story_count', count.toString());
+       
+        // إظهار رسالة خاصة
+        if (count === 1) {
+          showStoryNotification("تم إضافة قصة 1 ✅");
+        } else if (count === 0) {
+          showStoryNotification("0 قصص");
+        }
+      }
+    }, (error) => {
+      console.error("Error in story count listener:", error);
+    });
+   
+    // تنظيف عند الخروج
+    window.addEventListener('beforeunload', () => {
+      unsubscribe();
+    });
+  }
+
+  // ================== تحديث النشاط الحديث ==================
+  function setupRecentActivity(userId) {
+    if (!recentActivitySection) return;
+   
+    const recentQuery = query(
+      collection(db, "stories"),
+      where("authorId", "==", userId),
+      orderBy("createdAt", "desc"),
+      limit(3)
+    );
+   
+    const unsubscribe = onSnapshot(recentQuery, (snapshot) => {
+      // مسح النشاط القديم (احتفظ بالأنشطة الأخرى)
+      const oldActivities = recentActivitySection.querySelectorAll('[data-story-activity]');
+      oldActivities.forEach(activity => activity.remove());
+     
+      snapshot.forEach((docSnap) => {
+        const story = docSnap.data();
+        const activityItem = createActivityItem(story);
+        recentActivitySection.prepend(activityItem);
+      });
+    });
+   
+    // تنظيف عند الخروج
+    window.addEventListener('beforeunload', () => {
+      unsubscribe();
+    });
+  }
+
+  // ================== إنشاء عنصر نشاط ==================
+  function createActivityItem(story) {
+    const item = document.createElement('div');
+    item.className = 'flex items-center gap-4 p-4 bg-white/5 rounded-xl animate-fadeIn';
+    item.setAttribute('data-story-activity', 'true');
+   
+    const timeAgo = getTimeAgo(story.createdAt?.toDate() || new Date());
+    const status = story.status === 'pending' ? 'submitted' : 'published';
+   
+    item.innerHTML = `
+      <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+        <i class="fas fa-book text-primary"></i>
+      </div>
+      <div class="flex-1">
+        <p class="font-medium">${status} a story</p>
+        <p class="text-sm text-gray-400">"${escapeHtml(story.title || 'Untitled')}"</p>
+      </div>
+      <span class="text-sm text-gray-400">${timeAgo}</span>
+    `;
+   
+    return item;
+  }
+
+  // ================== إعداد القصص الشخصية ==================
+  function setupMyStories(userId) {
+    const storiesTab = document.getElementById('stories-tab');
+    if (!storiesTab) return;
+   
+    const storiesGrid = storiesTab.querySelector('.grid') ||
+                       document.createElement('div');
+   
+    if (!storiesGrid.classList.contains('grid')) {
+      storiesGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+      storiesTab.appendChild(storiesGrid);
+    }
+   
+    const storiesQuery = query(
+      collection(db, "stories"),
+      where("authorId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+   
+    const unsubscribe = onSnapshot(storiesQuery, (snapshot) => {
+      storiesGrid.innerHTML = '';
+     
+      if (snapshot.empty) {
+        storiesGrid.innerHTML = `
+          <div class="col-span-full text-center py-8">
+            <div class="w-16 h-16 mx-auto bg-gray-700 rounded-full flex items-center justify-center mb-4">
+              <i class="fas fa-book-open text-gray-400 text-2xl"></i>
+            </div>
+            <p class="text-gray-400">You haven't written any stories yet.</p>
+            <a href="./stories.html" class="inline-block mt-4 text-primary hover:text-primary-dark">
+              Start your first story →
+            </a>
+          </div>
+        `;
+        return;
+      }
+     
+      snapshot.forEach((docSnap) => {
+        const story = docSnap.data();
+        const storyCard = createStoryCard(story, docSnap.id);
+        storiesGrid.appendChild(storyCard);
+      });
+    });
+   
+    // تنظيف عند الخروج
+    window.addEventListener('beforeunload', () => {
+      unsubscribe();
+    });
+  }
+
+  // ================== إنشاء بطاقة قصة ==================
+  function createStoryCard(story, storyId) {
+    const card = document.createElement('div');
+    card.className = 'story-card bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all';
+   
+    const statusClass = story.status === 'pending'
+      ? 'bg-yellow-500/20 text-yellow-300'
+      : 'bg-green-500/20 text-green-300';
+    const statusText = story.status === 'pending' ? 'Pending Review' : 'Published';
+    const date = story.createdAt?.toDate
+      ? story.createdAt.toDate().toLocaleDateString()
+      : new Date().toLocaleDateString();
+   
+    card.innerHTML = `
+      <div class="flex justify-between items-start mb-3">
+        <h4 class="font-bold text-lg">${escapeHtml(story.title || 'Untitled')}</h4>
+        <span class="text-xs px-2 py-1 rounded ${statusClass}">${statusText}</span>
+      </div>
+      <p class="text-sm text-gray-400 mb-2">${story.category || 'General'}</p>
+      <p class="text-gray-300 text-sm mb-4 line-clamp-2">
+        ${escapeHtml(story.story_content?.substring(0, 100) || '')}...
+      </p>
+      <div class="flex justify-between items-center">
+        <span class="text-xs text-gray-500">${date}</span>
+        <div class="flex gap-2">
+          <a href="./stories.html#${storyId}" class="text-primary text-sm hover:underline">View</a>
+          <button onclick="deleteStoryFromDashboard('${storyId}')" class="text-red-400 text-sm hover:text-red-600">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `;
+   
+    return card;
+  }
+
+  // ================== دالة حذف القصة ==================
+  window.deleteStoryFromDashboard = async function(storyId) {
+    if (!confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
+      return;
+    }
+   
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+     
+      // حذف من Firebase
+      await deleteDoc(doc(db, "stories", storyId));
+     
+      // تحديث localStorage
+      const currentCount = parseInt(localStorage.getItem('current_story_count') || '0');
+      localStorage.setItem('current_story_count', Math.max(0, currentCount - 1).toString());
+     
+      showToast("Story deleted successfully", "success");
+     
+    } catch (error) {
+      console.error("Error deleting story:", error);
+      showToast("Failed to delete story", "error");
+    }
+  };
+
+  // ================== إعداد إحصائيات المستخدم ==================
+  function setupUserStats(userId) {
+    const userStatsRef = doc(db, "userStats", userId);
+   
+    const unsubscribe = onSnapshot(userStatsRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const stats = docSnap.data();
+        updateAllStats(stats);
+      }
+    });
+   
+    window.addEventListener('beforeunload', () => {
+      unsubscribe();
+    });
+  }
+
+  // ================== تحديث جميع الإحصائيات ==================
+  function updateAllStats(stats) {
+    const statElements = {
+      stories: document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl'),
+      messages: document.querySelector('.bg-white\\/5:nth-child(2) .text-2xl'),
+      programs: document.querySelector('.bg-white\\/5:nth-child(3) .text-2xl'),
+      badges: document.querySelector('.bg-white\\/5:nth-child(4) .text-2xl')
+    };
+   
+    if (statElements.stories) {
+      statElements.stories.textContent = stats.storiesCount || 0;
+    }
+    if (statElements.messages) {
+      statElements.messages.textContent = stats.chatMessages || 0;
+    }
+    if (statElements.programs) {
+      statElements.programs.textContent = stats.programsCompleted || 0;
+    }
+    if (statElements.badges) {
+      statElements.badges.textContent = stats.badgesEarned || 0;
+    }
+  }
+
+  // ================== استماع لتحديثات من صفحة القصص ==================
+  function setupStoryUpdatesListener() {
+    // الاستماع لـ localStorage
+    setInterval(() => {
+      checkForStoryUpdates();
+    }, 1000);
+   
+    // الاستماع لـ Broadcast Channel
+    if (typeof BroadcastChannel !== 'undefined') {
+      const channel = new BroadcastChannel('story_updates');
+      channel.onmessage = (event) => {
+        if (event.data.type === 'story_count_update') {
+          updateStoryCountDisplay(event.data.count);
+        }
+      };
+    }
+   
+    // الاستماع لـ window messages
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'STORY_UPDATE') {
+        updateStoryCountDisplay(event.data.count);
+      }
+    });
+  }
+
+  // ================== التحقق من تحديثات القصص ==================
+  function checkForStoryUpdates() {
+    const notification = localStorage.getItem('story_update_notification');
+   
+    if (notification) {
+      try {
+        const data = JSON.parse(notification);
+       
+        if (data.action === 'added') {
+          showStoryNotification("تم إضافة قصة 1 ✅");
+        } else if (data.action === 'deleted') {
+          showStoryNotification("0 قصص");
+        }
+       
+        // مسح الإشعار
+        localStorage.removeItem('story_update_notification');
+      } catch (error) {
+        console.error("Error parsing notification:", error);
+        localStorage.removeItem('story_update_notification');
+      }
+    }
+  }
+
+  // ================== تحديث عرض عدد القصص ==================
+  function updateStoryCountDisplay(count) {
+    if (storiesCountElement) {
+      storiesCountElement.textContent = count;
+      storiesCountElement.classList.add('animate-bounce');
+      setTimeout(() => {
+        storiesCountElement.classList.remove('animate-bounce');
+      }, 500);
+    }
+  }
+
+  // ================== تحميل بيانات المودال ==================
+  async function loadProfileModalData(userId) {
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    if (!editProfileBtn) return;
+   
+    editProfileBtn.addEventListener('click', async () => {
+      try {
+        const userDoc = await getDoc(doc(db, "users", userId));
+       
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const nameParts = (userData.displayName || "").split(" ");
+         
+          document.getElementById('editFirstName').value = nameParts[0] || "";
+          document.getElementById('editLastName').value = nameParts.slice(1).join(" ") || "";
+          document.getElementById('editBio').value = userData.bio || "";
+         
+          if (userData.location) {
+            document.getElementById('editLocation').value = userData.location;
+          }
+        }
+       
+        document.getElementById('editProfileModal').classList.remove('hidden');
+      } catch (error) {
+        console.error("Error loading modal data:", error);
+      }
+    });
+  }
+
+  // ================== إعداد أزرار تسجيل الخروج ==================
+  function setupLogoutButtons() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+   
+    async function handleLogout() {
+      try {
+        await signOut(auth);
+        localStorage.removeItem('girlspaceUser');
+        localStorage.removeItem('current_story_count');
+        window.location.href = './index.html';
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+    }
+   
+    if (logoutBtn) {
+      logoutBtn.classList.remove('hidden');
+      logoutBtn.addEventListener('click', handleLogout);
+    }
+   
+    if (mobileLogoutBtn) {
+      mobileLogoutBtn.classList.remove('hidden');
+      mobileLogoutBtn.addEventListener('click', handleLogout);
+    }
+  }
+
+  // ================== وظائف مساعدة ==================
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function getTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+   
+    if (diffMins < 1) return "just now";
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hours ago`;
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  }
+
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-white font-medium shadow-lg z-50 transition-all duration-300 transform translate-y-[-100px] ${
+      type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    }`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+   
+    setTimeout(() => {
+      toast.style.transform = 'translateY(0)';
+    }, 100);
+   
+    setTimeout(() => {
+      toast.style.transform = 'translateY(-100px)';
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 3000);
+  }
+
+  function showStoryNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-20 right-4 bg-primary text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-pulse';
+    notification.innerHTML = `
+      <div class="flex items-center gap-2">
+        <i class="fas fa-book"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+   
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  // إضافة أنماط CSS للرسوم المتحركة
+  const style = document.createElement('style');
+  style.textContent = `
+    .animate-pulse {
+      animation: pulse 0.5s ease-in-out;
+    }
+    .animate-bounce {
+      animation: bounce 0.5s ease-in-out;
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  `;
+  document.head.appendChild(style);
+
+</script>
+
+<!-- Clean up - remove duplicate Firebase imports and scripts -->
+ <!-- Story Editor Modal -->
+<div id="story-editor-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
+   
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-gray-900 p-6 border-b border-gray-800 z-10">
+      <div class="flex justify-between items-center">
+        <h2 id="modal-title" class="text-2xl font-bold">Add New Story</h2>
+        <button id="close-editor-modal" class="text-gray-400 hover:text-white text-2xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <p id="modal-subtitle" class="text-gray-400 mt-2">Share your story with the community</p>
+    </div>
+   
+    <!-- Form Content -->
+    <div class="p-6">
+      <form id="story-editor-form">
+       
+        <!-- Story ID (hidden for edit mode) -->
+        <input type="hidden" id="story-id">
+       
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- Left Column -->
+          <div class="space-y-6">
+            <!-- Title -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Story Title *</label>
+              <input type="text" id="story-title" required
+                     class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none"
+                     placeholder="Enter your story title">
+            </div>
+           
+            <!-- Author Name -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Author Name</label>
+              <input type="text" id="author-name"
+                     class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none"
+                     placeholder="Your name or anonymous">
+            </div>
+           
+            <!-- Category -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Category *</label>
+              <select id="story-category" required
+                      class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none">
+                <option value="">Select Category</option>
+                <option value="education">Education & Learning</option>
+                <option value="empowerment">Personal Empowerment</option>
+                <option value="community">Community Support</option>
+                <option value="career">Career & Dreams</option>
+                <option value="health">Health & Wellbeing</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+           
+            <!-- Status -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Status</label>
+              <select id="story-status"
+                      class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none">
+                <option value="draft">Draft</option>
+                <option value="pending">Pending Review</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
+         
+          <!-- Right Column -->
+          <div>
+            <!-- Featured Image -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Featured Image</label>
+              <div class="border-2 border-dashed border-gray-700 rounded-xl p-6 text-center cursor-pointer hover:border-primary transition-colors"
+                   onclick="document.getElementById('story-image-upload').click()">
+                <div id="image-preview" class="mb-4">
+                  <div class="w-32 h-32 mx-auto bg-gray-800 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-image text-gray-600 text-3xl"></i>
+                  </div>
+                </div>
+                <p class="text-gray-400">Click to upload image</p>
+                <p class="text-sm text-gray-500 mt-2">PNG, JPG up to 5MB</p>
+                <input type="file" id="story-image-upload" accept="image/*" class="hidden">
+              </div>
+            </div>
+           
+            <!-- Character Counter -->
+            <div class="bg-white/5 rounded-xl p-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm text-gray-400">Content Length</span>
+                <span id="char-counter" class="text-sm font-medium">0/5000</span>
+              </div>
+              <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+                <div id="char-progress" class="h-full bg-primary" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        <!-- Story Content -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-2">Story Content *</label>
+          <div class="mb-2 flex gap-2">
+            <button type="button" onclick="formatText('bold')" class="px-3 py-1 bg-white/5 rounded hover:bg-white/10">
+              <i class="fas fa-bold"></i>
+            </button>
+            <button type="button" onclick="formatText('italic')" class="px-3 py-1 bg-white/5 rounded hover:bg-white/10">
+              <i class="fas fa-italic"></i>
+            </button>
+            <button type="button" onclick="formatText('underline')" class="px-3 py-1 bg-white/5 rounded hover:bg-white/10">
+              <i class="fas fa-underline"></i>
+            </button>
+          </div>
+          <textarea id="story-content" rows="12" required
+                    class="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none resize-none"
+                    placeholder="Write your story here..."></textarea>
+        </div>
+       
+        <!-- Tags -->
+        <div class="mb-8">
+          <label class="block text-sm font-medium mb-2">Tags</label>
+          <div class="flex flex-wrap gap-2 mb-2" id="tags-container">
+            <!-- Tags will be added here -->
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="tag-input"
+                   class="flex-1 px-4 py-2 bg-white/5 border border-gray-700 rounded-xl focus:border-primary focus:outline-none"
+                   placeholder="Add tags (press Enter)">
+            <button type="button" onclick="addTag()" class="px-4 py-2 bg-primary/20 text-primary rounded-xl hover:bg-primary/30">
+              Add
+            </button>
+          </div>
+        </div>
+       
+        <!-- Action Buttons -->
+        <div class="flex gap-4 pt-6 border-t border-gray-800">
+          <button type="submit" id="save-story-btn"
+                  class="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-dark transition-colors flex-1">
+            <span id="save-btn-text">Publish Story</span>
+            <div id="save-loading" class="loading-spinner hidden ml-2"></div>
+          </button>
+         
+          <button type="button" id="save-draft-btn"
+                  class="px-6 py-3 border border-gray-600 text-gray-300 rounded-xl font-semibold hover:bg-white/5 transition-colors">
+            Save as Draft
+          </button>
+         
+          <button type="button" id="cancel-editor"
+                  class="px-6 py-3 border border-gray-600 text-gray-300 rounded-xl font-semibold hover:bg-white/5 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-confirm-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-gray-900 rounded-2xl max-w-md w-full p-6 border border-gray-800">
+    <div class="text-center">
+      <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
+        <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Delete Story</h3>
+      <p class="text-gray-400 mb-6">Are you sure you want to delete this story? This action cannot be undone.</p>
+     
+      <div class="flex gap-3">
+        <button id="confirm-delete-btn" class="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors">
+          Yes, Delete
+        </button>
+        <button id="cancel-delete-btn" class="flex-1 px-4 py-3 border border-gray-600 text-gray-300 rounded-xl font-semibold hover:bg-white/5 transition-colors">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Toast -->
+<div id="story-toast" class="fixed top-20 right-4 z-50 px-6 py-4 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300">
+  <div class="flex items-center gap-3">
+    <i class="fas fa-check-circle text-white"></i>
+    <span class="text-white font-medium" id="toast-message"></span>
+  </div>
+</div>
+
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
@@ -1444,162 +2041,443 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // العناصر في الداشبورد
-  const storiesCountElement = document.querySelector('.bg-white\\/5 .text-2xl.text-primary');
-  const myStoriesContainer = document.getElementById('my-stories-container') ||
-    document.querySelector('#stories-tab .grid') ||
-    document.querySelector('#overview-tab .story-card')?.parentElement;
+  let currentUser = null;
+  let currentStoryId = null;
 
-  // إنشاء قسم "My Stories" في تبويب Overview لو مش موجود
-  let container = document.getElementById('my-stories-list');
-  if (!container) {
-    // نضيفه تحت Recent Activity أو في تبويب Stories
-    const overviewTab = document.getElementById('overview-tab');
-    if (overviewTab) {
-      const existingSection = overviewTab.querySelector('.bg-gradient-to-br');
-      const newSection = document.createElement('div');
-      newSection.className = 'bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800';
-      newSection.innerHTML = `
-        <h2 class="text-2xl font-bold mb-6 flex items-center">
-          My Stories
-          <span class="ml-auto text-primary text-lg font-normal" id="my-stories-count">0</span>
-        </h2>
-        <div id="my-stories-list" class="space-y-4"></div>
-        <div id="no-my-stories" class="text-center py-8 text-gray-400 hidden">
-          You haven't shared any stories yet.
-          <a href="./stories.html" class="text-primary block mt-2">Write your first story →</a>
-        </div>
-      `;
-      // نضيفه بعد Recent Activity
-      const recentActivitySection.after(newSection);
+  // عند تسجيل الدخول
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      loadStories();
+    } else {
+      window.location.href = "login.html";
     }
+  });
+
+  // فتح المودال لإضافة قصة جديدة
+  document.getElementById('add-story-btn')?.addEventListener('click', () => {
+    currentStoryId = null;
+    document.getElementById('modal-title').textContent = 'Add New Story';
+    document.getElementById('save-btn-text').textContent = 'Publish Story';
+    document.getElementById('story-editor-form').reset();
+    document.getElementById('story-status').value = 'pending';
+    document.getElementById('story-editor-modal').classList.remove('hidden');
+  });
+
+  document.getElementById('add-first-story-btn')?.addEventListener('click', () => {
+    document.getElementById('add-story-btn').click();
+  });
+
+  // إغلاق المودال
+  document.getElementById('close-editor-modal')?.addEventListener('click', closeModal);
+  document.getElementById('cancel-editor')?.addEventListener('click', closeModal);
+  document.getElementById('story-editor-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'story-editor-modal') closeModal();
+  });
+
+  function closeModal() {
+    document.getElementById('story-editor-modal').classList.add('hidden');
+    currentStoryId = null;
   }
 
-  const recentActivitySection = document.querySelector('.bg-gradient-to-br.from-gray-900');
+  // حفظ القصة
+  document.getElementById('story-editor-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      if (storiesCountElement) storiesCountElement.textContent = "0";
+    const title = document.getElementById('story-title').value.trim();
+    const content = document.getElementById('story-content').value.trim();
+    const category = document.getElementById('story-category').value;
+    const status = document.getElementById('story-status').value;
+
+    if (!title || !content || !category) {
+      alert('Please fill in all required fields');
       return;
     }
 
-    const userId = user.uid;
+    const saveBtn = document.getElementById('save-story-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = 'Saving...';
 
-    // 1. تحديث عدد القصص
-    const storiesQuery = query(
+    try {
+      const storyData = {
+        title,
+        story_content: content,
+        category,
+        status,
+        authorId: currentUser.uid,
+        author_name: currentUser.displayName || 'Anonymous',
+        updatedAt: serverTimestamp()
+      };
+
+      if (currentStoryId) {
+        await updateDoc(doc(db, "stories", currentStoryId), storyData);
+        showToast('Story updated successfully!');
+      } else {
+        storyData.createdAt = serverTimestamp();
+        await addDoc(collection(db, "stories"), storyData);
+        showToast('Story published successfully!');
+      }
+
+      closeModal();
+      document.getElementById('story-editor-form').reset();
+    } catch (error) {
+      console.error("Error saving story:", error);
+      showToast('Error saving story', 'error');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = currentStoryId ? 'Update Story' : 'Publish Story';
+    }
+  });
+
+  // تحديث العدد + القائمة
+  function loadStories() {
+    const q = query(collection(db, "stories"), where("authorId", "==", currentUser.uid), orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+      const total = snapshot.size;
+      let published = 0, pending = 0;
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.status === 'published') published++;
+        else if (data.status === 'pending') pending++;
+      });
+
+      // تحديث البطاقات
+      document.getElementById('total-stories-count').textContent = total;
+      document.getElementById('published-stories-count').textContent = published;
+      document.getElementById('pending-stories-count').textContent = pending;
+
+      // تحديث الـ Overview
+      const mainCount = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
+      if (mainCount) mainCount.textContent = total;
+    });
+  }
+
+  // Toast بسيط
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-20 right-4 px-6 py-4 rounded-xl shadow-2xl text-white z-50 transition-all animate-pulse ${type === 'error' ? 'bg-red-600' : 'bg-green-600'}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+</script>
+
+
+
+
+<script type="module">
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const auth = getAuth();
+  const db = getFirestore();
+
+  // عندما يسجل المستخدم دخول
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loadUserStories(user.uid);
+    }
+  });
+
+  function loadUserStories(uid) {
+    const q = query(
       collection(db, "stories"),
-      where("authorId", "==", userId)
+      where("authorId", "==", uid),
+      orderBy("createdAt", "desc")
     );
 
-    const unsubscribeCount = onSnapshot(storiesQuery, (snapshot) => {
-      const count = snapshot.size;
-      if (storiesCountElement) {
-        storiesCountElement.textContent = count;
-      }
-      document.getElementById('my-stories-count')?.textContent = count;
+    onSnapshot(q, (snapshot) => {
+      const stories = [];
+      snapshot.forEach(doc => stories.push({ id: doc.id, ...doc.data() }));
+
+      renderStoriesTable(stories);
+      renderStoriesGrid(stories);
+      updateStats(stories);
+      toggleEmptyState(stories.length === 0);
     });
+  }
 
-    // 2. عرض قصص المستخدمة مع زر حذف
-    const unsubscribeStories = onSnapshot(storiesQuery, (snapshot) => {
-      const list = document.getElementById('my-stories-list');
-      const noStoriesMsg = document.getElementById('no-my-stories');
+  function renderStoriesTable(stories) {
+    const tbody = document.getElementById('stories-table-body');
+    tbody.innerHTML = '';
 
-      if (!list) return;
+    stories.forEach(story => {
+      const date = story.createdAt?.toDate?.().toLocaleDateString() || '—';
+      const statusClass = story.status === 'published' ? 'bg-green-500/20 text-green-300' : 
+                         story.status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-gray-500/20 text-gray-300';
+      const statusText = story.status === 'published' ? 'Published' : 
+                        story.status === 'pending' ? 'Pending' : 'Draft';
 
-      list.innerHTML = '';
-
-      if (snapshot.empty) {
-        noStoriesMsg?.classList.remove('hidden');
-        return;
-      }
-
-      noStoriesMsg?.classList.add('hidden');
-
-      snapshot.forEach((docSnap) => {
-        const story = docSnap.data();
-        const storyId = docSnap.id;
-
-        const storyCard = document.createElement('div');
-        storyCard.className = 'bg-white/5 rounded-xl p-4 flex justify-between items-start hover:bg-white/10 transition-all';
-
-        const statusBadge = story.status === 'pending'
-          ? '<span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Pending</span>'
-          : '<span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Published</span>';
-
-        storyCard.innerHTML = `
-          <div class="flex-1">
-            <h4 class="font-semibold text-lg">${escapeHtml(story.title || 'Untitled')}</h4>
-            <p class="text-sm text-gray-400 mt-1">
-              \( {new Date(story.createdAt?.toDate()).toLocaleDateString()} • \){story.category || 'General'}
-            </p>
-            <p class="text-gray-300 mt-2 line-clamp-2">
-              ${escapeHtml(story.story_content?.substring(0, 100) || '')}...
-            </p>
-            <div class="mt-3">${statusBadge}</div>
+      const row = document.createElement('tr');
+      row.className = 'border-b border-gray-800 hover:bg-white/5 transition-colors';
+      row.innerHTML = `
+        <td class="p-4"><div class="font-medium">${story.title || 'Untitled'}</div></td>
+        <td class="p-4"><span class="px-3 py-1 bg-white/5 rounded-full text-sm">${story.category || 'General'}</span></td>
+        <td class="p-4"><span class="px-3 py-1 rounded-full text-sm \( {statusClass}"> \){statusText}</span></td>
+        <td class="p-4 text-gray-400">${date}</td>
+        <td class="p-4">
+          <div class="flex gap-2">
+            <button onclick="window.storyManager?.editStory('${story.id}')" class="px-3 py-1.5 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 text-sm">Edit</button>
+            <button onclick="window.storyManager?.showDeleteModal('${story.id}')" class="px-3 py-1.5 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 text-sm">Delete</button>
           </div>
-          <button onclick="deleteUserStory('${storyId}', this)"
-                  class="ml-4 px-4 py-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/40 transition-colors text-sm font-medium">
-            Delete
-          </button>
-        `;
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
 
-        list.appendChild(storyCard);
+  function renderStoriesGrid(stories) {
+    const grid = document.getElementById('stories-grid-view');
+    grid.innerHTML = stories.map(story => `
+      <div class="story-card-grid bg-white/5 rounded-xl p-5 border border-gray-800 hover:border-primary/30 transition-all">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="font-bold text-lg">${story.title || 'Untitled'}</h3>
+          <span class="px-2 py-1 text-xs rounded-full ${story.status === 'published' ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'}">
+            ${story.status === 'published' ? 'Published' : 'Pending'}
+          </span>
+        </div>
+        <p class="text-sm text-gray-400 mb-3">${story.category || 'General'}</p>
+        <p class="text-gray-300 text-sm line-clamp-3 mb-4">${(story.story_content || '').substring(0, 120)}...</p>
+        <div class="flex justify-between items-center">
+          <span class="text-xs text-gray-500">${story.createdAt?.toDate?.().toLocaleDateString() || '—'}</span>
+          <a href="./stories.html#${story.id}" class="text-primary text-sm font-medium hover:underline">Read →</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updateStats(stories) {
+    const total = stories.length;
+    const published = stories.filter(s => s.status === 'published').length;
+    const pending = stories.filter(s => s.status === 'pending').length;
+
+    document.getElementById('total-stories-count').textContent = total;
+    document.getElementById('published-stories-count').textContent = published;
+    document.getElementById('pending-stories-count').textContent = pending;
+  }
+
+  function toggleEmptyState(isEmpty) {
+    document.getElementById('no-stories-message').classList.toggle('hidden', !isEmpty);
+    document.querySelector('.story-table').parentElement.classList.toggle('hidden', isEmpty);
+  }
+
+  // فتح التبويب تلقائيًا لو المستخدم جاي من رابط #my-stories
+  if (location.hash === '#my-stories') {
+    document.querySelector('[data-tab="stories"]').click();
+  }
+</script>
+<script type="module">
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const auth = getAuth();
+  const db = getFirestore();
+
+  // تحديث الأرقام في الوقت الفعلي
+  onAuthStateChanged(auth, (user) => {
+    if (!user) return;
+
+    const storiesRef = collection(db, "stories");
+    const q = query(storiesRef, where("authorId", "==", user.uid));
+
+    onSnapshot(q, (snapshot) => {
+      let total = 0;
+      let published = 0;
+      let pending = 0;
+
+      snapshot.forEach((doc) => {
+        total++;
+        const status = doc.data().status;
+        if (status === "published") published++;
+        else if (status === "pending") pending++;
+      });
+
+      // تحديث البطاقات الثلاثة
+      document.getElementById("total-stories-count").textContent = total;
+      document.getElementById("published-stories-count").textContent = published;
+      document.getElementById("pending-stories-count").textContent = pending;
+
+      // تحديث العدد في الـ Overview أيضًا (لو موجود)
+      const mainCount = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
+      if (mainCount) mainCount.textContent = total;
+
+      // إضافة أنيميشن بسيط عند التغيير
+      ["total-stories-count", "published-stories-count", "pending-stories-count"].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.add("animate-pulse");
+        setTimeout(() => el.classList.remove("animate-pulse"), 600);
       });
     });
-
-    // دالة الحذف (متاحة عالميًا)
-    window.deleteUserStory = async (storyId, buttonElement) => {
-      if (!confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
-        return;
-      }
-
-      try {
-        buttonElement.disabled = true;
-        buttonElement.textContent = "Deleting...";
-
-        await deleteDoc(doc(db, "stories", storyId));
-
-        // الـ UI هيتحدث تلقائيًا بسبب onSnapshot
-        showSuccessToast("Story deleted successfully");
-
-      } catch (error) {
-        console.error("Error deleting story:", error);
-        alert("Failed to delete story. Please try again.");
-        buttonElement.disabled = false;
-        buttonElement.textContent = "Delete";
-      }
-    };
-
-    function showSuccessToast(msg) {
-      const toast = document.createElement('div');
-      toast.className = 'fixed top-20 right-4 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50 transform translate-x-full transition-transform';
-      toast.textContent = msg;
-      document.body.appendChild(toast);
-
-      setTimeout(() => toast.classList.remove('translate-x-full'), 100);
-      setTimeout(() => {
-        toast.classList.add('translate-x-full');
-        setTimeout(() => document.body.removeChild(toast), 400);
-      }, 3000);
-    }
-
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
   });
 </script>
 
-<!-- ربط الاسم + الصورة + البيو + المكان مع Firebase (تحديث + عرض) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-  import {
-    getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp
+  import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  let currentUser = null;
+
+  // انتظر تسجيل الدخول
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+    currentUser = user;
+    await loadUserData(user.uid);
+  });
+
+  // تحميل بيانات المستخدم من Firebase وعرضها
+  async function loadUserData(uid) {
+    try {
+      const docSnap = await getDoc(doc(db, "users", uid));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        document.getElementById("userName").textContent = data.displayName || "User";
+        document.getElementById("userBio").textContent = data.bio || "No bio yet.";
+        if (data.photoURL) {
+          document.getElementById("profileImage").src = data.photoURL;
+          document.getElementById("modalProfileImage").src = data.photoURL;
+        }
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  }
+
+  // فتح نافذة التعديل وملء الحقول
+  document.getElementById("editProfileBtn")?.addEventListener("click", async () => {
+    const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const nameParts = (data.displayName || "").split(" ");
+      document.getElementById("editFirstName").value = nameParts[0] || "";
+      document.getElementById("editLastName").value = nameParts.slice(1).join(" ") || "";
+      document.getElementById("editBio").value = data.bio || "";
+      document.getElementById("editLocation").value = data.location || "mahama";
+    }
+    document.getElementById("editProfileModal").classList.remove("hidden");
+  });
+
+  // إغلاق النافذة
+  const closeModal = () => document.getElementById("editProfileModal").classList.add("hidden");
+  document.getElementById("closeEditModal")?.addEventListener("click", closeModal);
+  document.getElementById("cancelEdit")?.addEventListener("click", closeModal);
+
+  // معاينة الصورة فور اختيارها
+  document.getElementById("imageUpload").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target.result;
+      document.getElementById("profileImage").src = url;
+      document.getElementById("modalProfileImage").src = url;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // حفظ التعديلات في Firebase
+  document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById("editFirstName").value.trim();
+    const lastName = document.getElementById("editLastName").value.trim();
+    const bio = document.getElementById("editBio").value.trim();
+    const location = document.getElementById("editLocation").value;
+
+    if (!firstName) {
+      showToast("الاسم الأول مطلوب", "error");
+      return;
+    }
+
+    const displayName = `\( {firstName} \){lastName}`.trim();
+    let photoURL = currentUser.photoURL;
+
+    // رفع الصورة إذا تم اختيار واحدة
+    const file = document.getElementById("imageUpload").files[0];
+    if (file) {
+      try {
+        const storageRef = ref(storage, `profile-pictures/${currentUser.uid}`);
+        await uploadBytes(storageRef, file);
+        photoURL = await getDownloadURL(storageRef);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        showToast("فشل رفع الصورة", "error");
+        return;
+      }
+    }
+
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        displayName,
+        bio: bio || null,
+        location,
+        photoURL,
+        updatedAt: serverTimestamp()
+      });
+
+      // تحديث الواجهة فورًا
+      document.getElementById("userName").textContent = displayName;
+      document.getElementById("userBio").textContent = bio || "No bio yet.";
+      if (photoURL) {
+        document.getElementById("profileImage").src = photoURL;
+        document.getElementById("modalProfileImage").src = photoURL;
+      }
+
+      closeModal();
+      showToast("تم حفظ التغييرات بنجاح!");
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      showToast("فشل حفظ التغييرات", "error");
+    }
+  });
+
+  // Toast
+  function showToast(message, type = "success") {
+    const toast = document.createElement("div");
+    toast.textContent = message;
+    toast.className = `fixed top-20 right-4 px-6 py-4 rounded-xl shadow-2xl text-white z-50 animate-pulse transition-all ${type === "error" ? "bg-red-600" : "bg-green-600"}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    updateDoc,
+    serverTimestamp 
   } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-  import {
-    getStorage, ref, uploadBytes, getDownloadURL
+  import { 
+    getStorage, 
+    ref, 
+    uploadBytes, 
+    getDownloadURL
   } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
   const firebaseConfig = {
@@ -1616,130 +2494,470 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 
-  const userNameEl = document.getElementById('userName');
-  const userBioEl = document.getElementById('userBio');
-  const profileImageEl = document.getElementById('profileImage');
-  const modalImageEl = document.getElementById('modalProfileImage');
+  let currentUser = null;
 
-  // تحميل بيانات المستخدم من Firebase
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      {
-      window.location.href = "./login.html";
-      return;
-    }
-
-    const userRef = doc(db, "users", user.uid);
-
-    // نجيب البيانات في الوقت الفعلي
-    onSnapshot(userRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        userNameEl.textContent = data.displayName || user.email.split('@')[0];
-        userBioEl.textContent = data.bio || "Welcome to GirlsSpace!";
-        if (data.photoURL) {
-          profileImageEl.src = data.photoURL;
-          modalImageEl.src = data.photoURL;
-        }
-      } else {
-        // لو أول مرة → نعمل بروفايل افتراضي
-        setDoc(userRef, {
-          displayName: user.displayName || user.email.split('@')[0],
-          photoURL: user.photoURL || "https://via.placeholder.com/160",
-          bio: "مرحبًا! أنا عضوة جديدة في GirlsSpace",
-          location: "Mahama Refugee Camp",
-          createdAt: serverTimestamp()
-        });
+  // ========== عند تحميل الصفحة ==========
+  document.addEventListener('DOMContentLoaded', async () => {
+    console.log("🚀 Profile page loaded");
+    
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        console.log("❌ No user, redirecting to login");
+        window.location.href = "./login.html";
+        return;
       }
+      
+      currentUser = user;
+      console.log("✅ User logged in:", user.email, "UID:", user.uid);
+      
+      // تحميل البيانات فوراً
+      await loadUserProfile(user.uid);
+      
+      // إعداد الأحداث
+      setupEventListeners();
     });
   });
 
-  // تعديل الصورة
-  document.getElementById('editPictureBtn')?.addEventListener('click', () => {
-    document.getElementById('imageUpload').click();
-  });
-
-  document.getElementById('imageUpload')?.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file || !auth.currentUser) return;
-
-    const user = auth.currentUser;
-    const storageRef = ref(storage, `profilePictures/${user.uid}`);
-
+  // ========== تحميل بيانات الملف الشخصي ==========
+  async function loadUserProfile(userId) {
     try {
-      // رفع الصورة
-      await uploadBytes(storageRef, file);
-      const photoURL = await getDownloadURL(storageRef);
-
-      // حفظ الرابط في Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        photoURL: photoURL,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-
-      // تحديث الصورة فورًا
-      profileImageEl.src = photoURL;
-      modalImageEl.src = photoURL;
-
-      showToast("تم تحديث الصورة بنجاح!");
+      console.log("📥 Loading profile for user:", userId);
+      
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        console.log("📊 Profile data found:", userData);
+        
+        // تحديث الاسم
+        if (document.getElementById('userName')) {
+          const displayName = userData.displayName || userData.fullName || userData.email?.split('@')[0] || "User";
+          document.getElementById('userName').textContent = displayName;
+        }
+        
+        // تحديث البيو
+        if (document.getElementById('userBio')) {
+          document.getElementById('userBio').textContent = userData.bio || "No bio yet. Click edit to add one.";
+        }
+        
+        // تحديث الصورة - الأولوية للصورة المحفوظة في Firestore
+        if (userData.photoURL) {
+          console.log("🖼️ Setting photo from Firestore:", userData.photoURL);
+          setProfileImage(userData.photoURL);
+        } else if (currentUser.photoURL) {
+          // إذا لم توجد في Firestore، استخدم صورة Auth
+          console.log("🖼️ Setting photo from Auth:", currentUser.photoURL);
+          setProfileImage(currentUser.photoURL);
+        }
+        
+      } else {
+        console.log("⚠️ No profile in Firestore, creating one...");
+        await createInitialProfile(userId);
+      }
+      
     } catch (error) {
-      showToast("فشل رفع الصورة", "error");
+      console.error("❌ Error loading profile:", error);
+      showToast("Failed to load profile", "error");
     }
-  });
+  }
 
-  // تعديل الاسم والبيو من المودال
-  document.getElementById('editProfileForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-    if (!user) return;
+  // ========== إنشاء ملف شخصي أولي ==========
+  async function createInitialProfile(userId) {
+    try {
+      console.log("🆕 Creating initial profile...");
+      
+      const userData = {
+        displayName: currentUser.displayName || currentUser.email?.split('@')[0] || "New User",
+        email: currentUser.email,
+        photoURL: currentUser.photoURL || "",
+        bio: "Welcome to GirlsSpace!",
+        location: "mahama",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+      
+      await updateDoc(doc(db, "users", userId), userData);
+      
+      // تحديث الواجهة
+      document.getElementById('userName').textContent = userData.displayName;
+      document.getElementById('userBio').textContent = userData.bio;
+      
+      if (userData.photoURL) {
+        setProfileImage(userData.photoURL);
+      }
+      
+      console.log("✅ Initial profile created");
+      
+    } catch (error) {
+      console.error("❌ Error creating profile:", error);
+    }
+  }
 
+  // ========== تعيين صورة الملف الشخصي ==========
+  function setProfileImage(url) {
+    try {
+      console.log("🖼️ Setting image URL:", url);
+      
+      // تحديث كلا الصورتين
+      const profileImage = document.getElementById('profileImage');
+      const modalImage = document.getElementById('modalProfileImage');
+      
+      if (profileImage) profileImage.src = url;
+      if (modalImage) modalImage.src = url;
+      
+      // إضافة حدث لتحميل الصورة
+      profileImage.onload = () => {
+        console.log("✅ Profile image loaded successfully");
+        localStorage.setItem('profile_image_url', url); // حفظ في localStorage
+      };
+      
+      profileImage.onerror = () => {
+        console.warn("⚠️ Failed to load profile image, using fallback");
+        profileImage.src = "https://via.placeholder.com/160";
+        if (modalImage) modalImage.src = "https://via.placeholder.com/160";
+      };
+      
+    } catch (error) {
+      console.error("❌ Error setting profile image:", error);
+    }
+  }
+
+  // ========== إعداد أحداث النقر ==========
+  function setupEventListeners() {
+    console.log("⚙️ Setting up event listeners");
+    
+    // 1. زر تعديل الصورة الرئيسي
+    document.getElementById('editPictureBtn')?.addEventListener('click', () => {
+      console.log("📸 Edit picture clicked");
+      document.getElementById('imageUpload').click();
+    });
+    
+    // 2. زر فتح نافذة التعديل
+    document.getElementById('editProfileBtn')?.addEventListener('click', async () => {
+      console.log("✏️ Edit profile clicked");
+      await openEditModal();
+    });
+    
+    // 3. اختيار صورة جديدة
+    const imageUpload = document.getElementById('imageUpload');
+    if (imageUpload) {
+      imageUpload.addEventListener('change', handleImageSelect);
+    }
+    
+    // 4. إغلاق النافذة
+    document.getElementById('closeEditModal')?.addEventListener('click', () => {
+      closeEditModal();
+      resetImageUpload();
+    });
+    
+    document.getElementById('cancelEdit')?.addEventListener('click', () => {
+      closeEditModal();
+      resetImageUpload();
+    });
+    
+    // 5. حفظ التعديلات
+    const editForm = document.getElementById('editProfileForm');
+    if (editForm) {
+      editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log("💾 Saving profile changes...");
+        await saveProfile();
+      });
+    }
+  }
+
+  // ========== فتح نافذة التعديل ==========
+  async function openEditModal() {
+    try {
+      console.log("🪟 Opening edit modal");
+      
+      // تحميل البيانات الحالية
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const nameParts = (userData.displayName || "").split(" ");
+        
+        document.getElementById('editFirstName').value = nameParts[0] || "";
+        document.getElementById('editLastName').value = nameParts.slice(1).join(" ") || "";
+        document.getElementById('editBio').value = userData.bio || "";
+        document.getElementById('editLocation').value = userData.location || "mahama";
+      }
+      
+      // إظهار النافذة
+      document.getElementById('editProfileModal').classList.remove('hidden');
+      console.log("✅ Edit modal opened");
+      
+    } catch (error) {
+      console.error("❌ Error opening modal:", error);
+      showToast("Error opening edit form", "error");
+    }
+  }
+
+  // ========== معالجة اختيار الصورة ==========
+  let selectedImageFile = null;
+
+  function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    console.log("📁 Image selected:", file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+    
+    // التحقق من الحجم
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Image too large (max 5MB)", "error");
+      event.target.value = '';
+      return;
+    }
+    
+    // التحقق من النوع
+    if (!file.type.startsWith('image/')) {
+      showToast("Please select an image file", "error");
+      event.target.value = '';
+      return;
+    }
+    
+    selectedImageFile = file;
+    
+    // عرض معاينة فورية
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewUrl = e.target.result;
+      setProfileImage(previewUrl);
+      console.log("👀 Preview shown");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ========== رفع الصورة إلى Storage ==========
+  async function uploadImage(file) {
+    try {
+      console.log("⬆️ Uploading image to Storage...");
+      
+      // إنشاء اسم فريد
+      const timestamp = Date.now();
+      const fileExt = file.name.split('.').pop();
+      const fileName = `profile_${currentUser.uid}_${timestamp}.${fileExt}`;
+      const storagePath = `users/${currentUser.uid}/profile/${fileName}`;
+      
+      console.log("📍 Storage path:", storagePath);
+      
+      // رفع الملف
+      const storageRef = ref(storage, storagePath);
+      const snapshot = await uploadBytes(storageRef, file);
+      console.log("✅ Upload completed");
+      
+      // الحصول على الرابط
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log("🔗 Download URL:", downloadURL);
+      
+      return downloadURL;
+      
+    } catch (error) {
+      console.error("❌ Error uploading image:", error);
+      throw error;
+    }
+  }
+
+  // ========== حفظ الملف الشخصي ==========
+  async function saveProfile() {
+    console.log("💾 === STARTING PROFILE SAVE ===");
+    
+    // جمع البيانات
     const firstName = document.getElementById('editFirstName').value.trim();
     const lastName = document.getElementById('editLastName').value.trim();
     const bio = document.getElementById('editBio').value.trim();
-
-    if (!firstName) return alert("الاسم مطلوب");
-
+    const location = document.getElementById('editLocation').value;
+    
+    if (!firstName) {
+      showToast("First name is required", "error");
+      return;
+    }
+    
+    const displayName = `${firstName} ${lastName}`.trim();
+    let photoURL = null;
+    
     try {
-      await setDoc(doc(db, "users", user.uid), {
-        displayName: `\( {firstName} \){lastName}`.trim(),
-        bio: bio || "لا يوجد وصف",
+      // 1. رفع الصورة أولاً إذا كانت جديدة
+      if (selectedImageFile) {
+        console.log("🖼️ New image detected, uploading...");
+        showToast("Uploading image...", "info");
+        
+        photoURL = await uploadImage(selectedImageFile);
+        console.log("✅ Image uploaded. URL:", photoURL);
+      } else {
+        // الاحتفاظ بالرابط الحالي
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          photoURL = userSnap.data().photoURL;
+          console.log("🔄 Keeping existing image:", photoURL);
+        }
+      }
+      
+      // 2. تحضير البيانات للحفظ
+      const updateData = {
+        displayName: displayName,
+        bio: bio || "",
+        location: location,
         updatedAt: serverTimestamp()
-      }, { merge: true });
-
-      // تحديث الواجهة فورًا
-      userNameEl.textContent = `\( {firstName} \){lastName}`;
-      userBioEl.textContent = bio || "لا يوجد وصف";
-
-      document.getElementById('editProfileModal').classList.add('hidden');
-      showToast("تم حفظ التغييرات بنجاح!");
+      };
+      
+      // إضافة رابط الصورة
+      if (photoURL) {
+        updateData.photoURL = photoURL;
+        console.log("📌 PhotoURL will be saved:", photoURL);
+      }
+      
+      console.log("📦 Data to save:", updateData);
+      
+      // 3. حفظ في Firestore
+      const userRef = doc(db, "users", currentUser.uid);
+      await updateDoc(userRef, updateData);
+      console.log("✅ Saved to Firestore");
+      
+      // 4. تحديث الواجهة فوراً
+      document.getElementById('userName').textContent = displayName;
+      document.getElementById('userBio').textContent = bio || "No bio yet";
+      
+      if (photoURL) {
+        setProfileImage(photoURL);
+      }
+      
+      // 5. إغلاق وإعادة تعيين
+      closeEditModal();
+      resetImageUpload();
+      
+      // 6. إظهار رسالة النجاح
+      showToast("Profile saved successfully!", "success");
+      console.log("🎉 === PROFILE SAVED SUCCESSFULLY ===");
+      
+      // 7. تأكيد الحفظ بعد 2 ثانية
+      setTimeout(() => {
+        console.log("🔍 Verifying save...");
+        loadUserProfile(currentUser.uid); // إعادة تحميل للتأكد
+      }, 2000);
+      
     } catch (error) {
-      showToast("خطأ في الحفظ", "error");
+      console.error("❌ Error saving profile:", error);
+      console.error("Details:", error.message);
+      showToast("Error saving profile: " + error.message, "error");
     }
-  });
-
-  // فتح المودال وملء الحقول
-  document.getElementById('editProfileBtn')?.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const docSnap = await getDoc(doc(db, "users", user.uid));
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const nameParts = (data.displayName || "").split(" ");
-      document.getElementById('editFirstName').value = nameParts[0] || "";
-      document.getElementById('editLastName').value = nameParts.slice(1).join(" ") || "";
-      document.getElementById('editBio').value = data.bio || "";
-    }
-    document.getElementById('editProfileModal').classList.remove('hidden');
-  });
-
-  function showToast(msg, type = 'success') {
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-xl text-white font-bold shadow-lg ${type==='success'?'bg-green-600':'bg-red-600'}`;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3000);
   }
+
+  // ========== إعادة تعيين رفع الصورة ==========
+  function resetImageUpload() {
+    selectedImageFile = null;
+    const imageUpload = document.getElementById('imageUpload');
+    if (imageUpload) {
+      imageUpload.value = '';
+    }
+    console.log("🔄 Image upload reset");
+  }
+
+  // ========== إغلاق نافذة التعديل ==========
+  function closeEditModal() {
+    document.getElementById('editProfileModal').classList.add('hidden');
+    console.log("🪟 Edit modal closed");
+  }
+
+  // ========== عرض الرسائل ==========
+  function showToast(message, type = "info") {
+    console.log(`📢 Toast (${type}):`, message);
+    
+    // إزالة الرسائل القديمة
+    document.querySelectorAll('.profile-toast').forEach(toast => toast.remove());
+    
+    // إنشاء الرسالة
+    const toast = document.createElement('div');
+    toast.className = `profile-toast fixed top-24 right-4 px-6 py-4 rounded-xl text-white font-semibold shadow-2xl z-50 animate-slide-in ${
+      type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+      type === 'error' ? 'bg-gradient-to-r from-red-500 to-pink-600' :
+      'bg-gradient-to-r from-blue-500 to-purple-600'
+    }`;
+    
+    toast.innerHTML = `
+      <div class="flex items-center gap-3">
+        <span class="text-xl">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+        <span>${message}</span>
+      </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // إزالة بعد 4 ثواني
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.classList.add('animate-slide-out');
+        setTimeout(() => {
+          if (toast.parentNode) toast.remove();
+        }, 300);
+      }
+    }, 4000);
+  }
+
+  // ========== إضافة الأنماط ==========
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slide-in {
+      from {
+        opacity: 0;
+        transform: translateX(100px) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+    }
+    
+    @keyframes slide-out {
+      from {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100px) translateY(-10px);
+      }
+    }
+    
+    .animate-slide-in {
+      animation: slide-in 0.3s ease-out forwards;
+    }
+    
+    .animate-slide-out {
+      animation: slide-out 0.3s ease-out forwards;
+    }
+    
+    /* تحسين الصورة */
+    #profileImage, #modalProfileImage {
+      transition: opacity 0.3s ease;
+    }
+    
+    /* تأثير عند التحميل */
+    .image-loading {
+      opacity: 0.7;
+      filter: blur(2px);
+    }
+    
+    .image-loaded {
+      opacity: 1;
+      filter: blur(0);
+    }
+  `;
+  document.head.appendChild(style);
+
+  // ========== تحسين تجربة المستخدم ==========
+  // عرض صورة من localStorage مؤقتاً أثناء التحميل
+  window.addEventListener('load', () => {
+    const cachedImage = localStorage.getItem('profile_image_url');
+    if (cachedImage && document.getElementById('profileImage')) {
+      document.getElementById('profileImage').src = cachedImage;
+      document.getElementById('modalProfileImage').src = cachedImage;
+    }
+  });
 </script>
 </body>
 </html>
