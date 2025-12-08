@@ -380,7 +380,6 @@
 
     function onYouTubeIframeAPIReady() { ytReady = true; }
 
-    // تحميل المستخدم
     function loadUser() {
       const saved = localStorage.getItem('currentUser');
       if (saved) {
@@ -434,7 +433,6 @@
       }
     };
 
-    // التصحيح الرئيسي: فتح الدرس 2 بعد الدرس 1 فقط
     function renderLessons() {
       const grid = document.getElementById('lessonsGrid');
       grid.innerHTML = '';
@@ -443,12 +441,12 @@
         let unlocked = false;
 
         if (i === 0) {
-          unlocked = true; // الدرس 1 مفتوح دائمًا
+          unlocked = true;  
         } else if (i === 1) {
-          // الدرس 2: يُفتح بعد مشاهدة الدرس 1 فقط
+
           unlocked = progress[1]?.completed === true;
         } else {
-          // الدروس 3-25: يحتاجون فيديو + كويز
+
           unlocked = progress[prev?.id]?.completed && progress[prev?.id]?.quizCompleted;
         }
 
@@ -528,7 +526,7 @@
         progress[currentLessonId].completed = true;
         saveProgress();
         renderQuiz(currentLessonId);
-        renderLessons(); // إعادة رسم القفل
+        renderLessons()
         updateNextButton();
       }
     }
@@ -630,7 +628,7 @@
         progress[id].quizCompleted = true;
         saveProgress();
         renderQuiz(id);
-        renderLessons(); // إعادة رسم القفل للدرس التالي
+        renderLessons();
         updateNextButton();
         updateOverallProgress();
       }
