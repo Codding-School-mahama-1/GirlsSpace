@@ -41,8 +41,8 @@
       </li>
 
       
-      <li><a href="#" class="px-4 py-1.5 border border-pink-600 rounded-full text-pink-600 font-semibold hover:bg-pink-50">Log In</a></li>
-      <li><a href="#" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-700 text-white rounded-full font-semibold hover:shadow-lg">Donate</a></li>
+      <li><a href="./login.html" class="px-4 py-1.5 border border-pink-600 rounded-full text-pink-600 font-semibold hover:bg-pink-50">Log In</a></li>
+      <li><a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-700 text-white rounded-full font-semibold hover:shadow-lg">Donate</a></li>
     </ul>
 
     
@@ -480,5 +480,38 @@
     </div>
   </footer>
 
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check localStorage for user
+    const userData = localStorage.getItem('girlspaceUser');
+    
+    if (userData) {
+        // User is logged in
+        const loginButtons = document.querySelectorAll('a[href="./login.html"]');
+        loginButtons.forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-user-circle mr-2"></i> My Profile';
+            btn.href = './profile.html';
+            btn.classList.remove('border-2', 'border-primary', 'text-primary');
+            btn.classList.add('bg-primary', 'text-white', 'px-4', 'py-2', 'rounded-full');
+        });
+        
+        // Add logout button if not exists
+        // if (!document.getElementById('logoutBtn')) {
+        //     const logoutBtn = document.createElement('button');
+        //     logoutBtn.id = 'logoutBtn';
+        //     logoutBtn.className = 'ml-2 px-3 py-1 bg-red-500 text-white rounded text-sm';
+        //     logoutBtn.textContent = 'Logout';
+        //     logoutBtn.onclick = () => {
+        //         localStorage.removeItem('girlspaceUser');
+        //         window.location.reload();
+        //     };
+            
+        //     const nav = document.querySelector('.hidden.lg\\:flex.items-center.gap-6');
+        //     if (nav) nav.appendChild(logoutBtn);
+        // }
+    }
+});
+</script>
+  
+</body>
  </html>

@@ -86,7 +86,7 @@
       </div>
       
       <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-i18n="login">Log In</a>
-      <a href="#" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
+      <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-i18n="donate">Donate</a>
     </div>
 
     <div class="hidden lg:flex items-center gap-4">
@@ -131,7 +131,7 @@
         </div>
         
         <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-i18n="login">Log In</a>
-        <a href="#" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
+        <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-i18n="donate">Donate</a>
       </div>
     </div>
   </div>
@@ -804,5 +804,37 @@
     });
   </script>
   <script type="module" src="./auth-ui.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check localStorage for user
+    const userData = localStorage.getItem('girlspaceUser');
+    
+    if (userData) {
+        // User is logged in
+        const loginButtons = document.querySelectorAll('a[href="./login.html"]');
+        loginButtons.forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-user-circle mr-2"></i> My Profile';
+            btn.href = './profile.html';
+            btn.classList.remove('border-2', 'border-primary', 'text-primary');
+            btn.classList.add('bg-primary', 'text-white', 'px-4', 'py-2', 'rounded-full');
+        });
+        
+        // Add logout button if not exists
+        // if (!document.getElementById('logoutBtn')) {
+        //     const logoutBtn = document.createElement('button');
+        //     logoutBtn.id = 'logoutBtn';
+        //     logoutBtn.className = 'ml-2 px-3 py-1 bg-red-500 text-white rounded text-sm';
+        //     logoutBtn.textContent = 'Logout';
+        //     logoutBtn.onclick = () => {
+        //         localStorage.removeItem('girlspaceUser');
+        //         window.location.reload();
+        //     };
+            
+        //     const nav = document.querySelector('.hidden.lg\\:flex.items-center.gap-6');
+        //     if (nav) nav.appendChild(logoutBtn);
+        // }
+    }
+});
+</script>
 </body>
 </html>
