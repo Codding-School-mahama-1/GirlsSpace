@@ -689,7 +689,7 @@
       </li>
 
       <li><a href="./login.html" class="login-btn" data-translate="nav.login">Log In</a></li>
-      <li><a href="#" class="donate-btn" data-translate="nav.donate">Donate</a></li>
+      <li><a href="./donate.html" class="donate-btn" data-translate="nav.donate">Donate</a></li>
     </ul>
 
     <div class="nav-search">
@@ -858,7 +858,7 @@
         <div class="footer-links">
           <h4 class="links-title" data-translate="footer.quickLinks">Quick Links</h4>
           <ul class="links-list">
-            <li><a href="chat.html" class="link-item" data-translate="footer.joinChat">Join Chat</a></li>
+            <li><a href="./chat.html" class="link-item" data-translate="footer.joinChat">Join Chat</a></li>
             <li><a href="./stories.html" class="link-item" data-translate="footer.shareStory">Share Story</a></li>
             <li><a href="./Learning_Programs.html" class="link-item" data-translate="footer.programs">Programs</a></li>
           </ul>
@@ -1529,34 +1529,39 @@ document.addEventListener('DOMContentLoaded', function() {
   
 </script>
 
-### خلاصة اللي حصل:
-
-| المكان               | زر الحذف يظهر؟                  |
-|----------------------|-------------------------------|
-| صفحة stories.html      | نعم، بس لصاحبة القصة فقط         |
-| صفحة profile.html      | نعم، موجود من الكود السابق       |
-| لو المستخدم مش صاحب القصة | الزر مخفي تمامًا               |
-| بعد الحذف              | القصة تختفي فورًا + العدد ينقص في الداشبورد تلقائيًا |
-
-### اختبار سريع:
-1. سجلي دخول بحساب بنت كتبت قصة قبل كده
-2. افتحي `stories.html`
-3. هتلاقي بجانب قصتها زر Delete باللون الأحمر
-4. اضغطي → تأكيد → القصة تتمسح
-5. ارجعي للـ Dashboard → العدد نقص 1 والقصة مختفية من "My Stories"
-
-كل حاجة دلوقتي متصلة وفورية 100%
-
-لو عايزة نضيف كمان:
-- زر "Edit" لتعديل القصة
-- عرض حالة الموافقة (Pending / Approved)
-- إشعار للأدمن لما تيجي قصة جديدة
-
-قوليلي وأبعتلك الكود في ثواني
-
-الموقع بقى زي منصة عالمية بالظبط  
-مبروك يا بطلة!
-
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check localStorage for user
+    const userData = localStorage.getItem('girlspaceUser');
+    
+    if (userData) {
+        // User is logged in
+        const loginButtons = document.querySelectorAll('a[href="./login.html"]');
+        loginButtons.forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-user-circle mr-2"></i> My Profile';
+            btn.href = './profile.html';
+            btn.classList.remove('border-2', 'border-primary', 'text-primary');
+            btn.classList.add('bg-primary', 'text-white', 'px-4', 'py-2', 'rounded-full');
+        });
+        
+        // Add logout button if not exists
+        // if (!document.getElementById('logoutBtn')) {
+        //     const logoutBtn = document.createElement('button');
+        //     logoutBtn.id = 'logoutBtn';
+        //     logoutBtn.className = 'ml-2 px-3 py-1 bg-red-500 text-white rounded text-sm';
+        //     logoutBtn.textContent = 'Logout';
+        //     logoutBtn.onclick = () => {
+        //         localStorage.removeItem('girlspaceUser');
+        //         window.location.reload();
+        //     };
+            
+        //     const nav = document.querySelector('.hidden.lg\\:flex.items-center.gap-6');
+        //     if (nav) nav.appendChild(logoutBtn);
+        // }
+    }
+});
+</script>
 </body>
+
 </html>
 
