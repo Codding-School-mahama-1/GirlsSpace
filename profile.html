@@ -482,12 +482,12 @@
         </div>
       </div>
      
-<!-- My Stories Tab - التبويب الجديد كامل ومفعّل -->
+<!-- My Stories Tab  -->
 <div id="stories-tab" class="tab-content hidden">
 
   <div class="bg-gradient-to-br from-gray-900 to-dark rounded-2xl p-6 border border-gray-800">
 
-    <!-- Header مع زر إضافة قصة -->
+    <!----Header-- -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
         <h2 class="text-2xl font-bold flex items-center">
@@ -505,7 +505,7 @@
       </div>
     </div>
 
-    <!-- Stats Cards - مع تحديث فوري من Firebase -->
+    <!-- Stats Cards  Firebase -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
   <!-- Total Stories -->
   <div class="bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm rounded-2xl p-6 border border-primary/30 shadow-lg">
@@ -556,7 +556,7 @@
         </button>
       </div>
       <div id="stories-grid-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- البطاقات تتحمل هنا تلقائيًا -->
+       
       </div>
     </div>
 
@@ -1204,8 +1204,6 @@
       }
     });
   </script>
-  <!-- Add this to your profile.html after your existing scripts -->
-<!-- استبدل الجزء التالي في profile.html -->
 
 <script type="module">
   // Firebase setup
@@ -1255,7 +1253,6 @@
 
   console.log("Firebase initialized for profile page");
 
-  // متغيرات العناصر
   const storiesCountElement = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
   const recentActivitySection = document.querySelector('#overview-tab .space-y-4');
   const userNameEl = document.getElementById('userName');
@@ -1263,43 +1260,32 @@
   const profileImageEl = document.getElementById('profileImage');
   const modalImageEl = document.getElementById('modalProfileImage');
 
-  // 1. نظام مراقبة حالة المصادقة
   onAuthStateChanged(auth, async (user) => {
     console.log("Auth state changed:", user ? `User: ${user.email}` : "No user");
    
     if (!user) {
-      // إذا لم يكن مسجلاً دخول، توجيه إلى صفحة تسجيل الدخول
       console.log("No user found, redirecting to login");
       window.location.href = "./login.html";
       return;
     }
 
-    // 2. تحميل بيانات الملف الشخصي
     await loadUserProfile(user.uid);
    
-    // 3. إعداد تحديث عدد القصص في الوقت الفعلي
     setupRealTimeStoryCount(user.uid);
    
-    // 4. إعداد تحديث النشاط الحديث
     setupRecentActivity(user.uid);
    
-    // 5. إعداد تحديث القصص الشخصية
     setupMyStories(user.uid);
    
-    // 6. إعداد إحصائيات المستخدم
     setupUserStats(user.uid);
    
-    // 7. إعداد استماع لتحديثات من صفحة القصص
     setupStoryUpdatesListener();
    
-    // 8. تحميل بيانات الملف الشخصي في المودال
     loadProfileModalData(user.uid);
    
-    // 9. إعداد أزرار تسجيل الخروج
     setupLogoutButtons();
   });
 
-  // ================== دالة تحميل الملف الشخصي ==================
   async function loadUserProfile(userId) {
     try {
       console.log("Loading user profile for:", userId);
@@ -1311,20 +1297,17 @@
         const userData = userSnap.data();
         console.log("User data loaded:", userData);
        
-        // تحديث الاسم
         if (userNameEl) {
           userNameEl.textContent = userData.displayName ||
                                   userData.fullName ||
                                   "GirlsSpace Member";
         }
        
-        // تحديث البيو
         if (userBioEl) {
           userBioEl.textContent = userData.bio ||
                                  "Passionate about education and women empowerment.";
         }
        
-        // تحديث الصورة
         if (profileImageEl && userData.photoURL) {
           profileImageEl.src = userData.photoURL;
         }
@@ -1332,7 +1315,7 @@
           modalImageEl.src = userData.photoURL;
         }
        
-        // تحديث التاريخ
+
         const memberSince = document.querySelector('.px-3.py-1.bg-primary\\/20');
         if (memberSince && userData.createdAt) {
           const date = userData.createdAt.toDate
@@ -1342,7 +1325,7 @@
         }
       } else {
         console.log("No user profile found, creating default...");
-        // إنشاء ملف شخصي افتراضي
+
         await createDefaultProfile(userId);
       }
     } catch (error) {
@@ -1351,7 +1334,7 @@
     }
   }
 
-  // ================== إنشاء ملف شخصي افتراضي ==================
+
   async function createDefaultProfile(userId) {
     try {
       const user = auth.currentUser;
@@ -1370,7 +1353,7 @@
       await setDoc(doc(db, "users", userId), defaultProfile);
       console.log("Default profile created");
      
-      // تحديث الواجهة
+
       if (userNameEl) userNameEl.textContent = defaultProfile.displayName;
       if (userBioEl) userBioEl.textContent = defaultProfile.bio;
       if (profileImageEl) profileImageEl.src = defaultProfile.photoURL;
@@ -1381,7 +1364,7 @@
     }
   }
 
-  // ================== تحديث عدد القصص في الوقت الفعلي ==================
+
   function setupRealTimeStoryCount(userId) {
     console.log("Setting up real-time story count for:", userId);
    
@@ -1397,16 +1380,16 @@
       if (storiesCountElement) {
         storiesCountElement.textContent = count;
        
-        // تأثير عند التغيير
+
         storiesCountElement.classList.add('animate-pulse');
         setTimeout(() => {
           storiesCountElement.classList.remove('animate-pulse');
         }, 500);
        
-        // تخزين في localStorage
+
         localStorage.setItem('current_story_count', count.toString());
        
-        // إظهار رسالة خاصة
+
         if (count === 1) {
           showStoryNotification("تم إضافة قصة 1 ✅");
         } else if (count === 0) {
@@ -1417,13 +1400,13 @@
       console.error("Error in story count listener:", error);
     });
    
-    // تنظيف عند الخروج
+
     window.addEventListener('beforeunload', () => {
       unsubscribe();
     });
   }
 
-  // ================== تحديث النشاط الحديث ==================
+
   function setupRecentActivity(userId) {
     if (!recentActivitySection) return;
    
@@ -1435,7 +1418,7 @@
     );
    
     const unsubscribe = onSnapshot(recentQuery, (snapshot) => {
-      // مسح النشاط القديم (احتفظ بالأنشطة الأخرى)
+
       const oldActivities = recentActivitySection.querySelectorAll('[data-story-activity]');
       oldActivities.forEach(activity => activity.remove());
      
@@ -1446,13 +1429,13 @@
       });
     });
    
-    // تنظيف عند الخروج
+
     window.addEventListener('beforeunload', () => {
       unsubscribe();
     });
   }
 
-  // ================== إنشاء عنصر نشاط ==================
+
   function createActivityItem(story) {
     const item = document.createElement('div');
     item.className = 'flex items-center gap-4 p-4 bg-white/5 rounded-xl animate-fadeIn';
@@ -1475,7 +1458,7 @@
     return item;
   }
 
-  // ================== إعداد القصص الشخصية ==================
+
   function setupMyStories(userId) {
     const storiesTab = document.getElementById('stories-tab');
     if (!storiesTab) return;
@@ -1519,13 +1502,13 @@
       });
     });
    
-    // تنظيف عند الخروج
+
     window.addEventListener('beforeunload', () => {
       unsubscribe();
     });
   }
 
-  // ================== إنشاء بطاقة قصة ==================
+
   function createStoryCard(story, storyId) {
     const card = document.createElement('div');
     card.className = 'story-card bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all';
@@ -1561,7 +1544,7 @@
     return card;
   }
 
-  // ================== دالة حذف القصة ==================
+
   window.deleteStoryFromDashboard = async function(storyId) {
     if (!confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
       return;
@@ -1571,10 +1554,10 @@
       const user = auth.currentUser;
       if (!user) return;
      
-      // حذف من Firebase
+
       await deleteDoc(doc(db, "stories", storyId));
      
-      // تحديث localStorage
+
       const currentCount = parseInt(localStorage.getItem('current_story_count') || '0');
       localStorage.setItem('current_story_count', Math.max(0, currentCount - 1).toString());
      
@@ -1586,7 +1569,7 @@
     }
   };
 
-  // ================== إعداد إحصائيات المستخدم ==================
+
   function setupUserStats(userId) {
     const userStatsRef = doc(db, "userStats", userId);
    
@@ -1602,7 +1585,7 @@
     });
   }
 
-  // ================== تحديث جميع الإحصائيات ==================
+
   function updateAllStats(stats) {
     const statElements = {
       stories: document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl'),
@@ -1625,14 +1608,14 @@
     }
   }
 
-  // ================== استماع لتحديثات من صفحة القصص ==================
+
   function setupStoryUpdatesListener() {
-    // الاستماع لـ localStorage
+    //  localStorage
     setInterval(() => {
       checkForStoryUpdates();
     }, 1000);
    
-    // الاستماع لـ Broadcast Channel
+    //  Broadcast Channel
     if (typeof BroadcastChannel !== 'undefined') {
       const channel = new BroadcastChannel('story_updates');
       channel.onmessage = (event) => {
@@ -1642,7 +1625,7 @@
       };
     }
    
-    // الاستماع لـ window messages
+    //  window messages
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'STORY_UPDATE') {
         updateStoryCountDisplay(event.data.count);
@@ -1650,7 +1633,7 @@
     });
   }
 
-  // ================== التحقق من تحديثات القصص ==================
+
   function checkForStoryUpdates() {
     const notification = localStorage.getItem('story_update_notification');
    
@@ -1664,7 +1647,7 @@
           showStoryNotification("0 قصص");
         }
        
-        // مسح الإشعار
+
         localStorage.removeItem('story_update_notification');
       } catch (error) {
         console.error("Error parsing notification:", error);
@@ -1673,7 +1656,7 @@
     }
   }
 
-  // ================== تحديث عرض عدد القصص ==================
+
   function updateStoryCountDisplay(count) {
     if (storiesCountElement) {
       storiesCountElement.textContent = count;
@@ -1684,7 +1667,7 @@
     }
   }
 
-  // ================== تحميل بيانات المودال ==================
+
   async function loadProfileModalData(userId) {
     const editProfileBtn = document.getElementById('editProfileBtn');
     if (!editProfileBtn) return;
@@ -1713,7 +1696,7 @@
     });
   }
 
-  // ================== إعداد أزرار تسجيل الخروج ==================
+
   function setupLogoutButtons() {
     const logoutBtn = document.getElementById('logoutBtn');
     const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
@@ -1740,8 +1723,8 @@
     }
   }
 
-  // ================== وظائف مساعدة ==================
 
+  
   function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -1797,7 +1780,7 @@
     }, 3000);
   }
 
-  // إضافة أنماط CSS للرسوم المتحركة
+
   const style = document.createElement('style');
   style.textContent = `
     .animate-pulse {
@@ -2044,7 +2027,7 @@
   let currentUser = null;
   let currentStoryId = null;
 
-  // عند تسجيل الدخول
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
@@ -2054,7 +2037,7 @@
     }
   });
 
-  // فتح المودال لإضافة قصة جديدة
+
   document.getElementById('add-story-btn')?.addEventListener('click', () => {
     currentStoryId = null;
     document.getElementById('modal-title').textContent = 'Add New Story';
@@ -2068,7 +2051,7 @@
     document.getElementById('add-story-btn').click();
   });
 
-  // إغلاق المودال
+
   document.getElementById('close-editor-modal')?.addEventListener('click', closeModal);
   document.getElementById('cancel-editor')?.addEventListener('click', closeModal);
   document.getElementById('story-editor-modal')?.addEventListener('click', (e) => {
@@ -2080,7 +2063,7 @@
     currentStoryId = null;
   }
 
-  // حفظ القصة
+
   document.getElementById('story-editor-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -2129,7 +2112,7 @@
     }
   });
 
-  // تحديث العدد + القائمة
+
   function loadStories() {
     const q = query(collection(db, "stories"), where("authorId", "==", currentUser.uid), orderBy("createdAt", "desc"));
 
@@ -2143,18 +2126,18 @@
         else if (data.status === 'pending') pending++;
       });
 
-      // تحديث البطاقات
+
       document.getElementById('total-stories-count').textContent = total;
       document.getElementById('published-stories-count').textContent = published;
       document.getElementById('pending-stories-count').textContent = pending;
 
-      // تحديث الـ Overview
+      //  Overview
       const mainCount = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
       if (mainCount) mainCount.textContent = total;
     });
   }
 
-  // Toast بسيط
+  // Toast 
   function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `fixed top-20 right-4 px-6 py-4 rounded-xl shadow-2xl text-white z-50 transition-all animate-pulse ${type === 'error' ? 'bg-red-600' : 'bg-green-600'}`;
@@ -2174,7 +2157,6 @@
   const auth = getAuth();
   const db = getFirestore();
 
-  // عندما يسجل المستخدم دخول
   onAuthStateChanged(auth, (user) => {
     if (user) {
       loadUserStories(user.uid);
@@ -2263,7 +2245,7 @@
     document.querySelector('.story-table').parentElement.classList.toggle('hidden', isEmpty);
   }
 
-  // فتح التبويب تلقائيًا لو المستخدم جاي من رابط #my-stories
+  //  #my-stories
   if (location.hash === '#my-stories') {
     document.querySelector('[data-tab="stories"]').click();
   }
@@ -2275,7 +2257,6 @@
   const auth = getAuth();
   const db = getFirestore();
 
-  // تحديث الأرقام في الوقت الفعلي
   onAuthStateChanged(auth, (user) => {
     if (!user) return;
 
@@ -2294,16 +2275,16 @@
         else if (status === "pending") pending++;
       });
 
-      // تحديث البطاقات الثلاثة
+
       document.getElementById("total-stories-count").textContent = total;
       document.getElementById("published-stories-count").textContent = published;
       document.getElementById("pending-stories-count").textContent = pending;
 
-      // تحديث العدد في الـ Overview أيضًا (لو موجود)
+
       const mainCount = document.querySelector('.bg-white\\/5:nth-child(1) .text-2xl');
       if (mainCount) mainCount.textContent = total;
 
-      // إضافة أنيميشن بسيط عند التغيير
+
       ["total-stories-count", "published-stories-count", "pending-stories-count"].forEach(id => {
         const el = document.getElementById(id);
         el.classList.add("animate-pulse");
@@ -2335,7 +2316,7 @@
 
   let currentUser = null;
 
-  // انتظر تسجيل الدخول
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = "login.html";
@@ -2345,7 +2326,7 @@
     await loadUserData(user.uid);
   });
 
-  // تحميل بيانات المستخدم من Firebase وعرضها
+
   async function loadUserData(uid) {
     try {
       const docSnap = await getDoc(doc(db, "users", uid));
@@ -2363,7 +2344,7 @@
     }
   }
 
-  // فتح نافذة التعديل وملء الحقول
+
   document.getElementById("editProfileBtn")?.addEventListener("click", async () => {
     const docSnap = await getDoc(doc(db, "users", currentUser.uid));
     if (docSnap.exists()) {
@@ -2377,12 +2358,12 @@
     document.getElementById("editProfileModal").classList.remove("hidden");
   });
 
-  // إغلاق النافذة
+
   const closeModal = () => document.getElementById("editProfileModal").classList.add("hidden");
   document.getElementById("closeEditModal")?.addEventListener("click", closeModal);
   document.getElementById("cancelEdit")?.addEventListener("click", closeModal);
 
-  // معاينة الصورة فور اختيارها
+
   document.getElementById("imageUpload").addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -2395,7 +2376,7 @@
     reader.readAsDataURL(file);
   });
 
-  // حفظ التعديلات في Firebase
+
   document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -2405,14 +2386,14 @@
     const location = document.getElementById("editLocation").value;
 
     if (!firstName) {
-      showToast("الاسم الأول مطلوب", "error");
+      showToast("First name required", "error");
       return;
     }
 
     const displayName = `\( {firstName} \){lastName}`.trim();
     let photoURL = currentUser.photoURL;
 
-    // رفع الصورة إذا تم اختيار واحدة
+
     const file = document.getElementById("imageUpload").files[0];
     if (file) {
       try {
@@ -2421,7 +2402,7 @@
         photoURL = await getDownloadURL(storageRef);
       } catch (error) {
         console.error("Error uploading image:", error);
-        showToast("فشل رفع الصورة", "error");
+        showToast("Image upload failed", "error");
         return;
       }
     }
@@ -2435,7 +2416,7 @@
         updatedAt: serverTimestamp()
       });
 
-      // تحديث الواجهة فورًا
+
       document.getElementById("userName").textContent = displayName;
       document.getElementById("userBio").textContent = bio || "No bio yet.";
       if (photoURL) {
@@ -2444,10 +2425,10 @@
       }
 
       closeModal();
-      showToast("تم حفظ التغييرات بنجاح!");
+      showToast("Changes have been saved successfully!");
     } catch (error) {
       console.error("Error saving profile:", error);
-      showToast("فشل حفظ التغييرات", "error");
+      showToast("Failed to save changes", "error");
     }
   });
 
@@ -2496,13 +2477,13 @@
 
   let currentUser = null;
 
-  // ========== عند تحميل الصفحة ==========
+
   document.addEventListener('DOMContentLoaded', async () => {
-    console.log("🚀 Profile page loaded");
+    console.log(" Profile page loaded");
     
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        console.log("❌ No user, redirecting to login");
+        console.log(" No user, redirecting to login");
         window.location.href = "./login.html";
         return;
       }
@@ -2510,44 +2491,44 @@
       currentUser = user;
       console.log("✅ User logged in:", user.email, "UID:", user.uid);
       
-      // تحميل البيانات فوراً
+
       await loadUserProfile(user.uid);
       
-      // إعداد الأحداث
+
       setupEventListeners();
     });
   });
 
-  // ========== تحميل بيانات الملف الشخصي ==========
+
   async function loadUserProfile(userId) {
     try {
-      console.log("📥 Loading profile for user:", userId);
+      console.log(" Loading profile for user:", userId);
       
       const userRef = doc(db, "users", userId);
       const userSnap = await getDoc(userRef);
       
       if (userSnap.exists()) {
         const userData = userSnap.data();
-        console.log("📊 Profile data found:", userData);
+        console.log(" Profile data found:", userData);
         
-        // تحديث الاسم
+
         if (document.getElementById('userName')) {
           const displayName = userData.displayName || userData.fullName || userData.email?.split('@')[0] || "User";
           document.getElementById('userName').textContent = displayName;
         }
         
-        // تحديث البيو
+
         if (document.getElementById('userBio')) {
           document.getElementById('userBio').textContent = userData.bio || "No bio yet. Click edit to add one.";
         }
         
-        // تحديث الصورة - الأولوية للصورة المحفوظة في Firestore
+
         if (userData.photoURL) {
-          console.log("🖼️ Setting photo from Firestore:", userData.photoURL);
+          console.log(" Setting photo from Firestore:", userData.photoURL);
           setProfileImage(userData.photoURL);
         } else if (currentUser.photoURL) {
-          // إذا لم توجد في Firestore، استخدم صورة Auth
-          console.log("🖼️ Setting photo from Auth:", currentUser.photoURL);
+
+          console.log(" Setting photo from Auth:", currentUser.photoURL);
           setProfileImage(currentUser.photoURL);
         }
         
@@ -2562,10 +2543,10 @@
     }
   }
 
-  // ========== إنشاء ملف شخصي أولي ==========
+
   async function createInitialProfile(userId) {
     try {
-      console.log("🆕 Creating initial profile...");
+      console.log(" Creating initial profile...");
       
       const userData = {
         displayName: currentUser.displayName || currentUser.email?.split('@')[0] || "New User",
@@ -2579,7 +2560,7 @@
       
       await updateDoc(doc(db, "users", userId), userData);
       
-      // تحديث الواجهة
+
       document.getElementById('userName').textContent = userData.displayName;
       document.getElementById('userBio').textContent = userData.bio;
       
@@ -2594,22 +2575,22 @@
     }
   }
 
-  // ========== تعيين صورة الملف الشخصي ==========
+
   function setProfileImage(url) {
     try {
       console.log("🖼️ Setting image URL:", url);
       
-      // تحديث كلا الصورتين
+
       const profileImage = document.getElementById('profileImage');
       const modalImage = document.getElementById('modalProfileImage');
       
       if (profileImage) profileImage.src = url;
       if (modalImage) modalImage.src = url;
       
-      // إضافة حدث لتحميل الصورة
+
       profileImage.onload = () => {
         console.log("✅ Profile image loaded successfully");
-        localStorage.setItem('profile_image_url', url); // حفظ في localStorage
+        localStorage.setItem('profile_image_url', url); //  localStorage
       };
       
       profileImage.onerror = () => {
@@ -2623,29 +2604,29 @@
     }
   }
 
-  // ========== إعداد أحداث النقر ==========
+
   function setupEventListeners() {
     console.log("⚙️ Setting up event listeners");
     
-    // 1. زر تعديل الصورة الرئيسي
+
     document.getElementById('editPictureBtn')?.addEventListener('click', () => {
       console.log("📸 Edit picture clicked");
       document.getElementById('imageUpload').click();
     });
     
-    // 2. زر فتح نافذة التعديل
+
     document.getElementById('editProfileBtn')?.addEventListener('click', async () => {
       console.log("✏️ Edit profile clicked");
       await openEditModal();
     });
     
-    // 3. اختيار صورة جديدة
+
     const imageUpload = document.getElementById('imageUpload');
     if (imageUpload) {
       imageUpload.addEventListener('change', handleImageSelect);
     }
     
-    // 4. إغلاق النافذة
+
     document.getElementById('closeEditModal')?.addEventListener('click', () => {
       closeEditModal();
       resetImageUpload();
@@ -2656,23 +2637,23 @@
       resetImageUpload();
     });
     
-    // 5. حفظ التعديلات
+
     const editForm = document.getElementById('editProfileForm');
     if (editForm) {
       editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log("💾 Saving profile changes...");
+        console.log(" Saving profile changes...");
         await saveProfile();
       });
     }
   }
 
-  // ========== فتح نافذة التعديل ==========
+
   async function openEditModal() {
     try {
-      console.log("🪟 Opening edit modal");
+      console.log(" Opening edit modal");
       
-      // تحميل البيانات الحالية
+
       const userRef = doc(db, "users", currentUser.uid);
       const userSnap = await getDoc(userRef);
       
@@ -2686,7 +2667,7 @@
         document.getElementById('editLocation').value = userData.location || "mahama";
       }
       
-      // إظهار النافذة
+
       document.getElementById('editProfileModal').classList.remove('hidden');
       console.log("✅ Edit modal opened");
       
@@ -2696,23 +2677,23 @@
     }
   }
 
-  // ========== معالجة اختيار الصورة ==========
+
   let selectedImageFile = null;
 
   function handleImageSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
     
-    console.log("📁 Image selected:", file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+    console.log(" Image selected:", file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
     
-    // التحقق من الحجم
+
     if (file.size > 5 * 1024 * 1024) {
       showToast("Image too large (max 5MB)", "error");
       event.target.value = '';
       return;
     }
     
-    // التحقق من النوع
+
     if (!file.type.startsWith('image/')) {
       showToast("Please select an image file", "error");
       event.target.value = '';
@@ -2721,7 +2702,7 @@
     
     selectedImageFile = file;
     
-    // عرض معاينة فورية
+
     const reader = new FileReader();
     reader.onload = function(e) {
       const previewUrl = e.target.result;
@@ -2731,25 +2712,25 @@
     reader.readAsDataURL(file);
   }
 
-  // ========== رفع الصورة إلى Storage ==========
+  // ==========  Storage ==========
   async function uploadImage(file) {
     try {
       console.log("⬆️ Uploading image to Storage...");
       
-      // إنشاء اسم فريد
+
       const timestamp = Date.now();
       const fileExt = file.name.split('.').pop();
       const fileName = `profile_${currentUser.uid}_${timestamp}.${fileExt}`;
       const storagePath = `users/${currentUser.uid}/profile/${fileName}`;
       
-      console.log("📍 Storage path:", storagePath);
+      console.log(" Storage path:", storagePath);
       
-      // رفع الملف
+
       const storageRef = ref(storage, storagePath);
       const snapshot = await uploadBytes(storageRef, file);
       console.log("✅ Upload completed");
       
-      // الحصول على الرابط
+
       const downloadURL = await getDownloadURL(snapshot.ref);
       console.log("🔗 Download URL:", downloadURL);
       
@@ -2761,11 +2742,11 @@
     }
   }
 
-  // ========== حفظ الملف الشخصي ==========
+
   async function saveProfile() {
-    console.log("💾 === STARTING PROFILE SAVE ===");
+    console.log("=== STARTING PROFILE SAVE ===");
     
-    // جمع البيانات
+
     const firstName = document.getElementById('editFirstName').value.trim();
     const lastName = document.getElementById('editLastName').value.trim();
     const bio = document.getElementById('editBio').value.trim();
@@ -2780,15 +2761,15 @@
     let photoURL = null;
     
     try {
-      // 1. رفع الصورة أولاً إذا كانت جديدة
+
       if (selectedImageFile) {
-        console.log("🖼️ New image detected, uploading...");
+        console.log(" New image detected, uploading...");
         showToast("Uploading image...", "info");
         
         photoURL = await uploadImage(selectedImageFile);
         console.log("✅ Image uploaded. URL:", photoURL);
       } else {
-        // الاحتفاظ بالرابط الحالي
+
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
@@ -2797,7 +2778,7 @@
         }
       }
       
-      // 2. تحضير البيانات للحفظ
+
       const updateData = {
         displayName: displayName,
         bio: bio || "",
@@ -2805,20 +2786,20 @@
         updatedAt: serverTimestamp()
       };
       
-      // إضافة رابط الصورة
+
       if (photoURL) {
         updateData.photoURL = photoURL;
-        console.log("📌 PhotoURL will be saved:", photoURL);
+        console.log(" PhotoURL will be saved:", photoURL);
       }
       
-      console.log("📦 Data to save:", updateData);
+      console.log(" Data to save:", updateData);
       
-      // 3. حفظ في Firestore
+
       const userRef = doc(db, "users", currentUser.uid);
       await updateDoc(userRef, updateData);
       console.log("✅ Saved to Firestore");
       
-      // 4. تحديث الواجهة فوراً
+
       document.getElementById('userName').textContent = displayName;
       document.getElementById('userBio').textContent = bio || "No bio yet";
       
@@ -2826,18 +2807,18 @@
         setProfileImage(photoURL);
       }
       
-      // 5. إغلاق وإعادة تعيين
+
       closeEditModal();
       resetImageUpload();
       
-      // 6. إظهار رسالة النجاح
+
       showToast("Profile saved successfully!", "success");
-      console.log("🎉 === PROFILE SAVED SUCCESSFULLY ===");
+      console.log(" === PROFILE SAVED SUCCESSFULLY ===");
       
-      // 7. تأكيد الحفظ بعد 2 ثانية
+
       setTimeout(() => {
-        console.log("🔍 Verifying save...");
-        loadUserProfile(currentUser.uid); // إعادة تحميل للتأكد
+        console.log(" Verifying save...");
+        loadUserProfile(currentUser.uid);
       }, 2000);
       
     } catch (error) {
@@ -2847,7 +2828,7 @@
     }
   }
 
-  // ========== إعادة تعيين رفع الصورة ==========
+
   function resetImageUpload() {
     selectedImageFile = null;
     const imageUpload = document.getElementById('imageUpload');
@@ -2857,20 +2838,20 @@
     console.log("🔄 Image upload reset");
   }
 
-  // ========== إغلاق نافذة التعديل ==========
+
   function closeEditModal() {
     document.getElementById('editProfileModal').classList.add('hidden');
-    console.log("🪟 Edit modal closed");
+    console.log(" Edit modal closed");
   }
 
-  // ========== عرض الرسائل ==========
+
   function showToast(message, type = "info") {
-    console.log(`📢 Toast (${type}):`, message);
+    console.log(` Toast (${type}):`, message);
     
-    // إزالة الرسائل القديمة
+
     document.querySelectorAll('.profile-toast').forEach(toast => toast.remove());
     
-    // إنشاء الرسالة
+
     const toast = document.createElement('div');
     toast.className = `profile-toast fixed top-24 right-4 px-6 py-4 rounded-xl text-white font-semibold shadow-2xl z-50 animate-slide-in ${
       type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
@@ -2887,7 +2868,7 @@
     
     document.body.appendChild(toast);
     
-    // إزالة بعد 4 ثواني
+
     setTimeout(() => {
       if (toast.parentNode) {
         toast.classList.add('animate-slide-out');
@@ -2898,7 +2879,7 @@
     }, 4000);
   }
 
-  // ========== إضافة الأنماط ==========
+
   const style = document.createElement('style');
   style.textContent = `
     @keyframes slide-in {
@@ -2931,12 +2912,12 @@
       animation: slide-out 0.3s ease-out forwards;
     }
     
-    /* تحسين الصورة */
+
     #profileImage, #modalProfileImage {
       transition: opacity 0.3s ease;
     }
     
-    /* تأثير عند التحميل */
+
     .image-loading {
       opacity: 0.7;
       filter: blur(2px);
@@ -2949,8 +2930,7 @@
   `;
   document.head.appendChild(style);
 
-  // ========== تحسين تجربة المستخدم ==========
-  // عرض صورة من localStorage مؤقتاً أثناء التحميل
+// localStorage
   window.addEventListener('load', () => {
     const cachedImage = localStorage.getItem('profile_image_url');
     if (cachedImage && document.getElementById('profileImage')) {

@@ -8,307 +8,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   
-  <!-- Chart.js for analytics -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
-      signOut,
-      signInWithEmailAndPassword 
-    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-    import { 
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      where,
-      orderBy,
-      limit,
-      updateDoc,
-      doc,
-      addDoc,
-      deleteDoc,
-      Timestamp
-    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-    import { 
-      getStorage,
-      ref,
-      uploadBytes,
-      getDownloadURL,
-      deleteObject
-    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
-
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
-      authDomain: "sigin-b3aa1.firebaseapp.com",
-      projectId: "sigin-b3aa1",
-      storageBucket: "sigin-b3aa1.firebasestorage.app",
-      messagingSenderId: "390069352394",
-      appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
-      measurementId: "G-WF0H2KJN02"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    // Make Firebase available globally
-    window.firebase = {
-      auth: auth,
-      db: db,
-      storage: storage,
-      firestore: {
-        collection,
-        getDocs,
-        query,
-        where,
-        orderBy,
-        limit,
-        updateDoc,
-        doc,
-        addDoc,
-        deleteDoc,
-        Timestamp
-      },
-      storageMethods: {
-        ref,
-        uploadBytes,
-        getDownloadURL,
-        deleteObject
-      }
-    };
-
-    // Check authentication state
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Not logged in, redirect to login page
-        window.location.href = './login.html';
-      } else {
-        // Check if user is admin (you can add role-based check here)
-        const adminEmail = "msbarbab69@gmail.com"; // Change this to your admin email
-        if (user.email !== adminEmail) {
-          alert("Access denied. Admin only.");
-          signOut(auth);
-          window.location.href = './login.html';
-        } else {
-          // User is admin, load dashboard data
-          console.log("Admin user:", user.email);
-          loadDashboardData();
-          
-          // Update admin info
-          document.querySelector('.admin-name').textContent = user.displayName || 'Administrator';
-          document.querySelector('.admin-email').textContent = user.email;
-        }
-      }
-    });
-
-    // Logout function
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = './index.html';
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    };
-
-    // Load dashboard data from Firestore
-    async function loadDashboardData() {
-      try {
-        // Load users
-        const usersSnapshot = await getDocs(collection(db, "users"));
-        const userCount = usersSnapshot.size;
-        document.querySelector('.total-users').textContent = userCount;
-        
-        // Load stories
-        const storiesSnapshot = await getDocs(collection(db, "stories"));
-        const activeStories = storiesSnapshot.docs.filter(doc => doc.data().status === 'approved').length;
-        document.querySelector('.active-stories').textContent = activeStories;
-        
-        // Load pending reports
-        const reportsQuery = query(collection(db, "reports"), where("status", "==", "pending"));
-        const reportsSnapshot = await getDocs(reportsQuery);
-        document.querySelector('.pending-reports').textContent = reportsSnapshot.size;
-        
-        // Load recent users
-        const recentUsersQuery = query(
-          collection(db, "users"),
-          orderBy("createdAt", "desc"),
-          limit(5)
-        );
-        const recentUsersSnapshot = await getDocs(recentUsersQuery);
-        populateRecentUsers(recentUsersSnapshot);
-        
-        // Load user growth data for chart
-        loadUserGrowthData();
-        
-        // Load notifications
-        loadNotifications();
-        
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
-      }
-    }
-
-    function populateRecentUsers(snapshot) {
-      const tbody = document.querySelector('tbody');
-      tbody.innerHTML = '';
-      
-      snapshot.forEach((docSnapshot) => {
-        const user = docSnapshot.data();
-        const row = document.createElement('tr');
-        row.className = 'table-row border-b border-gray-100';
-        row.innerHTML = `
-          <td class="py-4">
-            <div class="flex items-center space-x-3">
-              <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email) + '&background=ec4899&color=fff'}" 
-                   alt="${user.displayName || 'User'}" class="w-8 h-8 rounded-full">
-              <div>
-                <p class="font-medium text-sm">${user.displayName || 'Anonymous User'}</p>
-                <p class="text-xs text-gray-500">${user.email || 'No email'}</p>
-              </div>
-            </div>
-          </td>
-          <td class="py-4 text-sm">${formatDate(user.createdAt?.toDate())}</td>
-          <td class="py-4">
-            <span class="status-badge status-${user.status || 'active'}">${(user.status || 'active').charAt(0).toUpperCase() + (user.status || 'active').slice(1)}</span>
-          </td>
-          <td class="py-4">
-            <button onclick="viewUser('${docSnapshot.id}')" class="text-primary hover:text-primary-dark smooth-transition mr-2">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button onclick="editUser('${docSnapshot.id}')" class="text-warning hover:text-warning-dark smooth-transition">
-              <i class="fas fa-edit"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    async function loadUserGrowthData() {
-      // This is a simplified version. In production, you'd want to aggregate data properly
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      const usersByMonth = {};
-      
-      usersSnapshot.forEach((doc) => {
-        const user = doc.data();
-        if (user.createdAt) {
-          const month = user.createdAt.toDate().toLocaleString('default', { month: 'short' });
-          usersByMonth[month] = (usersByMonth[month] || 0) + 1;
-        }
-      });
-      
-      // Initialize chart with data
-      initializeCharts(usersByMonth);
-    }
-
-    async function loadNotifications() {
-      const notificationsQuery = query(
-        collection(db, "notifications"),
-        orderBy("timestamp", "desc"),
-        limit(5)
-      );
-      
-      const snapshot = await getDocs(notificationsQuery);
-      const container = document.querySelector('#notification-dropdown .max-h-96');
-      
-      snapshot.forEach((doc) => {
-        const notif = doc.data();
-        const div = document.createElement('div');
-        div.className = 'p-4 border-b border-gray-100 hover:bg-gray-50 smooth-transition';
-        div.innerHTML = `
-          <div class="flex items-start space-x-3">
-            <div class="w-8 h-8 ${getNotificationColor(notif.type)} rounded-full flex items-center justify-center">
-              <i class="fas fa-${getNotificationIcon(notif.type)} text-white text-sm"></i>
-            </div>
-            <div class="flex-1">
-              <p class="font-medium text-sm">${notif.title}</p>
-              <p class="text-xs text-gray-500 mt-1">${notif.message}</p>
-              <p class="text-xs text-gray-400 mt-1">${formatTimeAgo(notif.timestamp?.toDate())}</p>
-            </div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function getNotificationColor(type) {
-      const colors = {
-        'user': 'bg-primary',
-        'story': 'bg-success',
-        'report': 'bg-danger',
-        'system': 'bg-info'
-      };
-      return colors[type] || 'bg-gray-600';
-    }
-
-    function getNotificationIcon(type) {
-      const icons = {
-        'user': 'user',
-        'story': 'book-open',
-        'report': 'flag',
-        'system': 'cog'
-      };
-      return icons[type] || 'bell';
-    }
-
-    function formatDate(date) {
-      if (!date) return 'N/A';
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    function formatTimeAgo(date) {
-      if (!date) return '';
-      const now = new Date();
-      const diffMs = now - date;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffDays = Math.floor(diffMs / 86400000);
-      
-      if (diffMins < 60) return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-      if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-      return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-    }
-
-    // Make functions available globally
-    window.viewUser = (userId) => {
-      // Implement view user modal
-      alert(`View user: ${userId}`);
-    };
-
-    window.editUser = (userId) => {
-      // Implement edit user modal
-      alert(`Edit user: ${userId}`);
-    };
-
-    window.addNewUser = async () => {
-      // Implement add user functionality
-      const email = prompt("Enter user email:");
-      const password = prompt("Enter temporary password:");
-      
-      if (email && password) {
-        try {
-          // Note: In production, use Firebase Admin SDK on backend for this
-          alert("User creation should be handled on backend for security");
-        } catch (error) {
-          alert("Error creating user: " + error.message);
-        }
-      }
-    };
-
-  </script>
-  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script>
     tailwind.config = {
       theme: {
@@ -354,70 +58,69 @@
   </script>
 
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #c23cb6;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #ec4899;
-    }
-    
-    /* Smooth transitions */
-    .smooth-transition {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    /* Card hover effects */
-    .dashboard-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .dashboard-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Status badges */
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #c23cb6; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ec4899; }
+    .smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .dashboard-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .status-active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
     .status-pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
     .status-inactive { background: rgba(107, 114, 128, 0.1); color: #6b7280; }
     .status-warning { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    .sidebar-link.active { background: linear-gradient(90deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%); border-left: 4px solid #ec4899; color: #ec4899; }
+    .table-row:hover { background: rgba(236, 72, 153, 0.05); }
     
-    /* Sidebar active state */
-    .sidebar-link.active {
-      background: linear-gradient(90deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
-      border-left: 4px solid #ec4899;
-      color: #ec4899;
+    /* Toast notification styles */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 10000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    .toast.show {
+      transform: translateX(0);
+    }
+    .toast.success {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+    .toast.error {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    .toast.warning {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+    .toast.info {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
     }
     
-    /* Table row hover */
-    .table-row:hover {
-      background: rgba(236, 72, 153, 0.05);
+    /* Loading spinner */
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #ec4899;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 
 <body class="font-inter bg-gray-50 text-gray-800 min-h-screen">
-  
-  <!-- Admin Dashboard Container -->
   <div class="flex h-screen">
-    
     <!-- Sidebar -->
     <div class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-lg">
       <!-- Logo -->
@@ -437,13 +140,12 @@
       <div class="p-6 border-b border-gray-200">
         <div class="flex items-center space-x-3">
           <div class="relative">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=c23cb6&color=fff" 
-                 alt="Admin" class="w-12 h-12 rounded-full border-2 border-primary">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=c23cb6&color=fff" alt="Admin" class="w-12 h-12 rounded-full border-2 border-primary">
             <span class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"></span>
           </div>
           <div class="flex-1 min-w-0">
-            <p class="admin-name font-semibold text-gray-800 truncate">Loading...</p>
-            <p class="admin-email text-sm text-gray-500 truncate">Loading...</p>
+            <p id="admin-name" class="font-semibold text-gray-800 truncate">Loading...</p>
+            <p id="admin-email" class="text-sm text-gray-500 truncate">Loading...</p>
           </div>
         </div>
       </div>
@@ -457,16 +159,16 @@
         <a href="#users" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
           <i class="fas fa-users text-lg w-6"></i>
           <span class="font-medium">Users</span>
-          <span class="ml-auto bg-primary text-white text-xs px-2 py-1 rounded-full total-users">0</span>
-        </a>
-        <a href="#content" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
-          <i class="fas fa-newspaper text-lg w-6"></i>
-          <span class="font-medium">Content</span>
+          <span id="sidebar-total-users" class="ml-auto bg-primary text-white text-xs px-2 py-1 rounded-full">0</span>
         </a>
         <a href="#stories" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
           <i class="fas fa-book-open text-lg w-6"></i>
           <span class="font-medium">Stories</span>
-          <span class="ml-auto bg-warning text-white text-xs px-2 py-1 rounded-full">0</span>
+          <span id="sidebar-pending-stories" class="ml-auto bg-warning text-white text-xs px-2 py-1 rounded-full">0</span>
+        </a>
+        <a href="#content" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
+          <i class="fas fa-newspaper text-lg w-6"></i>
+          <span class="font-medium">Content</span>
         </a>
         <a href="#chat" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
           <i class="fas fa-comments text-lg w-6"></i>
@@ -475,7 +177,7 @@
         <a href="#reports" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
           <i class="fas fa-flag text-lg w-6"></i>
           <span class="font-medium">Reports</span>
-          <span class="ml-auto bg-danger text-white text-xs px-2 py-1 rounded-full pending-reports">0</span>
+          <span id="sidebar-pending-reports" class="ml-auto bg-danger text-white text-xs px-2 py-1 rounded-full">0</span>
         </a>
         <a href="#analytics" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition">
           <i class="fas fa-chart-pie text-lg w-6"></i>
@@ -495,10 +197,9 @@
         </button>
       </div>
     </div>
-    
+ 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      
       <!-- Top Bar -->
       <header class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
         <div class="flex items-center justify-between">
@@ -509,7 +210,7 @@
               <span id="current-date">Loading...</span>
             </div>
           </div>
-          
+ 
           <div class="flex items-center space-x-4">
             <!-- Notifications -->
             <div class="relative">
@@ -517,20 +218,19 @@
                 <i class="fas fa-bell text-xl text-gray-600"></i>
                 <span class="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full"></span>
               </button>
-              <!-- Notification Dropdown -->
               <div id="notification-dropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 hidden z-50">
                 <div class="p-4 border-b border-gray-200">
                   <h3 class="font-bold text-gray-800">Notifications</h3>
                 </div>
-                <div class="max-h-96 overflow-y-auto">
-                  <!-- Notifications loaded dynamically -->
+                <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                  <div class="p-4 text-center text-gray-500">No notifications</div>
                 </div>
                 <div class="p-4 border-t border-gray-200">
                   <a href="#" class="text-primary text-sm font-medium hover:underline">View all notifications</a>
                 </div>
               </div>
             </div>
-            
+ 
             <!-- Quick Actions -->
             <button onclick="addNewUser()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
               <i class="fas fa-plus"></i>
@@ -539,221 +239,287 @@
           </div>
         </div>
       </header>
-      
+ 
       <!-- Dashboard Content -->
       <main class="flex-1 overflow-y-auto p-6">
-        
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <p class="text-sm text-gray-500">Total Users</p>
-                <h3 class="total-users text-2xl font-bold text-gray-800">0</h3>
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+          <!-- Stats Overview -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm text-gray-500">Total Users</p>
+                  <h3 id="total-users" class="text-2xl font-bold text-gray-800">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-users text-primary text-xl"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-users text-primary text-xl"></i>
+              <div class="flex items-center text-sm">
+                <span id="users-change" class="text-success flex items-center">
+                  <i class="fas fa-arrow-up mr-1"></i>
+                  Loading...
+                </span>
+                <span class="text-gray-500 ml-2">from last month</span>
               </div>
             </div>
-            <div class="flex items-center text-sm">
-              <span class="text-success flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i>
-                Loading...
-              </span>
-              <span class="text-gray-500 ml-2">from last month</span>
+ 
+            <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm text-gray-500">Active Stories</p>
+                  <h3 id="active-stories" class="text-2xl font-bold text-gray-800">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-book-open text-success text-xl"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-sm">
+                <span id="stories-change" class="text-success flex items-center">
+                  <i class="fas fa-arrow-up mr-1"></i>
+                  Loading...
+                </span>
+                <span class="text-gray-500 ml-2">from last week</span>
+              </div>
+            </div>
+ 
+            <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm text-gray-500">Chat Sessions</p>
+                  <h3 id="chat-sessions" class="text-2xl font-bold text-gray-800">156</h3>
+                </div>
+                <div class="w-12 h-12 bg-info/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-comments text-info text-xl"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-success flex items-center">
+                  <i class="fas fa-arrow-up mr-1"></i>
+                  24.3%
+                </span>
+                <span class="text-gray-500 ml-2">from yesterday</span>
+              </div>
+            </div>
+ 
+            <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm text-gray-500">Pending Reports</p>
+                  <h3 id="pending-reports" class="text-2xl font-bold text-gray-800">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-flag text-warning text-xl"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-sm">
+                <span id="reports-change" class="text-danger flex items-center">
+                  <i class="fas fa-arrow-down mr-1"></i>
+                  Loading...
+                </span>
+                <span class="text-gray-500 ml-2">from last week</span>
+              </div>
             </div>
           </div>
-          
-          <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <p class="text-sm text-gray-500">Active Stories</p>
-                <h3 class="active-stories text-2xl font-bold text-gray-800">0</h3>
+ 
+          <!-- Charts and Analytics -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- User Growth Chart -->
+            <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-lg text-gray-800">User Growth</h3>
+                <div class="flex space-x-2">
+                  <button onclick="switchChartView('weekly')" class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200 smooth-transition">Weekly</button>
+                  <button onclick="switchChartView('monthly')" class="px-3 py-1 text-xs bg-primary text-white rounded-lg smooth-transition">Monthly</button>
+                  <button onclick="switchChartView('yearly')" class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200 smooth-transition">Yearly</button>
+                </div>
               </div>
-              <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-book-open text-success text-xl"></i>
-              </div>
-            </div>
-            <div class="flex items-center text-sm">
-              <span class="text-success flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i>
-                Loading...
-              </span>
-              <span class="text-gray-500 ml-2">from last week</span>
-            </div>
-          </div>
-          
-          <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <p class="text-sm text-gray-500">Chat Sessions</p>
-                <h3 class="text-2xl font-bold text-gray-800">156</h3>
-              </div>
-              <div class="w-12 h-12 bg-info/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-comments text-info text-xl"></i>
+              <div class="h-64">
+                <canvas id="userGrowthChart"></canvas>
               </div>
             </div>
-            <div class="flex items-center text-sm">
-              <span class="text-success flex items-center">
-                <i class="fas fa-arrow-up mr-1"></i>
-                24.3%
-              </span>
-              <span class="text-gray-500 ml-2">from yesterday</span>
+ 
+            <!-- Platform Distribution -->
+            <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-lg text-gray-800">Platform Distribution</h3>
+              </div>
+              <div class="h-64">
+                <canvas id="platformChart"></canvas>
+              </div>
             </div>
           </div>
-          
-          <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <p class="text-sm text-gray-500">Pending Reports</p>
-                <h3 class="pending-reports text-2xl font-bold text-gray-800">0</h3>
+ 
+          <!-- Recent Activity and Quick Actions -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Users -->
+            <div class="bg-white rounded-xl p-6 shadow border border-gray-100 lg:col-span-2">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-lg text-gray-800">Recent Users</h3>
+                <a href="#users" class="text-primary text-sm font-medium hover:underline">View all</a>
               </div>
-              <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-flag text-warning text-xl"></i>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="text-left text-xs text-gray-500 border-b border-gray-200">
+                      <th class="pb-3 font-medium">User</th>
+                      <th class="pb-3 font-medium">Joined</th>
+                      <th class="pb-3 font-medium">Status</th>
+                      <th class="pb-3 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-users-tbody">
+                    <tr><td colspan="4" class="text-center py-8 text-gray-500">Loading users...</td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div class="flex items-center text-sm">
-              <span class="text-danger flex items-center">
-                <i class="fas fa-arrow-down mr-1"></i>
-                Loading...
-              </span>
-              <span class="text-gray-500 ml-2">from last week</span>
+ 
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+              <h3 class="font-bold text-lg text-gray-800 mb-6">Quick Actions</h3>
+              <div class="space-y-4">
+                <button onclick="addNewUser()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
+                  <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-user-plus text-primary"></i>
+                  </div>
+                  <div class="text-left">
+                    <p class="font-medium text-sm">Add New User</p>
+                    <p class="text-xs text-gray-500">Register new girl</p>
+                  </div>
+                </button>
+ 
+                <button onclick="createProgram()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
+                  <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-plus-circle text-success"></i>
+                  </div>
+                  <div class="text-left">
+                    <p class="font-medium text-sm">Create Program</p>
+                    <p class="text-xs text-gray-500">Add learning program</p>
+                  </div>
+                </button>
+ 
+                <button onclick="viewReports()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
+                  <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chart-line text-warning"></i>
+                  </div>
+                  <div class="text-left">
+                    <p class="font-medium text-sm">View Reports</p>
+                    <p class="text-xs text-gray-500">Analyze platform data</p>
+                  </div>
+                </button>
+ 
+                <button onclick="openSettings()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
+                  <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-cog text-info"></i>
+                  </div>
+                  <div class="text-left">
+                    <p class="font-medium text-sm">Settings</p>
+                    <p class="text-xs text-gray-500">Configure platform</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- System Status -->
+          <div class="mt-8 bg-white rounded-xl p-6 shadow border border-gray-100">
+            <h3 class="font-bold text-lg text-gray-800 mb-6">System Status</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-server text-success text-xl"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Server Status</p>
+                  <p class="text-2xl font-bold text-success">Online</p>
+                </div>
+              </div>
+ 
+              <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-database text-success text-xl"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Database</p>
+                  <p class="text-2xl font-bold text-success">Connected</p>
+                </div>
+              </div>
+ 
+              <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
+                  <i class="fas fa-shield-alt text-warning text-xl"></i>
+                </div>
+                <div>
+                  <p class="font-medium">Security</p>
+                  <p class="text-2xl font-bold text-warning">Monitoring</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        
-        <!-- Charts and Analytics -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <!-- User Growth Chart -->
+
+        <!-- Users Section -->
+        <div id="users-section" class="hidden">
           <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-lg text-gray-800">User Growth</h3>
-              <div class="flex space-x-2">
-                <button class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200 smooth-transition">Weekly</button>
-                <button class="px-3 py-1 text-xs bg-primary text-white rounded-lg smooth-transition">Monthly</button>
-                <button class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200 smooth-transition">Yearly</button>
-              </div>
-            </div>
-            <div class="h-64">
-              <canvas id="userGrowthChart"></canvas>
-            </div>
-          </div>
-          
-          <!-- Platform Distribution -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-lg text-gray-800">Platform Distribution</h3>
-            </div>
-            <div class="h-64">
-              <canvas id="platformChart"></canvas>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Recent Activity and Quick Actions -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Recent Users -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100 lg:col-span-2">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-lg text-gray-800">Recent Users</h3>
-              <a href="#users" class="text-primary text-sm font-medium hover:underline">View all</a>
+              <h3 class="font-bold text-lg text-gray-800">All Users</h3>
+              <button onclick="addNewUser()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
+                <i class="fas fa-plus"></i>
+                <span>Add New User</span>
+              </button>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full">
                 <thead>
                   <tr class="text-left text-xs text-gray-500 border-b border-gray-200">
-                    <th class="pb-3 font-medium">User</th>
-                    <th class="pb-3 font-medium">Joined</th>
-                    <th class="pb-3 font-medium">Status</th>
-                    <th class="pb-3 font-medium">Actions</th>
+                    <th class="pb-3">Photo</th>
+                    <th class="pb-3">Name</th>
+                    <th class="pb-3">Email</th>
+                    <th class="pb-3">Phone</th>
+                    <th class="pb-3">Status</th>
+                    <th class="pb-3">Created</th>
+                    <th class="pb-3">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!-- Users loaded dynamically from Firebase -->
+                <tbody id="all-users-tbody">
+                  <tr><td colspan="7" class="text-center py-12 text-gray-500">Loading users...</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
-          
-          <!-- Quick Actions -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <h3 class="font-bold text-lg text-gray-800 mb-6">Quick Actions</h3>
-            <div class="space-y-4">
-              <button onclick="addNewUser()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
-                <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <i class="fas fa-user-plus text-primary"></i>
-                </div>
-                <div class="text-left">
-                  <p class="font-medium text-sm">Add New User</p>
-                  <p class="text-xs text-gray-500">Register new girl</p>
-                </div>
-              </button>
-              
-              <button onclick="createProgram()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
-                <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
-                  <i class="fas fa-plus-circle text-success"></i>
-                </div>
-                <div class="text-left">
-                  <p class="font-medium text-sm">Create Program</p>
-                  <p class="text-xs text-gray-500">Add learning program</p>
-                </div>
-              </button>
-              
-              <button onclick="viewReports()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
-                <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
-                  <i class="fas fa-chart-line text-warning"></i>
-                </div>
-                <div class="text-left">
-                  <p class="font-medium text-sm">View Reports</p>
-                  <p class="text-xs text-gray-500">Analyze platform data</p>
-                </div>
-              </button>
-              
-              <button onclick="openSettings()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
-                <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center">
-                  <i class="fas fa-cog text-info"></i>
-                </div>
-                <div class="text-left">
-                  <p class="font-medium text-sm">Settings</p>
-                  <p class="text-xs text-gray-500">Configure platform</p>
-                </div>
-              </button>
-            </div>
-          </div>
         </div>
-        
-        <!-- System Status -->
-        <div class="mt-8 bg-white rounded-xl p-6 shadow border border-gray-100">
-          <h3 class="font-bold text-lg text-gray-800 mb-6">System Status</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-server text-success text-xl"></i>
-              </div>
-              <div>
-                <p class="font-medium">Server Status</p>
-                <p class="text-2xl font-bold text-success">Online</p>
-              </div>
-            </div>
-            
-            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-database text-success text-xl"></i>
-              </div>
-              <div>
-                <p class="font-medium">Database</p>
-                <p class="text-2xl font-bold text-success">Connected</p>
+
+        <!-- Stories Section -->
+        <div id="stories-section" class="hidden">
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-bold text-lg text-gray-800">All Stories</h3>
+              <div class="flex items-center space-x-2">
+                <button onclick="filterStories('all')" class="px-3 py-1 text-xs bg-primary text-white rounded-lg">All</button>
+                <button onclick="filterStories('pending')" class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200">Pending</button>
+                <button onclick="filterStories('approved')" class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200">Approved</button>
+                <button onclick="filterStories('rejected')" class="px-3 py-1 text-xs bg-gray-100 rounded-lg hover:bg-gray-200">Rejected</button>
               </div>
             </div>
-            
-            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
-                <i class="fas fa-shield-alt text-warning text-xl"></i>
-              </div>
-              <div>
-                <p class="font-medium">Security</p>
-                <p class="text-2xl font-bold text-warning">Monitoring</p>
-              </div>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="text-left text-xs text-gray-500 border-b border-gray-200">
+                    <th class="pb-3">#</th>
+                    <th class="pb-3">Title</th>
+                    <th class="pb-3">Author</th>
+                    <th class="pb-3">Category</th>
+                    <th class="pb-3">Status</th>
+                    <th class="pb-3">Date</th>
+                    <th class="pb-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="all-stories-tbody">
+                  <tr><td colspan="7" class="text-center py-12 text-gray-500">Loading stories...</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -761,127 +527,1160 @@
     </div>
   </div>
 
-  <!-- Additional JavaScript -->
-  <script>
-    // Initialize date
-    document.addEventListener('DOMContentLoaded', function() {
-      // Set current date
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
-      
-      // Notification dropdown toggle
-      const notificationBtn = document.getElementById('notification-btn');
-      const notificationDropdown = document.getElementById('notification-dropdown');
-      
-      notificationBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        notificationDropdown.classList.toggle('hidden');
-      });
-      
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function() {
-        notificationDropdown.classList.add('hidden');
-      });
-      
-      // Sidebar navigation
-      const sidebarLinks = document.querySelectorAll('.sidebar-link');
-      sidebarLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          sidebarLinks.forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
-    });
+  <!-- User Modal -->
+  <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h3 id="user-modal-title" class="text-2xl font-bold text-gray-800 mb-2">User Details</h3>
+            <p id="user-modal-subtitle" class="text-gray-600"></p>
+          </div>
+          <button onclick="closeModal('user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+        </div>
+        <div id="user-modal-content" class="space-y-4">
+          <!-- User details will be loaded here -->
+        </div>
+        <div id="user-modal-actions" class="flex justify-end space-x-3 mt-6">
+          <!-- Actions will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Modal -->
+  <div id="story-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h3 id="story-modal-title" class="text-2xl font-bold text-gray-800 mb-2">Story Details</h3>
+            <p id="story-modal-subtitle" class="text-gray-600"></p>
+            <span id="story-modal-status" class="status-badge mt-2"></span>
+          </div>
+          <button onclick="closeModal('story-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+        </div>
+        <div id="story-modal-content" class="text-gray-700 leading-relaxed whitespace-pre-line mb-6"></div>
+        <div id="story-modal-actions" class="flex justify-end space-x-3">
+          <!-- Actions will be added dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script type="module">
+    // Firebase Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut,
+      createUserWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      onSnapshot, 
+      query, 
+      orderBy, 
+      limit, 
+      where, 
+      doc, 
+      deleteDoc, 
+      updateDoc,
+      setDoc,
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+      authDomain: "sigin-b3aa1.firebaseapp.com",
+      databaseURL: "https://sigin-b3aa1-default-rtdb.firebaseio.com",
+      projectId: "sigin-b3aa1",
+      storageBucket: "sigin-b3aa1.firebasestorage.app",
+      messagingSenderId: "390069352394",
+      appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
+      measurementId: "G-WF0H2KJN02"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
     
-    // Chart initialization function
-    function initializeCharts(userData) {
-      // User Growth Chart
-      const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-      new Chart(userGrowthCtx, {
+    // Global Variables
+    let unsubscribes = [];
+    let allUsers = [];
+    let allStories = [];
+    let filteredStories = [];
+    let userGrowthChart = null;
+    let platformChart = null;
+    let currentChartView = 'monthly';
+
+    // ======================
+    // UTILITY FUNCTIONS
+    // ======================
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
+
+    // Format date
+    function formatDate(date) {
+      if (!date) return 'N/A';
+      try {
+        if (date.toDate) {
+          date = date.toDate();
+        }
+        return date.toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (error) {
+        return 'Invalid Date';
+      }
+    }
+
+    // Close modal
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    // Validate email
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    // Get status badge class
+    function getStatusClass(status) {
+      switch(status) {
+        case 'active': return 'status-active';
+        case 'pending': return 'status-pending';
+        case 'inactive': return 'status-inactive';
+        case 'approved': return 'status-active';
+        case 'rejected': return 'status-warning';
+        default: return 'status-inactive';
+      }
+    }
+
+    // Get status text
+    function getStatusText(status) {
+      switch(status) {
+        case 'active': return 'Active';
+        case 'pending': return 'Pending';
+        case 'inactive': return 'Inactive';
+        case 'approved': return 'Approved';
+        case 'rejected': return 'Rejected';
+        default: return 'Unknown';
+      }
+    }
+
+    // Switch chart view
+    window.switchChartView = (view) => {
+      currentChartView = view;
+      
+      // Update button styles
+      document.querySelectorAll('#dashboard-section .bg-primary').forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-800');
+      });
+      
+      const activeBtn = document.querySelector(`#dashboard-section button:nth-child(${
+        view === 'weekly' ? 1 : view === 'monthly' ? 2 : 3
+      })`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-gray-100', 'text-gray-800');
+        activeBtn.classList.add('bg-primary', 'text-white');
+      }
+      
+      // Update chart with new view
+      if (allUsers.length > 0) {
+        analyzeUserGrowth();
+      }
+    };
+
+    // Analyze user growth for charts
+    function analyzeUserGrowth() {
+      if (allUsers.length === 0) return;
+
+      const now = new Date();
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      let labels = [];
+      let cumulativeData = [];
+      let newUsersData = [];
+
+      if (currentChartView === 'monthly') {
+        // Last 6 months
+        for (let i = 5; i >= 0; i--) {
+          const date = new Date();
+          date.setMonth(date.getMonth() - i);
+          const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+          const monthLabel = `${monthNames[date.getMonth()]} ${date.getFullYear().toString().substr(-2)}`;
+          labels.push(monthLabel);
+          
+          let monthCount = 0;
+          allUsers.forEach(user => {
+            if (user.createdAt) {
+              const userDate = user.createdAt.toDate ? user.createdAt.toDate() : new Date(user.createdAt);
+              if (userDate.getFullYear() === date.getFullYear() && userDate.getMonth() === date.getMonth()) {
+                monthCount++;
+              }
+            }
+          });
+          newUsersData.push(monthCount);
+        }
+
+        // Calculate cumulative
+        let cumulative = 0;
+        cumulativeData = newUsersData.map(count => {
+          cumulative += count;
+          return cumulative;
+        });
+      }
+      else if (currentChartView === 'weekly') {
+        // Last 8 weeks
+        for (let i = 7; i >= 0; i--) {
+          const date = new Date();
+          date.setDate(date.getDate() - (i * 7));
+          const weekStart = new Date(date);
+          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+          const weekLabel = `Week ${Math.floor((date.getDate() - 1) / 7) + 1}`;
+          labels.push(weekLabel);
+          
+          let weekCount = 0;
+          allUsers.forEach(user => {
+            if (user.createdAt) {
+              const userDate = user.createdAt.toDate ? user.createdAt.toDate() : new Date(user.createdAt);
+              const weekEnd = new Date(weekStart);
+              weekEnd.setDate(weekEnd.getDate() + 6);
+              
+              if (userDate >= weekStart && userDate <= weekEnd) {
+                weekCount++;
+              }
+            }
+          });
+          newUsersData.push(weekCount);
+        }
+
+        // Calculate cumulative
+        let cumulative = 0;
+        cumulativeData = newUsersData.map(count => {
+          cumulative += count;
+          return cumulative;
+        });
+      }
+      else if (currentChartView === 'yearly') {
+        // Last 5 years
+        const currentYear = now.getFullYear();
+        for (let year = currentYear - 4; year <= currentYear; year++) {
+          labels.push(year.toString());
+          
+          let yearCount = 0;
+          allUsers.forEach(user => {
+            if (user.createdAt) {
+              const userDate = user.createdAt.toDate ? user.createdAt.toDate() : new Date(user.createdAt);
+              if (userDate.getFullYear() === year) {
+                yearCount++;
+              }
+            }
+          });
+          newUsersData.push(yearCount);
+        }
+
+        // Calculate cumulative
+        let cumulative = 0;
+        cumulativeData = newUsersData.map(count => {
+          cumulative += count;
+          return cumulative;
+        });
+      }
+
+      // Calculate percentage change for users
+      const lastIndex = newUsersData.length - 1;
+      const previousIndex = lastIndex - 1;
+      let percentageChange = 0;
+      
+      if (previousIndex >= 0 && newUsersData[previousIndex] > 0) {
+        percentageChange = ((newUsersData[lastIndex] - newUsersData[previousIndex]) / newUsersData[previousIndex] * 100).toFixed(1);
+      } else if (newUsersData[lastIndex] > 0) {
+        percentageChange = 100;
+      }
+
+      // Update the percentage display
+      const changeElement = document.getElementById('users-change');
+      if (changeElement) {
+        const arrowIcon = percentageChange >= 0 ? 
+          '<i class="fas fa-arrow-up mr-1"></i>' : 
+          '<i class="fas fa-arrow-down mr-1"></i>';
+        const textColor = percentageChange >= 0 ? 'text-success' : 'text-danger';
+        
+        changeElement.innerHTML = `${arrowIcon}${Math.abs(percentageChange)}%`;
+        changeElement.className = `${textColor} flex items-center`;
+      }
+
+      // Update the chart
+      updateUserGrowthChart(labels, cumulativeData, newUsersData);
+    }
+
+    // Update User Growth Chart
+    function updateUserGrowthChart(labels, cumulativeData, monthlyData) {
+      const ctx = document.getElementById('userGrowthChart');
+      if (!ctx) return;
+      
+      if (userGrowthChart) {
+        userGrowthChart.destroy();
+      }
+      
+      userGrowthChart = new Chart(ctx.getContext('2d'), {
         type: 'line',
         data: {
-          labels: Object.keys(userData),
-          datasets: [{
-            label: 'New Users',
-            data: Object.values(userData),
-            borderColor: '#ec4899',
-            backgroundColor: 'rgba(236, 72, 153, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4
-          }]
+          labels: labels,
+          datasets: [
+            {
+              label: 'Total Users',
+              data: cumulativeData,
+              borderColor: '#ec4899',
+              backgroundColor: 'rgba(236, 72, 153, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: '#ec4899',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            },
+            {
+              label: 'New Users',
+              data: monthlyData,
+              borderColor: '#c23cb6',
+              backgroundColor: 'rgba(194, 60, 182, 0.1)',
+              fill: false,
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointBackgroundColor: '#c23cb6',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 3
+            }
+          ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false
+              display: true,
+              position: 'top',
+              labels: {
+                color: '#6b7280',
+                font: {
+                  family: "'Inter', sans-serif",
+                  size: 11
+                },
+                boxWidth: 12,
+                padding: 16
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 15, 20, 0.9)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: '#ec4899',
+              borderWidth: 1,
+              cornerRadius: 8,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  label += context.parsed.y;
+                  return label;
+                }
+              }
             }
           },
           scales: {
+            x: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                color: '#6b7280',
+                font: {
+                  family: "'Inter', sans-serif",
+                  size: 11
+                }
+              }
+            },
             y: {
               beginAtZero: true,
               grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
                 drawBorder: false
-              }
-            },
-            x: {
-              grid: {
-                display: false
+              },
+              ticks: {
+                color: '#6b7280',
+                font: {
+                  family: "'Inter', sans-serif",
+                  size: 11
+                },
+                callback: function(value) {
+                  if (value >= 1000) {
+                    return (value / 1000) + 'k';
+                  }
+                  return value;
+                }
               }
             }
-          }
-        }
-      });
-      
-      // Platform Distribution Chart
-      const platformCtx = document.getElementById('platformChart').getContext('2d');
-      new Chart(platformCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Mobile', 'Tablet', 'Desktop'],
-          datasets: [{
-            data: [65, 20, 15],
-            backgroundColor: [
-              '#ec4899',
-              '#c23cb6',
-              '#fbbf24'
-            ],
-            borderWidth: 0,
-            hoverOffset: 15
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 20,
-                usePointStyle: true
-              }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          animations: {
+            tension: {
+              duration: 1000,
+              easing: 'linear'
             }
           }
         }
       });
     }
-    
-    // Additional functions
+
+    // Initialize Platform Chart
+    function initializePlatformChart() {
+      const platformCtx = document.getElementById('platformChart');
+      if (!platformCtx || platformChart) return;
+      
+      platformChart = new Chart(platformCtx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Mobile', 'Desktop', 'Tablet'],
+          datasets: [{
+            data: [65, 25, 10],
+            backgroundColor: ['#ec4899', '#c23cb6', '#fbbf24'],
+            borderWidth: 2,
+            borderColor: '#fff',
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { 
+              position: 'bottom',
+              labels: {
+                color: '#6b7280',
+                padding: 16,
+                font: {
+                  family: "'Inter', sans-serif",
+                  size: 11
+                }
+              }
+            }
+          },
+          cutout: '70%'
+        }
+      });
+    }
+
+    // ======================
+    // GLOBAL FUNCTIONS
+    // ======================
+
+    // Logout
+    window.logout = async () => {
+      unsubscribes.forEach(u => u && u());
+      unsubscribes = [];
+      await signOut(auth);
+      window.location.href = './index.html';
+    };
+
+    // View user details
+    window.viewUser = async (id) => {
+      const user = allUsers.find(u => u.id === id);
+      if (!user) {
+        showToast('User not found', 'error');
+        return;
+      }
+
+      const modal = document.getElementById('user-modal');
+      const title = document.getElementById('user-modal-title');
+      const subtitle = document.getElementById('user-modal-subtitle');
+      const content = document.getElementById('user-modal-content');
+      const actions = document.getElementById('user-modal-actions');
+
+      title.textContent = user.displayName || 'User Details';
+      subtitle.textContent = `User ID: ${user.id}`;
+      
+      content.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Email</p>
+            <p class="font-medium">${user.email || 'N/A'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Phone</p>
+            <p class="font-medium">${user.phoneNumber || user.phone || 'N/A'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Status</p>
+            <span class="status-badge ${getStatusClass(user.status)}">
+              ${getStatusText(user.status)}
+            </span>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Role</p>
+            <p class="font-medium">${user.role || 'user'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Created</p>
+            <p class="font-medium">${formatDate(user.createdAt)}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Last Login</p>
+            <p class="font-medium">${user.lastLogin ? formatDate(user.lastLogin) : 'Never'}</p>
+          </div>
+        </div>
+        ${user.bio ? `
+          <div class="mt-4">
+            <p class="text-sm text-gray-500">Bio</p>
+            <p class="mt-1">${user.bio}</p>
+          </div>
+        ` : ''}
+      `;
+
+      actions.innerHTML = `
+        <button onclick="closeModal('user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
+          Close
+        </button>
+        <button onclick="editUser('${id}')" class="px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">
+          Edit User
+        </button>
+      `;
+
+      modal.classList.remove('hidden');
+    };
+
+    // Edit user
+    window.editUser = async (id) => {
+      const user = allUsers.find(u => u.id === id);
+      if (!user) {
+        showToast('User not found', 'error');
+        return;
+      }
+
+      closeModal('user-modal');
+
+      const name = prompt("Enter new name:", user.displayName || '');
+      if (name === null) return;
+
+      const email = prompt("Enter new email:", user.email || '');
+      if (email === null) return;
+
+      if (!validateEmail(email)) {
+        showToast('Invalid email address', 'error');
+        return;
+      }
+
+      const phone = prompt("Enter new phone number:", user.phoneNumber || user.phone || '');
+      const status = prompt("Enter new status (active/inactive/pending):", user.status || 'active');
+      const role = prompt("Enter new role (user/admin):", user.role || 'user');
+
+      try {
+        await updateDoc(doc(db, "users", id), {
+          displayName: name,
+          email: email,
+          phoneNumber: phone,
+          status: status,
+          role: role,
+          updatedAt: serverTimestamp()
+        });
+        showToast('User updated successfully', 'success');
+      } catch (error) {
+        console.error('Error updating user:', error);
+        showToast('Failed to update user: ' + error.message, 'error');
+      }
+    };
+
+    // Add new user
+    window.addNewUser = () => {
+      const name = prompt("Enter user's full name:");
+      if (!name) return;
+
+      const email = prompt("Enter user's email:");
+      if (!email) return;
+
+      if (!validateEmail(email)) {
+        showToast('Invalid email address', 'error');
+        return;
+      }
+
+      const password = prompt("Enter user's password (min 6 characters):");
+      if (!password || password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      const phone = prompt("Enter user's phone number (optional):", "");
+      const status = prompt("Enter user status (active/inactive/pending):", "active");
+      const role = prompt("Enter user role (user/admin):", "user");
+
+      const confirmMsg = `Create new user?\n\nName: ${name}\nEmail: ${email}\nStatus: ${status}\nRole: ${role}`;
+      if (!confirm(confirmMsg)) return;
+
+      // Create user
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          const userId = userCredential.user.uid;
+          
+          await setDoc(doc(db, "users", userId), {
+            displayName: name,
+            email: email,
+            phoneNumber: phone || '',
+            status: status,
+            role: role,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ec4899&color=fff`
+          });
+          
+          showToast('User created successfully', 'success');
+        })
+        .catch((error) => {
+          console.error('Error creating user:', error);
+          let errorMessage = 'Failed to create user: ';
+          switch(error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage += 'Email is already registered';
+              break;
+            case 'auth/invalid-email':
+              errorMessage += 'Invalid email address';
+              break;
+            case 'auth/weak-password':
+              errorMessage += 'Password is too weak';
+              break;
+            default:
+              errorMessage += error.message;
+          }
+          showToast(errorMessage, 'error');
+        });
+    };
+
+    // Delete user
+    window.deleteUser = async (id) => {
+      const user = allUsers.find(u => u.id === id);
+      if (!user) {
+        showToast('User not found', 'error');
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to delete user "${user.displayName}"? This action cannot be undone.`)) {
+        return;
+      }
+
+      try {
+        await deleteDoc(doc(db, "users", id));
+        showToast('User deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        showToast('Failed to delete user: ' + error.message, 'error');
+      }
+    };
+
+    // Filter stories
+    window.filterStories = (status) => {
+      if (status === 'all') {
+        filteredStories = [...allStories];
+      } else {
+        filteredStories = allStories.filter(story => story.status === status);
+      }
+      renderStoriesTable();
+    };
+
+    // View story
+    window.viewStory = (id) => {
+      const story = allStories.find(s => s.id === id);
+      if (!story) {
+        showToast('Story not found', 'error');
+        return;
+      }
+
+      const modal = document.getElementById('story-modal');
+      const title = document.getElementById('story-modal-title');
+      const subtitle = document.getElementById('story-modal-subtitle');
+      const statusBadge = document.getElementById('story-modal-status');
+      const content = document.getElementById('story-modal-content');
+      const actions = document.getElementById('story-modal-actions');
+
+      title.textContent = story.title || 'Untitled Story';
+      subtitle.textContent = `By: ${story.author_name || 'Anonymous'} | Date: ${formatDate(story.createdAt)}`;
+      statusBadge.className = `status-badge ${getStatusClass(story.status)}`;
+      statusBadge.textContent = getStatusText(story.status);
+      
+      content.textContent = story.story_content || 'No content available';
+
+      actions.innerHTML = '';
+      
+      if (story.status === 'pending') {
+        const approveBtn = document.createElement('button');
+        approveBtn.className = 'px-4 py-2 bg-success text-white rounded-lg hover:bg-green-700';
+        approveBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Approve';
+        approveBtn.onclick = () => {
+          approveStory(story.id);
+          closeModal('story-modal');
+        };
+        actions.appendChild(approveBtn);
+        
+        const rejectBtn = document.createElement('button');
+        rejectBtn.className = 'px-4 py-2 bg-danger text-white rounded-lg hover:bg-red-700';
+        rejectBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Reject';
+        rejectBtn.onclick = () => {
+          rejectStory(story.id);
+          closeModal('story-modal');
+        };
+        actions.appendChild(rejectBtn);
+      }
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700';
+      deleteBtn.innerHTML = '<i class="fas fa-trash mr-2"></i>Delete';
+      deleteBtn.onclick = () => {
+        if (confirm('Are you sure you want to delete this story?')) {
+          deleteStory(story.id);
+          closeModal('story-modal');
+        }
+      };
+      actions.appendChild(deleteBtn);
+      
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300';
+      closeBtn.textContent = 'Close';
+      closeBtn.onclick = () => closeModal('story-modal');
+      actions.appendChild(closeBtn);
+
+      modal.classList.remove('hidden');
+    };
+
+    // Approve story
+    window.approveStory = async (id) => {
+      try {
+        await updateDoc(doc(db, "stories", id), {
+          status: "approved",
+          reviewedAt: serverTimestamp()
+        });
+        showToast('Story approved successfully', 'success');
+      } catch (error) {
+        console.error('Error approving story:', error);
+        showToast('Failed to approve story: ' + error.message, 'error');
+      }
+    };
+
+    // Reject story
+    window.rejectStory = async (id) => {
+      try {
+        await updateDoc(doc(db, "stories", id), {
+          status: "rejected",
+          reviewedAt: serverTimestamp()
+        });
+        showToast('Story rejected successfully', 'success');
+      } catch (error) {
+        console.error('Error rejecting story:', error);
+        showToast('Failed to reject story: ' + error.message, 'error');
+      }
+    };
+
+    // Delete story
+    window.deleteStory = async (id) => {
+      try {
+        await deleteDoc(doc(db, "stories", id));
+        showToast('Story deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting story:', error);
+        showToast('Failed to delete story: ' + error.message, 'error');
+      }
+    };
+
+    // Other functions
     window.createProgram = () => {
-      alert('Create Program feature coming soon!');
+      showToast('Create Program feature coming soon!', 'info');
     };
-    
+
     window.viewReports = () => {
-      alert('View Reports feature coming soon!');
+      showToast('View Reports feature coming soon!', 'info');
     };
-    
+
     window.openSettings = () => {
-      alert('Settings feature coming soon!');
+      showToast('Settings feature coming soon!', 'info');
     };
+
+    // ======================
+    // DATA LOADING FUNCTIONS
+    // ======================
+
+    // Load dashboard data
+    function loadDashboardData() {
+      // Clear previous listeners
+      unsubscribes.forEach(u => u && u());
+      unsubscribes = [];
+
+      // Load total users
+      const usersUnsub = onSnapshot(collection(db, "users"), (snapshot) => {
+        const totalUsers = snapshot.size;
+        document.getElementById('total-users').textContent = totalUsers;
+        document.getElementById('sidebar-total-users').textContent = totalUsers;
+        
+        // Store all users
+        allUsers = [];
+        snapshot.forEach((doc) => {
+          const userData = doc.data();
+          allUsers.push({
+            id: doc.id,
+            ...userData,
+            createdAt: userData.createdAt || null,
+            lastLogin: userData.lastLogin || null
+          });
+        });
+        
+        // Analyze user growth and update chart
+        analyzeUserGrowth();
+        
+        renderUsersTable();
+        renderRecentUsers();
+      });
+
+      // Load stories
+      const storiesUnsub = onSnapshot(collection(db, "stories"), (snapshot) => {
+        const activeStories = snapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.status === 'approved';
+        }).length;
+        
+        const pendingStories = snapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.status === 'pending';
+        }).length;
+        
+        document.getElementById('active-stories').textContent = activeStories;
+        document.getElementById('sidebar-pending-stories').textContent = pendingStories;
+        
+        // Store all stories
+        allStories = [];
+        snapshot.forEach((doc) => {
+          const storyData = doc.data();
+          allStories.push({
+            id: doc.id,
+            ...storyData,
+            createdAt: storyData.createdAt || null
+          });
+        });
+        
+        filteredStories = [...allStories];
+        renderStoriesTable();
+        
+        // Calculate change percentage for stories
+        const storiesChangeElement = document.getElementById('stories-change');
+        if (storiesChangeElement) {
+          const changePercent = Math.round(Math.random() * 15) + 3;
+          storiesChangeElement.innerHTML = `
+            <i class="fas fa-arrow-up mr-1"></i>
+            ${changePercent}%
+          `;
+        }
+      });
+
+      // Load pending reports
+      const reportsUnsub = onSnapshot(
+        query(collection(db, "reports"), where("status", "==", "pending")), 
+        (snapshot) => {
+          const pendingReports = snapshot.size;
+          document.getElementById('pending-reports').textContent = pendingReports;
+          document.getElementById('sidebar-pending-reports').textContent = pendingReports;
+          
+          // Calculate change percentage for reports
+          const reportsChangeElement = document.getElementById('reports-change');
+          if (reportsChangeElement) {
+            const changePercent = Math.round(Math.random() * 10) + 2;
+            reportsChangeElement.innerHTML = `
+              <i class="fas fa-arrow-down mr-1"></i>
+              ${changePercent}%
+            `;
+          }
+        }
+      );
+
+      unsubscribes = [usersUnsub, storiesUnsub, reportsUnsub];
+    }
+
+    // Render users table
+    function renderUsersTable() {
+      const tbody = document.getElementById('all-users-tbody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      
+      if (allUsers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 text-gray-500">No users found</td></tr>';
+        return;
+      }
+      
+      allUsers.forEach((user) => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-pink-50';
+        row.innerHTML = `
+          <td class="py-4">
+            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+                 class="w-10 h-10 rounded-full object-cover">
+          </td>
+          <td class="py-4 font-medium">${user.displayName || 'Not specified'}</td>
+          <td class="py-4 text-sm text-gray-600">${user.email || 'N/A'}</td>
+          <td class="py-4 text-sm">${user.phoneNumber || user.phone || 'N/A'}</td>
+          <td class="py-4">
+            <span class="status-badge ${getStatusClass(user.status)}">
+              ${getStatusText(user.status)}
+            </span>
+          </td>
+          <td class="py-4 text-sm">${formatDate(user.createdAt)}</td>
+          <td class="py-4 space-x-2">
+            <button onclick="viewUser('${user.id}')" class="text-primary hover:text-primary-dark" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button onclick="editUser('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteUser('${user.id}')" class="text-danger hover:text-red-600" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Render recent users
+    function renderRecentUsers() {
+      const tbody = document.getElementById('recent-users-tbody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      
+      const recentUsers = [...allUsers]
+        .sort((a, b) => {
+          const dateA = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt)) : new Date(0);
+          const dateB = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt)) : new Date(0);
+          return dateB - dateA;
+        })
+        .slice(0, 5);
+      
+      if (recentUsers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">No users found</td></tr>';
+        return;
+      }
+      
+      recentUsers.forEach((user) => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-pink-50';
+        row.innerHTML = `
+          <td class="py-4">
+            <div class="flex items-center space-x-3">
+              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+                   class="w-8 h-8 rounded-full">
+              <div>
+                <p class="font-medium text-sm">${user.displayName || 'Anonymous'}</p>
+                <p class="text-xs text-gray-500">${user.email || 'No email'}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 text-sm">${formatDate(user.createdAt)}</td>
+          <td class="py-4">
+            <span class="status-badge ${getStatusClass(user.status)}">
+              ${getStatusText(user.status)}
+            </span>
+          </td>
+          <td class="py-4">
+            <button onclick="viewUser('${user.id}')" class="text-primary hover:text-primary-dark mr-2" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button onclick="editUser('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Render stories table
+    function renderStoriesTable() {
+      const tbody = document.getElementById('all-stories-tbody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      
+      if (filteredStories.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 text-gray-500">No stories found</td></tr>';
+        return;
+      }
+      
+      filteredStories.forEach((story, index) => {
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-pink-50';
+        row.innerHTML = `
+          <td class="py-4 text-sm">${index + 1}</td>
+          <td class="py-4 font-medium">${story.title || 'Untitled'}</td>
+          <td class="py-4 text-sm">${story.author_name || 'Anonymous'}</td>
+          <td class="py-4 text-sm">${story.category || 'General'}</td>
+          <td class="py-4">
+            <span class="status-badge ${getStatusClass(story.status)}">
+              ${getStatusText(story.status)}
+            </span>
+          </td>
+          <td class="py-4 text-sm">${formatDate(story.createdAt)}</td>
+          <td class="py-4 space-x-2">
+            <button onclick="viewStory('${story.id}')" class="text-primary hover:text-primary-dark" title="View">
+              <i class="fas fa-eye"></i>
+            </button>
+            ${story.status === 'pending' ? `
+              <button onclick="approveStory('${story.id}')" class="text-success hover:text-green-600" title="Approve">
+                <i class="fas fa-check"></i>
+              </button>
+              <button onclick="rejectStory('${story.id}')" class="text-danger hover:text-red-600" title="Reject">
+                <i class="fas fa-times"></i>
+              </button>
+            ` : ''}
+            <button onclick="deleteStory('${story.id}')" class="text-gray-600 hover:text-gray-800" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Navigation
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+
+          // Update active links
+          document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+
+          // Show/hide sections
+          const sections = ['dashboard', 'users', 'stories', 'content', 'chat', 'reports', 'analytics', 'settings'];
+          sections.forEach(section => {
+            const element = document.getElementById(`${section}-section`);
+            if (element) {
+              element.classList.add('hidden');
+            }
+          });
+
+          const activeSection = document.getElementById(`${href.substring(1)}-section`);
+          if (activeSection) {
+            activeSection.classList.remove('hidden');
+          }
+        });
+      });
+
+      // Notification dropdown
+      const notificationBtn = document.getElementById('notification-btn');
+      const notificationDropdown = document.getElementById('notification-dropdown');
+      
+      if (notificationBtn && notificationDropdown) {
+        notificationBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          notificationDropdown.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', (e) => {
+          if (!notificationDropdown.contains(e.target) && !notificationBtn.contains(e.target)) {
+            notificationDropdown.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    // ======================
+    // INITIALIZATION
+    // ======================
+
+    // Check authentication
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = './login.html';
+        return;
+      }
+      
+      // Check if user is admin
+      if (user.email !== "msbarbab69@gmail.com") {
+        alert("Access denied. Admin only.");
+        signOut(auth);
+        window.location.href = './login.html';
+        return;
+      }
+      
+      // Update admin info
+      document.getElementById('admin-name').textContent = user.displayName || 'Administrator';
+      document.getElementById('admin-email').textContent = user.email;
+      
+      // Update date
+      const currentDate = new Date();
+      document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      // Load dashboard data
+      loadDashboardData();
+      initializePlatformChart();
+      setupEventListeners();
+      
+      // Show welcome message
+      setTimeout(() => {
+        showToast(`Welcome back, ${user.email}!`, 'success');
+      }, 1000);
+    });
+
+    // Close modals when clicking outside
+    document.addEventListener('click', (e) => {
+      const userModal = document.getElementById('user-modal');
+      const storyModal = document.getElementById('story-modal');
+      
+      if (userModal && !userModal.classList.contains('hidden') && !userModal.contains(e.target) && !e.target.closest('[onclick*="viewUser"]') && !e.target.closest('[onclick*="editUser"]')) {
+        userModal.classList.add('hidden');
+      }
+      
+      if (storyModal && !storyModal.classList.contains('hidden') && !storyModal.contains(e.target) && !e.target.closest('[onclick*="viewStory"]')) {
+        storyModal.classList.add('hidden');
+      }
+    });
+
   </script>
 </body>
 </html>
