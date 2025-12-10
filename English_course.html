@@ -400,10 +400,18 @@
       progress = JSON.parse(localStorage.getItem(key) || '{}');
     }
 
-    function saveProgress() {
-      const key = currentUser ? `progress_${currentUser.id}` : 'guest_progress';
-      localStorage.setItem(key, JSON.stringify(progress));
-    }
+    f// في ملف english_course.js - تعديل دالة saveProgress
+function saveProgress() {
+  const key = currentUser ? `progress_${currentUser.id}` : 'guest_progress';
+  localStorage.setItem(key, JSON.stringify(progress));
+  
+  // إرسال تحديث للداشبورد إذا كان المستخدم مسجلاً
+  if (currentUser) {
+    sendProgressToDashboard();
+  }
+  
+  updateOverallProgress();
+}
 
     function createAccount() {
       const name = document.getElementById('authName').value.trim();
@@ -762,5 +770,418 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<!-- Firebase Integration for English Course -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged 
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  import { 
+    getFirestore,
+    doc,
+    setDoc,
+    updateDoc,
+    getDoc,
+    arrayUnion,
+    Timestamp
+  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
+    authDomain: "sigin-b3aa1.firebaseapp.com",
+    projectId: "sigin-b3aa1",
+    storageBucket: "sigin-b3aa1.firebasestorage.app",
+    messagingSenderId: "390069352394",
+    appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUserId = null;
+  const COURSE_ID = 'english_zero';
+
+  // تتبع حالة تسجيل الدخول
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUserId = user.uid;
+      console.log("✅ User logged in for course tracking:", user.email);
+      
+      // تحديث التقدم الحالي من Firebase
+      loadUserProgressFromFirebase();
+      
+      // تحديث واجهة المستخدم
+      updateUIForLoggedInUser(user);
+    } else {
+      console.log("❌ User not logged in - progress saved locally only");
+    }
+  });
+
+  // تحديث واجهة المستخدم للمسجلين
+  function updateUIForLoggedInUser(user) {
+    // تحديث رسالة الترحيب
+    const greeting = document.getElementById('userGreeting');
+    const nameDisplay = document.getElementById('userNameDisplay');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (greeting && nameDisplay) {
+      nameDisplay.textContent = user.displayName || user.email.split('@')[0];
+      greeting.classList.remove('hidden');
+    }
+    
+    if (loginBtn) loginBtn.classList.add('hidden');
+    if (logoutBtn) logoutBtn.classList.remove('hidden');
+    
+    // إعداد زر تسجيل الخروج
+    logoutBtn.onclick = () => {
+      auth.signOut().then(() => {
+        localStorage.removeItem('currentUser');
+        location.reload();
+      });
+    };
+  }
+
+  // تحميل التقدم من Firebase
+  async function loadUserProgressFromFirebase() {
+    try {
+      const userRef = doc(db, "users", currentUserId);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const courseProgress = userData.courses?.[COURSE_ID];
+        
+        if (courseProgress && courseProgress.lessons) {
+          // دمج التقدم من Firebase مع التقدم المحلي
+          const localProgress = JSON.parse(localStorage.getItem(`progress_user_${currentUserId}`) || '{}');
+          const mergedProgress = { ...localProgress, ...courseProgress.lessons };
+          
+          // حفظ المدمج في localStorage
+          localStorage.setItem(`progress_user_${currentUserId}`, JSON.stringify(mergedProgress));
+          
+          // تحديث واجهة المستخدم
+          if (window.renderLessons) {
+            window.progress = mergedProgress;
+            window.renderLessons();
+            window.updateOverallProgress();
+          }
+          
+          console.log("📊 Course progress loaded from Firebase:", courseProgress.overallProgress + "%");
+        }
+      }
+    } catch (error) {
+      console.error("Error loading progress from Firebase:", error);
+    }
+  }
+
+  // تحديث تقدم الدرس في Firebase
+  async function updateLessonProgressInFirebase(lessonId, progressData) {
+    if (!currentUserId) return;
+    
+    try {
+      const userRef = doc(db, "users", currentUserId);
+      const userSnap = await getDoc(userRef);
+      
+      // بيانات التقدم
+      const lessonProgress = {
+        lessonId: lessonId,
+        completed: progressData.completed || false,
+        quizPassed: progressData.quizPassed || false,
+        watchPercent: progressData.watchPercent || 0,
+        completedAt: progressData.completed ? Timestamp.now() : null,
+        ...progressData
+      };
+      
+      if (!userSnap.exists()) {
+        // إنشاء مستند جديد
+        await setDoc(userRef, {
+          email: auth.currentUser.email,
+          displayName: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+          courses: {
+            [COURSE_ID]: {
+              lessons: {
+                [lessonId]: lessonProgress
+              },
+              overallProgress: 4, // 4% لكل درس
+              lastUpdated: Timestamp.now()
+            }
+          },
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now()
+        });
+      } else {
+        // تحديث المستند الموجود
+        const userData = userSnap.data();
+        const currentLessons = userData.courses?.[COURSE_ID]?.lessons || {};
+        
+        // احتساب التقدم الكلي
+        const updatedLessons = { ...currentLessons, [lessonId]: lessonProgress };
+        const completedCount = Object.values(updatedLessons).filter(
+          lesson => lesson.completed && (lesson.lessonId === 1 || lesson.quizPassed)
+        ).length;
+        const overallProgress = Math.round((completedCount / 25) * 100);
+        
+        await updateDoc(userRef, {
+          [`courses.${COURSE_ID}.lessons.${lessonId}`]: lessonProgress,
+          [`courses.${COURSE_ID}.overallProgress`]: overallProgress,
+          [`courses.${COURSE_ID}.lastUpdated`]: Timestamp.now(),
+          updatedAt: Timestamp.now()
+        });
+        
+        console.log(`✅ Lesson ${lessonId} progress saved to Firebase:`, lessonProgress);
+        
+        // إرسال إشعار للداشبورد
+        sendProgressUpdateToDashboard(lessonId, overallProgress);
+      }
+      
+    } catch (error) {
+      console.error("Error saving lesson progress to Firebase:", error);
+    }
+  }
+
+  // إرسال تحديث التقدم للداشبورد
+  function sendProgressUpdateToDashboard(lessonId, overallProgress) {
+    // تحديث localStorage للداشبورد
+    const dashboardUpdate = {
+      type: 'ENGLISH_COURSE_PROGRESS',
+      lessonId: lessonId,
+      overallProgress: overallProgress,
+      timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('dashboard_course_update', JSON.stringify(dashboardUpdate));
+    
+    // إرسال رسالة عبر BroadcastChannel
+    if (typeof BroadcastChannel !== 'undefined') {
+      const channel = new BroadcastChannel('course_updates');
+      channel.postMessage(dashboardUpdate);
+    }
+    
+    // إرسال custom event
+    window.dispatchEvent(new CustomEvent('courseProgressUpdated', {
+      detail: dashboardUpdate
+    }));
+  }
+
+  // تحديث الشهادة في Firebase
+  async function updateCertificateInFirebase(studentName) {
+    if (!currentUserId) return;
+    
+    try {
+      const userRef = doc(db, "users", currentUserId);
+      
+      const certificateData = {
+        studentName: studentName,
+        courseName: "English Zero Course",
+        completionDate: new Date().toISOString(),
+        lessonsCompleted: 25,
+        issuedBy: "GirlsSpace Mahama"
+      };
+      
+      await updateDoc(userRef, {
+        [`courses.${COURSE_ID}.certificate`]: certificateData,
+        achievements: arrayUnion("english_course_completed"),
+        [`courses.${COURSE_ID}.completed`]: true,
+        [`courses.${COURSE_ID}.completedAt`]: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      });
+      
+      console.log("🎓 Certificate saved to Firebase for:", studentName);
+      
+      // إشعار الداشبورد بإكمال الدورة
+      sendCourseCompletionToDashboard(studentName);
+      
+    } catch (error) {
+      console.error("Error saving certificate to Firebase:", error);
+    }
+  }
+
+  // إشعار الداشبورد بإكمال الدورة
+  function sendCourseCompletionToDashboard(studentName) {
+    const completionEvent = {
+      type: 'ENGLISH_COURSE_COMPLETED',
+      studentName: studentName,
+      timestamp: new Date().toISOString(),
+      message: "Congratulations! You've completed the English Zero Course!"
+    };
+    
+    localStorage.setItem('dashboard_course_completed', JSON.stringify(completionEvent));
+    
+    if (typeof BroadcastChannel !== 'undefined') {
+      const channel = new BroadcastChannel('course_updates');
+      channel.postMessage(completionEvent);
+    }
+  }
+
+  // ================== دمج مع الدوال الموجودة ==================
+
+  // تعديل دالة حفظ التقدم
+  const originalSaveProgress = window.saveProgress;
+  window.saveProgress = function() {
+    // استدعاء الدالة الأصلية
+    if (originalSaveProgress) originalSaveProgress();
+    
+    // إرسال تحديث لـ Firebase
+    if (currentUserId && window.currentLessonId) {
+      const lessonProgress = {
+        completed: window.progress[window.currentLessonId]?.completed || false,
+        quizPassed: window.progress[window.currentLessonId]?.quizCompleted || false,
+        watchPercent: window.progress[window.currentLessonId]?.watchPercent || 0
+      };
+      
+      updateLessonProgressInFirebase(window.currentLessonId, lessonProgress);
+    }
+  };
+
+  // تعديل دالة إنشاء الحساب
+  const originalCreateAccount = window.createAccount;
+  window.createAccount = async function() {
+    // استدعاء الدالة الأصلية
+    if (originalCreateAccount) originalCreateAccount();
+    
+    // إنشاء حساب Firebase (افترض أن لديك نظام تسجيل دخول)
+    // سيتم التعامل مع هذا عبر onAuthStateChanged
+  };
+
+  // تعديل دالة إنشاء الشهادة
+  const originalGenerateCertificate = window.generateCertificate;
+  window.generateCertificate = function() {
+    const name = document.getElementById('studentName').value.trim() || window.currentUser?.name;
+    
+    // حفظ الشهادة في Firebase
+    if (currentUserId) {
+      updateCertificateInFirebase(name);
+    }
+    
+    // استدعاء الدالة الأصلية لإنشاء PDF
+    if (originalGenerateCertificate) originalGenerateCertificate();
+  };
+
+  // تعديل دالة تسجيل الخروج
+  const originalLogout = window.logout;
+  window.logout = function() {
+    if (confirm('Are you sure you want to log out?')) {
+      auth.signOut().then(() => {
+        localStorage.removeItem('currentUser');
+        if (originalLogout) originalLogout();
+        else location.reload();
+      });
+    }
+  };
+
+  // ================== تهيئة النظام ==================
+
+  // تحديث زر تسجيل الخروج ليعمل مع Firebase
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.onclick = () => {
+        if (confirm('Are you sure you want to log out?')) {
+          auth.signOut().then(() => {
+            localStorage.removeItem('currentUser');
+            location.reload();
+          });
+        }
+      };
+    }
+  });
+
+  // تصدير الدوال للاستخدام العام
+  window.englishCourseFirebase = {
+    updateLessonProgress: updateLessonProgressInFirebase,
+    updateCertificate: updateCertificateInFirebase,
+    loadProgress: loadUserProgressFromFirebase,
+    currentUserId: () => currentUserId
+  };
+
+  console.log("🎯 English Course Firebase integration loaded successfully!");
+
+</script>
+<script>// في ملف english_course.js - إضافة هذا الهيكل
+const COURSE_STRUCTURE = {
+  courseId: 'english_zero',
+  courseName: 'English Zero Course',
+  totalLessons: 25,
+  lessons: lessons // المصفوفة الموجودة لديك
+};
+// في ملف english_course.js - تعديل دالة saveProgress
+function saveProgress() {
+  const key = currentUser ? `progress_${currentUser.id}` : 'guest_progress';
+  localStorage.setItem(key, JSON.stringify(progress));
+  
+  // إرسال تحديث للداشبورد إذا كان المستخدم مسجلاً
+  if (currentUser) {
+    sendProgressToDashboard();
+  }
+  
+  updateOverallProgress();
+}
+
+// في ملف english_course.js - إضافة هذه الدوال
+function sendProgressToDashboard() {
+  // بيانات التقدم الحالي
+  const dashboardData = {
+    type: 'COURSE_PROGRESS_UPDATE',
+    courseId: 'english_zero',
+    progress: calculateOverallProgress(),
+    completedLessons: getCompletedLessonsCount(),
+    timestamp: new Date().toISOString()
+  };
+  
+  // حفظ في localStorage للداشبورد
+  localStorage.setItem('dashboard_course_progress', JSON.stringify(dashboardData));
+  
+  // إرسال عبر BroadcastChannel إذا كان متاحاً
+  if (typeof BroadcastChannel !== 'undefined') {
+    const channel = new BroadcastChannel('course_updates');
+    channel.postMessage(dashboardData);
+  }
+}
+
+function calculateOverallProgress() {
+  let completed = 0;
+  lessons.forEach(lesson => {
+    if (lesson.id === 1 && progress[lesson.id]?.completed) completed++;
+    else if (lesson.id > 1 && progress[lesson.id]?.completed && progress[lesson.id]?.quizCompleted) completed++;
+  });
+  return Math.round((completed / 25) * 100);
+}
+
+function getCompletedLessonsCount() {
+  let count = 0;
+  lessons.forEach(lesson => {
+    if (lesson.id === 1 && progress[lesson.id]?.completed) count++;
+    else if (lesson.id > 1 && progress[lesson.id]?.completed && progress[lesson.id]?.quizCompleted) count++;
+  });
+  return count;
+}
+
+
+
+// في english_course.js - عند إكمال درس
+function addToRecentActivity(lessonId, action) {
+  const activity = {
+    type: 'english_lesson',
+    lessonId: lessonId,
+    action: action, // 'completed', 'quiz_passed'
+    timestamp: new Date().toISOString(),
+    title: lessons.find(l => l.id === lessonId)?.title
+  };
+  
+  // إضافة للنشاطات الأخيرة في localStorage
+  const recentActivities = JSON.parse(localStorage.getItem('recent_activities') || '[]');
+  recentActivities.unshift(activity);
+  if (recentActivities.length > 10) recentActivities.pop();
+  localStorage.setItem('recent_activities', JSON.stringify(recentActivities));
+  
+  // إرسال تحديث للداشبورد
+  sendActivityUpdate(activity);
+}
+</script>
+
+
 </body>
 </html>
