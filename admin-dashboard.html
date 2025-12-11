@@ -116,6 +116,11 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* Modal styles */
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 
@@ -232,7 +237,7 @@
             </div>
  
             <!-- Quick Actions -->
-            <button onclick="addNewUser()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
+            <button onclick="showAddUserModal()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
               <i class="fas fa-plus"></i>
               <span>Add New User</span>
             </button>
@@ -380,7 +385,7 @@
             <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
               <h3 class="font-bold text-lg text-gray-800 mb-6">Quick Actions</h3>
               <div class="space-y-4">
-                <button onclick="addNewUser()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
+                <button onclick="showAddUserModal()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
                   <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <i class="fas fa-user-plus text-primary"></i>
                   </div>
@@ -465,7 +470,7 @@
           <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
             <div class="flex items-center justify-between mb-6">
               <h3 class="font-bold text-lg text-gray-800">All Users</h3>
-              <button onclick="addNewUser()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
+              <button onclick="showAddUserModal()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
                 <i class="fas fa-plus"></i>
                 <span>Add New User</span>
               </button>
@@ -527,23 +532,120 @@
     </div>
   </div>
 
-  <!-- User Modal -->
-  <div id="user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+  <!-- Add User Modal -->
+  <div id="add-user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal-overlay">
+    <div class="bg-white rounded-xl max-w-md w-full">
       <div class="p-6">
         <div class="flex justify-between items-start mb-6">
+          <h3 class="text-2xl font-bold text-gray-800">Add New User</h3>
+          <button onclick="closeModal('add-user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        
+        <form id="add-user-form" class="space-y-4">
           <div>
-            <h3 id="user-modal-title" class="text-2xl font-bold text-gray-800 mb-2">User Details</h3>
-            <p id="user-modal-subtitle" class="text-gray-600"></p>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="new-user-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          <button onclick="closeModal('user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="new-user-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="new-user-password" required minlength="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+            <p class="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
+            <input type="tel" id="new-user-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="new-user-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select id="new-user-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          
+          <div class="flex justify-end space-x-3 pt-4">
+            <button type="button" onclick="closeModal('add-user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg">
+              Create User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="edit-user-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal-overlay">
+    <div class="bg-white rounded-xl max-w-md w-full">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-6">
+          <h3 class="text-2xl font-bold text-gray-800">Edit User</h3>
+          <button onclick="closeModal('edit-user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
         </div>
-        <div id="user-modal-content" class="space-y-4">
-          <!-- User details will be loaded here -->
-        </div>
-        <div id="user-modal-actions" class="flex justify-end space-x-3 mt-6">
-          <!-- Actions will be loaded here -->
-        </div>
+        
+        <form id="edit-user-form" class="space-y-4">
+          <input type="hidden" id="edit-user-id">
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="edit-user-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="edit-user-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="edit-user-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="edit-user-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select id="edit-user-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          
+          <div class="flex justify-end space-x-3 pt-4">
+            <button type="button" onclick="closeModal('edit-user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg">
+              Update User
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -590,19 +692,19 @@
       deleteDoc, 
       updateDoc,
       setDoc,
-      serverTimestamp 
+      serverTimestamp,
+      getDocs,
+      addDoc
     } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
     // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD5K27SYd3NzV5FOtMtPZs_l8UhEUq42zc",
       authDomain: "sigin-b3aa1.firebaseapp.com",
-      databaseURL: "https://sigin-b3aa1-default-rtdb.firebaseio.com",
       projectId: "sigin-b3aa1",
       storageBucket: "sigin-b3aa1.firebasestorage.app",
       messagingSenderId: "390069352394",
-      appId: "1:390069352394:web:aa32d4a640b6f7fee54133",
-      measurementId: "G-WF0H2KJN02"
+      appId: "1:390069352394:web:aa32d4a640b6f7fee54133"
     };
 
     // Initialize Firebase
@@ -618,6 +720,7 @@
     let userGrowthChart = null;
     let platformChart = null;
     let currentChartView = 'monthly';
+    let currentAdminId = null;
 
     // ======================
     // UTILITY FUNCTIONS
@@ -690,6 +793,29 @@
         default: return 'Unknown';
       }
     }
+
+    // Show add user modal
+    window.showAddUserModal = () => {
+      document.getElementById('add-user-modal').classList.remove('hidden');
+    };
+
+    // Show edit user modal
+    window.showEditUserModal = (userId) => {
+      const user = allUsers.find(u => u.id === userId);
+      if (!user) {
+        showToast('User not found', 'error');
+        return;
+      }
+
+      document.getElementById('edit-user-id').value = userId;
+      document.getElementById('edit-user-name').value = user.displayName || '';
+      document.getElementById('edit-user-email').value = user.email || '';
+      document.getElementById('edit-user-phone').value = user.phoneNumber || user.phone || '';
+      document.getElementById('edit-user-status').value = user.status || 'active';
+      document.getElementById('edit-user-role').value = user.role || 'user';
+
+      document.getElementById('edit-user-modal').classList.remove('hidden');
+    };
 
     // Switch chart view
     window.switchChartView = (view) => {
@@ -1006,6 +1132,46 @@
     }
 
     // ======================
+    // ADMIN SPECIFIC FUNCTIONS
+    // ======================
+
+    // Check if user is admin in admins collection
+    async function checkAdminStatus(userId) {
+      try {
+        const adminDoc = await getDocs(collection(db, "admins"));
+        let isAdmin = false;
+        
+        adminDoc.forEach((doc) => {
+          if (doc.id === userId) {
+            isAdmin = true;
+            currentAdminId = doc.id;
+          }
+        });
+        
+        return isAdmin;
+      } catch (error) {
+        console.error("Error checking admin status:", error);
+        return false;
+      }
+    }
+
+    // Create admin document for new admin users
+    async function createAdminDocument(userId, userEmail) {
+      try {
+        await setDoc(doc(db, "admins", userId), {
+          email: userEmail,
+          createdAt: serverTimestamp(),
+          role: "admin",
+          permissions: ["read", "write", "delete"]
+        });
+        return true;
+      } catch (error) {
+        console.error("Error creating admin document:", error);
+        return false;
+      }
+    }
+
+    // ======================
     // GLOBAL FUNCTIONS
     // ======================
 
@@ -1014,7 +1180,7 @@
       unsubscribes.forEach(u => u && u());
       unsubscribes = [];
       await signOut(auth);
-      window.location.href = './index.html';
+      window.location.href = './login.html';
     };
 
     // View user details
@@ -1025,91 +1191,94 @@
         return;
       }
 
-      const modal = document.getElementById('user-modal');
-      const title = document.getElementById('user-modal-title');
-      const subtitle = document.getElementById('user-modal-subtitle');
-      const content = document.getElementById('user-modal-content');
-      const actions = document.getElementById('user-modal-actions');
-
-      title.textContent = user.displayName || 'User Details';
-      subtitle.textContent = `User ID: ${user.id}`;
-      
-      content.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p class="text-sm text-gray-500">Email</p>
-            <p class="font-medium">${user.email || 'N/A'}</p>
+      // Create a simple view modal
+      const modalContent = `
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+          <div class="flex justify-between items-start mb-6">
+            <h3 class="text-xl font-bold">User Details</h3>
+            <button onclick="closeUserViewModal()" class="text-gray-400 hover:text-gray-600">&times;</button>
           </div>
-          <div>
-            <p class="text-sm text-gray-500">Phone</p>
-            <p class="font-medium">${user.phoneNumber || user.phone || 'N/A'}</p>
+          <div class="space-y-4">
+            <div class="flex items-center space-x-4">
+              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+                   class="w-16 h-16 rounded-full">
+              <div>
+                <h4 class="font-bold text-lg">${user.displayName || 'Not specified'}</h4>
+                <p class="text-gray-600">${user.email || 'N/A'}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-sm text-gray-500">Status</p>
+                <span class="status-badge ${getStatusClass(user.status)}">
+                  ${getStatusText(user.status)}
+                </span>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Role</p>
+                <p>${user.role || 'user'}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Phone</p>
+                <p>${user.phoneNumber || user.phone || 'N/A'}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Created</p>
+                <p>${formatDate(user.createdAt)}</p>
+              </div>
+            </div>
           </div>
-          <div>
-            <p class="text-sm text-gray-500">Status</p>
-            <span class="status-badge ${getStatusClass(user.status)}">
-              ${getStatusText(user.status)}
-            </span>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Role</p>
-            <p class="font-medium">${user.role || 'user'}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Created</p>
-            <p class="font-medium">${formatDate(user.createdAt)}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Last Login</p>
-            <p class="font-medium">${user.lastLogin ? formatDate(user.lastLogin) : 'Never'}</p>
+          <div class="flex justify-end space-x-3 mt-6">
+            <button onclick="closeUserViewModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
+              Close
+            </button>
+            <button onclick="showEditUserModal('${id}')" class="px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">
+              Edit
+            </button>
           </div>
         </div>
-        ${user.bio ? `
-          <div class="mt-4">
-            <p class="text-sm text-gray-500">Bio</p>
-            <p class="mt-1">${user.bio}</p>
-          </div>
-        ` : ''}
       `;
 
-      actions.innerHTML = `
-        <button onclick="closeModal('user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
-          Close
-        </button>
-        <button onclick="editUser('${id}')" class="px-4 py-2 bg-primary text-white hover:bg-primary-dark rounded-lg">
-          Edit User
-        </button>
-      `;
-
+      // Create modal container
+      const modal = document.createElement('div');
+      modal.id = 'user-view-modal';
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4';
+      modal.innerHTML = modalContent;
+      document.body.appendChild(modal);
       modal.classList.remove('hidden');
+
+      // Close function
+      window.closeUserViewModal = () => {
+        modal.classList.add('hidden');
+        setTimeout(() => modal.remove(), 300);
+      };
     };
 
-    // Edit user
-    window.editUser = async (id) => {
-      const user = allUsers.find(u => u.id === id);
-      if (!user) {
-        showToast('User not found', 'error');
-        return;
-      }
-
-      closeModal('user-modal');
-
-      const name = prompt("Enter new name:", user.displayName || '');
-      if (name === null) return;
-
-      const email = prompt("Enter new email:", user.email || '');
-      if (email === null) return;
-
+    // Edit user form submission
+    document.getElementById('edit-user-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const userId = document.getElementById('edit-user-id').value;
+      const name = document.getElementById('edit-user-name').value;
+      const email = document.getElementById('edit-user-email').value;
+      const phone = document.getElementById('edit-user-phone').value;
+      const status = document.getElementById('edit-user-status').value;
+      const role = document.getElementById('edit-user-role').value;
+      
       if (!validateEmail(email)) {
         showToast('Invalid email address', 'error');
         return;
       }
-
-      const phone = prompt("Enter new phone number:", user.phoneNumber || user.phone || '');
-      const status = prompt("Enter new status (active/inactive/pending):", user.status || 'active');
-      const role = prompt("Enter new role (user/admin):", user.role || 'user');
-
+      
       try {
-        await updateDoc(doc(db, "users", id), {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to edit users', 'error');
+          return;
+        }
+        
+        await updateDoc(doc(db, "users", userId), {
           displayName: name,
           email: email,
           phoneNumber: phone,
@@ -1117,59 +1286,89 @@
           role: role,
           updatedAt: serverTimestamp()
         });
+        
+        // If making someone admin, add them to admins collection
+        if (role === 'admin' && status === 'active') {
+          await createAdminDocument(userId, email);
+        }
+        
+        closeModal('edit-user-modal');
         showToast('User updated successfully', 'success');
       } catch (error) {
         console.error('Error updating user:', error);
-        showToast('Failed to update user: ' + error.message, 'error');
+        
+        // Check for specific permission errors
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You need admin privileges to edit users.', 'error');
+        } else {
+          showToast('Failed to update user: ' + error.message, 'error');
+        }
       }
-    };
+    });
 
-    // Add new user
-    window.addNewUser = () => {
-      const name = prompt("Enter user's full name:");
-      if (!name) return;
-
-      const email = prompt("Enter user's email:");
-      if (!email) return;
-
+    // Add user form submission
+    document.getElementById('add-user-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('new-user-name').value;
+      const email = document.getElementById('new-user-email').value;
+      const password = document.getElementById('new-user-password').value;
+      const phone = document.getElementById('new-user-phone').value;
+      const status = document.getElementById('new-user-status').value;
+      const role = document.getElementById('new-user-role').value;
+      
       if (!validateEmail(email)) {
         showToast('Invalid email address', 'error');
         return;
       }
-
-      const password = prompt("Enter user's password (min 6 characters):");
-      if (!password || password.length < 6) {
+      
+      if (password.length < 6) {
         showToast('Password must be at least 6 characters', 'error');
         return;
       }
-
-      const phone = prompt("Enter user's phone number (optional):", "");
-      const status = prompt("Enter user status (active/inactive/pending):", "active");
-      const role = prompt("Enter user role (user/admin):", "user");
-
-      const confirmMsg = `Create new user?\n\nName: ${name}\nEmail: ${email}\nStatus: ${status}\nRole: ${role}`;
-      if (!confirm(confirmMsg)) return;
-
-      // Create user
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential) => {
-          const userId = userCredential.user.uid;
-          
-          await setDoc(doc(db, "users", userId), {
-            displayName: name,
-            email: email,
-            phoneNumber: phone || '',
-            status: status,
-            role: role,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-            photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ec4899&color=fff`
-          });
-          
-          showToast('User created successfully', 'success');
-        })
-        .catch((error) => {
-          console.error('Error creating user:', error);
+      
+      try {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to create users', 'error');
+          return;
+        }
+        
+        // Create user in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userId = userCredential.user.uid;
+        
+        // Create user document in Firestore
+        await setDoc(doc(db, "users", userId), {
+          displayName: name,
+          email: email,
+          phoneNumber: phone,
+          status: status,
+          role: role,
+          photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ec4899&color=fff`,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          uid: userId
+        });
+        
+        // If creating an admin user, add to admins collection
+        if (role === 'admin' && status === 'active') {
+          await createAdminDocument(userId, email);
+        }
+        
+        closeModal('add-user-modal');
+        showToast('User created successfully', 'success');
+        
+        // Clear form
+        document.getElementById('add-user-form').reset();
+      } catch (error) {
+        console.error('Error creating user:', error);
+        
+        // Check for specific permission errors
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You need admin privileges to create users.', 'error');
+        } else {
           let errorMessage = 'Failed to create user: ';
           switch(error.code) {
             case 'auth/email-already-in-use':
@@ -1185,10 +1384,12 @@
               errorMessage += error.message;
           }
           showToast(errorMessage, 'error');
-        });
-    };
+        }
+      }
+    });
 
-    // Delete user
+    // Delete user - NOTE: This won't work with current security rules
+    // Users can only delete their own profiles
     window.deleteUser = async (id) => {
       const user = allUsers.find(u => u.id === id);
       if (!user) {
@@ -1201,11 +1402,25 @@
       }
 
       try {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to delete users', 'error');
+          return;
+        }
+        
+        // Note: This will fail with current security rules
+        // Users can only delete their own profiles
         await deleteDoc(doc(db, "users", id));
         showToast('User deleted successfully', 'success');
       } catch (error) {
         console.error('Error deleting user:', error);
-        showToast('Failed to delete user: ' + error.message, 'error');
+        
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You cannot delete other users with current security rules.', 'error');
+        } else {
+          showToast('Failed to delete user: ' + error.message, 'error');
+        }
       }
     };
 
@@ -1243,6 +1458,9 @@
 
       actions.innerHTML = '';
       
+      // Note: With current rules, only story authors can update/delete their stories
+      // Admins cannot modify stories unless they are the author
+      
       if (story.status === 'pending') {
         const approveBtn = document.createElement('button');
         approveBtn.className = 'px-4 py-2 bg-success text-white rounded-lg hover:bg-green-700';
@@ -1263,17 +1481,6 @@
         actions.appendChild(rejectBtn);
       }
       
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700';
-      deleteBtn.innerHTML = '<i class="fas fa-trash mr-2"></i>Delete';
-      deleteBtn.onclick = () => {
-        if (confirm('Are you sure you want to delete this story?')) {
-          deleteStory(story.id);
-          closeModal('story-modal');
-        }
-      };
-      actions.appendChild(deleteBtn);
-      
       const closeBtn = document.createElement('button');
       closeBtn.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300';
       closeBtn.textContent = 'Close';
@@ -1283,9 +1490,17 @@
       modal.classList.remove('hidden');
     };
 
-    // Approve story
+    // Approve story - NOTE: This won't work with current rules
+    // Only story authors can update their stories
     window.approveStory = async (id) => {
       try {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to approve stories', 'error');
+          return;
+        }
+        
         await updateDoc(doc(db, "stories", id), {
           status: "approved",
           reviewedAt: serverTimestamp()
@@ -1293,13 +1508,25 @@
         showToast('Story approved successfully', 'success');
       } catch (error) {
         console.error('Error approving story:', error);
-        showToast('Failed to approve story: ' + error.message, 'error');
+        
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You cannot approve stories with current security rules.', 'error');
+        } else {
+          showToast('Failed to approve story: ' + error.message, 'error');
+        }
       }
     };
 
-    // Reject story
+    // Reject story - NOTE: This won't work with current rules
     window.rejectStory = async (id) => {
       try {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to reject stories', 'error');
+          return;
+        }
+        
         await updateDoc(doc(db, "stories", id), {
           status: "rejected",
           reviewedAt: serverTimestamp()
@@ -1307,18 +1534,35 @@
         showToast('Story rejected successfully', 'success');
       } catch (error) {
         console.error('Error rejecting story:', error);
-        showToast('Failed to reject story: ' + error.message, 'error');
+        
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You cannot reject stories with current security rules.', 'error');
+        } else {
+          showToast('Failed to reject story: ' + error.message, 'error');
+        }
       }
     };
 
-    // Delete story
+    // Delete story - NOTE: This won't work with current rules
     window.deleteStory = async (id) => {
       try {
+        // First check if we're admin
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to delete stories', 'error');
+          return;
+        }
+        
         await deleteDoc(doc(db, "stories", id));
         showToast('Story deleted successfully', 'success');
       } catch (error) {
         console.error('Error deleting story:', error);
-        showToast('Failed to delete story: ' + error.message, 'error');
+        
+        if (error.code === 'permission-denied') {
+          showToast('Permission denied. You cannot delete stories with current security rules.', 'error');
+        } else {
+          showToast('Failed to delete story: ' + error.message, 'error');
+        }
       }
     };
 
@@ -1466,7 +1710,7 @@
             <button onclick="viewUser('${user.id}')" class="text-primary hover:text-primary-dark" title="View">
               <i class="fas fa-eye"></i>
             </button>
-            <button onclick="editUser('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
+            <button onclick="showEditUserModal('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
             <button onclick="deleteUser('${user.id}')" class="text-danger hover:text-red-600" title="Delete">
@@ -1522,7 +1766,7 @@
             <button onclick="viewUser('${user.id}')" class="text-primary hover:text-primary-dark mr-2" title="View">
               <i class="fas fa-eye"></i>
             </button>
-            <button onclick="editUser('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
+            <button onclick="showEditUserModal('${user.id}')" class="text-warning hover:text-yellow-600" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
           </td>
@@ -1560,17 +1804,6 @@
           <td class="py-4 space-x-2">
             <button onclick="viewStory('${story.id}')" class="text-primary hover:text-primary-dark" title="View">
               <i class="fas fa-eye"></i>
-            </button>
-            ${story.status === 'pending' ? `
-              <button onclick="approveStory('${story.id}')" class="text-success hover:text-green-600" title="Approve">
-                <i class="fas fa-check"></i>
-              </button>
-              <button onclick="rejectStory('${story.id}')" class="text-danger hover:text-red-600" title="Reject">
-                <i class="fas fa-times"></i>
-              </button>
-            ` : ''}
-            <button onclick="deleteStory('${story.id}')" class="text-gray-600 hover:text-gray-800" title="Delete">
-              <i class="fas fa-trash"></i>
             </button>
           </td>
         `;
@@ -1622,6 +1855,25 @@
           }
         });
       }
+
+      // Close modals when clicking outside
+      document.addEventListener('click', (e) => {
+        const addUserModal = document.getElementById('add-user-modal');
+        const editUserModal = document.getElementById('edit-user-modal');
+        const storyModal = document.getElementById('story-modal');
+        
+        if (addUserModal && !addUserModal.classList.contains('hidden') && !addUserModal.contains(e.target) && !e.target.closest('[onclick*="showAddUserModal"]')) {
+          addUserModal.classList.add('hidden');
+        }
+        
+        if (editUserModal && !editUserModal.classList.contains('hidden') && !editUserModal.contains(e.target) && !e.target.closest('[onclick*="showEditUserModal"]')) {
+          editUserModal.classList.add('hidden');
+        }
+        
+        if (storyModal && !storyModal.classList.contains('hidden') && !storyModal.contains(e.target) && !e.target.closest('[onclick*="viewStory"]')) {
+          storyModal.classList.add('hidden');
+        }
+      });
     }
 
     // ======================
@@ -1629,19 +1881,22 @@
     // ======================
 
     // Check authentication
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = './login.html';
         return;
       }
       
-      // Check if user is admin
-      if (user.email !== "msbarbab69@gmail.com") {
+      // Check if user is admin in admins collection
+      const isAdmin = await checkAdminStatus(user.uid);
+      if (!isAdmin) {
         alert("Access denied. Admin only.");
         signOut(auth);
         window.location.href = './login.html';
         return;
       }
+      
+      currentAdminId = user.uid;
       
       // Update admin info
       document.getElementById('admin-name').textContent = user.displayName || 'Administrator';
@@ -1665,20 +1920,6 @@
       setTimeout(() => {
         showToast(`Welcome back, ${user.email}!`, 'success');
       }, 1000);
-    });
-
-    // Close modals when clicking outside
-    document.addEventListener('click', (e) => {
-      const userModal = document.getElementById('user-modal');
-      const storyModal = document.getElementById('story-modal');
-      
-      if (userModal && !userModal.classList.contains('hidden') && !userModal.contains(e.target) && !e.target.closest('[onclick*="viewUser"]') && !e.target.closest('[onclick*="editUser"]')) {
-        userModal.classList.add('hidden');
-      }
-      
-      if (storyModal && !storyModal.classList.contains('hidden') && !storyModal.contains(e.target) && !e.target.closest('[onclick*="viewStory"]')) {
-        storyModal.classList.add('hidden');
-      }
     });
 
   </script>
