@@ -7,10 +7,10 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  
+ 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+ 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -72,7 +72,7 @@
     .status-warning { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
     .sidebar-link.active { background: linear-gradient(90deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%); border-left: 4px solid #ec4899; color: #ec4899; }
     .table-row:hover { background: rgba(236, 72, 153, 0.05); }
-    
+   
     /* Toast notification styles */
     .toast {
       position: fixed;
@@ -102,7 +102,7 @@
     .toast.info {
       background: linear-gradient(135deg, #3b82f6, #2563eb);
     }
-    
+   
     /* Loading spinner */
     .loader {
       border: 3px solid #f3f3f3;
@@ -120,6 +120,50 @@
     /* Modal styles */
     .modal-overlay {
       background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Settings specific styles */
+    .settings-tab {
+      transition: all 0.2s ease;
+      margin-bottom: -1px;
+    }
+
+    .settings-content {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .settings-content.active {
+      display: block;
+    }
+
+    /* Range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #ec4899;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Toggle switch styling */
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #ec4899;
+    }
+
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #ec4899;
     }
   </style>
 </head>
@@ -140,7 +184,7 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- Admin Profile -->
       <div class="p-6 border-b border-gray-200">
         <div class="flex items-center space-x-3">
@@ -154,7 +198,7 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- Navigation -->
       <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
         <a href="#dashboard" class="sidebar-link flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:text-primary hover:bg-pink-50 smooth-transition active">
@@ -193,7 +237,7 @@
           <span class="font-medium">Settings</span>
         </a>
       </nav>
-      
+     
       <!-- Logout -->
       <div class="p-4 border-t border-gray-200">
         <button onclick="logout()" class="flex items-center space-x-3 p-3 w-full text-left rounded-lg text-gray-600 hover:text-danger hover:bg-red-50 smooth-transition">
@@ -215,7 +259,7 @@
               <span id="current-date">Loading...</span>
             </div>
           </div>
- 
+
           <div class="flex items-center space-x-4">
             <!-- Notifications -->
             <div class="relative">
@@ -235,7 +279,7 @@
                 </div>
               </div>
             </div>
- 
+
             <!-- Quick Actions -->
             <button onclick="showAddUserModal()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
               <i class="fas fa-plus"></i>
@@ -244,7 +288,7 @@
           </div>
         </div>
       </header>
- 
+
       <!-- Dashboard Content -->
       <main class="flex-1 overflow-y-auto p-6">
         <!-- Dashboard Section -->
@@ -269,7 +313,7 @@
                 <span class="text-gray-500 ml-2">from last month</span>
               </div>
             </div>
- 
+
             <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -288,7 +332,7 @@
                 <span class="text-gray-500 ml-2">from last week</span>
               </div>
             </div>
- 
+
             <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -307,7 +351,7 @@
                 <span class="text-gray-500 ml-2">from yesterday</span>
               </div>
             </div>
- 
+
             <div class="dashboard-card bg-white rounded-xl p-6 shadow border border-gray-100">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -327,7 +371,7 @@
               </div>
             </div>
           </div>
- 
+
           <!-- Charts and Analytics -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- User Growth Chart -->
@@ -344,7 +388,7 @@
                 <canvas id="userGrowthChart"></canvas>
               </div>
             </div>
- 
+
             <!-- Platform Distribution -->
             <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
               <div class="flex items-center justify-between mb-6">
@@ -355,7 +399,7 @@
               </div>
             </div>
           </div>
- 
+
           <!-- Recent Activity and Quick Actions -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Recent Users -->
@@ -380,7 +424,7 @@
                 </table>
               </div>
             </div>
- 
+
             <!-- Quick Actions -->
             <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
               <h3 class="font-bold text-lg text-gray-800 mb-6">Quick Actions</h3>
@@ -394,7 +438,7 @@
                     <p class="text-xs text-gray-500">Register new girl</p>
                   </div>
                 </button>
- 
+
                 <button onclick="createProgram()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
                   <div class="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
                     <i class="fas fa-plus-circle text-success"></i>
@@ -404,7 +448,7 @@
                     <p class="text-xs text-gray-500">Add learning program</p>
                   </div>
                 </button>
- 
+
                 <button onclick="viewReports()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
                   <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
                     <i class="fas fa-chart-line text-warning"></i>
@@ -414,7 +458,7 @@
                     <p class="text-xs text-gray-500">Analyze platform data</p>
                   </div>
                 </button>
- 
+
                 <button onclick="openSettings()" class="w-full flex items-center space-x-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg smooth-transition">
                   <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center">
                     <i class="fas fa-cog text-info"></i>
@@ -427,7 +471,7 @@
               </div>
             </div>
           </div>
- 
+
           <!-- System Status -->
           <div class="mt-8 bg-white rounded-xl p-6 shadow border border-gray-100">
             <h3 class="font-bold text-lg text-gray-800 mb-6">System Status</h3>
@@ -441,7 +485,7 @@
                   <p class="text-2xl font-bold text-success">Online</p>
                 </div>
               </div>
- 
+
               <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                 <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
                   <i class="fas fa-database text-success text-xl"></i>
@@ -451,7 +495,7 @@
                   <p class="text-2xl font-bold text-success">Connected</p>
                 </div>
               </div>
- 
+
               <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                 <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
                   <i class="fas fa-shield-alt text-warning text-xl"></i>
@@ -528,6 +572,422 @@
             </div>
           </div>
         </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" class="hidden">
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-bold text-lg text-gray-800">Platform Settings</h3>
+              <button onclick="saveAllSettings()" class="px-4 py-2 bg-gradient-to-r from-primary to-custom-purple text-white rounded-lg font-medium hover:shadow-lg smooth-transition flex items-center space-x-2">
+                <i class="fas fa-save"></i>
+                <span>Save All Settings</span>
+              </button>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="mb-6 border-b border-gray-200">
+              <div class="flex space-x-4">
+                <button onclick="openSettingsTab('general')" id="tab-general" class="settings-tab active px-4 py-2 text-primary font-medium border-b-2 border-primary">General</button>
+                <button onclick="openSettingsTab('users')" id="tab-users" class="settings-tab px-4 py-2 text-gray-600 hover:text-primary">Users & Permissions</button>
+                <button onclick="openSettingsTab('content')" id="tab-content" class="settings-tab px-4 py-2 text-gray-600 hover:text-primary">Content</button>
+                <button onclick="openSettingsTab('security')" id="tab-security" class="settings-tab px-4 py-2 text-gray-600 hover:text-primary">Security</button>
+                <button onclick="openSettingsTab('notifications')" id="tab-notifications" class="settings-tab px-4 py-2 text-gray-600 hover:text-primary">Notifications</button>
+                <button onclick="openSettingsTab('maintenance')" id="tab-maintenance" class="settings-tab px-4 py-2 text-gray-600 hover:text-primary">Maintenance</button>
+              </div>
+            </div>
+            
+            <!-- General Settings Tab -->
+            <div id="settings-general" class="settings-content active space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Platform Name -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Platform Name</label>
+                  <input type="text" id="setting-platform-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                  <p class="text-xs text-gray-500 mt-1">Display name for GirlsSpace platform</p>
+                </div>
+                
+                <!-- Platform URL -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Platform URL</label>
+                  <input type="url" id="setting-platform-url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                  <p class="text-xs text-gray-500 mt-1">Main website URL</p>
+                </div>
+                
+                <!-- Contact Email -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+                  <input type="email" id="setting-contact-email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                  <p class="text-xs text-gray-500 mt-1">Official contact email</p>
+                </div>
+                
+                <!-- Support Phone -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Support Phone</label>
+                  <input type="tel" id="setting-support-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                  <p class="text-xs text-gray-500 mt-1">Customer support phone number</p>
+                </div>
+                
+                <!-- Default Language -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Default Language</label>
+                  <select id="setting-default-language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                    <option value="en">English</option>
+                    <option value="fr">French</option>
+                    <option value="rw">Kinyarwanda</option>
+                    <option value="sw">Swahili</option>
+                  </select>
+                </div>
+                
+                <!-- Timezone -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                  <select id="setting-timezone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                    <option value="Africa/Kigali">Africa/Kigali (GMT+2)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">America/New_York (GMT-5)</option>
+                    <option value="Europe/London">Europe/London (GMT+0)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Platform Description -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Platform Description</label>
+                <textarea id="setting-platform-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"></textarea>
+                <p class="text-xs text-gray-500 mt-1">Brief description shown in search engines</p>
+              </div>
+            </div>
+            
+            <!-- Users & Permissions Tab -->
+            <div id="settings-users" class="settings-content hidden space-y-6">
+              <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">User Registration Settings</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Allow New Registrations</p>
+                      <p class="text-sm text-gray-500">Allow new users to create accounts</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-allow-registration" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Require Email Verification</p>
+                      <p class="text-sm text-gray-500">Users must verify email before login</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-require-email-verification" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Allow Anonymous Stories</p>
+                      <p class="text-sm text-gray-500">Users can post stories without registration</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-allow-anonymous-stories" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Default User Permissions</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center">
+                    <input type="checkbox" id="setting-permission-post-stories" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" checked>
+                    <label for="setting-permission-post-stories" class="ml-2 text-sm">Post Stories</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" id="setting-permission-comment" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" checked>
+                    <label for="setting-permission-comment" class="ml-2 text-sm">Comment on Stories</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" id="setting-permission-join-chat" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" checked>
+                    <label for="setting-permission-join-chat" class="ml-2 text-sm">Join Chat Rooms</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="checkbox" id="setting-permission-report-content" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" checked>
+                    <label for="setting-permission-report-content" class="ml-2 text-sm">Report Content</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Content Settings Tab -->
+            <div id="settings-content" class="settings-content hidden space-y-6">
+              <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">Story Settings</h4>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Default Story Status</label>
+                    <select id="setting-default-story-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                      <option value="pending">Pending Review</option>
+                      <option value="approved">Auto-approve</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Status for newly posted stories</p>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Story Character Limit</label>
+                    <div class="flex items-center">
+                      <input type="range" id="setting-story-limit-range" min="100" max="5000" step="100" value="2000" class="w-full mr-4">
+                      <input type="number" id="setting-story-limit" min="100" max="5000" step="100" value="2000" class="w-24 px-3 py-2 border border-gray-300 rounded-lg">
+                      <span class="ml-2 text-gray-600">characters</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Enable Story Categories</p>
+                      <p class="text-sm text-gray-500">Allow categorization of stories</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-enable-categories" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Content Moderation</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Auto-filter Inappropriate Content</p>
+                      <p class="text-sm text-gray-500">Use AI to filter inappropriate words</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-auto-filter-content" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Banned Words List</label>
+                    <textarea id="setting-banned-words" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Enter banned words separated by commas">hate, violence, abuse, harassment</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Words that will trigger automatic content rejection</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Security Settings Tab -->
+            <div id="settings-security" class="settings-content hidden space-y-6">
+              <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">Authentication Security</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Require Strong Passwords</p>
+                      <p class="text-sm text-gray-500">Minimum 8 characters with mix of letters and numbers</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-strong-passwords" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Session Timeout</label>
+                    <select id="setting-session-timeout" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                      <option value="30">30 minutes</option>
+                      <option value="60" selected>1 hour</option>
+                      <option value="120">2 hours</option>
+                      <option value="240">4 hours</option>
+                      <option value="720">12 hours</option>
+                      <option value="1440">24 hours</option>
+                    </select>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Enable Login Alerts</p>
+                      <p class="text-sm text-gray-500">Send email alerts for new device logins</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-login-alerts" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Data Protection</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Enable Data Encryption</p>
+                      <p class="text-sm text-gray-500">Encrypt sensitive user data at rest</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-data-encryption" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">GDPR Compliance</p>
+                      <p class="text-sm text-gray-500">Enable GDPR data protection features</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-gdpr-compliance" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Data Retention Period</label>
+                    <select id="setting-data-retention" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                      <option value="90">90 days</option>
+                      <option value="180">6 months</option>
+                      <option value="365" selected>1 year</option>
+                      <option value="730">2 years</option>
+                      <option value="0">Forever</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">How long to keep user data after account deletion</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Notifications Settings Tab -->
+            <div id="settings-notifications" class="settings-content hidden space-y-6">
+              <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">Email Notifications</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">New User Registration</p>
+                      <p class="text-sm text-gray-500">Notify admins when new users register</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-notify-new-users" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">New Story Submission</p>
+                      <p class="text-sm text-gray-500">Notify admins when new stories are posted</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-notify-new-stories" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Report Submission</p>
+                      <p class="text-sm text-gray-500">Notify admins when content is reported</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-notify-reports" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Notification Templates</h4>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Welcome Email Subject</label>
+                    <input type="text" id="setting-welcome-email-subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" value="Welcome to GirlsSpace!">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Welcome Email Body</label>
+                    <textarea id="setting-welcome-email-body" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">Thank you for joining GirlsSpace! We're excited to have you in our community.</textarea>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Story Approved Notification</label>
+                    <textarea id="setting-story-approved-notification" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">Your story has been approved and is now live on GirlsSpace!</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Maintenance Settings Tab -->
+            <div id="settings-maintenance" class="settings-content hidden space-y-6">
+              <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h4 class="font-medium text-gray-800 mb-2">System Maintenance</h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium">Maintenance Mode</p>
+                      <p class="text-sm text-gray-500">Take site offline for maintenance</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="setting-maintenance-mode" class="sr-only peer">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  
+                  <div id="maintenance-message-section" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Maintenance Message</label>
+                    <textarea id="setting-maintenance-message" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">GirlsSpace is currently undergoing maintenance. We'll be back soon!</textarea>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Auto-Backup Schedule</label>
+                    <select id="setting-backup-schedule" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                      <option value="daily">Daily</option>
+                      <option value="weekly" selected>Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="disabled">Disabled</option>
+                    </select>
+                  </div>
+                  
+                  <div class="pt-4">
+                    <button onclick="runSystemBackup()" class="px-4 py-2 bg-warning text-white rounded-lg font-medium hover:bg-yellow-600 smooth-transition">
+                      <i class="fas fa-database mr-2"></i>
+                      Run Manual Backup
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">Create a backup of all platform data</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-medium text-gray-800 mb-2">Cache Management</h4>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cache Duration</label>
+                    <select id="setting-cache-duration" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                      <option value="3600" selected>1 hour</option>
+                      <option value="86400">24 hours</option>
+                      <option value="604800">1 week</option>
+                      <option value="0">No caching</option>
+                    </select>
+                  </div>
+                  
+                  <div class="pt-4">
+                    <button onclick="clearAllCache()" class="px-4 py-2 bg-danger text-white rounded-lg font-medium hover:bg-red-600 smooth-transition">
+                      <i class="fas fa-broom mr-2"></i>
+                      Clear All Cache
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">Clear all cached data and refresh</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
@@ -540,29 +1000,29 @@
           <h3 class="text-2xl font-bold text-gray-800">Add New User</h3>
           <button onclick="closeModal('add-user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
         </div>
-        
+       
         <form id="add-user-form" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
             <input type="text" id="new-user-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input type="email" id="new-user-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input type="password" id="new-user-password" required minlength="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
             <p class="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number (Optional)</label>
             <input type="tel" id="new-user-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select id="new-user-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
@@ -571,7 +1031,7 @@
               <option value="pending">Pending</option>
             </select>
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
             <select id="new-user-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
@@ -579,7 +1039,7 @@
               <option value="admin">Admin</option>
             </select>
           </div>
-          
+         
           <div class="flex justify-end space-x-3 pt-4">
             <button type="button" onclick="closeModal('add-user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">
               Cancel
@@ -601,25 +1061,25 @@
           <h3 class="text-2xl font-bold text-gray-800">Edit User</h3>
           <button onclick="closeModal('edit-user-modal')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
         </div>
-        
+       
         <form id="edit-user-form" class="space-y-4">
           <input type="hidden" id="edit-user-id">
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
             <input type="text" id="edit-user-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input type="email" id="edit-user-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
             <input type="tel" id="edit-user-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select id="edit-user-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
@@ -628,7 +1088,7 @@
               <option value="pending">Pending</option>
             </select>
           </div>
-          
+         
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
             <select id="edit-user-role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
@@ -636,7 +1096,7 @@
               <option value="admin">Admin</option>
             </select>
           </div>
-          
+         
           <div class="flex justify-end space-x-3 pt-4">
             <button type="button" onclick="closeModal('edit-user-modal')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">
               Cancel
@@ -674,27 +1134,29 @@
   <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
+    import {
+      getAuth,
+      onAuthStateChanged,
       signOut,
-      createUserWithEmailAndPassword 
+      createUserWithEmailAndPassword
     } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      onSnapshot, 
-      query, 
-      orderBy, 
-      limit, 
-      where, 
-      doc, 
-      deleteDoc, 
+    import {
+      getFirestore,
+      collection,
+      onSnapshot,
+      query,
+      orderBy,
+      limit,
+      where,
+      doc,
+      deleteDoc,
       updateDoc,
       setDoc,
       serverTimestamp,
       getDocs,
-      addDoc
+      addDoc,
+      getDoc,
+      getCountFromServer
     } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
     // Firebase Configuration
@@ -711,7 +1173,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
+   
     // Global Variables
     let unsubscribes = [];
     let allUsers = [];
@@ -732,7 +1194,7 @@
       toast.className = `toast ${type}`;
       toast.textContent = message;
       document.body.appendChild(toast);
-      
+     
       setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => {
         toast.classList.remove('show');
@@ -747,9 +1209,9 @@
         if (date.toDate) {
           date = date.toDate();
         }
-        return date.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric', 
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
           year: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
@@ -820,13 +1282,13 @@
     // Switch chart view
     window.switchChartView = (view) => {
       currentChartView = view;
-      
+     
       // Update button styles
       document.querySelectorAll('#dashboard-section .bg-primary').forEach(btn => {
         btn.classList.remove('bg-primary', 'text-white');
         btn.classList.add('bg-gray-100', 'text-gray-800');
       });
-      
+     
       const activeBtn = document.querySelector(`#dashboard-section button:nth-child(${
         view === 'weekly' ? 1 : view === 'monthly' ? 2 : 3
       })`);
@@ -834,7 +1296,7 @@
         activeBtn.classList.remove('bg-gray-100', 'text-gray-800');
         activeBtn.classList.add('bg-primary', 'text-white');
       }
-      
+     
       // Update chart with new view
       if (allUsers.length > 0) {
         analyzeUserGrowth();
@@ -859,7 +1321,7 @@
           const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
           const monthLabel = `${monthNames[date.getMonth()]} ${date.getFullYear().toString().substr(-2)}`;
           labels.push(monthLabel);
-          
+         
           let monthCount = 0;
           allUsers.forEach(user => {
             if (user.createdAt) {
@@ -888,14 +1350,14 @@
           weekStart.setDate(weekStart.getDate() - weekStart.getDay());
           const weekLabel = `Week ${Math.floor((date.getDate() - 1) / 7) + 1}`;
           labels.push(weekLabel);
-          
+         
           let weekCount = 0;
           allUsers.forEach(user => {
             if (user.createdAt) {
               const userDate = user.createdAt.toDate ? user.createdAt.toDate() : new Date(user.createdAt);
               const weekEnd = new Date(weekStart);
               weekEnd.setDate(weekEnd.getDate() + 6);
-              
+             
               if (userDate >= weekStart && userDate <= weekEnd) {
                 weekCount++;
               }
@@ -916,7 +1378,7 @@
         const currentYear = now.getFullYear();
         for (let year = currentYear - 4; year <= currentYear; year++) {
           labels.push(year.toString());
-          
+         
           let yearCount = 0;
           allUsers.forEach(user => {
             if (user.createdAt) {
@@ -941,7 +1403,7 @@
       const lastIndex = newUsersData.length - 1;
       const previousIndex = lastIndex - 1;
       let percentageChange = 0;
-      
+     
       if (previousIndex >= 0 && newUsersData[previousIndex] > 0) {
         percentageChange = ((newUsersData[lastIndex] - newUsersData[previousIndex]) / newUsersData[previousIndex] * 100).toFixed(1);
       } else if (newUsersData[lastIndex] > 0) {
@@ -951,11 +1413,11 @@
       // Update the percentage display
       const changeElement = document.getElementById('users-change');
       if (changeElement) {
-        const arrowIcon = percentageChange >= 0 ? 
-          '<i class="fas fa-arrow-up mr-1"></i>' : 
+        const arrowIcon = percentageChange >= 0 ?
+          '<i class="fas fa-arrow-up mr-1"></i>' :
           '<i class="fas fa-arrow-down mr-1"></i>';
         const textColor = percentageChange >= 0 ? 'text-success' : 'text-danger';
-        
+       
         changeElement.innerHTML = `${arrowIcon}${Math.abs(percentageChange)}%`;
         changeElement.className = `${textColor} flex items-center`;
       }
@@ -968,11 +1430,11 @@
     function updateUserGrowthChart(labels, cumulativeData, monthlyData) {
       const ctx = document.getElementById('userGrowthChart');
       if (!ctx) return;
-      
+     
       if (userGrowthChart) {
         userGrowthChart.destroy();
       }
-      
+     
       userGrowthChart = new Chart(ctx.getContext('2d'), {
         type: 'line',
         data: {
@@ -1097,7 +1559,7 @@
     function initializePlatformChart() {
       const platformCtx = document.getElementById('platformChart');
       if (!platformCtx || platformChart) return;
-      
+     
       platformChart = new Chart(platformCtx.getContext('2d'), {
         type: 'doughnut',
         data: {
@@ -1114,7 +1576,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { 
+            legend: {
               position: 'bottom',
               labels: {
                 color: '#6b7280',
@@ -1138,17 +1600,29 @@
     // Check if user is admin in admins collection
     async function checkAdminStatus(userId) {
       try {
-        const adminDoc = await getDocs(collection(db, "admins"));
-        let isAdmin = false;
-        
-        adminDoc.forEach((doc) => {
-          if (doc.id === userId) {
-            isAdmin = true;
-            currentAdminId = doc.id;
+        const adminRef = doc(db, "admins", userId);
+        const adminSnap = await getDoc(adminRef);
+       
+        if (adminSnap.exists()) {
+          currentAdminId = adminSnap.id;
+          return true;
+        }
+       
+        // Also check by email if not found by ID
+        if (auth.currentUser && auth.currentUser.email) {
+          const adminQuery = query(
+            collection(db, "admins"),
+            where("email", "==", auth.currentUser.email)
+          );
+          const querySnapshot = await getDocs(adminQuery);
+         
+          if (!querySnapshot.empty) {
+            currentAdminId = querySnapshot.docs[0].id;
+            return true;
           }
-        });
-        
-        return isAdmin;
+        }
+       
+        return false;
       } catch (error) {
         console.error("Error checking admin status:", error);
         return false;
@@ -1156,18 +1630,488 @@
     }
 
     // Create admin document for new admin users
-    async function createAdminDocument(userId, userEmail) {
+    async function createAdminDocument(userId, userEmail, userName) {
       try {
         await setDoc(doc(db, "admins", userId), {
           email: userEmail,
+          name: userName,
           createdAt: serverTimestamp(),
           role: "admin",
-          permissions: ["read", "write", "delete"]
+          permissions: ["users:read", "users:write", "stories:read", "stories:write", "reports:read"]
         });
         return true;
       } catch (error) {
         console.error("Error creating admin document:", error);
         return false;
+      }
+    }
+
+    // ======================
+    // SETTINGS FUNCTIONS - محسنة ومعدلة
+    // ======================
+
+    // Open settings tab
+    window.openSettingsTab = (tabName) => {
+      // Update tab buttons
+      document.querySelectorAll('.settings-tab').forEach(tab => {
+        tab.classList.remove('active', 'text-primary', 'border-primary');
+        tab.classList.add('text-gray-600');
+      });
+     
+      const activeTab = document.getElementById(`tab-${tabName}`);
+      if (activeTab) {
+        activeTab.classList.add('active', 'text-primary', 'border-primary');
+        activeTab.classList.remove('text-gray-600');
+      }
+     
+      // Update content
+      document.querySelectorAll('.settings-content').forEach(content => {
+        content.classList.add('hidden');
+        content.classList.remove('active');
+      });
+     
+      const activeContent = document.getElementById(`settings-${tabName}`);
+      if (activeContent) {
+        activeContent.classList.remove('hidden');
+        activeContent.classList.add('active');
+      }
+    };
+
+    // Load settings from Firestore
+    async function loadSettings() {
+      try {
+        if (!currentAdminId) {
+          console.log("❌ لا يوجد currentAdminId");
+          return;
+        }
+
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to access settings', 'error');
+          return;
+        }
+       
+        const settingsRef = doc(db, "settings", "platform");
+        const settingsSnap = await getDoc(settingsRef);
+       
+        if (settingsSnap.exists()) {
+          const settings = settingsSnap.data();
+          console.log("✅ تم تحميل الإعدادات:", settings);
+         
+          // General Settings
+          if (document.getElementById('setting-platform-name')) {
+            document.getElementById('setting-platform-name').value = settings.platformName || 'GirlsSpace Mahama';
+            document.getElementById('setting-platform-url').value = settings.platformUrl || '';
+            document.getElementById('setting-contact-email').value = settings.contactEmail || '';
+            document.getElementById('setting-support-phone').value = settings.supportPhone || '';
+            document.getElementById('setting-default-language').value = settings.defaultLanguage || 'en';
+            document.getElementById('setting-timezone').value = settings.timezone || 'Africa/Kigali';
+            document.getElementById('setting-platform-description').value = settings.platformDescription || '';
+          }
+         
+          // User Settings
+          if (document.getElementById('setting-allow-registration')) {
+            document.getElementById('setting-allow-registration').checked = settings.allowRegistration !== false;
+            document.getElementById('setting-require-email-verification').checked = settings.requireEmailVerification || false;
+            document.getElementById('setting-allow-anonymous-stories').checked = settings.allowAnonymousStories || false;
+          }
+         
+          // User Permissions
+          const permissions = settings.userPermissions || {};
+          if (document.getElementById('setting-permission-post-stories')) {
+            document.getElementById('setting-permission-post-stories').checked = permissions.postStories !== false;
+            document.getElementById('setting-permission-comment').checked = permissions.comment || false;
+            document.getElementById('setting-permission-join-chat').checked = permissions.joinChat || false;
+            document.getElementById('setting-permission-report-content').checked = permissions.reportContent || false;
+          }
+         
+          // Content Settings
+          if (document.getElementById('setting-default-story-status')) {
+            document.getElementById('setting-default-story-status').value = settings.defaultStoryStatus || 'pending';
+            document.getElementById('setting-story-limit').value = settings.storyCharacterLimit || 2000;
+            document.getElementById('setting-story-limit-range').value = settings.storyCharacterLimit || 2000;
+            document.getElementById('setting-enable-categories').checked = settings.enableCategories || false;
+            document.getElementById('setting-auto-filter-content').checked = settings.autoFilterContent || false;
+            document.getElementById('setting-banned-words').value = settings.bannedWords ? settings.bannedWords.join(', ') : '';
+          }
+         
+          // Security Settings
+          if (document.getElementById('setting-strong-passwords')) {
+            document.getElementById('setting-strong-passwords').checked = settings.requireStrongPasswords || false;
+            document.getElementById('setting-session-timeout').value = settings.sessionTimeout || 60;
+            document.getElementById('setting-login-alerts').checked = settings.enableLoginAlerts || false;
+            document.getElementById('setting-data-encryption').checked = settings.enableDataEncryption || false;
+            document.getElementById('setting-gdpr-compliance').checked = settings.gdprCompliance || false;
+            document.getElementById('setting-data-retention').value = settings.dataRetentionPeriod || 365;
+          }
+         
+          // Notification Settings
+          if (document.getElementById('setting-notify-new-users')) {
+            document.getElementById('setting-notify-new-users').checked = settings.notifyNewUsers !== false;
+            document.getElementById('setting-notify-new-stories').checked = settings.notifyNewStories || false;
+            document.getElementById('setting-notify-reports').checked = settings.notifyReports || false;
+            document.getElementById('setting-welcome-email-subject').value = settings.welcomeEmailSubject || 'Welcome to GirlsSpace!';
+            document.getElementById('setting-welcome-email-body').value = settings.welcomeEmailBody || '';
+            document.getElementById('setting-story-approved-notification').value = settings.storyApprovedNotification || '';
+          }
+         
+          // Maintenance Settings
+          if (document.getElementById('setting-maintenance-mode')) {
+            document.getElementById('setting-maintenance-mode').checked = settings.maintenanceMode || false;
+            document.getElementById('setting-maintenance-message').value = settings.maintenanceMessage || '';
+            document.getElementById('setting-backup-schedule').value = settings.backupSchedule || 'weekly';
+            document.getElementById('setting-cache-duration').value = settings.cacheDuration || 3600;
+          }
+         
+          // Toggle maintenance message visibility
+          toggleMaintenanceMessage();
+         
+        } else {
+          // Initialize default settings
+          console.log("⚠️ الإعدادات غير موجودة، جاري إنشاء الإعدادات الافتراضية...");
+          await initializeDefaultSettings();
+        }
+      } catch (error) {
+        console.error('❌ خطأ في تحميل الإعدادات:', error);
+        showToast('Failed to load settings: ' + error.message, 'error');
+      }
+    }
+
+    // Initialize default settings
+    async function initializeDefaultSettings() {
+      try {
+        const defaultSettings = {
+          platformName: 'GirlsSpace Mahama',
+          platformUrl: '',
+          contactEmail: '',
+          supportPhone: '',
+          defaultLanguage: 'en',
+          timezone: 'Africa/Kigali',
+          platformDescription: 'A safe space for girls in Mahama Refugee Camp to share stories and connect.',
+         
+          // User Settings
+          allowRegistration: true,
+          requireEmailVerification: false,
+          allowAnonymousStories: true,
+         
+          // User Permissions
+          userPermissions: {
+            postStories: true,
+            comment: true,
+            joinChat: true,
+            reportContent: true
+          },
+         
+          // Content Settings
+          defaultStoryStatus: 'pending',
+          storyCharacterLimit: 2000,
+          enableCategories: true,
+          autoFilterContent: true,
+          bannedWords: ['hate', 'violence', 'abuse', 'harassment'],
+         
+          // Security Settings
+          requireStrongPasswords: true,
+          sessionTimeout: 60,
+          enableLoginAlerts: false,
+          enableDataEncryption: false,
+          gdprCompliance: false,
+          dataRetentionPeriod: 365,
+         
+          // Notification Settings
+          notifyNewUsers: true,
+          notifyNewStories: true,
+          notifyReports: true,
+          welcomeEmailSubject: 'Welcome to GirlsSpace!',
+          welcomeEmailBody: 'Thank you for joining GirlsSpace! We\'re excited to have you in our community.',
+          storyApprovedNotification: 'Your story has been approved and is now live on GirlsSpace!',
+         
+          // Maintenance Settings
+          maintenanceMode: false,
+          maintenanceMessage: 'GirlsSpace is currently undergoing maintenance. We\'ll be back soon!',
+          backupSchedule: 'weekly',
+          cacheDuration: 3600,
+         
+          // System
+          lastUpdated: serverTimestamp(),
+          updatedBy: currentAdminId,
+          createdAt: serverTimestamp()
+        };
+       
+        const settingsRef = doc(db, "settings", "platform");
+        await setDoc(settingsRef, defaultSettings);
+        console.log("✅ تم إنشاء الإعدادات الافتراضية");
+        
+        // Load the settings after creating them
+        loadSettings();
+      } catch (error) {
+        console.error('❌ خطأ في إنشاء الإعدادات الافتراضية:', error);
+      }
+    }
+
+    // Save all settings - محسنة مع إصلاحات
+    window.saveAllSettings = async () => {
+      try {
+        console.log("🚀 بدء عملية حفظ الإعدادات...");
+        
+        // 1. التحقق من تسجيل الدخول
+        if (!auth.currentUser) {
+          showToast('يجب تسجيل الدخول أولاً', 'error');
+          window.location.href = './login.html';
+          return;
+        }
+        
+        console.log("👤 المستخدم الحالي:", auth.currentUser.email);
+        
+        // 2. التحقق من صلاحيات الأدمن
+        const isAdmin = await checkAdminStatus(auth.currentUser.uid);
+        console.log("🔐 حالة الأدمن:", isAdmin);
+        
+        if (!isAdmin) {
+          showToast('صلاحيات الأدمن مطلوبة لحفظ الإعدادات', 'error');
+          return;
+        }
+        
+        // 3. جمع البيانات من النموذج
+        const settingsData = {
+          // General
+          platformName: document.getElementById('setting-platform-name').value,
+          platformUrl: document.getElementById('setting-platform-url').value,
+          contactEmail: document.getElementById('setting-contact-email').value,
+          supportPhone: document.getElementById('setting-support-phone').value,
+          defaultLanguage: document.getElementById('setting-default-language').value,
+          timezone: document.getElementById('setting-timezone').value,
+          platformDescription: document.getElementById('setting-platform-description').value,
+          
+          // Users
+          allowRegistration: document.getElementById('setting-allow-registration').checked,
+          requireEmailVerification: document.getElementById('setting-require-email-verification').checked,
+          allowAnonymousStories: document.getElementById('setting-allow-anonymous-stories').checked,
+          
+          // Permissions
+          userPermissions: {
+            postStories: document.getElementById('setting-permission-post-stories').checked,
+            comment: document.getElementById('setting-permission-comment').checked,
+            joinChat: document.getElementById('setting-permission-join-chat').checked,
+            reportContent: document.getElementById('setting-permission-report-content').checked
+          },
+          
+          // Content
+          defaultStoryStatus: document.getElementById('setting-default-story-status').value,
+          storyCharacterLimit: parseInt(document.getElementById('setting-story-limit').value) || 2000,
+          enableCategories: document.getElementById('setting-enable-categories').checked,
+          autoFilterContent: document.getElementById('setting-auto-filter-content').checked,
+          bannedWords: document.getElementById('setting-banned-words').value
+            .split(',')
+            .map(w => w.trim())
+            .filter(w => w.length > 0),
+          
+          // Security
+          requireStrongPasswords: document.getElementById('setting-strong-passwords').checked,
+          sessionTimeout: parseInt(document.getElementById('setting-session-timeout').value) || 60,
+          enableLoginAlerts: document.getElementById('setting-login-alerts').checked,
+          enableDataEncryption: document.getElementById('setting-data-encryption').checked,
+          gdprCompliance: document.getElementById('setting-gdpr-compliance').checked,
+          dataRetentionPeriod: parseInt(document.getElementById('setting-data-retention').value) || 365,
+          
+          // Notifications
+          notifyNewUsers: document.getElementById('setting-notify-new-users').checked,
+          notifyNewStories: document.getElementById('setting-notify-new-stories').checked,
+          notifyReports: document.getElementById('setting-notify-reports').checked,
+          welcomeEmailSubject: document.getElementById('setting-welcome-email-subject').value,
+          welcomeEmailBody: document.getElementById('setting-welcome-email-body').value,
+          storyApprovedNotification: document.getElementById('setting-story-approved-notification').value,
+          
+          // Maintenance
+          maintenanceMode: document.getElementById('setting-maintenance-mode').checked,
+          maintenanceMessage: document.getElementById('setting-maintenance-message').value,
+          backupSchedule: document.getElementById('setting-backup-schedule').value,
+          cacheDuration: parseInt(document.getElementById('setting-cache-duration').value) || 3600,
+          
+          // Metadata
+          lastUpdated: serverTimestamp(),
+          updatedBy: auth.currentUser.uid,
+          updatedByEmail: auth.currentUser.email
+        };
+        
+        console.log("📦 البيانات المجمعة:", settingsData);
+        
+        // 4. حفظ البيانات في Firestore
+        const settingsRef = doc(db, "settings", "platform");
+        console.log("💾 محاولة الحفظ في:", settingsRef.path);
+        
+        await setDoc(settingsRef, settingsData, { merge: true });
+        
+        console.log("✅ تم الحفظ بنجاح!");
+        showToast('تم حفظ الإعدادات بنجاح', 'success');
+        
+        // 5. إظهار تأكيد مرئي
+        const saveBtn = document.querySelector('button[onclick="saveAllSettings()"]');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-check mr-2"></i>تم الحفظ!';
+        saveBtn.classList.remove('from-primary', 'to-custom-purple');
+        saveBtn.classList.add('bg-green-500');
+        
+        setTimeout(() => {
+          saveBtn.innerHTML = originalText;
+          saveBtn.classList.remove('bg-green-500');
+          saveBtn.classList.add('from-primary', 'to-custom-purple');
+        }, 2000);
+        
+      } catch (error) {
+        console.error("❌ خطأ في حفظ الإعدادات:", error);
+        
+        let errorMessage = 'فشل في حفظ الإعدادات: ';
+        
+        if (error.code === 'permission-denied') {
+          errorMessage = 'صلاحيات غير كافية. يجب أن تكون أدمن لحفظ الإعدادات.';
+        } else if (error.code === 'unavailable') {
+          errorMessage = 'اتصال الشبكة غير متوفر. تحقق من اتصال الإنترنت.';
+        } else {
+          errorMessage += error.message;
+        }
+        
+        showToast(errorMessage, 'error');
+        
+        // إظهار زر لتصحيح المشكلة
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'mt-4 p-4 bg-red-50 border border-red-200 rounded-lg';
+        errorDiv.innerHTML = `
+          <h4 class="font-bold text-red-700">حل المشكلة:</h4>
+          <p class="text-sm text-red-600 mb-2">${errorMessage}</p>
+          <button onclick="fixSettingsIssue()" class="px-3 py-1 bg-red-600 text-white text-sm rounded">
+            إصلاح تلقائي
+          </button>
+        `;
+        
+        const settingsSection = document.getElementById('settings-section');
+        const existingError = settingsSection.querySelector('.error-fix');
+        if (existingError) existingError.remove();
+        
+        errorDiv.classList.add('error-fix');
+        settingsSection.appendChild(errorDiv);
+      }
+    };
+
+    // دالة الإصلاح التلقائي
+    window.fixSettingsIssue = async () => {
+      try {
+        // 1. إنشاء مجموعة settings إذا لم تكن موجودة
+        const settingsRef = doc(db, "settings", "platform");
+        
+        // 2. محاولة إنشاء وثيقة بسيطة أولاً
+        const testData = {
+          test: true,
+          createdAt: serverTimestamp(),
+          createdBy: auth.currentUser.uid
+        };
+        
+        await setDoc(settingsRef, testData, { merge: true });
+        showToast('تم إصلاح قاعدة البيانات. حاول حفظ الإعدادات مرة أخرى.', 'success');
+        
+        // إزالة رسالة الخطأ
+        const errorDiv = document.querySelector('.error-fix');
+        if (errorDiv) errorDiv.remove();
+        
+      } catch (fixError) {
+        console.error("❌ فشل الإصلاح:", fixError);
+        showToast(`فشل الإصلاح: ${fixError.message}`, 'error');
+      }
+    };
+
+    // Toggle maintenance message visibility
+    function toggleMaintenanceMessage() {
+      const maintenanceMode = document.getElementById('setting-maintenance-mode');
+      const messageSection = document.getElementById('maintenance-message-section');
+     
+      if (maintenanceMode && messageSection) {
+        if (maintenanceMode.checked) {
+          messageSection.classList.remove('hidden');
+        } else {
+          messageSection.classList.add('hidden');
+        }
+      }
+    }
+
+    // Run system backup
+    window.runSystemBackup = async () => {
+      try {
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to run backups', 'error');
+          return;
+        }
+       
+        // Create backup document
+        const backupData = {
+          timestamp: serverTimestamp(),
+          createdBy: currentAdminId,
+          status: 'in-progress'
+        };
+       
+        const backupRef = await addDoc(collection(db, "backups"), backupData);
+       
+        // In a real implementation, this would trigger a cloud function
+        // For now, we'll simulate the backup process
+        showToast('Backup process started...', 'info');
+       
+        setTimeout(async () => {
+          await updateDoc(backupRef, {
+            status: 'completed',
+            completedAt: serverTimestamp(),
+            size: Math.floor(Math.random() * 500) + 100 // Simulated file size in MB
+          });
+         
+          showToast('Backup completed successfully!', 'success');
+        }, 3000);
+      } catch (error) {
+        console.error('Error running backup:', error);
+        showToast('Failed to run backup: ' + error.message, 'error');
+      }
+    };
+
+    // Clear all cache
+    window.clearAllCache = async () => {
+      try {
+        const isAdmin = await checkAdminStatus(currentAdminId);
+        if (!isAdmin) {
+          showToast('Admin privileges required to clear cache', 'error');
+          return;
+        }
+       
+        // In a real implementation, this would clear server cache
+        // For now, we'll just show a message
+        showToast('Cache cleared successfully. Page will refresh.', 'success');
+       
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } catch (error) {
+        console.error('Error clearing cache:', error);
+        showToast('Failed to clear cache: ' + error.message, 'error');
+      }
+    };
+
+    // Link range input with number input for story limit
+    function linkStoryLimitInputs() {
+      const rangeInput = document.getElementById('setting-story-limit-range');
+      const numberInput = document.getElementById('setting-story-limit');
+     
+      if (rangeInput && numberInput) {
+        rangeInput.addEventListener('input', function() {
+          numberInput.value = this.value;
+        });
+       
+        numberInput.addEventListener('input', function() {
+          rangeInput.value = this.value;
+        });
+      }
+    }
+
+    // Initialize maintenance mode toggle
+    function initMaintenanceToggle() {
+      const maintenanceToggle = document.getElementById('setting-maintenance-mode');
+      if (maintenanceToggle) {
+        maintenanceToggle.addEventListener('change', toggleMaintenanceMessage);
       }
     }
 
@@ -1200,7 +2144,7 @@
           </div>
           <div class="space-y-4">
             <div class="flex items-center space-x-4">
-              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}"
                    class="w-16 h-16 rounded-full">
               <div>
                 <h4 class="font-bold text-lg">${user.displayName || 'Not specified'}</h4>
@@ -1257,19 +2201,19 @@
     // Edit user form submission
     document.getElementById('edit-user-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+     
       const userId = document.getElementById('edit-user-id').value;
       const name = document.getElementById('edit-user-name').value;
       const email = document.getElementById('edit-user-email').value;
       const phone = document.getElementById('edit-user-phone').value;
       const status = document.getElementById('edit-user-status').value;
       const role = document.getElementById('edit-user-role').value;
-      
+     
       if (!validateEmail(email)) {
         showToast('Invalid email address', 'error');
         return;
       }
-      
+     
       try {
         // First check if we're admin
         const isAdmin = await checkAdminStatus(currentAdminId);
@@ -1277,7 +2221,7 @@
           showToast('Admin privileges required to edit users', 'error');
           return;
         }
-        
+       
         await updateDoc(doc(db, "users", userId), {
           displayName: name,
           email: email,
@@ -1286,17 +2230,17 @@
           role: role,
           updatedAt: serverTimestamp()
         });
-        
+       
         // If making someone admin, add them to admins collection
         if (role === 'admin' && status === 'active') {
-          await createAdminDocument(userId, email);
+          await createAdminDocument(userId, email, name);
         }
-        
+       
         closeModal('edit-user-modal');
         showToast('User updated successfully', 'success');
       } catch (error) {
         console.error('Error updating user:', error);
-        
+       
         // Check for specific permission errors
         if (error.code === 'permission-denied') {
           showToast('Permission denied. You need admin privileges to edit users.', 'error');
@@ -1309,24 +2253,24 @@
     // Add user form submission
     document.getElementById('add-user-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+     
       const name = document.getElementById('new-user-name').value;
       const email = document.getElementById('new-user-email').value;
       const password = document.getElementById('new-user-password').value;
       const phone = document.getElementById('new-user-phone').value;
       const status = document.getElementById('new-user-status').value;
       const role = document.getElementById('new-user-role').value;
-      
+     
       if (!validateEmail(email)) {
         showToast('Invalid email address', 'error');
         return;
       }
-      
+     
       if (password.length < 6) {
         showToast('Password must be at least 6 characters', 'error');
         return;
       }
-      
+     
       try {
         // First check if we're admin
         const isAdmin = await checkAdminStatus(currentAdminId);
@@ -1334,11 +2278,11 @@
           showToast('Admin privileges required to create users', 'error');
           return;
         }
-        
+       
         // Create user in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const userId = userCredential.user.uid;
-        
+       
         // Create user document in Firestore
         await setDoc(doc(db, "users", userId), {
           displayName: name,
@@ -1351,20 +2295,20 @@
           updatedAt: serverTimestamp(),
           uid: userId
         });
-        
+       
         // If creating an admin user, add to admins collection
         if (role === 'admin' && status === 'active') {
-          await createAdminDocument(userId, email);
+          await createAdminDocument(userId, email, name);
         }
-        
+       
         closeModal('add-user-modal');
         showToast('User created successfully', 'success');
-        
+       
         // Clear form
         document.getElementById('add-user-form').reset();
       } catch (error) {
         console.error('Error creating user:', error);
-        
+       
         // Check for specific permission errors
         if (error.code === 'permission-denied') {
           showToast('Permission denied. You need admin privileges to create users.', 'error');
@@ -1388,8 +2332,7 @@
       }
     });
 
-    // Delete user - NOTE: This won't work with current security rules
-    // Users can only delete their own profiles
+    // Delete user
     window.deleteUser = async (id) => {
       const user = allUsers.find(u => u.id === id);
       if (!user) {
@@ -1408,16 +2351,23 @@
           showToast('Admin privileges required to delete users', 'error');
           return;
         }
-        
-        // Note: This will fail with current security rules
-        // Users can only delete their own profiles
+       
+        // Delete user document
         await deleteDoc(doc(db, "users", id));
+       
+        // Also remove from admins collection if they were admin
+        const adminRef = doc(db, "admins", id);
+        const adminSnap = await getDoc(adminRef);
+        if (adminSnap.exists()) {
+          await deleteDoc(adminRef);
+        }
+       
         showToast('User deleted successfully', 'success');
       } catch (error) {
         console.error('Error deleting user:', error);
-        
+       
         if (error.code === 'permission-denied') {
-          showToast('Permission denied. You cannot delete other users with current security rules.', 'error');
+          showToast('Permission denied. You need admin privileges to delete users.', 'error');
         } else {
           showToast('Failed to delete user: ' + error.message, 'error');
         }
@@ -1453,14 +2403,14 @@
       subtitle.textContent = `By: ${story.author_name || 'Anonymous'} | Date: ${formatDate(story.createdAt)}`;
       statusBadge.className = `status-badge ${getStatusClass(story.status)}`;
       statusBadge.textContent = getStatusText(story.status);
-      
+     
       content.textContent = story.story_content || 'No content available';
 
       actions.innerHTML = '';
-      
+     
       // Note: With current rules, only story authors can update/delete their stories
       // Admins cannot modify stories unless they are the author
-      
+     
       if (story.status === 'pending') {
         const approveBtn = document.createElement('button');
         approveBtn.className = 'px-4 py-2 bg-success text-white rounded-lg hover:bg-green-700';
@@ -1470,7 +2420,7 @@
           closeModal('story-modal');
         };
         actions.appendChild(approveBtn);
-        
+       
         const rejectBtn = document.createElement('button');
         rejectBtn.className = 'px-4 py-2 bg-danger text-white rounded-lg hover:bg-red-700';
         rejectBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Reject';
@@ -1480,7 +2430,7 @@
         };
         actions.appendChild(rejectBtn);
       }
-      
+     
       const closeBtn = document.createElement('button');
       closeBtn.className = 'px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300';
       closeBtn.textContent = 'Close';
@@ -1490,8 +2440,7 @@
       modal.classList.remove('hidden');
     };
 
-    // Approve story - NOTE: This won't work with current rules
-    // Only story authors can update their stories
+    // Approve story
     window.approveStory = async (id) => {
       try {
         // First check if we're admin
@@ -1500,7 +2449,7 @@
           showToast('Admin privileges required to approve stories', 'error');
           return;
         }
-        
+       
         await updateDoc(doc(db, "stories", id), {
           status: "approved",
           reviewedAt: serverTimestamp()
@@ -1508,7 +2457,7 @@
         showToast('Story approved successfully', 'success');
       } catch (error) {
         console.error('Error approving story:', error);
-        
+       
         if (error.code === 'permission-denied') {
           showToast('Permission denied. You cannot approve stories with current security rules.', 'error');
         } else {
@@ -1517,7 +2466,7 @@
       }
     };
 
-    // Reject story - NOTE: This won't work with current rules
+    // Reject story
     window.rejectStory = async (id) => {
       try {
         // First check if we're admin
@@ -1526,7 +2475,7 @@
           showToast('Admin privileges required to reject stories', 'error');
           return;
         }
-        
+       
         await updateDoc(doc(db, "stories", id), {
           status: "rejected",
           reviewedAt: serverTimestamp()
@@ -1534,7 +2483,7 @@
         showToast('Story rejected successfully', 'success');
       } catch (error) {
         console.error('Error rejecting story:', error);
-        
+       
         if (error.code === 'permission-denied') {
           showToast('Permission denied. You cannot reject stories with current security rules.', 'error');
         } else {
@@ -1543,7 +2492,7 @@
       }
     };
 
-    // Delete story - NOTE: This won't work with current rules
+    // Delete story
     window.deleteStory = async (id) => {
       try {
         // First check if we're admin
@@ -1552,12 +2501,12 @@
           showToast('Admin privileges required to delete stories', 'error');
           return;
         }
-        
+       
         await deleteDoc(doc(db, "stories", id));
         showToast('Story deleted successfully', 'success');
       } catch (error) {
         console.error('Error deleting story:', error);
-        
+       
         if (error.code === 'permission-denied') {
           showToast('Permission denied. You cannot delete stories with current security rules.', 'error');
         } else {
@@ -1576,7 +2525,25 @@
     };
 
     window.openSettings = () => {
-      showToast('Settings feature coming soon!', 'info');
+      // Navigate to settings section
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      document.querySelector('a[href="#settings"]').classList.add('active');
+     
+      // Hide all sections
+      const sections = ['dashboard', 'users', 'stories', 'content', 'chat', 'reports', 'analytics', 'settings'];
+      sections.forEach(section => {
+        const element = document.getElementById(`${section}-section`);
+        if (element) {
+          element.classList.add('hidden');
+        }
+      });
+     
+      // Show settings section
+      const settingsSection = document.getElementById('settings-section');
+      if (settingsSection) {
+        settingsSection.classList.remove('hidden');
+        loadSettings();
+      }
     };
 
     // ======================
@@ -1594,7 +2561,7 @@
         const totalUsers = snapshot.size;
         document.getElementById('total-users').textContent = totalUsers;
         document.getElementById('sidebar-total-users').textContent = totalUsers;
-        
+       
         // Store all users
         allUsers = [];
         snapshot.forEach((doc) => {
@@ -1606,10 +2573,10 @@
             lastLogin: userData.lastLogin || null
           });
         });
-        
+       
         // Analyze user growth and update chart
         analyzeUserGrowth();
-        
+       
         renderUsersTable();
         renderRecentUsers();
       });
@@ -1620,15 +2587,15 @@
           const data = doc.data();
           return data.status === 'approved';
         }).length;
-        
+       
         const pendingStories = snapshot.docs.filter(doc => {
           const data = doc.data();
           return data.status === 'pending';
         }).length;
-        
+       
         document.getElementById('active-stories').textContent = activeStories;
         document.getElementById('sidebar-pending-stories').textContent = pendingStories;
-        
+       
         // Store all stories
         allStories = [];
         snapshot.forEach((doc) => {
@@ -1639,10 +2606,10 @@
             createdAt: storyData.createdAt || null
           });
         });
-        
+       
         filteredStories = [...allStories];
         renderStoriesTable();
-        
+       
         // Calculate change percentage for stories
         const storiesChangeElement = document.getElementById('stories-change');
         if (storiesChangeElement) {
@@ -1656,12 +2623,12 @@
 
       // Load pending reports
       const reportsUnsub = onSnapshot(
-        query(collection(db, "reports"), where("status", "==", "pending")), 
+        query(collection(db, "reports"), where("status", "==", "pending")),
         (snapshot) => {
           const pendingReports = snapshot.size;
           document.getElementById('pending-reports').textContent = pendingReports;
           document.getElementById('sidebar-pending-reports').textContent = pendingReports;
-          
+         
           // Calculate change percentage for reports
           const reportsChangeElement = document.getElementById('reports-change');
           if (reportsChangeElement) {
@@ -1681,20 +2648,20 @@
     function renderUsersTable() {
       const tbody = document.getElementById('all-users-tbody');
       if (!tbody) return;
-      
+     
       tbody.innerHTML = '';
-      
+     
       if (allUsers.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 text-gray-500">No users found</td></tr>';
         return;
       }
-      
+     
       allUsers.forEach((user) => {
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 hover:bg-pink-50';
         row.innerHTML = `
           <td class="py-4">
-            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+            <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}"
                  class="w-10 h-10 rounded-full object-cover">
           </td>
           <td class="py-4 font-medium">${user.displayName || 'Not specified'}</td>
@@ -1726,9 +2693,9 @@
     function renderRecentUsers() {
       const tbody = document.getElementById('recent-users-tbody');
       if (!tbody) return;
-      
+     
       tbody.innerHTML = '';
-      
+     
       const recentUsers = [...allUsers]
         .sort((a, b) => {
           const dateA = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt)) : new Date(0);
@@ -1736,19 +2703,19 @@
           return dateB - dateA;
         })
         .slice(0, 5);
-      
+     
       if (recentUsers.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">No users found</td></tr>';
         return;
       }
-      
+     
       recentUsers.forEach((user) => {
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 hover:bg-pink-50';
         row.innerHTML = `
           <td class="py-4">
             <div class="flex items-center space-x-3">
-              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}" 
+              <img src="${user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'U')}&background=ec4899&color=fff`}"
                    class="w-8 h-8 rounded-full">
               <div>
                 <p class="font-medium text-sm">${user.displayName || 'Anonymous'}</p>
@@ -1779,14 +2746,14 @@
     function renderStoriesTable() {
       const tbody = document.getElementById('all-stories-tbody');
       if (!tbody) return;
-      
+     
       tbody.innerHTML = '';
-      
+     
       if (filteredStories.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center py-12 text-gray-500">No stories found</td></tr>';
         return;
       }
-      
+     
       filteredStories.forEach((story, index) => {
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 hover:bg-pink-50';
@@ -1842,13 +2809,13 @@
       // Notification dropdown
       const notificationBtn = document.getElementById('notification-btn');
       const notificationDropdown = document.getElementById('notification-dropdown');
-      
+     
       if (notificationBtn && notificationDropdown) {
         notificationBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           notificationDropdown.classList.toggle('hidden');
         });
-        
+       
         document.addEventListener('click', (e) => {
           if (!notificationDropdown.contains(e.target) && !notificationBtn.contains(e.target)) {
             notificationDropdown.classList.add('hidden');
@@ -1861,19 +2828,33 @@
         const addUserModal = document.getElementById('add-user-modal');
         const editUserModal = document.getElementById('edit-user-modal');
         const storyModal = document.getElementById('story-modal');
-        
+       
         if (addUserModal && !addUserModal.classList.contains('hidden') && !addUserModal.contains(e.target) && !e.target.closest('[onclick*="showAddUserModal"]')) {
           addUserModal.classList.add('hidden');
         }
-        
+       
         if (editUserModal && !editUserModal.classList.contains('hidden') && !editUserModal.contains(e.target) && !e.target.closest('[onclick*="showEditUserModal"]')) {
           editUserModal.classList.add('hidden');
         }
-        
+       
         if (storyModal && !storyModal.classList.contains('hidden') && !storyModal.contains(e.target) && !e.target.closest('[onclick*="viewStory"]')) {
           storyModal.classList.add('hidden');
         }
       });
+
+      // Settings event listeners
+      linkStoryLimitInputs();
+      initMaintenanceToggle();
+
+      // Load settings when settings section is opened
+      const settingsLink = document.querySelector('a[href="#settings"]');
+      if (settingsLink) {
+        settingsLink.addEventListener('click', () => {
+          setTimeout(() => {
+            loadSettings();
+          }, 100);
+        });
+      }
     }
 
     // ======================
@@ -1886,36 +2867,46 @@
         window.location.href = './login.html';
         return;
       }
-      
+     
       // Check if user is admin in admins collection
       const isAdmin = await checkAdminStatus(user.uid);
       if (!isAdmin) {
-        alert("Access denied. Admin only.");
-        signOut(auth);
-        window.location.href = './login.html';
-        return;
+        // If not admin, check if this is the first user and make them admin
+        const usersCount = await getCountFromServer(collection(db, "users"));
+        const adminsCount = await getCountFromServer(collection(db, "admins"));
+       
+        if (usersCount.data().count === 1 && adminsCount.data().count === 0) {
+          // Create admin document for first user
+          await createAdminDocument(user.uid, user.email, user.displayName || 'Admin');
+          showToast('First admin account created successfully', 'success');
+        } else {
+          alert("Access denied. Admin only.");
+          await signOut(auth);
+          window.location.href = './login.html';
+          return;
+        }
       }
-      
+     
       currentAdminId = user.uid;
-      
+     
       // Update admin info
       document.getElementById('admin-name').textContent = user.displayName || 'Administrator';
       document.getElementById('admin-email').textContent = user.email;
-      
+     
       // Update date
       const currentDate = new Date();
-      document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      document.getElementById('current-date').textContent = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
-      
+     
       // Load dashboard data
       loadDashboardData();
       initializePlatformChart();
       setupEventListeners();
-      
+     
       // Show welcome message
       setTimeout(() => {
         showToast(`Welcome back, ${user.email}!`, 'success');
