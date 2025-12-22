@@ -1,0 +1,26 @@
+name: Enforce Max File Line Limit
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-lines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Check for files with more than 500 lines
+        run: |
+          max_lines=500
+          files=$(find . -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" \))
+          for file in $files; do
+            lines=$(wc -l < "$file")
+            if [ $lines -gt $max_lines ]; then
+              echo "❌ ERROR: $file has $lines lines (limit is $max_lines)."
+              exit 1
+            fi
+          done
+          echo "✅ All files are within the 500-line limit."
