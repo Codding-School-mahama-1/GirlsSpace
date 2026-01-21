@@ -18,6 +18,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
     <style>
+        
         /* جميع الأنماط السابقة كما هي */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -388,6 +389,140 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden theme-pink">
+
+
+ <nav class="flex items-center justify-between px-5 py-3 bg-white sticky top-0 z-50 shadow-md md:px-10">
+    <div class="w-[60px] h-[50px]">
+      <img src="./img/Girls Space (1) (1).png" onerror="this.src='https:via.placeholder.com/60'" alt="Logo" class="w-full h-full object-contain rounded-full">
+    </div>
+
+    <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
+      <a href="./index.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.home">Home</a>
+      <a href="./AboutUs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.about">About</a>
+      <a href="./chat.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.chat">Chat</a>
+      <a href="./stories.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.stories">Stories</a>
+      <a href="./Learning_Programs.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.programs">Programs</a>
+      <a href="./protection.html" class="nav-link hover:text-primary relative transition-colors" data-translate="nav.protection">Protection</a>
+
+      
+      <div class="relative group">
+        <button class="flex items-center hover:text-primary transition-colors py-2" id="language-button">
+          <span id="current-language">English</span> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+        </button>
+        <ul class="absolute top-full left-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100">
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="en">English</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="ar">Arabic</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="sw">Swahili</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="fr">French</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-custom-purple text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
+        </ul>
+      </div>
+      <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors" data-translate="nav.login">Log In</a>
+      <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple" data-translate="nav.donate">Donate</a>
+    
+<a id="adminLink" href="admin-dashboard.html" class="hidden px-3 py-1.5 bg-purple-600 text-white rounded-full text-xs font-semibold hover:bg-purple-700">
+  <i class="fas fa-shield-alt mr-2"></i>Admin Panel
+</a>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-4">
+      <div class="relative">
+        <input type="text" id="search-input" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-[140px] transition-all duration-300" data-translate="nav.search">
+        <div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50 animate-fadeIn">
+          <!-- Search results will be populated here -->
+        </div>
+      </div>
+   </div>
+
+    <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+      <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Search Bar -->
+  <div id="mobile-search-container" class="lg:hidden px-5 py-3 bg-white border-b border-gray-200 hidden">
+    <div class="relative">
+      <input type="text" id="mobile-search-input" placeholder="Search..." class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+      <button id="close-mobile-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="mobile-search-results" class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg max-h-80 overflow-y-auto hidden z-50">
+        <!-- Mobile search results will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed top-0 left-[-100%] w-full h-full bg-white z-40 transition-all duration-300 lg:hidden overflow-y-auto no-scrollbar">
+    <div class="pt-20 px-6 pb-10">
+      <div class="flex flex-col gap-6 text-gray-700 font-medium">
+        <a href="./index.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.home">Home</a>
+        <a href="./AboutUs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.about">About</a>
+        <a href="./chat.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.chat">Chat</a>
+        <a href="./stories.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.stories">Stories</a>
+        <a href="./Learning_Programs.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.programs">Programs</a>
+        <a href="./protection/protection.html" class="py-2 border-b border-gray-100 hover:text-primary transition-colors" data-translate="nav.protection">Protection</a>
+        
+        <!-- Mobile Search Button -->
+        <button id="mobile-search-button" class="py-2 border-b border-gray-100 hover:text-primary transition-colors text-left flex items-center justify-between">
+          <span data-translate="nav.search">Search</span>
+          <i class="fas fa-search text-gray-400"></i>
+        </button>
+        
+        <div class="py-2 border-b border-gray-100">
+          <div class="flex justify-between items-center">
+            <span data-translate="nav.language">Language</span>
+            <select id="mobile-language-selector" class="bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+              <option value="en" selected>English</option>
+              <option value="ar">Arabic</option>
+              <option value="sw">Swahili</option>
+              <option value="fr">French</option>
+              <option value="rw">Kinyarwanda</option>
+            </select>
+          </div>
+        </div>
+        
+        <a href="./login.html" class="px-4 py-2 border-[1.5px] border-custom-purple text-custom-purple rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors text-center" data-translate="nav.login">Log In</a>
+        <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-[#ff5f8d] to-[#c23cb6] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all border border-transparent hover:border-custom-purple text-center" data-translate="nav.donate">Donate</a>
+      </div>
+    </div>
+  </div>
+
+   <!-- Search Results Page (initially hidden) -->
+  <section id="search-results-page" class="min-h-screen bg-black py-16 px-6 hidden">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl lg:text-4xl font-bold" data-translate="search.results">Search Results</h2>
+        <button id="close-search-page" class="text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <div class="relative">
+          <input type="text" id="results-search-input" placeholder="Search..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+          <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      
+      <div id="search-results-content" class="space-y-4">
+        <!-- Search results will be displayed here -->
+      </div>
+      
+      <div id="no-results-message" class="text-center py-12 hidden">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2" data-translate="search.noResults">No results found</h3>
+        <p class="text-gray-500" data-translate="search.tryDifferent">Try different keywords or browse our categories</p>
+      </div>
+    </div>
+  </section>
+
+
+
     <!-- Online/Offline Indicators -->
     <div class="offline-indicator" id="offline-indicator">
         <i class="fas fa-wifi-slash mr-2"></i> You're offline
@@ -2644,5 +2779,60 @@
             elements.searchModal.classList.add('hidden');
         };
     </script>
+     <!-- Footer -->
+  <footer class="bg-black text-slate-200 py-12 px-6 font-inter border-t border-slate-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/50'" alt="Logo" class="w-[50px] h-[50px] object-contain rounded-full border-2 border-[rgb(255,135,219)]">
+            <p class="font-semibold text-[rgb(255,135,219)] text-base" data-translate="footer.tagline">Empowering Girls, Building Futures</p>
+          </div>
+          <p class="text-sm leading-relaxed text-slate-400 max-w-sm mb-6" data-translate="footer.description">
+            A safe digital haven where girls in Mahama refugee camp can connect, learn, grow, and thrive.
+          </p>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:bg-slate-700 hover:text-white hover:-translate-y-1 transition-all"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4" data-translate="footer.quickLinks">Quick Links</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="./chat.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.joinChat">Join Chat</a></li>
+            <li><a href="./stories.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.shareStory">Share Story</a></li>
+            <li><a href="./Learning_Programs.html" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.programs">Programs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-lg mb-4" data-translate="footer.getHelp">Get Help</h4>
+          <ul class="space-y-3 text-sm text-slate-400">
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.emergency">Emergency</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.support">Support</a></li>
+            <li><a href="#" class="hover:text-[rgb(219,120,228)] transition-colors" data-translate="footer.report">Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pt-6 border-t border-slate-800 text-sm text-slate-500">
+        <div>
+          <p data-translate="footer.copyright">© 2025 GirlsSpace Mahama. <span class="text-[rgb(183,64,219)] font-medium">Empowering girls, always.</span></p>
+        </div>
+        <div class="text-left md:text-right">
+          <p class="mb-1" data-translate="footer.languages">Available in: English, Français, Kiswahili, Kinyarwanda, Arabic</p>
+          <p data-translate="footer.supporters">Supported by UNHCR, Save The Children, Alight</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    
+  </script>
 </body>
 </html>
