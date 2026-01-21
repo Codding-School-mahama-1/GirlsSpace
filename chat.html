@@ -492,6 +492,35 @@
     </div>
   </div>
 
+   <!-- Search Results Page (initially hidden) -->
+  <section id="search-results-page" class="min-h-screen bg-black py-16 px-6 hidden">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl lg:text-4xl font-bold" data-translate="search.results">Search Results</h2>
+        <button id="close-search-page" class="text-gray-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <div class="relative">
+          <input type="text" id="results-search-input" placeholder="Search..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white outline-none focus:border-primary transition-all duration-300" data-translate="nav.search">
+          <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+      
+      <div id="search-results-content" class="space-y-4">
+        <!-- Search results will be displayed here -->
+      </div>
+      
+      <div id="no-results-message" class="text-center py-12 hidden">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-400 mb-2" data-translate="search.noResults">No results found</h3>
+        <p class="text-gray-500" data-translate="search.tryDifferent">Try different keywords or browse our categories</p>
+      </div>
+    </div>
+  </section>
+
 
 
     <!-- Online/Offline Indicators -->
@@ -2801,5 +2830,9 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    
+  </script>
 </body>
 </html>
