@@ -19,11 +19,21 @@
             success: '#0e5ae7',
             purple: {
               800: '#5d1a9e',
-            }
+            },
+            customPurple: '#c23cb6'
           },
           fontFamily: {
             sans: ['Poppins', 'sans-serif'],
           },
+          animation: {
+            'fadeIn': 'fadeIn 0.3s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(-10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
         },
       },
     }
@@ -49,36 +59,124 @@
     .nav-link:hover::after {
       width: 100%;
     }
+    
+    /* Mobile menu animation */
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+    }
+    
+    .mobile-menu.open {
+      max-height: 500px;
+      transition: max-height 0.5s ease-in;
+    }
   </style>
 </head>
 
 <body class="bg-light text-gray-800 font-sans">
 
-  <!-- ==================== NAVBAR ==================== -->
-  <nav class="sticky top-0 z-50 bg-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16 flex-wrap gap-3">
+<!-- ==================== NAVBAR ==================== -->
+<nav class="sticky top-0 z-50 bg-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <img src="./img/Girls Space (1) (1).png" onerror="this.src='https://via.placeholder.com/60x50'" alt="GirlsSpace Logo" class="w-14 h-12 object-contain rounded-full">
+      </div>
 
-        <!-- Logo -->
-        <div class="flex-shrink-0">
-          <img src="img/Girls Space (1) (1).png" alt="GirlsSpace Logo" class="w-14 h-12 object-contain rounded-full">
+      <!-- Desktop Navigation -->
+      <div class="hidden sm:flex flex-1 justify-center items-center space-x-5 text-sm">
+        <a href="./index.html" class="nav-link text-dark hover:text-primary font-medium relative">Home</a>
+        <a href="./AboutUs.html" class="nav-link text-dark hover:text-primary font-medium relative">About</a>
+        <a href="./chat.html" class="nav-link text-dark hover:text-primary font-medium relative">Chat</a>
+        <a href="./stories.html" class="nav-link text-dark hover:text-primary font-medium relative">Stories</a>
+        <a href="./Learning_Programs.html" class="nav-link text-dark hover:text-primary font-medium relative">Programs</a>
+        <a href="./protection.html" class="nav-link text-dark hover:text-primary font-medium relative">Protection</a>
+
+                <!-- Language Dropdown -->
+        <div class="relative group">
+          <button class="flex items-center hover:text-primary transition-colors py-2 text-sm font-medium text-dark">
+            <span id="current-language">English</span> 
+            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+          </button>
+          <ul class="absolute top-full right-0 bg-white shadow-xl rounded-lg w-32 hidden group-hover:block py-2 border border-gray-100 z-50">
+            <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-primary text-gray-700 language-option" data-lang="en">English</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-primary text-gray-700 language-option" data-lang="ar">Arabic</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-primary text-gray-700 language-option" data-lang="sw">Swahili</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-primary text-gray-700 language-option" data-lang="fr">French</a></li>
+            <li><a href="#" class="block px-4 py-2 hover:bg-purple-50 hover:text-primary text-gray-700 language-option" data-lang="rw">Kinyarwanda</a></li>
+          </ul>
         </div>
 
-        <!-- Desktop Nav Links -->
-        <div class="hidden sm:flex sm:items-center sm:space-x-4 text-sm">
-          <a href="./index.html" class="nav-link text-dark hover:text-accent font-medium relative">Home</a>
-          <a href="./AboutUs.html" class="nav-link text-dark hover:text-accent font-medium relative">About</a>
-          <a href="./chat.html" class="nav-link text-dark hover:text-accent font-medium relative">Chat</a>
-          <a href="./stories.html" class="nav-link text-dark hover:text-accent font-medium relative">Stories</a>
-          <a href="./Learning_Programs.html" class="nav-link text-dark hover:text-accent font-medium relative">Programs</a>
-          <a href="./protection.html" class="nav-link text-dark hover:text-accent font-medium relative">Protection</a>
+       <a href="./donate.html" class="px-5 py-2 bg-gradient-to-r from-accent to-primary text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all">Donate</a>
 
-          <a href="./login.html" class="px-3 py-1.5 border-2 border-primary text-primary rounded-full text-xs font-semibold hover:bg-purple-50">Log In</a>
-          <a href="./donate.html" class="px-4 py-2 bg-gradient-to-r from-accent to-primary text-white rounded-full text-xs font-semibold hover:shadow-lg hover:shadow-primary/50 transition-shadow">Donate</a>
+      </div>
+
+      <!-- Desktop Right Section -->
+      <div class="hidden lg:flex items-center space-x-4">
+
+
+        <!-- Search Bar -->
+        <div class="relative">
+          <input type="text" id="search-input" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-700 outline-none focus:border-primary w-40 transition-all">
+        </div>
+
+        <!-- Buttons -->
+        <!-- <a href="./login.html" class="px-4 py-1.5 border-[1.5px] border-primary text-primary rounded-full text-sm font-semibold hover:bg-purple-50 transition-colors">Log In</a> -->
+        <a id="adminLink" href="admin-dashboard.html" class="hidden px-3 py-1.5 bg-purple-800 text-white rounded-full text-xs font-semibold hover:bg-purple-900">
+          <i class="fas fa-shield-alt mr-2"></i>Admin
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Menu -->
+      <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 z-50 cursor-pointer group">
+        <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:rotate-45 group-[.active]:translate-y-2"></span>
+        <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:opacity-0"></span>
+        <span class="w-7 h-[3px] bg-gray-700 rounded-full transition-all duration-300 group-[.active]:-rotate-45 group-[.active]:-translate-y-2.5"></span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu (Hidden by default) -->
+    <div id="mobile-menu" class="lg:hidden mobile-menu bg-white shadow-lg rounded-b-lg">
+      <div class="py-4 px-4 space-y-3">
+        <!-- Mobile Navigation Links -->
+        <a href="./index.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">Home</a>
+        <a href="./AboutUs.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">About</a>
+        <a href="./chat.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">Chat</a>
+        <a href="./stories.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">Stories</a>
+        <a href="./Learning_Programs.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">Programs</a>
+        <a href="./protection.html" class="block px-4 py-3 text-dark hover:text-primary hover:bg-purple-50 rounded-lg transition-colors">Protection</a>
+        
+        <!-- Mobile Language Dropdown -->
+        <div class="px-4 py-3">
+          <p class="text-sm font-medium text-gray-500 mb-2">Language</p>
+          <div class="flex flex-wrap gap-2">
+            <button class="px-3 py-1.5 bg-primary text-white rounded-full text-xs font-medium">English</button>
+            <button class="px-3 py-1.5 border border-gray-300 rounded-full text-xs font-medium hover:bg-gray-50">Arabic</button>
+            <button class="px-3 py-1.5 border border-gray-300 rounded-full text-xs font-medium hover:bg-gray-50">Swahili</button>
+            <button class="px-3 py-1.5 border border-gray-300 rounded-full text-xs font-medium hover:bg-gray-50">French</button>
+          </div>
+        </div>
+
+        <!-- Mobile Search -->
+        <div class="px-4 py-3">
+          <input type="text" placeholder="Search..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-primary">
+        </div>
+
+        <!-- Mobile Buttons -->
+        <div class="flex flex-col gap-3 px-4 py-3">
+          <a href="./login.html" class="text-center px-4 py-2.5 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-purple-50 transition-colors">Log In</a>
+          <a href="./donate.html" class="text-center px-4 py-2.5 bg-gradient-to-r from-accent to-primary text-white rounded-lg font-semibold hover:shadow-md transition-all">Donate</a>
+          <a id="mobileAdminLink" href="admin-dashboard.html" class="text-center px-4 py-2.5 bg-purple-800 text-white rounded-lg text-sm font-semibold hover:bg-purple-900 hidden">
+            <i class="fas fa-shield-alt mr-2"></i>Admin Panel
+          </a>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- ==================== MAIN CONTENT ==================== -->
   <main class="max-w-7xl mx-auto px-4 py-12">
@@ -96,8 +194,16 @@
 
           <div>
             <label for="password" class="block text-sm font-medium text-dark mb-2">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition">
+            <div class="relative">
+              <input type="password" id="password" placeholder="Enter your password" required
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition">
+              <div class="absolute right-3 top-3">
+                <input type="checkbox" id="showPassword" 
+                       onclick="document.getElementById('password').type = this.checked ? 'text' : 'password'"
+                       class="w-4 h-4">
+                <label for="showPassword" class="text-xs text-gray-500 ml-1">Show</label>
+              </div>
+            </div>
           </div>
 
           <div class="flex items-center justify-between text-sm">
@@ -108,16 +214,31 @@
             <a href="./Forgot_password.html" class="text-primary hover:underline font-medium">Forgot password?</a>
           </div>
 
-              <!-- In your login.html, update the button section: -->
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition">
-                  Login
-                </button>
-                <button type="button" onclick="window.location.href='signup.html'"
-                        class="flex-1 px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition">
-                  Sign Up
-                </button>
-              </div>
+          <!-- Error Message Container -->
+          <div id="error-message" class="hidden p-3 bg-red-50 text-red-700 rounded-lg text-sm"></div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-primary text-white rounded-full font-semibold hover:shadow-lg hover:shadow-primary/40 transition">
+              Login
+            </button>
+            <button type="button" onclick="window.location.href='signup.html'"
+                    class="flex-1 px-6 py-3 border-2 border-primary text-primary rounded-full font-semibold hover:bg-purple-50 transition">
+              Sign Up
+            </button>
+          </div>
+
+          <!-- Social Login Options -->
+          <div class="text-center mt-4">
+            <p class="text-sm text-gray-600 mb-3">Or continue with</p>
+            <div class="flex justify-center gap-3">
+              <button type="button" class="p-3 border border-gray-300 rounded-full hover:bg-gray-50 transition">
+                <i class="fab fa-google text-red-500"></i>
+              </button>
+              <button type="button" class="p-3 border border-gray-300 rounded-full hover:bg-gray-50 transition">
+                <i class="fab fa-facebook text-blue-600"></i>
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
@@ -160,10 +281,61 @@
       </div>
 
       <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
-        <p>© 2024 GirlsSpace Mahama. <span class="text-purple-500 font-medium">Empowering girls, always.</span></p>
+        <p>© 2026 GirlsSpace Mahama. <span class="text-purple-500 font-medium">Empowering girls, always.</span></p>
       </div>
     </div>
   </footer>
+
+  <!-- JavaScript for Mobile Menu -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      hamburger.addEventListener('click', function() {
+        // Toggle active class for hamburger animation
+        this.classList.toggle('active');
+        
+        // Toggle mobile menu visibility with animation
+        if (mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          setTimeout(() => {
+            mobileMenu.style.display = 'none';
+          }, 500); // Match the transition duration
+        } else {
+          mobileMenu.style.display = 'block';
+          // Force reflow to enable transition
+          mobileMenu.offsetHeight;
+          mobileMenu.classList.add('open');
+        }
+      });
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const isClickInsideMenu = mobileMenu.contains(event.target);
+        const isClickOnHamburger = hamburger.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnHamburger && mobileMenu.classList.contains('open')) {
+          hamburger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          setTimeout(() => {
+            mobileMenu.style.display = 'none';
+          }, 500);
+        }
+      });
+      
+      // Close mobile menu when clicking a link
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+          hamburger.classList.remove('active');
+          mobileMenu.classList.remove('open');
+          setTimeout(() => {
+            mobileMenu.style.display = 'none';
+          }, 500);
+        });
+      });
+    });
+  </script>
 
   <script type="module">
     import { setupSignIn } from './firebase.js';
@@ -173,14 +345,5 @@
       setupSignIn();
     });
   </script>
-<!-- Replace your existing login form script with: -->
-<script type="module">
-  import { setupSignIn } from './firebase.js';
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Login page loaded, initializing sign in...');
-    setupSignIn();
-  });
-</script>
 </body>
 </html>
